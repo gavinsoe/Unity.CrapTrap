@@ -36,6 +36,8 @@ public class BlockController : MonoBehaviour {
 		animator.SetBool("Out", true);	
 		// Enable the collider
 		boxCollider.enabled = true;
+		// Set the z-depth
+		transform.position = new Vector3(transform.position.x, transform.position.y, 0);
 	}
 	
 	// Actions to take when block is pushed in
@@ -44,5 +46,7 @@ public class BlockController : MonoBehaviour {
 		animator.SetBool("Out", false);	
 		// Enable the collider
 		boxCollider.enabled = false;
+		// Set the z-depth
+		transform.position = new Vector3(transform.position.x, transform.position.y, 1);
 	}
 }
