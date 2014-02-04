@@ -4,7 +4,7 @@ using System.Collections;
 public class CharacterController : MonoBehaviour {
 	
 	private float moveSpeed = 2f;
-	private float gridSize = 0.51f;
+	private float gridSize = 1f;
 	private enum Orientation {
 		Horizontal,
 		Vertical
@@ -56,6 +56,7 @@ public class CharacterController : MonoBehaviour {
 		startPosition = transform.position;
 		t = 0;
 		var sign = System.Math.Sign(input);
+		/*
 		if (hanging){
 			if (sign > 0 && rightBlock || sign < 0 && leftBlock){
 				endPosition = new Vector3(startPosition.x + sign * (gridSize/2), startPosition.y + (gridSize/2), startPosition.z);
@@ -72,7 +73,26 @@ public class CharacterController : MonoBehaviour {
 				endPosition = new Vector3(startPosition.x + sign * gridSize, startPosition.y, startPosition.z);
 			}
 		}
-		
+		*/
+
+		Vector2 rightVector = new Vector2 (startPosition.x + gridSize, startPosition.y);
+		Collider2D rightCollider = Physics2D.OverlapPoint (rightVector);
+		Vector2 rightUpVector = new Vector2 (startPosition.x + gridSize, startPosition.y + gridSize);
+		Collider2D rightUpCollider = Physics2D.OverlapPoint (rightUpVector);
+		Vector2 leftVector = new Vector2 (startPosition.x - gridSize, startPosition.y);
+		Collider2D leftCollider = Physics2D.OverlapPoint (leftVector);
+		Vector2 leftUpVector = new Vector2 (startPosition.x - gridSize, startPosition.y + gridSize);
+		Collider2D leftUpCollider = Physics2D.OverlapPoint (leftUpVector);
+
+		if ((rightCollider != null && rightUpCollider == null && sign > 0) || (leftCollider != null && leftUpCollider == null && sign < 0)) {
+			endPosition = new Vector3(startPosition.x + sign * gridSize, startPosition.y + gridSize, startPosition.z);
+			Debug.Log(startPosition);
+			Debug.Log(endPosition);
+		} else if((rightCollider == null && sign > 0) || (leftCollider == null && sign < 0)){
+			endPosition = new Vector3(startPosition.x + sign * gridSize, startPosition.y, startPosition.z);
+		} else {
+			endPosition = startPosition;
+		}
 				
 		while (t < 1f) {
 		
