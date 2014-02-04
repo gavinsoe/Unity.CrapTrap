@@ -86,19 +86,65 @@ public class CharacterController : MonoBehaviour {
 
 		if ((rightCollider != null && rightUpCollider == null && sign > 0) || (leftCollider != null && leftUpCollider == null && sign < 0)) {
 			endPosition = new Vector3(startPosition.x + sign * gridSize, startPosition.y + gridSize, startPosition.z);
-			Debug.Log(startPosition);
-			Debug.Log(endPosition);
 		} else if((rightCollider == null && sign > 0) || (leftCollider == null && sign < 0)){
 			endPosition = new Vector3(startPosition.x + sign * gridSize, startPosition.y, startPosition.z);
 		} else {
 			endPosition = startPosition;
 		}
-				
-		while (t < 1f) {
-		
-			t += Time.deltaTime * (moveSpeed/gridSize);
-			transform.position = Vector3.Lerp(startPosition, endPosition, t);
-			yield return null;
+
+		if(Input.GetKey("o") && leftCollider != null) {
+			Vector3 boxStart = leftCollider.transform.position;
+			Vector3 boxEnd = boxStart;
+			if(sign > 0) {
+				if(rightCollider == null) {
+					boxEnd.x += gridSize;
+				} else {
+					endPosition = startPosition;
+				}
+			} else {
+				if(Physics2D.OverlapPoint(new Vector2(boxStart.x - gridSize, boxStart.y)) == null) {
+					boxEnd.x -= gridSize;
+					endPosition.y -= gridSize;
+				} else {
+					endPosition = startPosition;
+				}
+			}
+			while(t < 1f) {
+				t += Time.deltaTime * (moveSpeed/gridSize);
+				transform.position = Vector3.Lerp(startPosition, endPosition, t);
+				leftCollider.transform.gameObject.transform.position = Vector3.Lerp(boxStart, boxEnd, t);
+				yield return null;
+			}
+		} else if(Input.GetKey("p") && rightCollider != null) {
+			Vector3 boxStart = rightCollider.transform.position;
+			Vector3 boxEnd = boxStart;
+			if(sign > 0) {
+				if(Physics2D.OverlapPoint(new Vector2(boxStart.x + gridSize, boxStart.y)) == null) {
+					boxEnd.x += gridSize;
+					endPosition.y -= gridSize;
+				} else {
+					endPosition = startPosition;
+				}
+			} else {
+				if(leftCollider == null) {
+					boxEnd.x -= gridSize;
+				} else {
+					endPosition = startPosition;
+				}
+			}
+			while(t < 1f) {
+				t += Time.deltaTime * (moveSpeed/gridSize);
+				transform.position = Vector3.Lerp(startPosition, endPosition, t);
+				rightCollider.transform.gameObject.transform.position = Vector3.Lerp(boxStart, boxEnd, t);
+				yield return null;
+			}
+		} else {
+			while (t < 1f) {
+			
+				t += Time.deltaTime * (moveSpeed/gridSize);
+				transform.position = Vector3.Lerp(startPosition, endPosition, t);
+				yield return null;
+			}
 		}
 		
 		isMoving = false;
