@@ -50,6 +50,7 @@ public class CharacterController : MonoBehaviour {
 	
 	public IEnumerator move (Transform transform){
 		isMoving = true;
+		bool stepUp = false;
 		// Set the running animation
 		animator.SetBool("Running", true);	
 		
@@ -86,13 +87,14 @@ public class CharacterController : MonoBehaviour {
 
 		if (((rightCollider != null && rightUpCollider == null && sign > 0) || (leftCollider != null && leftUpCollider == null && sign < 0)) && upCollider == null) {
 			endPosition = new Vector3(startPosition.x + sign * gridSize, startPosition.y + gridSize, startPosition.z);
+			stepUp = true;
 		} else if((rightCollider == null && sign > 0) || (leftCollider == null && sign < 0)){
 			endPosition = new Vector3(startPosition.x + sign * gridSize, startPosition.y, startPosition.z);
 		} else {
 			endPosition = startPosition;
 		}
 
-		if(Physics2D.OverlapPoint (new Vector2 (startPosition.x + sign * gridSize, startPosition.y - gridSize * 2)) != null) {
+		if(Physics2D.OverlapPoint (new Vector2 (startPosition.x + sign * gridSize, startPosition.y - gridSize * 2)) != null && startPosition != endPosition) {
 			endPosition.y -= gridSize;
 		}
 
@@ -108,7 +110,9 @@ public class CharacterController : MonoBehaviour {
 			} else {
 				if(Physics2D.OverlapPoint(new Vector2(boxStart.x - gridSize, boxStart.y)) == null) {
 					boxEnd.x -= gridSize;
-					endPosition.y -= gridSize;
+					if(stepUp) {
+						endPosition.y -= gridSize;
+					}
 				} else {
 					endPosition = startPosition;
 				}
@@ -125,7 +129,10 @@ public class CharacterController : MonoBehaviour {
 			if(sign > 0) {
 				if(Physics2D.OverlapPoint(new Vector2(boxStart.x + gridSize, boxStart.y)) == null) {
 					boxEnd.x += gridSize;
-					endPosition.y -= gridSize;
+					if(stepUp) {
+						endPosition.y -= gridSize;
+					}
+					endPosition.x += gridSize;
 				} else {
 					endPosition = startPosition;
 				}
@@ -165,6 +172,7 @@ public class CharacterController : MonoBehaviour {
 		}
 		
 		isMoving = false;
+		stepUp = false;
 		animator.SetBool("Running", false);	
 		
 		yield return 0;
