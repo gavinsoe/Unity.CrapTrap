@@ -99,6 +99,7 @@ public class CharacterController : MonoBehaviour {
 		}
 
 		if(Input.GetKey("o") && leftCollider != null) {
+			leftCollider.transform.gameObject.GetComponent<BlockController>().Moving();
 			Vector3 boxStart = leftCollider.transform.position;
 			Vector3 boxEnd = boxStart;
 			if(sign > 0) {
@@ -123,7 +124,9 @@ public class CharacterController : MonoBehaviour {
 				leftCollider.transform.gameObject.transform.position = Vector3.Lerp(boxStart, boxEnd, t);
 				yield return null;
 			}
+			leftCollider.transform.gameObject.GetComponent<BlockController>().NotMoving();
 		} else if(Input.GetKey("p") && rightCollider != null) {
+			rightCollider.transform.gameObject.GetComponent<BlockController>().Moving();
 			Vector3 boxStart = rightCollider.transform.position;
 			Vector3 boxEnd = boxStart;
 			if(sign > 0) {
@@ -149,6 +152,7 @@ public class CharacterController : MonoBehaviour {
 				rightCollider.transform.gameObject.transform.position = Vector3.Lerp(boxStart, boxEnd, t);
 				yield return null;
 			}
+			rightCollider.transform.gameObject.GetComponent<BlockController>().NotMoving();
 		} else {
 			while (t < 1f) {
 			
