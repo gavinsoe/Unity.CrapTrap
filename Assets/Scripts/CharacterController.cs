@@ -50,6 +50,7 @@ public class CharacterController : MonoBehaviour {
 	
 	public IEnumerator move (Transform transform){
 		isMoving = true;
+		bool stepUp = false;
 		// Set the running animation
 		animator.SetBool("Running", true);	
 		
@@ -74,25 +75,31 @@ public class CharacterController : MonoBehaviour {
 			}
 		}
 		*/
+		
+		Collider2D rightCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x + gridSize, startPosition.y));
+		Collider2D rightUpCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x + gridSize, startPosition.y + gridSize));
+		Collider2D rightDownCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x + gridSize, startPosition.y - gridSize));
+		Collider2D leftCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize, startPosition.y));
+		Collider2D leftUpCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize, startPosition.y + gridSize));
+		Collider2D leftDownCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize, startPosition.y - gridSize));
+		Collider2D upCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y + gridSize));
+		Collider2D downCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y - gridSize));
 
-		Vector2 rightVector = new Vector2 (startPosition.x + gridSize, startPosition.y);
-		Collider2D rightCollider = Physics2D.OverlapPoint (rightVector);
-		Vector2 rightUpVector = new Vector2 (startPosition.x + gridSize, startPosition.y + gridSize);
-		Collider2D rightUpCollider = Physics2D.OverlapPoint (rightUpVector);
-		Vector2 leftVector = new Vector2 (startPosition.x - gridSize, startPosition.y);
-		Collider2D leftCollider = Physics2D.OverlapPoint (leftVector);
-		Vector2 leftUpVector = new Vector2 (startPosition.x - gridSize, startPosition.y + gridSize);
-		Collider2D leftUpCollider = Physics2D.OverlapPoint (leftUpVector);
-
-		if ((rightCollider != null && rightUpCollider == null && sign > 0) || (leftCollider != null && leftUpCollider == null && sign < 0)) {
+		if (((rightCollider != null && rightUpCollider == null && sign > 0) || (leftCollider != null && leftUpCollider == null && sign < 0)) && upCollider == null) {
 			endPosition = new Vector3(startPosition.x + sign * gridSize, startPosition.y + gridSize, startPosition.z);
+			stepUp = true;
 		} else if((rightCollider == null && sign > 0) || (leftCollider == null && sign < 0)){
 			endPosition = new Vector3(startPosition.x + sign * gridSize, startPosition.y, startPosition.z);
 		} else {
 			endPosition = startPosition;
 		}
 
+		if(Physics2D.OverlapPoint (new Vector2 (startPosition.x + sign * gridSize, startPosition.y - gridSize * 2)) != null && startPosition != endPosition) {
+			endPosition.y -= gridSize;
+		}
+
 		if(Input.GetKey("o") && leftCollider != null) {
+			leftCollider.transform.gameObject.GetComponent<BlockController>().Moving();
 			Vector3 boxStart = leftCollider.transform.position;
 			Vector3 boxEnd = boxStart;
 			if(sign > 0) {
@@ -104,7 +111,9 @@ public class CharacterController : MonoBehaviour {
 			} else {
 				if(Physics2D.OverlapPoint(new Vector2(boxStart.x - gridSize, boxStart.y)) == null) {
 					boxEnd.x -= gridSize;
-					endPosition.y -= gridSize;
+					if(stepUp) {
+						endPosition.y -= gridSize;
+					}
 				} else {
 					endPosition = startPosition;
 				}
@@ -115,13 +124,18 @@ public class CharacterController : MonoBehaviour {
 				leftCollider.transform.gameObject.transform.position = Vector3.Lerp(boxStart, boxEnd, t);
 				yield return null;
 			}
+			leftCollider.transform.gameObject.GetComponent<BlockController>().NotMoving();
 		} else if(Input.GetKey("p") && rightCollider != null) {
+			rightCollider.transform.gameObject.GetComponent<BlockController>().Moving();
 			Vector3 boxStart = rightCollider.transform.position;
 			Vector3 boxEnd = boxStart;
 			if(sign > 0) {
 				if(Physics2D.OverlapPoint(new Vector2(boxStart.x + gridSize, boxStart.y)) == null) {
 					boxEnd.x += gridSize;
-					endPosition.y -= gridSize;
+					if(stepUp) {
+						endPosition.y -= gridSize;
+					}
+					endPosition.x += gridSize;
 				} else {
 					endPosition = startPosition;
 				}
@@ -138,6 +152,7 @@ public class CharacterController : MonoBehaviour {
 				rightCollider.transform.gameObject.transform.position = Vector3.Lerp(boxStart, boxEnd, t);
 				yield return null;
 			}
+			rightCollider.transform.gameObject.GetComponent<BlockController>().NotMoving();
 		} else {
 			while (t < 1f) {
 			
@@ -146,8 +161,22 @@ public class CharacterController : MonoBehaviour {
 				yield return null;
 			}
 		}
+
+		while(Physics2D.OverlapPoint (new Vector2 (transform.position.x, transform.position.y - gridSize)) == null) {
+			t = 0;
+			startPosition = transform.position;
+			endPosition = transform.position;
+			endPosition.y -= gridSize;
+			while (t < 1f) {
+				
+				t += Time.deltaTime * (moveSpeed/gridSize);
+				transform.position = Vector3.Lerp(startPosition, endPosition, t);
+				yield return null;
+			}
+		}
 		
 		isMoving = false;
+		stepUp = false;
 		animator.SetBool("Running", false);	
 		
 		yield return 0;
