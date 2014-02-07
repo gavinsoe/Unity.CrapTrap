@@ -35,21 +35,7 @@ public class BlockController : MonoBehaviour {
 				PushIn();
 			}
 
-			Vector3 startPosition = transform.position;
-
-			Collider2D rightCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x + (gridSize/2f + 0.1f), startPosition.y));
-			Collider2D rightUpCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x + gridSize/2f + 0.1f, startPosition.y + gridSize/2f + 0.1f));
-			Collider2D rightDownCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x + gridSize/2f + 0.1f, startPosition.y - gridSize/2f - 0.1f));
-			Collider2D leftCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize/2f - 0.1f, startPosition.y));
-			Collider2D leftUpCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize/2f - 0.1f, startPosition.y + gridSize/2f + 0.1f));
-			Collider2D leftDownCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize/2f - 0.1f, startPosition.y - gridSize/2f - 0.1f));
-			Collider2D upCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y + gridSize/2f + 0.1f));
-			Collider2D downCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y - gridSize/2f - 0.1f));
-
-			if(rightCollider == null && leftCollider == null && upCollider == null && downCollider == null &&
-			      rightUpCollider == null && rightDownCollider == null && leftUpCollider == null && leftDownCollider == null) {
-				StartCoroutine(FallDown(transform));
-			}
+			StartCoroutine(FallDown(transform));
 		}
 	}
 	
@@ -77,16 +63,16 @@ public class BlockController : MonoBehaviour {
 		Vector3 startPosition = transform.position;
 		isMoving = true;
 		
-		while(Physics2D.OverlapPoint (new Vector2 (startPosition.x + (gridSize/2f + 0.1f), startPosition.y)) == null && //right
-		      Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize/2f - 0.1f, startPosition.y)) == null && //left
-		      Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y + gridSize/2f + 0.1f)) == null && //up
-		      Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y - gridSize/2f - 0.1f)) == null && //down
-		      Physics2D.OverlapPoint (new Vector2 (startPosition.x + gridSize/2f + 0.1f, startPosition.y + gridSize/2f + 0.1f)) == null && //right up
-		      Physics2D.OverlapPoint (new Vector2 (startPosition.x + gridSize/2f + 0.1f, startPosition.y - gridSize/2f - 0.1f)) == null && //right down
-		      Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize/2f - 0.1f, startPosition.y + gridSize/2f + 0.1f)) == null && //left up
-		      Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize/2f - 0.1f, startPosition.y - gridSize/2f - 0.1f)) == null) { //left down
+		while(Physics2D.OverlapPoint (new Vector2 (startPosition.x + (gridSize/2f + 0.1f), startPosition.y), 1 << 8, -0.9f, 0.9f) == null && //right
+		      Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize/2f - 0.1f, startPosition.y), 1 << 8, -0.9f, 0.9f) == null && //left
+		      Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y + gridSize/2f + 0.1f), 1 << 8, -0.9f, 0.9f) == null && //up
+		      Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y - gridSize/2f - 0.1f), 1 << 8, -0.9f, 0.9f) == null && //down
+		      Physics2D.OverlapPoint (new Vector2 (startPosition.x + gridSize/2f + 0.1f, startPosition.y + gridSize/2f + 0.1f), 1 << 8, -0.9f, 0.9f) == null && //right up
+		      Physics2D.OverlapPoint (new Vector2 (startPosition.x + gridSize/2f + 0.1f, startPosition.y - gridSize/2f - 0.1f), 1 << 8, -0.9f, 0.9f) == null && //right down
+		      Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize/2f - 0.1f, startPosition.y + gridSize/2f + 0.1f), 1 << 8, -0.9f, 0.9f) == null && //left up
+		      Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize/2f - 0.1f, startPosition.y - gridSize/2f - 0.1f), 1 << 8, -0.9f, 0.9f) == null && //left down
+		      transform.position.z == 0) { 
 			float t = 0;
-			startPosition = transform.position;
 			Vector3 endPosition = startPosition;
 			endPosition.y -= gridSize;
 			while (t < 1f) {
@@ -95,6 +81,7 @@ public class BlockController : MonoBehaviour {
 				transform.position = Vector3.Lerp(startPosition, endPosition, t);
 				yield return null;
 			}
+			startPosition = transform.position;
 		}
 		isMoving = false;
 
