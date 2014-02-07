@@ -11,15 +11,16 @@ public class BlockGenerator : MonoBehaviour {
 	void Start () {
 		// Create the blocks.
 		for (int i = 1; i <= width; i++){
-			for (int j = 1; j <= height; j++){
+			for (int j = -3; j <= (height-3); j++){
 				transform.position = new Vector3(i,j,0);
-				var block = Instantiate (Randomizer(), transform.position, transform.rotation) as GameObject;
+				var block = Instantiate (GenerateBlock(), transform.position, transform.rotation) as GameObject;
 				block.transform.parent = this.transform.parent;
+				block.transform.localPosition = transform.position;
 			}
 		}
 	}
 	
-	GameObject Randomizer(){
+	GameObject GenerateBlock(){
 		GameObject block = blocks[0];
 		block.GetComponent<BlockController>().pulledOut = (Random.value > 0.5f);
 		return block;
