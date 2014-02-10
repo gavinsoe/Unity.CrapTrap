@@ -16,7 +16,7 @@ public class BlockController : MonoBehaviour {
 	protected BoxCollider2D boxCollider;
 
 	// Falling speed
-	private float moveSpeed = 2f;
+	private float moveSpeed = 3f;
 	private float gridSize = 1f;
 	
 	// Use this for initialization

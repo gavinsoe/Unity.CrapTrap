@@ -3,7 +3,7 @@ using System.Collections;
 
 public class CharacterController : MonoBehaviour {
 	
-	private float moveSpeed = 2f;
+	private float moveSpeed = 3f;
 	private float gridSize = 1f;
 	private enum Orientation {
 		Horizontal,
@@ -114,10 +114,6 @@ public class CharacterController : MonoBehaviour {
 		Collider2D leftUpCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize, startPosition.y + gridSize), 1 << 8, -0.9f, 0.9f);
 		//Collider2D leftDownCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize, startPosition.y - gridSize), 1 << 8, -0.9f, 0.9f);
 		Collider2D upCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y + gridSize), 1 << 8, -0.9f, 0.9f);
-		Debug.Log (rightCollider);
-		Debug.Log (rightUpCollider);
-		Debug.Log (leftCollider);
-		Debug.Log (leftUpCollider);
 
 		if(!hanging) {
 			if (((rightCollider != null && rightUpCollider == null && sign > 0) || (leftCollider != null && leftUpCollider == null && sign < 0)) && upCollider == null) {
