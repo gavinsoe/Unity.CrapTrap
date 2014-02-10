@@ -23,6 +23,7 @@ public class BlockController : MonoBehaviour {
 	void Start () {
 		animator = GetComponent<Animator>();
 		boxCollider = GetComponent<BoxCollider2D>();
+		boxCollider.enabled = true;
 	}
 	
 	// Update is called once per frame
@@ -44,7 +45,7 @@ public class BlockController : MonoBehaviour {
 		// Change the color of the block
 		animator.SetBool("Out", true);	
 		// Enable the collider
-		boxCollider.enabled = true;
+		//boxCollider.enabled = true;
 		// Set the z-depth
 		transform.position = new Vector3(transform.position.x, transform.position.y, 0);
 	}
@@ -54,7 +55,7 @@ public class BlockController : MonoBehaviour {
 		// Change the color of the block
 		animator.SetBool("Out", false);	
 		// Enable the collider
-		boxCollider.enabled = false;
+		//boxCollider.enabled = false;
 		// Set the z-depth
 		transform.position = new Vector3(transform.position.x, transform.position.y, 1);
 	}
@@ -63,14 +64,14 @@ public class BlockController : MonoBehaviour {
 		Vector3 startPosition = transform.position;
 		isMoving = true;
 		
-		while(Physics2D.OverlapPoint (new Vector2 (startPosition.x + (gridSize/2f + 0.1f), startPosition.y), 1 << 8, -0.9f, 0.9f) == null && //right
-		      Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize/2f - 0.1f, startPosition.y), 1 << 8, -0.9f, 0.9f) == null && //left
-		      Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y + gridSize/2f + 0.1f), 1 << 8, -0.9f, 0.9f) == null && //up
-		      Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y - gridSize/2f - 0.1f), 1 << 8, -0.9f, 0.9f) == null && //down
-		      Physics2D.OverlapPoint (new Vector2 (startPosition.x + gridSize/2f + 0.1f, startPosition.y + gridSize/2f + 0.1f), 1 << 8, -0.9f, 0.9f) == null && //right up
-		      Physics2D.OverlapPoint (new Vector2 (startPosition.x + gridSize/2f + 0.1f, startPosition.y - gridSize/2f - 0.1f), 1 << 8, -0.9f, 0.9f) == null && //right down
-		      Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize/2f - 0.1f, startPosition.y + gridSize/2f + 0.1f), 1 << 8, -0.9f, 0.9f) == null && //left up
-		      Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize/2f - 0.1f, startPosition.y - gridSize/2f - 0.1f), 1 << 8, -0.9f, 0.9f) == null && //left down
+		while(Physics2D.OverlapPoint (new Vector2 (startPosition.x + (gridSize), startPosition.y), 1 << 8, -0.9f, 0.9f) == null && //right
+		      Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize, startPosition.y), 1 << 8, -0.9f, 0.9f) == null && //left
+		      Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y + gridSize), 1 << 8, -0.9f, 0.9f) == null && //up
+		      Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y - gridSize), 1 << 8, -0.9f, 0.9f) == null && //down
+		      Physics2D.OverlapPoint (new Vector2 (startPosition.x + gridSize, startPosition.y + gridSize), 1 << 8, -0.9f, 0.9f) == null && //right up
+		      Physics2D.OverlapPoint (new Vector2 (startPosition.x + gridSize, startPosition.y - gridSize), 1 << 8, -0.9f, 0.9f) == null && //right down
+		      Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize, startPosition.y + gridSize), 1 << 8, -0.9f, 0.9f) == null && //left up
+		      Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize, startPosition.y - gridSize), 1 << 8, -0.9f, 0.9f) == null && //left down
 		      transform.position.z == 0) { 
 			float t = 0;
 			Vector3 endPosition = startPosition;
@@ -94,5 +95,9 @@ public class BlockController : MonoBehaviour {
 
 	public void NotMoving() {
 		isMoving = false;
+	}
+
+	public void Pull() {
+		pulledOut = true;
 	}
 }

@@ -50,8 +50,30 @@ public class CharacterController : MonoBehaviour {
 				StartCoroutine(move(transform));
 			} else if(inputV != 0) {
 				StartCoroutine(hang(transform));
+			} else if(Input.GetKey("l")) {
+				StartCoroutine(pull(transform));
 			}
 		}
+	}
+
+	public IEnumerator pull(Transform transform) {
+		isMoving = true;
+		Collider2D box;
+		t = 0;
+		startPosition = transform.position;
+		endPosition = startPosition;
+		if((box = Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y + gridSize / 2), 1 << 8, 0.1f, 1.9f)) != null && !hanging) {
+			box.transform.gameObject.GetComponent<BlockController>().Pull();
+			endPosition.y -= gridSize/2;
+			hanging = true;
+			while(t < 1f) {
+				t += Time.deltaTime * (moveSpeed/gridSize);
+				transform.position = Vector3.Lerp(startPosition, endPosition, t);
+				yield return null;
+			}
+		}
+		isMoving = false;
+		yield return 0;
 	}
 
 	public IEnumerator hang(Transform transform) {
@@ -231,7 +253,7 @@ public class CharacterController : MonoBehaviour {
 			}
 		}
 
-		while(Physics2D.OverlapPoint (new Vector2 (transform.position.x, transform.position.y - gridSize), 1 << 8, -0.9f, 0.9f) == null) {
+		while(Physics2D.OverlapPoint (new Vector2 (transform.position.x, transform.position.y - gridSize), 1 << 8, -0.9f, 0.9f) == null && !hanging) {
 			t = 0;
 			startPosition = transform.position;
 			endPosition = transform.position;
