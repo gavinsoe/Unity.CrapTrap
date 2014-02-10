@@ -30,7 +30,7 @@ public class BlockGenerator : MonoBehaviour {
 					
 					// checks if block collides with the character, if it does, make sure block is pulled in
 					if (Physics2D.OverlapPoint(new_block.transform.position, 1 << LayerMask.NameToLayer("Character"))){
-						block.GetComponent<BlockController>().pulledOut = false;
+						new_block.GetComponent<BlockController>().pulledOut = false;
 					}
 					
 				}
