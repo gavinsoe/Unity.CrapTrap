@@ -49,7 +49,7 @@ public class BlockGenerator : MonoBehaviour {
 	}
 	
 	GameObject GenerateRandomBlock(){
-		GameObject block = blocks[0];
+		GameObject block = blocks[Random.Range (0,blocks.Length)];
 		block.GetComponent<BlockController>().pulledOut = (Random.value > 0.7f);
 		return block;
 	}
