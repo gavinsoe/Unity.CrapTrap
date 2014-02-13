@@ -9,6 +9,7 @@ public class BlockController : MonoBehaviour {
 	public bool crumbling;   // Determines whether the block will dissapear once stepped on.
 	public bool sticky;      // Determines whether players will get slowed while in contact with the block.
 	public bool pulledOut;  // Determines whether the block is pulled out or not.
+	public bool slippery; // Determines whether the block is slippery.
 	public bool isMoving = false;
 
 	// Components
@@ -36,7 +37,9 @@ public class BlockController : MonoBehaviour {
 				PushIn();
 			}
 
-			StartCoroutine(FallDown(transform));
+			if(unmovable) {
+				StartCoroutine(FallDown(transform));
+			}
 		}
 	}
 	
@@ -99,5 +102,29 @@ public class BlockController : MonoBehaviour {
 
 	public void Pull() {
 		pulledOut = true;
+	}
+
+	public void Push() {
+		pulledOut = false;
+	}
+
+	public bool GetUnMovable() {
+		return unmovable;
+	}
+
+	public bool GetHangable() {
+		return hangable;
+	}
+
+	public bool GetCrumbling() {
+		return crumbling;
+	}
+
+	public bool GetSticky() {
+		return sticky;
+	}
+
+	public bool GetSlippery() {
+		return slippery;
 	}
 }
