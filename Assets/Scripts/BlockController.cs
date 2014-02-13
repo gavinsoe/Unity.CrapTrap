@@ -37,7 +37,7 @@ public class BlockController : MonoBehaviour {
 				PushIn();
 			}
 
-			if(unmovable) {
+			if(!unmovable) {
 				StartCoroutine(FallDown(transform));
 			}
 		}
