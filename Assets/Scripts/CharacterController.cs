@@ -285,7 +285,8 @@ public class CharacterController : MonoBehaviour {
 				}
 			}
 		} else {
-			if((rightCollider != null && sign > 0) || (leftCollider != null && sign < 0)) {
+			if((rightCollider != null && sign > 0 && rightCollider.transform.gameObject.GetComponent<BlockController>().GetHangable()) || 
+			   (leftCollider != null && sign < 0 && leftCollider.transform.gameObject.GetComponent<BlockController>().GetHangable())) {
 				endPosition.x = endPosition.x + sign * gridSize;
 			} else if((rightCollider == null && sign > 0) || (leftCollider == null && sign < 0)) {
 				endPosition.x = endPosition.x + sign * gridSize;
