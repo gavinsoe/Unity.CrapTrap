@@ -48,6 +48,7 @@ public class BlockGenerator : MonoBehaviour {
 		}
 	}
 	
+	
 	GameObject GenerateRandomBlock(){
 		
 		GameObject block = blocks[0];

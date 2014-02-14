@@ -17,7 +17,8 @@ public class LevelChunkFactory : MonoBehaviour {
 			// Generate the next section of the stage
 			Vector3 next_location = new Vector3(transform.position.x,transform.position.y + height,0);
 			
-			var block = Instantiate (GenerateLevelChunk(), next_location, transform.rotation) as GameObject;
+			var chunk = Instantiate (GenerateLevelChunk(), next_location, transform.rotation) as GameObject;
+			RemoveExistingBlocks(chunk);
 			triggered = true;
 		} else if ( col.gameObject.tag == "Collider" ){
 			RemoveThisChunk();
@@ -27,6 +28,15 @@ public class LevelChunkFactory : MonoBehaviour {
 	GameObject GenerateLevelChunk(){
 		GameObject chunk = levelChunks[0];
 		return chunk;
+	}
+	
+	void RemoveExistingBlocks(GameObject chunk){
+		// Remove any existing blocks
+		foreach(Transform child in chunk.transform) {
+			if (child.name != "Generator"){
+				Destroy(child.gameObject);
+			}
+		}
 	}
 	
 	void RemoveThisChunk(){
