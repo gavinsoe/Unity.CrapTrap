@@ -120,7 +120,9 @@ public class CharacterController : MonoBehaviour {
 
 		// if there is a block behind the character that can be pulled
 		if((box = Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y + gridSize / 2), 1 << 8, 0.1f, 1.9f)) != null && !hanging) {
-			if(!box.transform.gameObject.GetComponent<BlockController>().GetUnMovable()) {
+			Collider2D boxDown = Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y - gridSize), 1 << 8, -0.1f, 0.9f);
+			if(!box.transform.gameObject.GetComponent<BlockController>().GetUnMovable() && 
+			   			boxDown.transform.gameObject.GetComponent<BlockController>().GetHangable()) {
 				box.transform.gameObject.GetComponent<BlockController>().Pull();
 				endPosition.y -= gridSize/2;
 				hanging = true;
