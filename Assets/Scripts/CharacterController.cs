@@ -34,11 +34,16 @@ public class CharacterController : MonoBehaviour {
 		if (!isMoving) {
 			input = Input.GetAxis("Horizontal");
 			inputV = Input.GetAxis("Vertical");
-			
+
+			if(Input.GetKey("o")) {
+				transform.rotation = Quaternion.Euler(0, 180, 0);
+			} else if(Input.GetKey("p")) {
+				transform.rotation = Quaternion.Euler(0, 0, 0);
+			}
 			if (input != 0){
-				if(input >=0) {
+				if(input >=0 && !Input.GetKey("o") && !Input.GetKey("p")) {
 					transform.rotation = Quaternion.Euler(0, 0, 0);
-				} else {
+				} else if(input < 0 && !Input.GetKey("o") && !Input.GetKey("p")){
 					transform.rotation = Quaternion.Euler(0, 180, 0);
 				}
 				StartCoroutine(move(transform));
@@ -205,6 +210,7 @@ public class CharacterController : MonoBehaviour {
 			}
 
 			if(Input.GetKey("o") && leftCollider != null) {
+				transform.rotation = Quaternion.Euler(0, 180, 0);
 				if(!leftCollider.transform.gameObject.GetComponent<BlockController>().GetUnMovable()) {
 					leftCollider.transform.gameObject.GetComponent<BlockController>().Moving();
 					Vector3 boxStart = leftCollider.transform.position;
@@ -246,6 +252,7 @@ public class CharacterController : MonoBehaviour {
 					leftCollider.transform.gameObject.GetComponent<BlockController>().NotMoving();
 				}
 			} else if(Input.GetKey("p") && rightCollider != null) {
+				transform.rotation = Quaternion.Euler(0, 0, 0);
 				if(!rightCollider.transform.gameObject.GetComponent<BlockController>().GetUnMovable()) {
 					rightCollider.transform.gameObject.GetComponent<BlockController>().Moving();
 					Vector3 boxStart = rightCollider.transform.position;
