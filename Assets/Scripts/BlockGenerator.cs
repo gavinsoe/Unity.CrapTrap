@@ -38,7 +38,7 @@ public class BlockGenerator : MonoBehaviour {
 		} else {
 			// Create the blocks.
 			for (i = 1; i <= width; i++){
-				for (j = -3; j <= (height-3); j++){
+				for (j = -3; j < (height-3); j++){
 					transform.position = new Vector3(i,j,0);
 					var new_block = Instantiate (GenerateRandomBlock(), transform.position, transform.rotation) as GameObject;
 					new_block.transform.parent = this.transform.parent;
