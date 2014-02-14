@@ -36,6 +36,11 @@ public class CharacterController : MonoBehaviour {
 			inputV = Input.GetAxis("Vertical");
 			
 			if (input != 0){
+				if(input >=0) {
+					transform.rotation = Quaternion.Euler(0, 0, 0);
+				} else {
+					transform.rotation = Quaternion.Euler(0, 180, 0);
+				}
 				StartCoroutine(move(transform));
 			} else if(inputV != 0) {
 				StartCoroutine(hang(transform));
