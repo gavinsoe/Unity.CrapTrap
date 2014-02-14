@@ -53,7 +53,7 @@ public class CharacterController : MonoBehaviour {
 				StartCoroutine(pull(transform));
 			} else if(Input.GetKey("k")) {
 				StartCoroutine(push(transform));
-			} else if(Input.GetKey ("space")) {
+			} else if(Input.GetKey ("space") && !hanging) {
 				StartCoroutine(jump(transform));
 			}
 		}
