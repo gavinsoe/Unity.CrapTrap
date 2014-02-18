@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class CharacterController : MonoBehaviour {
-	
+	private int maxTouches = 2;	
 	private float moveSpeed = 3f;
 	private float gridSize = 1f;
 	private enum Orientation {
@@ -19,6 +19,8 @@ public class CharacterController : MonoBehaviour {
 	private bool vMove = false;
 	private bool hanging = false;
 	
+	private Vector2[] touchStartPosition;
+	
 	protected Animator animator;
 	
 	void Awake() {
@@ -26,12 +28,73 @@ public class CharacterController : MonoBehaviour {
 	
 	void Start(){
 		animator = GetComponentInChildren<Animator>();
+		touchStartPosition = new Vector2[maxTouches];
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+		/* Touch Controls */
+		// Only accept input if the character is currently not moving
 		if (!isMoving) {
+			foreach (Touch touch in Input.touches){
+				
+				// When a finger just touched the screen
+				if (touch.phase == TouchPhase.Began){
+					// Store data regarding where the touch started
+					touchStartPosition[touch.fingerId] = touch.position;					
+				}
+				
+				if (touch.phase == TouchPhase.Ended){
+					Vector2 startLocation = touchStartPosition[touch.fingerId];
+					Vector2 deltaPosition = touch.position - startLocation;
+					//Debug.Log("["+touch.fingerId+"] deltaPosition = "+deltaPosition.ToString());
+					
+					// If previously stored state == 'Began' it is a tap.
+					if ( Mathf.Abs(deltaPosition.x) < 25f ){
+						// check on which side of the screen the tap occured
+						if (startLocation.x < Screen.width/2){
+							Debug.Log("Move Left");
+							// If on the left side of the screen move character left
+							transform.rotation = Quaternion.Euler(0, 180, 0);
+							StartCoroutine(move(transform, -1, false, false));
+						} else {
+							Debug.Log("Move Right");
+							// If on the right side of the screen move character right
+							StartCoroutine(move(transform, 1, false, false));
+						}
+					} else {
+						// check where they dragged their finger
+						if ( deltaPosition.x > 0 ) {
+							// check the starting position (left or right of screen)
+							if (startLocation.x < Screen.width/2){
+								Debug.Log("Pull left");
+								// Rotate character to face left if starting position is on left side of screen
+								StartCoroutine(move(transform, 1, true, false));
+							} else {
+								Debug.Log("Push right");
+								// Rotate character to face right if starting position is on left side of screen
+								StartCoroutine(move(transform, 1, false, true));
+							}		
+						} else if ( deltaPosition.x < 0 ) {
+							// check the starting position (left or right of screen)
+							if (startLocation.x < Screen.width/2){
+								Debug.Log("Push left");
+								// Rotate character to face left if starting position is on left side of screen
+								StartCoroutine(move(transform, -1, true, false));
+							} else {
+								Debug.Log("Pull right");
+								// Rotate character to face right if starting position is on left side of screen
+								StartCoroutine(move(transform, -1, false, true));
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		
+		/* PC Controls */
+		/*if (!isMoving) {
 			input = Input.GetAxis("Horizontal");
 			inputV = Input.GetAxis("Vertical");
 
@@ -56,7 +119,7 @@ public class CharacterController : MonoBehaviour {
 			} else if(Input.GetKey ("space") && !hanging) {
 				StartCoroutine(jump(transform));
 			}
-		}
+		}*/
 	}
 
 	public IEnumerator jump(Transform transform) {
@@ -172,16 +235,16 @@ public class CharacterController : MonoBehaviour {
 		yield return 0;
 	}
 	
-	public IEnumerator move (Transform transform){
+	public IEnumerator move (Transform transform, int sign, bool grabLeft, bool grabRight){
 		isMoving = true;
 		bool stepUp = false;
 		// Set the running animation
-		animator.SetBool("Running", true);	
+		//animator.SetBool("Running", true);	
 		
 		startPosition = transform.position;
 		endPosition = startPosition;
 		t = 0;
-		var sign = System.Math.Sign(input);
+		//var sign = System.Math.Sign(input);
 		
 		Collider2D rightCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x + gridSize, startPosition.y), 1 << 8, -0.9f, 0.9f);
 		Collider2D rightUpCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x + gridSize, startPosition.y + gridSize), 1 << 8, -0.9f, 0.9f);
@@ -209,7 +272,7 @@ public class CharacterController : MonoBehaviour {
 				vMove = true;
 			}
 
-			if(Input.GetKey("o") && leftCollider != null) {
+			if(grabLeft && leftCollider != null) {
 				transform.rotation = Quaternion.Euler(0, 180, 0);
 				if(!leftCollider.transform.gameObject.GetComponent<BlockController>().GetUnMovable()) {
 					leftCollider.transform.gameObject.GetComponent<BlockController>().Moving();
@@ -251,7 +314,7 @@ public class CharacterController : MonoBehaviour {
 					}
 					leftCollider.transform.gameObject.GetComponent<BlockController>().NotMoving();
 				}
-			} else if(Input.GetKey("p") && rightCollider != null) {
+			} else if(grabRight && rightCollider != null) {
 				transform.rotation = Quaternion.Euler(0, 0, 0);
 				if(!rightCollider.transform.gameObject.GetComponent<BlockController>().GetUnMovable()) {
 					rightCollider.transform.gameObject.GetComponent<BlockController>().Moving();
@@ -351,7 +414,7 @@ public class CharacterController : MonoBehaviour {
 		hMove = false;
 		vMove = false;
 		stepUp = false;
-		animator.SetBool("Running", false);	
+		//animator.SetBool("Running", false);	
 		
 		yield return 0;
 	}
