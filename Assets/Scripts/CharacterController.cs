@@ -35,7 +35,7 @@ public class CharacterController : MonoBehaviour {
 	void Update () {
 		/* Touch Controls */
 		// Only accept input if the character is currently not moving
-		if (!isMoving) {
+		/*if (!isMoving) {
 			foreach (Touch touch in Input.touches){
 				
 				// When a finger just touched the screen
@@ -90,26 +90,36 @@ public class CharacterController : MonoBehaviour {
 					}
 				}
 			}
-		}
+		}*/
 		
 		
 		/* PC Controls */
-		/*if (!isMoving) {
+		if (!isMoving) {
 			input = Input.GetAxis("Horizontal");
 			inputV = Input.GetAxis("Vertical");
 
-			if(Input.GetKey("o")) {
+			/*if(Input.GetKey("o")) {
 				transform.rotation = Quaternion.Euler(0, 180, 0);
 			} else if(Input.GetKey("p")) {
 				transform.rotation = Quaternion.Euler(0, 0, 0);
-			}
+			}*/
 			if (input != 0){
+				if(Input.GetKey("o")) {
+					StartCoroutine(move(transform, System.Math.Sign(input), true, false));
+					//transform.rotation = Quaternion.Euler(0, 180, 0);
+				} else if(Input.GetKey("p")) {
+					StartCoroutine(move(transform, System.Math.Sign(input), false, true));
+					//transform.rotation = Quaternion.Euler(0, 0, 0);
+				} else {
+					StartCoroutine(move(transform, System.Math.Sign(input), false, false));
+				}
+			/*
 				if(input >=0 && !Input.GetKey("o") && !Input.GetKey("p")) {
 					transform.rotation = Quaternion.Euler(0, 0, 0);
 				} else if(input < 0 && !Input.GetKey("o") && !Input.GetKey("p")){
 					transform.rotation = Quaternion.Euler(0, 180, 0);
 				}
-				StartCoroutine(move(transform));
+				StartCoroutine(move(transform));*/
 			} else if(inputV != 0) {
 				StartCoroutine(hang(transform));
 			} else if(Input.GetKey("l")) {
@@ -119,7 +129,7 @@ public class CharacterController : MonoBehaviour {
 			} else if(Input.GetKey ("space") && !hanging) {
 				StartCoroutine(jump(transform));
 			}
-		}*/
+		}
 	}
 
 	public IEnumerator jump(Transform transform) {
@@ -244,7 +254,6 @@ public class CharacterController : MonoBehaviour {
 		startPosition = transform.position;
 		endPosition = startPosition;
 		t = 0;
-		//var sign = System.Math.Sign(input);
 		
 		Collider2D rightCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x + gridSize, startPosition.y), 1 << 8, -0.9f, 0.9f);
 		Collider2D rightUpCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x + gridSize, startPosition.y + gridSize), 1 << 8, -0.9f, 0.9f);
@@ -253,25 +262,34 @@ public class CharacterController : MonoBehaviour {
 		Collider2D leftUpCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize, startPosition.y + gridSize), 1 << 8, -0.9f, 0.9f);
 		//Collider2D leftDownCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize, startPosition.y - gridSize), 1 << 8, -0.9f, 0.9f);
 		Collider2D upCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y + gridSize), 1 << 8, -0.9f, 0.9f);
-
+	
+		
 		if(!hanging) {
-			if (((rightCollider != null && rightUpCollider == null && sign > 0) || (leftCollider != null && leftUpCollider == null && sign < 0)) && upCollider == null) {
-				endPosition = new Vector3(startPosition.x + sign * gridSize, startPosition.y + gridSize, startPosition.z);
-				stepUp = true;
-				hMove = true;
-			} else if((rightCollider == null && sign > 0) || (leftCollider == null && sign < 0)){
-				endPosition = new Vector3(startPosition.x + sign * gridSize, startPosition.y, startPosition.z);
-				hMove = true;
-			} else {
-				endPosition = startPosition;
+			// If character is not grabbing on to any blocks, proceed to move
+			if (!grabLeft && !grabRight){
+				// Make the character face the correct direction
+				if (sign > 0) transform.rotation = Quaternion.Euler(0, 0, 0);
+				else transform.rotation = Quaternion.Euler(0, 180, 0);
+				// Set destination depending on surrounding obstacles
+				if (((rightCollider != null && rightUpCollider == null && sign > 0) || (leftCollider != null && leftUpCollider == null && sign < 0)) && upCollider == null) {
+					endPosition = new Vector3(startPosition.x + sign * gridSize, startPosition.y + gridSize, startPosition.z);
+					stepUp = true;
+					hMove = true;
+				} else if((rightCollider == null && sign > 0) || (leftCollider == null && sign < 0)){
+					endPosition = new Vector3(startPosition.x + sign * gridSize, startPosition.y, startPosition.z);
+					hMove = true;
+				} else {
+					endPosition = startPosition;
+				}
+	
+				if(Physics2D.OverlapPoint (new Vector2 (startPosition.x + sign * gridSize, startPosition.y - gridSize * 2), 1 << 8, -0.9f, 0.9f) != null && startPosition != endPosition &&
+				   Physics2D.OverlapPoint(new Vector2(startPosition.x + sign * gridSize, startPosition.y - gridSize), 1 << 8, -0.9f, 0.9f) == null && stepUp == false) {
+					endPosition.y -= gridSize;
+					vMove = true;
+				}
 			}
-
-			if(Physics2D.OverlapPoint (new Vector2 (startPosition.x + sign * gridSize, startPosition.y - gridSize * 2), 1 << 8, -0.9f, 0.9f) != null && startPosition != endPosition &&
-			   Physics2D.OverlapPoint(new Vector2(startPosition.x + sign * gridSize, startPosition.y - gridSize), 1 << 8, -0.9f, 0.9f) == null && stepUp == false) {
-				endPosition.y -= gridSize;
-				vMove = true;
-			}
-
+			
+			// If player is grabbing on to left block
 			if(grabLeft && leftCollider != null) {
 				transform.rotation = Quaternion.Euler(0, 180, 0);
 				if(!leftCollider.transform.gameObject.GetComponent<BlockController>().GetUnMovable()) {
@@ -314,7 +332,7 @@ public class CharacterController : MonoBehaviour {
 					}
 					leftCollider.transform.gameObject.GetComponent<BlockController>().NotMoving();
 				}
-			} else if(grabRight && rightCollider != null) {
+			} else if(grabRight && rightCollider != null) { // If player is grabbing on to blocks on the right
 				transform.rotation = Quaternion.Euler(0, 0, 0);
 				if(!rightCollider.transform.gameObject.GetComponent<BlockController>().GetUnMovable()) {
 					rightCollider.transform.gameObject.GetComponent<BlockController>().Moving();
