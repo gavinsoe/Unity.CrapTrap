@@ -81,7 +81,7 @@ public class BlockController : MonoBehaviour {
 			endPosition.y -= gridSize;
 			while (t < 1f) {
 				
-				t += Time.deltaTime * (moveSpeed/gridSize);
+				t += Time.deltaTime * (5f/gridSize);
 				transform.position = Vector3.Lerp(startPosition, endPosition, t);
 				yield return null;
 			}
