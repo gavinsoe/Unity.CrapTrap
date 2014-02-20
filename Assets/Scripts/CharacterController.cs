@@ -3,7 +3,7 @@ using System.Collections;
 
 public class CharacterController : MonoBehaviour {
 	private int maxTouches = 2;	
-	private float moveSpeed = 3f;
+	public float moveSpeed;
 	private float gridSize = 1f;
 	private enum Orientation {
 		Horizontal,

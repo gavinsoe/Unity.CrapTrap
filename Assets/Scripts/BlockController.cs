@@ -10,6 +10,7 @@ public class BlockController : MonoBehaviour {
 	public bool sticky;      // Determines whether players will get slowed while in contact with the block.
 	public bool pulledOut;  // Determines whether the block is pulled out or not.
 	public bool slippery; // Determines whether the block is slippery.
+	public bool gate; // Determines whether the block is a gate block.
 	public bool isMoving = false;
 
 	// Components
@@ -25,16 +26,23 @@ public class BlockController : MonoBehaviour {
 		animator = GetComponent<Animator>();
 		boxCollider = GetComponent<BoxCollider2D>();
 		boxCollider.enabled = true;
+		if(gate) {
+			pulledOut = false;
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		// Check whether the block is pulled out or not and set accordingly.
 		if(!isMoving) {
-			if (pulledOut){
-				PullOut();
+			if(Physics2D.OverlapPoint (new Vector2 (transform.position.x, transform.position.y - 10f), 1 << LayerMask.NameToLayer("Character"), -0.1f, 0.9f) != null && gate) {
+				pulledOut = true;
 			} else {
-				PushIn();
+				if (pulledOut){
+					PullOut();
+				} else {
+					PushIn();
+				}
 			}
 
 			if(!unmovable) {
