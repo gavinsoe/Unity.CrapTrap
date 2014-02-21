@@ -128,6 +128,9 @@ public class CharacterController : MonoBehaviour {
 				StartCoroutine(push(transform));
 			} else if(Input.GetKey ("space") && !hanging) {
 				StartCoroutine(jump(transform));
+			} else if(Input.GetKey(KeyCode.Escape)) {
+				Time.timeScale = 0;
+				Camera.main.GetComponent<PauseGUI>().enabled = true;
 			}
 		}
 	}
