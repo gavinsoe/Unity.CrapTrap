@@ -11,14 +11,15 @@ public class BlockController : MonoBehaviour {
 	public bool pulledOut;  // Determines whether the block is pulled out or not.
 	public bool slippery; // Determines whether the block is slippery.
 	public bool gate; // Determines whether the block is a gate block.
-	public bool isMoving = false;
+	private bool isMoving = false;
+    private bool isActive = true;
 
 	// Components
 	protected Animator animator;
 	protected BoxCollider2D boxCollider;
 
 	// Falling speed
-	private float moveSpeed = 3f;
+	private float moveSpeed = 6f;
 	private float gridSize = 1f;
 	
 	// Use this for initialization
@@ -30,11 +31,19 @@ public class BlockController : MonoBehaviour {
 			pulledOut = false;
 		}
 	}
-	
+
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.gameObject.name == "Block Activator")
+        {
+            isActive = true;
+        }
+    }
+
 	// Update is called once per frame
 	void Update () {
 		// Check whether the block is pulled out or not and set accordingly.
-		if(!isMoving) {
+		if(!isMoving && isActive) {
 			if(Physics2D.OverlapPoint (new Vector2 (transform.position.x, transform.position.y - 10f), 1 << LayerMask.NameToLayer("Character"), -0.1f, 0.9f) != null && gate) {
 				pulledOut = true;
 			} else {
@@ -50,7 +59,9 @@ public class BlockController : MonoBehaviour {
 			}
 		}
 	}
-	
+
+    
+
 	// Actions to take when block is pulled out
 	public void PullOut(){
 		// Change the color of the block
@@ -88,14 +99,15 @@ public class BlockController : MonoBehaviour {
 			Vector3 endPosition = startPosition;
 			endPosition.y -= gridSize;
 			while (t < 1f) {
-				
-				t += Time.deltaTime * (5f/gridSize);
+
+                t += Time.deltaTime * (moveSpeed / gridSize);
 				transform.position = Vector3.Lerp(startPosition, endPosition, t);
 				yield return null;
 			}
 			startPosition = transform.position;
 		}
 		isMoving = false;
+        isActive = false;
 
 		yield return 0;
 	}

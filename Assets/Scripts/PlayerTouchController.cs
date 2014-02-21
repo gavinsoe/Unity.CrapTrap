@@ -42,8 +42,8 @@ public class PlayerTouchController : MonoBehaviour {
         // Detect Touch input
         foreach (Touch touch in Input.touches)
         {
-            if (Debug.isDebugBuild) Debug.Log("[" + touch.fingerId + "] NextCommand : " + nextCommand.ToString());
-            if (Debug.isDebugBuild) Debug.Log("[" + touch.fingerId + "] Phase : " + touch.phase.ToString() + " | Time : " + (Time.time - touchStartTime[touch.fingerId]));
+            //if (Debug.isDebugBuild) Debug.Log("[" + touch.fingerId + "] NextCommand : " + nextCommand.ToString());
+            //if (Debug.isDebugBuild) Debug.Log("[" + touch.fingerId + "] Phase : " + touch.phase.ToString() + " | Time : " + (Time.time - touchStartTime[touch.fingerId]));
             // When a finger touches the screen...
             if (touch.phase == TouchPhase.Began)
             {
@@ -60,7 +60,6 @@ public class PlayerTouchController : MonoBehaviour {
                 {
                     touchState[touch.fingerId] = InputState.TouchRight;
                 }
-
 
                 nextCommand = Commands.None;
 
@@ -258,7 +257,8 @@ public class PlayerTouchController : MonoBehaviour {
                 if (sign > 0) transform.rotation = Quaternion.Euler(0, 0, 0);
                 else transform.rotation = Quaternion.Euler(0, 180, 0);
                 // Set destination depending on surrounding obstacles
-                if (((rightCollider != null && rightUpCollider == null && sign > 0) || (leftCollider != null && leftUpCollider == null && sign < 0)) && upCollider == null)
+                if (((rightCollider != null && rightUpCollider == null && sign > 0) || 
+                     (leftCollider != null && leftUpCollider  == null && sign < 0)) && upCollider == null)
                 {
                     endPosition = new Vector3(startPosition.x + sign * gridSize, startPosition.y + gridSize, startPosition.z);
                     stepUp = true;
