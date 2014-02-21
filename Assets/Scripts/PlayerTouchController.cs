@@ -12,13 +12,15 @@ public class PlayerTouchController : MonoBehaviour {
 
     // Variables related to the touch controls
     private int maxTouches = 2;	// up to 5 (iOS only supports 5 apparently)
-    private float minDragDistance = 15f; // Swipe distance before touch is regarded as 'touch and drag'
+    private float minDragDistance = 25f; // Swipe distance before touch is regarded as 'touch and drag'
     private float minHoldTime = 0.15f; // Time before touch is regarded as 'touch and hold'
 
     enum InputState { TouchLeft, TouchRight, Left_DragLeft, Left_DragRight, Right_DragRight, Right_DragLeft, MovingRight, MovingLeft, Done };
+    enum Commands { None, MoveLeft, MoveRight, Left_DragLeft, Left_DragRight, Right_DragRight, Right_DragLeft, HangDown, ClimbUp };
     private InputState[] touchState;
     private Vector2[] touchStartPosition;
     private float[] touchStartTime;
+    private Commands nextCommand;
 
     // The component that handles the character animation.
     private Animator animator;
@@ -37,136 +39,189 @@ public class PlayerTouchController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        // Only take input whecn character is not moving.
-        if (!isMoving)
+        // Detect Touch input
+        foreach (Touch touch in Input.touches)
         {
-            // Detect Touch input
-            foreach (Touch touch in Input.touches)
-            { 
-                if (Debug.isDebugBuild) Debug.Log("[" + touch.fingerId + "] Phase : " + touch.phase.ToString() + " | Time : " + (Time.time - touchStartTime[touch.fingerId]));
-                // When a finger touches the screen...
-                if (touch.phase == TouchPhase.Began)
+            if (Debug.isDebugBuild) Debug.Log("[" + touch.fingerId + "] NextCommand : " + nextCommand.ToString());
+            if (Debug.isDebugBuild) Debug.Log("[" + touch.fingerId + "] Phase : " + touch.phase.ToString() + " | Time : " + (Time.time - touchStartTime[touch.fingerId]));
+            // When a finger touches the screen...
+            if (touch.phase == TouchPhase.Began)
+            {
+                if (Debug.isDebugBuild) Debug.Log("[" + touch.fingerId + "] Touch detected at : " + touch.position.ToString());
+
+                // Store data on where the user touched the screen, and the time of when it is pressed
+                touchStartPosition[touch.fingerId] = touch.position;
+                touchStartTime[touch.fingerId] = Time.time;
+
+                if (touch.position.x < Screen.width / 2)
                 {
-                    if (Debug.isDebugBuild) Debug.Log("[" + touch.fingerId + "] Touch detected at : " + touch.position.ToString());
-
-                    // Store data on where the user touched the screen, and the time of when it is pressed
-                    touchStartPosition[touch.fingerId] = touch.position;
-                    touchStartTime[touch.fingerId] = Time.time;
-
-                    if (touch.position.x < Screen.width / 2)
-                    {
-                        touchState[touch.fingerId] = InputState.TouchLeft;
-                    } else if (touch.position.x > Screen.width / 2)
-                    {
-                        touchState[touch.fingerId] = InputState.TouchRight;
-                    }
-                   
-                    /*
-                    // Get blocks on left and right of character (if any)
-                    Collider2D rightCollider = Physics2D.OverlapPoint(new Vector2(transform.position.x + gridSize, transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
-                    Collider2D leftCollider = Physics2D.OverlapPoint(new Vector2(transform.position.x - gridSize, transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
-
-                    // Cast a ray from the touch point to the world, and check if it collides with any boxes
-                    var ray = Camera.main.ScreenPointToRay(touch.position);
-                    RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
-                    if (hit)
-                    {
-                        if (hit.collider == rightCollider)
-                        {
-                            touchState[touch.fingerId] = InputState.DragRight;
-                        }
-                        else if (hit.collider == leftCollider)
-                        {
-                            touchState[touch.fingerId] = InputState.DragLeft;
-                        }
-                    }*/
+                    touchState[touch.fingerId] = InputState.TouchLeft;
+                } else if (touch.position.x > Screen.width / 2)
+                {
+                    touchState[touch.fingerId] = InputState.TouchRight;
                 }
 
-                if (touch.phase == TouchPhase.Moved)
+
+                nextCommand = Commands.None;
+
+                /*
+                // Get blocks on left and right of character (if any)
+                Collider2D rightCollider = Physics2D.OverlapPoint(new Vector2(transform.position.x + gridSize, transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
+                Collider2D leftCollider = Physics2D.OverlapPoint(new Vector2(transform.position.x - gridSize, transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
+
+                // Cast a ray from the touch point to the world, and check if it collides with any boxes
+                var ray = Camera.main.ScreenPointToRay(touch.position);
+                RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
+                if (hit)
+                {
+                    if (hit.collider == rightCollider)
+                    {
+                        touchState[touch.fingerId] = InputState.DragRight;
+                    }
+                    else if (hit.collider == leftCollider)
+                    {
+                        touchState[touch.fingerId] = InputState.DragLeft;
+                    }
+                }*/
+            }
+
+            if (touch.phase == TouchPhase.Moved)
+            {
+                var deltaPosition = touch.position - touchStartPosition[touch.fingerId];
+
+                if (Mathf.Abs(deltaPosition.x) > Mathf.Abs(deltaPosition.y))
                 {
                     if (touchState[touch.fingerId] == InputState.TouchLeft)
                     {
-                        var deltaPosition = touch.position - touchStartPosition[touch.fingerId];
                         if (deltaPosition.x > minDragDistance)
                         {
-                            StartCoroutine(move(transform, 1, true, false));
-                            touchState[touch.fingerId] = InputState.Left_DragRight;
+                            nextCommand = Commands.Left_DragRight;
                         }
                         else if (deltaPosition.x < -minDragDistance)
                         {
-                            StartCoroutine(move(transform, -1, true, false));
-                            touchState[touch.fingerId] = InputState.Left_DragLeft;
+                            nextCommand = Commands.Left_DragLeft;
                         }
                     }
                     else if (touchState[touch.fingerId] == InputState.TouchRight)
                     {
-                        var deltaPosition = touch.position - touchStartPosition[touch.fingerId];
                         if (deltaPosition.x > minDragDistance)
                         {
-                            StartCoroutine(move(transform, 1, false, true));
-                            touchState[touch.fingerId] = InputState.Right_DragRight;
+                            nextCommand = Commands.Right_DragRight;
                         }
                         else if (deltaPosition.x < -minDragDistance)
                         {
-                            StartCoroutine(move(transform, -1, false, true));
-                            touchState[touch.fingerId] = InputState.Right_DragLeft;
+                            nextCommand = Commands.Right_DragLeft;
                         }
                     }
                 }
-                
-                if (touch.phase == TouchPhase.Stationary)
+                else
                 {
-                    // check how long user has been touching the screen
-                    if (Time.time - touchStartTime[touch.fingerId] > minHoldTime)
+                    if (deltaPosition.y > minDragDistance)
                     {
-                        // check on which side of the screen the tap occured
-                        if (touchState[touch.fingerId] == InputState.TouchLeft ||
-                            touchState[touch.fingerId] == InputState.MovingLeft)
-                        {
-                            StartCoroutine(move(transform, -1, false, false));
-                            touchState[touch.fingerId] = InputState.MovingLeft;
-                        }
-                        else if (touchState[touch.fingerId] == InputState.TouchRight ||
-                                 touchState[touch.fingerId] == InputState.MovingRight)
-                        {
-                            StartCoroutine(move(transform, 1, false, false));
-                            touchState[touch.fingerId] = InputState.MovingRight;
-                        }
-                        else if (touchState[touch.fingerId] == InputState.Left_DragRight)
-                        {
-                            StartCoroutine(move(transform, 1, true, false));
-                        }
-                        else if (touchState[touch.fingerId] == InputState.Left_DragLeft)
-                        {
-                            StartCoroutine(move(transform, -1, true, false));
-                        }
-                        else if (touchState[touch.fingerId] == InputState.Right_DragRight)
-                        {
-                            StartCoroutine(move(transform, 1, false, true));
-                        }
-                        else if (touchState[touch.fingerId] == InputState.Right_DragLeft)
-                        {
-                            StartCoroutine(move(transform, -1, false, true));
-                        }
+                        nextCommand = Commands.ClimbUp;
+                    }
+                    else if (deltaPosition.y < -minDragDistance)
+                    {
+                        nextCommand = Commands.HangDown;
                     }
                 }
+            }
                 
-                if (touch.phase == TouchPhase.Ended)
+            if (touch.phase == TouchPhase.Stationary)
+            {
+                // check how long user has been touching the screen
+                if (Time.time - touchStartTime[touch.fingerId] > minHoldTime)
                 {
                     // check on which side of the screen the tap occured
                     if (touchState[touch.fingerId] == InputState.TouchLeft ||
                         touchState[touch.fingerId] == InputState.MovingLeft)
                     {
-                        StartCoroutine(move(transform, -1, false, false));
-                        touchState[touch.fingerId] = InputState.Done;
+                        nextCommand = Commands.MoveLeft;
                     }
                     else if (touchState[touch.fingerId] == InputState.TouchRight ||
                              touchState[touch.fingerId] == InputState.MovingRight)
                     {
-                        StartCoroutine(move(transform, 1, false, false));
-                        touchState[touch.fingerId] = InputState.Done;
+                        nextCommand = Commands.MoveRight;
+                    }
+                    else if (touchState[touch.fingerId] == InputState.Left_DragRight)
+                    {
+                        nextCommand = Commands.Left_DragRight;
+                    }
+                    else if (touchState[touch.fingerId] == InputState.Left_DragLeft)
+                    {
+                        nextCommand = Commands.Left_DragLeft;
+                    }
+                    else if (touchState[touch.fingerId] == InputState.Right_DragRight)
+                    {
+                        nextCommand = Commands.Right_DragRight;
+                    }
+                    else if (touchState[touch.fingerId] == InputState.Right_DragLeft)
+                    {
+                        nextCommand = Commands.Right_DragLeft;
                     }
                 }
+            }
+                
+            if (touch.phase == TouchPhase.Ended)
+            {
+                // check on which side of the screen the tap occured
+                if (touchState[touch.fingerId] == InputState.TouchLeft ||
+                    touchState[touch.fingerId] == InputState.MovingLeft)
+                {
+                    nextCommand = Commands.MoveLeft;
+                }
+                else if (touchState[touch.fingerId] == InputState.TouchRight ||
+                            touchState[touch.fingerId] == InputState.MovingRight)
+                {
+                    nextCommand = Commands.MoveRight;
+                }
+            }
+
+            // Check for any queued commands and execute when possible
+            if (nextCommand != Commands.None && !isMoving)
+            {
+                if (nextCommand == Commands.MoveRight)
+                {
+                    StartCoroutine(move(transform, 1, false, false));
+                    touchState[touch.fingerId] = InputState.MovingRight;
+                }
+                else if (nextCommand == Commands.MoveLeft)
+                {
+                    StartCoroutine(move(transform, -1, false, false));
+                    touchState[touch.fingerId] = InputState.MovingLeft;
+                }
+                else if (nextCommand == Commands.ClimbUp)
+                {
+                    StartCoroutine(hang(transform, 1));
+                    touchState[touch.fingerId] = InputState.Done;
+                }
+                else if (nextCommand == Commands.HangDown)
+                {
+                    StartCoroutine(hang(transform, -1));
+                    touchState[touch.fingerId] = InputState.Done;
+                }
+                else if (nextCommand == Commands.Left_DragLeft)
+                {
+                    StartCoroutine(move(transform, -1, true, false));
+                    touchState[touch.fingerId] = InputState.Left_DragLeft;
+                }
+                else if (nextCommand == Commands.Left_DragRight)
+                {
+                    StartCoroutine(move(transform, 1, true, false));
+                    touchState[touch.fingerId] = InputState.Left_DragRight;
+                }
+                else if (nextCommand == Commands.Right_DragLeft)
+                {
+                    StartCoroutine(move(transform, -1, false, true));
+                    touchState[touch.fingerId] = InputState.Right_DragLeft;
+                }
+                else if (nextCommand == Commands.Right_DragRight)
+                {
+                    StartCoroutine(move(transform, 1, false, true));
+                    touchState[touch.fingerId] = InputState.Right_DragRight;
+                }
+
+                nextCommand = Commands.None;
             }
         }
 	}
@@ -419,6 +474,39 @@ public class PlayerTouchController : MonoBehaviour {
         stepUp = false;
         //animator.SetBool("Running", false);	
 
+        yield return 0;
+    }
+
+    // hang will be called then the down button is pressed
+    public IEnumerator hang(Transform transform, int sign)
+    {
+        isMoving = true;
+        
+        Vector3 startPosition = transform.position;
+        Vector3 endPosition = startPosition;
+        float t = 0;
+
+        Collider2D box = Physics2D.OverlapPoint(new Vector2(startPosition.x, startPosition.y - gridSize), 1 << 8, -0.1f, 0.9f);
+
+        // if the character is not hanging and the down button is pushed: go to hanging on the block below
+        if (!isHanging && sign < 0 && box.transform.gameObject.GetComponent<BlockController>().GetHangable())
+        {
+            endPosition.y -= gridSize / 2;
+            isHanging = true;
+            // if the character is hanging and the up button is pushed: climb up if there are no blocks in the way
+        }
+        else if (isHanging && sign > 0 && Physics2D.OverlapPoint(new Vector2(startPosition.x, startPosition.y + gridSize), 1 << 8, -0.9f, 0.9f) == null)
+        {
+            endPosition.y += gridSize / 2;
+            isHanging = false;
+        }
+        while (t < 1f)
+        {
+            t += Time.deltaTime * (moveSpeed / gridSize);
+            transform.position = Vector3.Lerp(startPosition, endPosition, t);
+            yield return null;
+        }
+        isMoving = false;
         yield return 0;
     }
 }
