@@ -15,8 +15,8 @@ public class PlayerTouchController : MonoBehaviour {
     private float minDragDistance = 25f; // Swipe distance before touch is regarded as 'touch and drag'
     private float minHoldTime = 0.15f; // Time before touch is regarded as 'touch and hold'
 
-    enum InputState { TouchLeft, TouchRight, Left_DragLeft, Left_DragRight, Right_DragRight, Right_DragLeft, MovingRight, MovingLeft, Done };
-    enum Commands { None, MoveLeft, MoveRight, Left_DragLeft, Left_DragRight, Right_DragRight, Right_DragLeft, HangDown, ClimbUp };
+    enum InputState { TouchLeft, TouchRight, Left_DragLeft, Left_DragRight, Right_DragRight, Right_DragLeft, SwipeDown, MovingRight, MovingLeft, Done };
+    enum Commands { None, MoveLeft, MoveRight, Left_DragLeft, Left_DragRight, Right_DragRight, Right_DragLeft, HangDown, ClimbUp, PullOut };
     private InputState[] touchState;
     private Vector2[] touchStartPosition;
     private float[] touchStartTime;
@@ -39,7 +39,7 @@ public class PlayerTouchController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        // Detect Touch input
+            // Detect Touch input
         foreach (Touch touch in Input.touches)
         {
             //if (Debug.isDebugBuild) Debug.Log("[" + touch.fingerId + "] NextCommand : " + nextCommand.ToString());
@@ -47,7 +47,7 @@ public class PlayerTouchController : MonoBehaviour {
             // When a finger touches the screen...
             if (touch.phase == TouchPhase.Began)
             {
-                if (Debug.isDebugBuild) Debug.Log("[" + touch.fingerId + "] Touch detected at : " + touch.position.ToString());
+                //if (Debug.isDebugBuild) Debug.Log("[" + touch.fingerId + "] Touch detected at : " + touch.position.ToString());
 
                 // Store data on where the user touched the screen, and the time of when it is pressed
                 touchStartPosition[touch.fingerId] = touch.position;
@@ -56,7 +56,8 @@ public class PlayerTouchController : MonoBehaviour {
                 if (touch.position.x < Screen.width / 2)
                 {
                     touchState[touch.fingerId] = InputState.TouchLeft;
-                } else if (touch.position.x > Screen.width / 2)
+                }
+                else if (touch.position.x > Screen.width / 2)
                 {
                     touchState[touch.fingerId] = InputState.TouchRight;
                 }
@@ -121,11 +122,18 @@ public class PlayerTouchController : MonoBehaviour {
                     }
                     else if (deltaPosition.y < -minDragDistance)
                     {
-                        nextCommand = Commands.HangDown;
+                        if (Input.touches.Length == 1)
+                        {
+                            nextCommand = Commands.HangDown;
+                        }
+                        else
+                        {
+                            nextCommand = Commands.PullOut;
+                        }
                     }
                 }
             }
-                
+
             if (touch.phase == TouchPhase.Stationary)
             {
                 // check how long user has been touching the screen
@@ -160,7 +168,7 @@ public class PlayerTouchController : MonoBehaviour {
                     }
                 }
             }
-                
+
             if (touch.phase == TouchPhase.Ended)
             {
                 // check on which side of the screen the tap occured
@@ -218,6 +226,11 @@ public class PlayerTouchController : MonoBehaviour {
                 {
                     StartCoroutine(move(transform, 1, false, true));
                     touchState[touch.fingerId] = InputState.Right_DragRight;
+                }
+                else if (nextCommand == Commands.PullOut)
+                {
+                    StartCoroutine(pull(transform));
+                    touchState[touch.fingerId] = InputState.Done;
                 }
 
                 nextCommand = Commands.None;
@@ -477,6 +490,41 @@ public class PlayerTouchController : MonoBehaviour {
         yield return 0;
     }
 
+    // pull out a block
+    public IEnumerator pull(Transform transform)
+    {
+        isMoving = true;
+
+        Collider2D box;
+        Vector3 startPosition = transform.position;
+        Vector3 endPosition = startPosition;
+        float t = 0;
+ 
+        // Check for boxes behind the character that can be pulled out.
+        if ((box = Physics2D.OverlapPoint(new Vector2(startPosition.x, startPosition.y + gridSize / 2), 1 << LayerMask.NameToLayer("Terrain"), 0.1f, 1.9f)) != null && !isHanging)
+        {
+            Collider2D boxDown = Physics2D.OverlapPoint(new Vector2(startPosition.x, startPosition.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.1f, 0.9f);
+            if (!box.transform.gameObject.GetComponent<BlockController>().GetUnMovable() &&
+                        boxDown.transform.gameObject.GetComponent<BlockController>().GetHangable())
+            {
+                box.transform.gameObject.GetComponent<BlockController>().Pull();
+                endPosition.y -= gridSize / 2;
+                isHanging = true;
+
+                // move to hanging on the block below
+                while (t < 1f)
+                {
+                    t += Time.deltaTime * (moveSpeed / gridSize);
+                    transform.position = Vector3.Lerp(startPosition, endPosition, t);
+                    yield return null;
+                }
+            }
+        }
+
+        isMoving = false;
+        yield return 0;
+    }
+
     // hang will be called then the down button is pressed
     public IEnumerator hang(Transform transform, int sign)
     {
@@ -486,7 +534,7 @@ public class PlayerTouchController : MonoBehaviour {
         Vector3 endPosition = startPosition;
         float t = 0;
 
-        Collider2D box = Physics2D.OverlapPoint(new Vector2(startPosition.x, startPosition.y - gridSize), 1 << 8, -0.1f, 0.9f);
+        Collider2D box = Physics2D.OverlapPoint(new Vector2(startPosition.x, startPosition.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.1f, 0.9f);
 
         // if the character is not hanging and the down button is pushed: go to hanging on the block below
         if (!isHanging && sign < 0 && box.transform.gameObject.GetComponent<BlockController>().GetHangable())
@@ -495,7 +543,7 @@ public class PlayerTouchController : MonoBehaviour {
             isHanging = true;
             // if the character is hanging and the up button is pushed: climb up if there are no blocks in the way
         }
-        else if (isHanging && sign > 0 && Physics2D.OverlapPoint(new Vector2(startPosition.x, startPosition.y + gridSize), 1 << 8, -0.9f, 0.9f) == null)
+        else if (isHanging && sign > 0 && Physics2D.OverlapPoint(new Vector2(startPosition.x, startPosition.y + gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null)
         {
             endPosition.y += gridSize / 2;
             isHanging = false;
