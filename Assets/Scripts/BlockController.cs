@@ -44,7 +44,7 @@ public class BlockController : MonoBehaviour {
 	void Update () {
 		// Check whether the block is pulled out or not and set accordingly.
 		if(!isMoving && isActive) {
-			if(Physics2D.OverlapPoint (new Vector2 (transform.position.x, transform.position.y - 10f), 1 << LayerMask.NameToLayer("Character"), -0.1f, 0.9f) != null && gate) {
+			if(Physics2D.OverlapPoint (new Vector2 (transform.position.x, transform.position.y), 1 << LayerMask.NameToLayer("Character"), 9.5f, 10.5f) != null && gate) {
 				pulledOut = true;
 			} else {
 				if (pulledOut){
