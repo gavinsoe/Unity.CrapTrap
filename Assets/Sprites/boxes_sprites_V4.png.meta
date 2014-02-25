@@ -1,0 +1,121 @@
+fileFormatVersion: 2
+guid: 0eaef5366e365254bbb9b34d5b2c782a
+TextureImporter:
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 1024
+  textureSettings:
+    filterMode: -1
+    aniso: 1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spritePixelsToUnits: 400
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings:
+  - buildTarget: iPhone
+    maxTextureSize: 1024
+    textureFormat: -2
+    compressionQuality: 50
+  spriteSheet:
+    sprites:
+    - name: normal_box_V4_1
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 608
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: normal_box_V4_2
+      rect:
+        serializedVersion: 2
+        x: 596
+        y: 610
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: normal_box_V4_3
+      rect:
+        serializedVersion: 2
+        x: 1091
+        y: 608
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: unhangable_box_V4_1
+      rect:
+        serializedVersion: 2
+        x: 1590
+        y: 608
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: crumbling_box_V4_1
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 111
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: ice_box_V4_1
+      rect:
+        serializedVersion: 2
+        x: 596
+        y: 111
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: fire_box_V4_1
+      rect:
+        serializedVersion: 2
+        x: 1091
+        y: 111
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: explosive_box_V4_1
+      rect:
+        serializedVersion: 2
+        x: 1590
+        y: 111
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: .5, y: .5}
+  spritePackingTag: 
+  userData: 
