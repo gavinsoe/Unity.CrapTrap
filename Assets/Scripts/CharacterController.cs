@@ -141,8 +141,8 @@ public class CharacterController : MonoBehaviour {
 		Collider2D box;
 		startPosition = transform.position;
 		endPosition = startPosition;
-		if((box = Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y + gridSize), 1 << 8, -0.1f, 0.9f)) != null) {
-			if(box.transform.gameObject.GetComponent<BlockController>().GetHangable()) {
+		if((box = Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y + gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.1f, 0.9f)) != null) {
+			if(box.transform.gameObject.GetComponent<BlockController>().Hangable()) {
 				endPosition.y += gridSize * 1.5f;
 				while(t < 1f) {
 					t += Time.deltaTime * (moveSpeed/gridSize);
@@ -165,8 +165,8 @@ public class CharacterController : MonoBehaviour {
 		endPosition = startPosition;
 		
 		// if there is a block behind the character that can be pulled
-		if((box = Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y + gridSize), 1 << 8, -0.1f, 0.9f)) != null && !hanging) {
-			if(!box.transform.gameObject.GetComponent<BlockController>().GetUnMovable()) {
+		if((box = Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y + gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.1f, 0.9f)) != null && !hanging) {
+			if(box.transform.gameObject.GetComponent<BlockController>().Movable()) {
 				endPosition.y += gridSize/2;
 				while(t < 1f) {
 					t += Time.deltaTime * (moveSpeed/gridSize);
@@ -200,10 +200,10 @@ public class CharacterController : MonoBehaviour {
 		endPosition = startPosition;
 
 		// if there is a block behind the character that can be pulled
-		if((box = Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y + gridSize / 2), 1 << 8, 0.1f, 1.9f)) != null && !hanging) {
-			Collider2D boxDown = Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y - gridSize), 1 << 8, -0.1f, 0.9f);
-			if(!box.transform.gameObject.GetComponent<BlockController>().GetUnMovable() && 
-			   			boxDown.transform.gameObject.GetComponent<BlockController>().GetHangable()) {
+		if((box = Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y + gridSize / 2), 1 << LayerMask.NameToLayer("Terrain"), 0.1f, 1.9f)) != null && !hanging) {
+			Collider2D boxDown = Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.1f, 0.9f);
+			if(box.transform.gameObject.GetComponent<BlockController>().Movable() && 
+			   			boxDown.transform.gameObject.GetComponent<BlockController>().Hangable()) {
 				box.transform.gameObject.GetComponent<BlockController>().Pull();
 				endPosition.y -= gridSize/2;
 				hanging = true;
@@ -228,14 +228,14 @@ public class CharacterController : MonoBehaviour {
 		startPosition = transform.position;
 		endPosition = startPosition;
 
-		Collider2D box = Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y - gridSize), 1 << 8, -0.1f, 0.9f);
+		Collider2D box = Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.1f, 0.9f);
 
 		// if the character is not hanging and the down button is pushed: go to hanging on the block below
-		if(!hanging && sign < 0 && box.transform.gameObject.GetComponent<BlockController>().GetHangable()) {
+		if(!hanging && sign < 0 && box.transform.gameObject.GetComponent<BlockController>().Hangable()) {
 			endPosition.y -= gridSize/2;
 			hanging = true;
 		// if the character is hanging and the up button is pushed: climb up if there are no blcoks in the way
-		} else if(hanging && sign > 0 && Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y + gridSize), 1 << 8, -0.9f, 0.9f) == null) {
+		} else if(hanging && sign > 0 && Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y + gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null) {
 			endPosition.y += gridSize/2;
 			hanging = false;
 		}
@@ -258,13 +258,13 @@ public class CharacterController : MonoBehaviour {
 		endPosition = startPosition;
 		t = 0;
 		
-		Collider2D rightCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x + gridSize, startPosition.y), 1 << 8, -0.9f, 0.9f);
-		Collider2D rightUpCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x + gridSize, startPosition.y + gridSize), 1 << 8, -0.9f, 0.9f);
+		Collider2D rightCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x + gridSize, startPosition.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
+		Collider2D rightUpCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x + gridSize, startPosition.y + gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
 		//Collider2D rightDownCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x + gridSize, startPosition.y - gridSize), 1 << 8, -0.9f, 0.9f);
-		Collider2D leftCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize, startPosition.y), 1 << 8, -0.9f, 0.9f);
-		Collider2D leftUpCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize, startPosition.y + gridSize), 1 << 8, -0.9f, 0.9f);
+        Collider2D leftCollider = Physics2D.OverlapPoint(new Vector2(startPosition.x - gridSize, startPosition.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
+		Collider2D leftUpCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize, startPosition.y + gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
 		//Collider2D leftDownCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize, startPosition.y - gridSize), 1 << 8, -0.9f, 0.9f);
-		Collider2D upCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y + gridSize), 1 << 8, -0.9f, 0.9f);
+		Collider2D upCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y + gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
 	
 		
 		if(!hanging) {
@@ -285,8 +285,8 @@ public class CharacterController : MonoBehaviour {
 					endPosition = startPosition;
 				}
 	
-				if(Physics2D.OverlapPoint (new Vector2 (startPosition.x + sign * gridSize, startPosition.y - gridSize * 2), 1 << 8, -0.9f, 0.9f) != null && startPosition != endPosition &&
-				   Physics2D.OverlapPoint(new Vector2(startPosition.x + sign * gridSize, startPosition.y - gridSize), 1 << 8, -0.9f, 0.9f) == null && stepUp == false) {
+				if(Physics2D.OverlapPoint (new Vector2 (startPosition.x + sign * gridSize, startPosition.y - gridSize * 2), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) != null && startPosition != endPosition &&
+				   Physics2D.OverlapPoint(new Vector2(startPosition.x + sign * gridSize, startPosition.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null && stepUp == false) {
 					endPosition.y -= gridSize;
 					vMove = true;
 				}
@@ -295,7 +295,7 @@ public class CharacterController : MonoBehaviour {
 			// If player is grabbing on to left block
 			if(grabLeft && leftCollider != null) {
 				transform.rotation = Quaternion.Euler(0, 180, 0);
-				if(!leftCollider.transform.gameObject.GetComponent<BlockController>().GetUnMovable()) {
+				if(leftCollider.transform.gameObject.GetComponent<BlockController>().Movable()) {
 					leftCollider.transform.gameObject.GetComponent<BlockController>().Moving();
 					Vector3 boxStart = leftCollider.transform.position;
 					Vector3 boxEnd = boxStart;
@@ -311,7 +311,7 @@ public class CharacterController : MonoBehaviour {
 						}
 
 					} else {
-						if(Physics2D.OverlapPoint(new Vector2(boxStart.x - gridSize, boxStart.y), 1 << 8, -0.9f, 0.9f) == null) {
+						if(Physics2D.OverlapPoint(new Vector2(boxStart.x - gridSize, boxStart.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null) {
 							boxEnd.x -= gridSize;
 							if(stepUp) {
 								endPosition.y -= gridSize;
@@ -337,12 +337,12 @@ public class CharacterController : MonoBehaviour {
 				}
 			} else if(grabRight && rightCollider != null) { // If player is grabbing on to blocks on the right
 				transform.rotation = Quaternion.Euler(0, 0, 0);
-				if(!rightCollider.transform.gameObject.GetComponent<BlockController>().GetUnMovable()) {
+				if(rightCollider.transform.gameObject.GetComponent<BlockController>().Movable()) {
 					rightCollider.transform.gameObject.GetComponent<BlockController>().Moving();
 					Vector3 boxStart = rightCollider.transform.position;
 					Vector3 boxEnd = boxStart;
 					if(sign > 0) {
-						if(Physics2D.OverlapPoint(new Vector2(boxStart.x + gridSize, boxStart.y), 1 << 8, -0.9f, 0.9f) == null) {
+						if(Physics2D.OverlapPoint(new Vector2(boxStart.x + gridSize, boxStart.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null) {
 							boxEnd.x += gridSize;
 							if(stepUp) {
 								endPosition.y -= gridSize;
@@ -383,8 +383,8 @@ public class CharacterController : MonoBehaviour {
 				}
 			}
 		} else {
-			if((rightCollider != null && sign > 0 && rightCollider.transform.gameObject.GetComponent<BlockController>().GetHangable()) || 
-			   (leftCollider != null && sign < 0 && leftCollider.transform.gameObject.GetComponent<BlockController>().GetHangable())) {
+			if((rightCollider != null && sign > 0 && rightCollider.transform.gameObject.GetComponent<BlockController>().Hangable()) || 
+			   (leftCollider != null && sign < 0 && leftCollider.transform.gameObject.GetComponent<BlockController>().Hangable())) {
 				endPosition.x = endPosition.x + sign * gridSize;
 			} else if((rightCollider == null && sign > 0) || (leftCollider == null && sign < 0)) {
 				endPosition.x = endPosition.x + sign * gridSize;
@@ -401,9 +401,9 @@ public class CharacterController : MonoBehaviour {
 
 		startPosition = transform.position;
 		Collider2D downCollider;
-		while((downCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y - gridSize), 1 << 8, -0.9f, 0.9f)) != null && 
-		      		downCollider.transform.gameObject.GetComponent<BlockController>().GetSlippery() &&
-		      		Physics2D.OverlapPoint(new Vector2(startPosition.x + gridSize * sign, startPosition.y), 1 << 8, -0.9f, 0.9f) == null && 
+		while((downCollider = Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f)) != null && 
+		      		downCollider.transform.gameObject.GetComponent<BlockController>().Slippery() &&
+		      		Physics2D.OverlapPoint(new Vector2(startPosition.x + gridSize * sign, startPosition.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null && 
 		      		!hanging) {
 			Debug.Log("Slide");
 			endPosition = startPosition;
@@ -418,7 +418,7 @@ public class CharacterController : MonoBehaviour {
 			startPosition = transform.position;
 		}
 
-		while(Physics2D.OverlapPoint (new Vector2 (transform.position.x, transform.position.y - gridSize), 1 << 8, -0.9f, 0.9f) == null && !hanging) {
+		while(Physics2D.OverlapPoint (new Vector2 (transform.position.x, transform.position.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null && !hanging) {
 			t = 0;
 			startPosition = transform.position;
 			endPosition = transform.position;

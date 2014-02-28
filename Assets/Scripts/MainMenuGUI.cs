@@ -5,6 +5,7 @@ public class MainMenuGUI : MonoBehaviour {
 
 	private int menuNum;
 	Rect r;
+    public GUISkin customSkin;
 
 	// Use this for initialization
 	void Start () {
@@ -17,12 +18,13 @@ public class MainMenuGUI : MonoBehaviour {
 	}
 
 	void OnGUI() {
+        GUI.skin = customSkin;
 
 		// Calculate the menu rect
 		r = new Rect (Screen.width * (1f - 0.3f) / 2,
 		                  Screen.height * (1f - 0.3f) / 2,
 		                  Screen.width * 0.3f,
-		                  Screen.height * 0.3f);
+		                  Screen.height * 1f);
 
 		// Make a background box
 		//GUI.Box (new Rect (20, 20, 100, 90), "Main Menu");

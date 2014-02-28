@@ -3,20 +3,36 @@ using System.Collections;
 
 public class BlockController : MonoBehaviour {
 
-	// Block states
-	public bool unmovable;   // Determines whether the block is unmovable
-	public bool hangable;    // Determines whether players can hang on to the block
-	public bool crumbling;   // Determines whether the block will dissapear once stepped on.
-	public bool sticky;      // Determines whether players will get slowed while in contact with the block.
-	public bool pulledOut;  // Determines whether the block is pulled out or not.
-	public bool slippery; // Determines whether the block is slippery.
-	public bool gate; // Determines whether the block is a gate block.
-	private bool isMoving = false;
-    private bool isActive = true;
+    // Sprites for transforming blocks
+    public Sprite blockAfterExplosion;
+
+
+    // Block types
+    public enum BlockType
+    {
+        Normal,
+        Unmovable,
+        Unhangable,
+        Ice,
+        Fire,
+        Spiky,
+        Crumbling,
+        Explosive,
+        Sticky,
+        Switch,
+        Invinsible,
+        Gate
+    }
+    public BlockType blockType;
+
+    // Block states
+    public bool pulledOut = true;  // Determines whether the block is pulled out or not.
+    public bool explode = false; // Block explodes when set to true
+	private bool isMoving = false; // Toggles on when block is moving
+    private bool isActive = true;  // Toggles on when block is nearby character
 
 	// Components
-	protected Animator animator;
-	protected BoxCollider2D boxCollider;
+	protected Animator animator; // The box animator
 
 	// Falling speed
 	private float moveSpeed = 6f;
@@ -24,14 +40,17 @@ public class BlockController : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
+        // Retrieve the animator and the collider component
 		animator = GetComponent<Animator>();
-		boxCollider = GetComponent<BoxCollider2D>();
-		boxCollider.enabled = true;
-		if(gate) {
-			pulledOut = false;
-		}
+
+        // If block is of type 'Gate' always set block to start at a pushed in position
+		if ( blockType == BlockType.Gate ) pulledOut = false;
+
+        // Check the pulledOut state and initialise block accordingly
+        if ( pulledOut ) PullOut(); else PushIn();
 	}
 
+    // Activates the block when it collides with the "Block Activator" collider, which is attached to the character
     void OnTriggerEnter2D(Collider2D col)
     {
         if (col.gameObject.name == "Block Activator")
@@ -42,58 +61,128 @@ public class BlockController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		// Check whether the block is pulled out or not and set accordingly.
 		if(!isMoving && isActive) {
-			if(Physics2D.OverlapPoint (new Vector2 (transform.position.x, transform.position.y), 1 << LayerMask.NameToLayer("Character"), 9.5f, 10.5f) != null && gate) {
+			if(Physics2D.OverlapPoint (new Vector2 (transform.position.x, transform.position.y), 1 << LayerMask.NameToLayer("Character"), 9.5f, 10.5f) != null && blockType == BlockType.Gate) {
 				pulledOut = true;
-			} else {
-				if (pulledOut){
-					PullOut();
-				} else {
-					PushIn();
-				}
 			}
 
-			if(!unmovable) {
+            if (Movable())
+            {
 				StartCoroutine(FallDown(transform));
 			}
 		}
+
+        // Check the pulledOut state and initialise block accordingly
+        if (pulledOut) PullOut(); else PushIn();
+
+        // Check if block should explode
+        if (blockType == BlockType.Explosive && explode) StartCoroutine(Explode());
 	}
 
-    
-
 	// Actions to take when block is pulled out
-	public void PullOut(){
+    protected void PullOut()
+    {
 		// Change the color of the block
 		animator.SetBool("Out", true);	
-		// Enable the collider
-		//boxCollider.enabled = true;
 		// Set the z-depth
 		transform.position = new Vector3(transform.position.x, transform.position.y, 0);
 	}
 	
 	// Actions to take when block is pushed in
-	public void PushIn(){
+    protected void PushIn()
+    {
 		// Change the color of the block
 		animator.SetBool("Out", false);	
-		// Enable the collider
-		//boxCollider.enabled = false;
 		// Set the z-depth
 		transform.position = new Vector3(transform.position.x, transform.position.y, 1);
 	}
 
+    // Actions to take when block explodes
+    protected IEnumerator Explode()
+    {
+        if (Debug.isDebugBuild) Debug.Log("Explode");
+        Collider2D neighbouringBox;
+        // Check right block
+        if ( (neighbouringBox = Physics2D.OverlapPoint(new Vector2(transform.position.x + gridSize, transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f)) != null){
+            StartCoroutine(neighbouringBox.gameObject.GetComponent<BlockController>().HitByExplosion());
+        }
+        // Check left block
+        if ( (neighbouringBox = Physics2D.OverlapPoint(new Vector2(transform.position.x - gridSize, transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f)) != null){
+            StartCoroutine(neighbouringBox.gameObject.GetComponent<BlockController>().HitByExplosion());
+        }
+        // Check top block
+        if ( (neighbouringBox = Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y + gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f)) != null){
+            StartCoroutine(neighbouringBox.gameObject.GetComponent<BlockController>().HitByExplosion());
+        }
+        // Check bottom block
+        if ( (neighbouringBox = Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f)) != null){
+            StartCoroutine(neighbouringBox.gameObject.GetComponent<BlockController>().HitByExplosion());
+        }
+        // Check top right block
+        if ( (neighbouringBox = Physics2D.OverlapPoint(new Vector2(transform.position.x + gridSize, transform.position.y + gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f)) != null){
+            StartCoroutine(neighbouringBox.gameObject.GetComponent<BlockController>().HitByExplosion());
+        }
+        // Check bottom right block
+        if ( (neighbouringBox = Physics2D.OverlapPoint(new Vector2(transform.position.x + gridSize, transform.position.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f)) != null){
+            StartCoroutine(neighbouringBox.gameObject.GetComponent<BlockController>().HitByExplosion());
+        }
+        // Check top left block
+        if ( (neighbouringBox = Physics2D.OverlapPoint(new Vector2(transform.position.x - gridSize, transform.position.y + gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f)) != null){
+            StartCoroutine(neighbouringBox.gameObject.GetComponent<BlockController>().HitByExplosion());
+        }
+        // Check bottom left block
+        if ( (neighbouringBox = Physics2D.OverlapPoint(new Vector2(transform.position.x - gridSize, transform.position.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f)) != null){
+            StartCoroutine(neighbouringBox.gameObject.GetComponent<BlockController>().HitByExplosion());
+        }
+        yield return new WaitForSeconds(1.0F);
+        explode = false;
+        Destroy(gameObject);
+    }
+
+    // Actions to take when block is affected by an explosion
+    protected IEnumerator HitByExplosion()
+    {
+
+        if (Debug.isDebugBuild) Debug.Log("Hit!! " + transform.name);
+        if (blockType == BlockType.Ice)
+        {
+            // Evaporate
+            Destroy(gameObject);
+        }
+        else if (blockType == BlockType.Explosive)
+        {
+            yield return new WaitForSeconds(1.0F);
+            StartCoroutine(Explode());
+        }
+        else if (blockType == BlockType.Invinsible ||
+                 blockType == BlockType.Unmovable ||
+                 blockType == BlockType.Gate)
+        {
+            // DO nothing
+        }
+        else
+        {
+            // Turn into fire block,
+            GetComponentInChildren<SpriteRenderer>().sprite = blockAfterExplosion; 
+
+            blockType = BlockType.Fire;
+        }
+
+    }
+
+    // Check if block us supposed to fall
 	public IEnumerator FallDown(Transform transform) {
 		Vector3 startPosition = transform.position;
 		isMoving = true;
-		
-		while(Physics2D.OverlapPoint (new Vector2 (startPosition.x + (gridSize), startPosition.y), 1 << 8, -0.9f, 0.9f) == null && //right
-		      Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize, startPosition.y), 1 << 8, -0.9f, 0.9f) == null && //left
-		      Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y + gridSize), 1 << 8, -0.9f, 0.9f) == null && //up
-		      Physics2D.OverlapPoint (new Vector2 (startPosition.x, startPosition.y - gridSize), 1 << 8, -0.9f, 0.9f) == null && //down
-		      Physics2D.OverlapPoint (new Vector2 (startPosition.x + gridSize, startPosition.y + gridSize), 1 << 8, -0.9f, 0.9f) == null && //right up
-		      Physics2D.OverlapPoint (new Vector2 (startPosition.x + gridSize, startPosition.y - gridSize), 1 << 8, -0.9f, 0.9f) == null && //right down
-		      Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize, startPosition.y + gridSize), 1 << 8, -0.9f, 0.9f) == null && //left up
-		      Physics2D.OverlapPoint (new Vector2 (startPosition.x - gridSize, startPosition.y - gridSize), 1 << 8, -0.9f, 0.9f) == null && //left down
+
+        while (Physics2D.OverlapPoint(new Vector2(startPosition.x + (gridSize), startPosition.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null && //right
+              Physics2D.OverlapPoint(new Vector2(startPosition.x - gridSize, startPosition.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null && //left
+              Physics2D.OverlapPoint(new Vector2(startPosition.x, startPosition.y + gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null && //up
+              Physics2D.OverlapPoint(new Vector2(startPosition.x, startPosition.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null && //down
+              Physics2D.OverlapPoint(new Vector2(startPosition.x + gridSize, startPosition.y + gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null && //right up
+              Physics2D.OverlapPoint(new Vector2(startPosition.x + gridSize, startPosition.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null && //right down
+              Physics2D.OverlapPoint(new Vector2(startPosition.x - gridSize, startPosition.y + gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null && //left up
+              Physics2D.OverlapPoint(new Vector2(startPosition.x - gridSize, startPosition.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null && //left down
 		      transform.position.z == 0) { 
 			float t = 0;
 			Vector3 endPosition = startPosition;
@@ -128,6 +217,57 @@ public class BlockController : MonoBehaviour {
 		pulledOut = false;
 	}
 
+    public bool Movable()
+    {
+        if (blockType == BlockType.Normal ||
+            blockType == BlockType.Unhangable ||
+            blockType == BlockType.Ice ||
+            blockType == BlockType.Fire ||
+            blockType == BlockType.Spiky ||
+            blockType == BlockType.Crumbling ||
+            blockType == BlockType.Explosive ||
+            blockType == BlockType.Sticky)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool Hangable()
+    {
+        if (blockType == BlockType.Normal ||
+            blockType == BlockType.Unmovable ||
+            blockType == BlockType.Crumbling ||
+            blockType == BlockType.Explosive ||
+            blockType == BlockType.Sticky ||
+            blockType == BlockType.Switch ||
+            blockType == BlockType.Invinsible ||
+            blockType == BlockType.Gate)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool Slippery()
+    {
+        if (blockType == BlockType.Ice)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    /*
 	public bool GetUnMovable() {
 		return unmovable;
 	}
@@ -146,5 +286,5 @@ public class BlockController : MonoBehaviour {
 
 	public bool GetSlippery() {
 		return slippery;
-	}
+	}*/
 }
