@@ -3,6 +3,9 @@ using System.Collections;
 
 public class GameCompletedGUI : MonoBehaviour {
 
+	public GUISkin mainSkin;
+	Rect r;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -14,12 +17,13 @@ public class GameCompletedGUI : MonoBehaviour {
 	}
 
 	void OnGUI() {
+		GUI.skin = mainSkin;
 		
 		// Calculate the menu rect
-		Rect r = new Rect (Screen.width * (1f - 0.3f) / 2,
-		                   Screen.height * (1f - 0.3f) / 2,
-		                   Screen.width * 0.3f,
-		                   Screen.height * 0.3f);
+		r = new Rect (Screen.width/2 - 104,
+		              Screen.height/2 - 100,
+		              208,
+		              200);
 		
 		// Draw menu
 		GUILayout.BeginArea (r);
