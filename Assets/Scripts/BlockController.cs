@@ -3,10 +3,6 @@ using System.Collections;
 
 public class BlockController : MonoBehaviour {
 
-    // Sprites for transforming blocks
-    public Sprite blockAfterExplosion;
-
-
     // Block types
     public enum BlockType
     {
@@ -146,6 +142,7 @@ public class BlockController : MonoBehaviour {
         if (Debug.isDebugBuild) Debug.Log("Hit!! " + transform.name);
         if (blockType == BlockType.Ice)
         {
+            animator.SetTrigger("Evaporate");
             // Evaporate
             Destroy(gameObject);
         }
@@ -163,7 +160,7 @@ public class BlockController : MonoBehaviour {
         else
         {
             // Turn into fire block,
-            GetComponentInChildren<SpriteRenderer>().sprite = blockAfterExplosion; 
+            animator.SetTrigger("Burn");
 
             blockType = BlockType.Fire;
         }
