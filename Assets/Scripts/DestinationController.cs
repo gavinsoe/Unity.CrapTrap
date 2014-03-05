@@ -10,9 +10,11 @@ public class DestinationController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Physics2D.OverlapPoint (new Vector2 (transform.position.x, transform.position.y), 1 << LayerMask.NameToLayer("Character"), 3.5f, 12.5f) != null) {
+        Collider2D col = Physics2D.OverlapPoint (new Vector2 (transform.position.x, transform.position.y), 1 << LayerMask.NameToLayer("Character"),-0.9f, 0.9f);
+		if( col != null && col.gameObject.name == "Character") {
 			Time.timeScale = 0;
 			Camera.main.GetComponent<GameCompletedGUI>().enabled = true;
 		}
 	}
+
 }

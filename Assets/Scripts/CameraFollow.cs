@@ -3,6 +3,13 @@ using System.Collections;
 
 public class CameraFollow : MonoBehaviour 
 {
+    public enum CameraStatus { Introduction, TrackPlayer }
+    public CameraStatus camState; // Defaults to introduction
+
+    public float initialZoom = 1f;  // Initial zoom level when previewing the destination
+    public float gameplayZoom = 3f; // Zoom level for gameplay
+    public float zoomSmooth = 4f;
+
 	public float xMargin = 1f;		// Distance in the x axis the player can move before the camera follows.
 	public float yMargin = 1f;		// Distance in the y axis the player can move before the camera follows.
 	public float xSmooth = 8f;		// How smoothly the camera catches up with it's target movement in the x axis.
@@ -10,9 +17,18 @@ public class CameraFollow : MonoBehaviour
 	//public Vector2 maxXAndY;		// The maximum x and y coordinates the camera can have.
 	//public Vector2 minXAndY;		// The minimum x and y coordinates the camera can have.
 	
-	
 	private Transform player;		// Reference to the player's transform.
-	
+
+    void Start()
+    {
+        // Set the starting position to the final destination
+        Vector3 finishLocation = GameObject.FindGameObjectWithTag("Finish").transform.position;
+        transform.position = new Vector3(finishLocation.x, finishLocation.y, transform.position.z);
+
+        // Set default state to 'Introduction', and set the initial zoom level
+        camera.orthographicSize = initialZoom;
+        camState = CameraStatus.Introduction;
+    }
 	
 	void Awake ()
 	{
@@ -20,13 +36,11 @@ public class CameraFollow : MonoBehaviour
 		player = GameObject.FindGameObjectWithTag("Player").transform;
 	}
 	
-	
 	bool CheckXMargin()
 	{
 		// Returns true if the distance between the camera and the player in the x axis is greater than the x margin.
 		return Mathf.Abs(transform.position.x - player.position.x) > xMargin;
 	}
-	
 	
 	bool CheckYMargin()
 	{
@@ -34,12 +48,25 @@ public class CameraFollow : MonoBehaviour
 		return Mathf.Abs(transform.position.y - player.position.y) > yMargin;
 	}
 	
-	
 	void FixedUpdate ()
 	{
-		TrackPlayer();
+        if (camState == CameraStatus.Introduction)
+        {
+            // Set the starting animation
+            var camera = transform.GetComponent<Camera>();
+            camera.orthographicSize = Mathf.Lerp(camera.orthographicSize, gameplayZoom, zoomSmooth * Time.deltaTime);
+
+            if ((gameplayZoom - camera.orthographicSize) < 0.01)
+            {
+                camera.orthographicSize = gameplayZoom;
+                camState = CameraStatus.TrackPlayer;
+            }
+        }
+        else if (camState == CameraStatus.TrackPlayer)
+        {
+            TrackPlayer();
+        }
 	}
-	
 	
 	void TrackPlayer ()
 	{

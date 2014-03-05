@@ -53,12 +53,25 @@ public class BlockController : MonoBehaviour {
         {
             isActive = true;
         }
+        if (col.gameObject.name == "Character")
+        {
+            if (blockType == BlockType.Fire)
+            {
+                col.gameObject.GetComponent<CharacterController>().isBurning = true;
+            }
+            else
+            {
+                col.gameObject.GetComponent<CharacterController>().isBurning = false;
+            }
+        }
     }
 
 	// Update is called once per frame
 	void Update () {
 		if(!isMoving && isActive) {
-			if(Physics2D.OverlapPoint (new Vector2 (transform.position.x, transform.position.y), 1 << LayerMask.NameToLayer("Character"), 9.5f, 10.5f) != null && blockType == BlockType.Gate) {
+            Collider2D col = Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), 1 << LayerMask.NameToLayer("Character"), -0.9f, 0.9f);
+            if (col != null && col.gameObject.name == "Character" && blockType == BlockType.Gate)
+            {
 				pulledOut = true;
 			}
 
@@ -263,7 +276,18 @@ public class BlockController : MonoBehaviour {
             return false;
         }
     }
-    
+
+    public bool Fiery()
+    {
+        if (blockType == BlockType.Fire)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     /*
 	public bool GetUnMovable() {
 		return unmovable;
