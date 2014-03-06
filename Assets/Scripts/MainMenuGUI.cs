@@ -19,9 +19,6 @@ public class MainMenuGUI : MonoBehaviour {
 	}
 
 	void OnGUI() {
-
-
-
 		// Make a background box
 		//GUI.Box (new Rect (20, 20, 100, 90), "Main Menu");
 
