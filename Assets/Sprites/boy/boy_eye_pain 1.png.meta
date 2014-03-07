@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ba18440c17c544b85bf55717a89157ad
+guid: db6a18fd573d3407dbde204ab33dcd19
 TextureImporter:
   serializedVersion: 2
   mipmaps:
@@ -33,7 +33,7 @@ TextureImporter:
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 2
+  alignment: 0
   spritePivot: {x: .5, y: .5}
   spritePixelsToUnits: 500
   alphaIsTransparency: 1
@@ -45,22 +45,22 @@ TextureImporter:
     compressionQuality: 50
   spriteSheet:
     sprites:
-    - name: boy_eye_pain
+    - name: boy_eye_pain 1_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 24
+        y: 26
         width: 130
-        height: 62
+        height: 60
       alignment: 2
       pivot: {x: .5, y: 1}
     - name: boy_mouth_closed
       rect:
         serializedVersion: 2
-        x: 58
+        x: 60
         y: 0
-        width: 42
-        height: 22
+        width: 36
+        height: 24
       alignment: 2
       pivot: {x: .5, y: 1}
   spritePackingTag: 

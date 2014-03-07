@@ -7,13 +7,17 @@ public class CharacterController : MonoBehaviour {
     public float moveSpeed = 5f;
     private float gridSize = 1f;
 
-    //[HideInInspector]
+    // Character States
+    [HideInInspector]
     public bool isMoving = false;
-    //[HideInInspector]
+    [HideInInspector]
     public bool isHanging = false;
-    //[HideInInspector]
+    [HideInInspector]
     public bool isBurning = false;
     private bool wasBurning = false;
+    //[HideInInspector]
+    public bool reachedDestination = false;
+
 
     private MainGameController game;
 
@@ -24,6 +28,12 @@ public class CharacterController : MonoBehaviour {
 
     void Update()
     {
+        if (reachedDestination && !isMoving)
+        {
+            // End game
+            Time.timeScale = 0;
+            Camera.main.GetComponent<GameCompletedGUI>().enabled = true;
+        }
         if (isBurning && !wasBurning)
         {
             game.setTimerReductionRate(1.25f);
@@ -39,6 +49,10 @@ public class CharacterController : MonoBehaviour {
     // Function to move the character
     public IEnumerator move(Transform transform, int sign, bool grabLeft, bool grabRight)
     {
+        // disable movement if destination has been reached
+        if (reachedDestination) yield return null;
+
+        // Set the movement flag on
         isMoving = true;
         bool stepUp = false;
         bool hMove = false;
@@ -291,6 +305,10 @@ public class CharacterController : MonoBehaviour {
     // pull out a block
     public IEnumerator pull(Transform transform)
     {
+        // disable movement if destination has been reached
+        if (reachedDestination) yield return null;
+
+        // Set the movement flag on
         isMoving = true;
 
         Collider2D box;
@@ -326,6 +344,10 @@ public class CharacterController : MonoBehaviour {
     // hang will be called then the down button is pressed
     public IEnumerator hang(Transform transform, int sign)
     {
+        // disable movement if destination has been reached
+        if (reachedDestination) yield return null;
+
+        // Set the movement flag on
         isMoving = true;
 
         Vector3 startPosition = transform.position;
