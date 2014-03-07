@@ -7,10 +7,34 @@ public class CharacterController : MonoBehaviour {
     public float moveSpeed = 5f;
     private float gridSize = 1f;
 
-    [HideInInspector]
+    //[HideInInspector]
     public bool isMoving = false;
+    //[HideInInspector]
     public bool isHanging = false;
+    //[HideInInspector]
     public bool isBurning = false;
+    private bool wasBurning = false;
+
+    private MainGameController game;
+
+    void Start()
+    {
+        game = Camera.main.GetComponent<MainGameController>();
+    }
+
+    void Update()
+    {
+        if (isBurning && !wasBurning)
+        {
+            game.setTimerReductionRate(1.25f);
+            wasBurning = true;
+        }
+        if (!isBurning && wasBurning)
+        {
+            game.setTimerReductionRate(1f);
+            wasBurning = false;
+        }
+    }
 
     // Function to move the character
     public IEnumerator move(Transform transform, int sign, bool grabLeft, bool grabRight)
