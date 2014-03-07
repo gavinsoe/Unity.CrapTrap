@@ -1,19 +1,20 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\BlockController.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\StoneTuteController.cs">
     <Files>
-      <File FileName="Assets\Scripts\MainMenuGUI.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\StoneTutorialGUI.cs" Line="36" Column="34" />
       <File FileName="Assets\Scripts\BlockController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\CharacterController.cs" Line="405" Column="88" />
+      <File FileName="Assets\Scripts\CharacterController.cs" Line="1" Column="1" />
       <File FileName="..\protoShit\Assets\ZombieController.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\LevelChunkFactory.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\BlockGenerator.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\TimerBarController.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\PauseGUI.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayerTouchController.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\DestinationController.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GameCompletedGUI.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\FailedGUI.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\MainMenuGUI.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\StoneTuteController.cs" Line="34" Column="64" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
