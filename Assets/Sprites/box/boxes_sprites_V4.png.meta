@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f778f4f0dcaa6415aa859103c4c0c4c8
+guid: 0eaef5366e365254bbb9b34d5b2c782a
 TextureImporter:
   serializedVersion: 2
   mipmaps:
@@ -45,56 +45,74 @@ TextureImporter:
     compressionQuality: 50
   spriteSheet:
     sprites:
-    - name: normal_block_V5_1
+    - name: normal_box_V4_1
       rect:
         serializedVersion: 2
-        x: 228
-        y: 607
+        x: 98
+        y: 608
         width: 400
         height: 400
       alignment: 0
       pivot: {x: .5, y: .5}
-    - name: unhangable_block_V5_1
+    - name: normal_box_V4_2
       rect:
         serializedVersion: 2
-        x: 724
-        y: 607
+        x: 596
+        y: 610
         width: 400
         height: 400
       alignment: 0
       pivot: {x: .5, y: .5}
-    - name: ice_block_V5_1
+    - name: normal_box_V4_3
       rect:
         serializedVersion: 2
-        x: 1223
-        y: 607
+        x: 1091
+        y: 608
         width: 400
         height: 400
       alignment: 0
       pivot: {x: .5, y: .5}
-    - name: crumbling_block_V5_1
+    - name: unhangable_box_V4_1
       rect:
         serializedVersion: 2
-        x: 228
-        y: 113
+        x: 1590
+        y: 608
         width: 400
         height: 400
       alignment: 0
       pivot: {x: .5, y: .5}
-    - name: exploding_block_V5_1
+    - name: crumbling_box_V4_1
       rect:
         serializedVersion: 2
-        x: 724
-        y: 113
+        x: 98
+        y: 111
         width: 400
         height: 400
       alignment: 0
       pivot: {x: .5, y: .5}
-    - name: fire_block_V5_1
+    - name: ice_box_V4_1
       rect:
         serializedVersion: 2
-        x: 1223
-        y: 113
+        x: 596
+        y: 111
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: fire_box_V4_1
+      rect:
+        serializedVersion: 2
+        x: 1091
+        y: 111
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: explosive_box_V4_1
+      rect:
+        serializedVersion: 2
+        x: 1590
+        y: 111
         width: 400
         height: 400
       alignment: 0

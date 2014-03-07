@@ -1,0 +1,265 @@
+fileFormatVersion: 2
+guid: 11fb52e05741e47d2af5a69cd572757a
+TextureImporter:
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spritePixelsToUnits: 500
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings:
+  - buildTarget: iPhone
+    maxTextureSize: 1024
+    textureFormat: -2
+    compressionQuality: 50
+  spriteSheet:
+    sprites:
+    - name: boy_hair_brown
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 359
+        width: 230
+        height: 214
+      alignment: 9
+      pivot: {x: .569947898, y: .02299143}
+    - name: boy_sweat_big
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 558
+        width: 26
+        height: 43
+      alignment: 6
+      pivot: {x: 0, y: 0}
+    - name: boy_sweat_med
+      rect:
+        serializedVersion: 2
+        x: 474
+        y: 568
+        width: 31
+        height: 24
+      alignment: 6
+      pivot: {x: 0, y: 0}
+    - name: boy_ear
+      rect:
+        serializedVersion: 2
+        x: 678
+        y: 546
+        width: 23
+        height: 28
+      alignment: 9
+      pivot: {x: .823295236, y: .479572833}
+    - name: boy_head
+      rect:
+        serializedVersion: 2
+        x: 753
+        y: 422
+        width: 170
+        height: 184
+      alignment: 9
+      pivot: {x: .538004458, y: .0107619241}
+    - name: boy_sweat_small
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 499
+        width: 14
+        height: 19
+      alignment: 2
+      pivot: {x: .5, y: 1}
+    - name: boy_effect_stomach_top
+      rect:
+        serializedVersion: 2
+        x: 409
+        y: 437
+        width: 44
+        height: 20
+      alignment: 6
+      pivot: {x: 0, y: 0}
+    - name: boy_arm_upper
+      rect:
+        serializedVersion: 2
+        x: 559
+        y: 400
+        width: 39
+        height: 77
+      alignment: 9
+      pivot: {x: .488955766, y: .841217041}
+    - name: boy_effect_stomach_bottom
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 394
+        width: 46
+        height: 19
+      alignment: 4
+      pivot: {x: 0, y: .5}
+    - name: boy_eyes_normal
+      rect:
+        serializedVersion: 2
+        x: 126
+        y: 271
+        width: 127
+        height: 75
+      alignment: 2
+      pivot: {x: .5, y: 1}
+    - name: boy_crotch
+      rect:
+        serializedVersion: 2
+        x: 410
+        y: 306
+        width: 69
+        height: 38
+      alignment: 4
+      pivot: {x: 0, y: .5}
+    - name: boy_arm_lower
+      rect:
+        serializedVersion: 2
+        x: 570
+        y: 300
+        width: 47
+        height: 61
+      alignment: 9
+      pivot: {x: .21591121, y: .84598577}
+    - name: gear_glove_right
+      rect:
+        serializedVersion: 2
+        x: 658
+        y: 300
+        width: 36
+        height: 41
+      alignment: 9
+      pivot: {x: .296605438, y: .762632072}
+    - name: gear_glove_left
+      rect:
+        serializedVersion: 2
+        x: 725
+        y: 302
+        width: 37
+        height: 41
+      alignment: 9
+      pivot: {x: .3137438, y: .783642292}
+    - name: boy_mouth
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 232
+        width: 38
+        height: 54
+      alignment: 9
+      pivot: {x: .499999702, y: .882859409}
+    - name: boy_nose
+      rect:
+        serializedVersion: 2
+        x: 305
+        y: 262
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: boy_leg_upper
+      rect:
+        serializedVersion: 2
+        x: 579
+        y: 195
+        width: 32
+        height: 75
+      alignment: 9
+      pivot: {x: .486539841, y: .856058776}
+    - name: boy_eyes_twitch_1
+      rect:
+        serializedVersion: 2
+        x: 126
+        y: 158
+        width: 127
+        height: 75
+      alignment: 2
+      pivot: {x: .5, y: 1}
+    - name: boy_body
+      rect:
+        serializedVersion: 2
+        x: 398
+        y: 133
+        width: 78
+        height: 126
+      alignment: 9
+      pivot: {x: .814430416, y: .573164225}
+    - name: boy_eyes_twitch_2
+      rect:
+        serializedVersion: 2
+        x: 126
+        y: 46
+        width: 127
+        height: 75
+      alignment: 2
+      pivot: {x: .5, y: 1}
+    - name: boy_leg_lower
+      rect:
+        serializedVersion: 2
+        x: 579
+        y: 100
+        width: 46
+        height: 73
+      alignment: 9
+      pivot: {x: .303368598, y: .883514643}
+    - name: gear_feet_sneaker_normal
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 101
+        width: 47
+        height: 28
+      alignment: 9
+      pivot: {x: .298387885, y: .807653964}
+    - name: boy_animation_parts_35
+      rect:
+        serializedVersion: 2
+        x: 613
+        y: 548
+        width: 15
+        height: 25
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: boy_effect_line
+      rect:
+        serializedVersion: 2
+        x: 558
+        y: 522
+        width: 59
+        height: 95
+      alignment: 9
+      pivot: {x: .524236143, y: .930494428}
+  spritePackingTag: 
+  userData: 

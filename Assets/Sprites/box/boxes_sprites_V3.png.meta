@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f778f4f0dcaa6415aa859103c4c0c4c8
+guid: a4267a3a75610434683ff9b6897495a5
 TextureImporter:
   serializedVersion: 2
   mipmaps:
@@ -45,56 +45,56 @@ TextureImporter:
     compressionQuality: 50
   spriteSheet:
     sprites:
-    - name: normal_block_V5_1
+    - name: boxes_fiery_1
       rect:
         serializedVersion: 2
-        x: 228
-        y: 607
+        x: 98
+        y: 164
         width: 400
         height: 400
       alignment: 0
       pivot: {x: .5, y: .5}
-    - name: unhangable_block_V5_1
+    - name: boxes_normal_2
       rect:
         serializedVersion: 2
-        x: 724
-        y: 607
+        x: 596
+        y: 660
         width: 400
         height: 400
       alignment: 0
       pivot: {x: .5, y: .5}
-    - name: ice_block_V5_1
+    - name: boxes_normal_3
       rect:
         serializedVersion: 2
-        x: 1223
-        y: 607
+        x: 1092
+        y: 660
         width: 400
         height: 400
       alignment: 0
       pivot: {x: .5, y: .5}
-    - name: crumbling_block_V5_1
+    - name: boxes_moss_1
       rect:
         serializedVersion: 2
-        x: 228
-        y: 113
+        x: 1590
+        y: 660
         width: 400
         height: 400
       alignment: 0
       pivot: {x: .5, y: .5}
-    - name: exploding_block_V5_1
+    - name: boxes_normal_1
       rect:
         serializedVersion: 2
-        x: 724
-        y: 113
+        x: 98
+        y: 660
         width: 400
         height: 400
       alignment: 0
       pivot: {x: .5, y: .5}
-    - name: fire_block_V5_1
+    - name: boxes_ice_1
       rect:
         serializedVersion: 2
-        x: 1223
-        y: 113
+        x: 596
+        y: 164
         width: 400
         height: 400
       alignment: 0
