@@ -25,6 +25,8 @@ public class CameraFollow : MonoBehaviour
         Vector3 finishLocation = GameObject.FindGameObjectWithTag("Finish").transform.position;
         transform.position = new Vector3(finishLocation.x, finishLocation.y, transform.position.z);
 
+		Camera.main.GetComponent<MainGameController>().DisableTimeNMove();
+
         // Set default state to 'Introduction', and set the initial zoom level
         camera.orthographicSize = initialZoom;
         camState = CameraStatus.Introduction;
@@ -60,6 +62,7 @@ public class CameraFollow : MonoBehaviour
             {
                 camera.orthographicSize = gameplayZoom;
                 camState = CameraStatus.TrackPlayer;
+				Camera.main.GetComponent<MainGameController>().EnableTimeNMove();
             }
         }
         else if (camState == CameraStatus.TrackPlayer)

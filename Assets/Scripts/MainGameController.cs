@@ -32,4 +32,22 @@ public class MainGameController : MonoBehaviour {
     {
         score.goldenToiletPaper += 1;
     }
+
+	public void PauseGame() {
+		Time.timeScale = 0;
+	}
+
+	public void ResumeGame() {
+		Time.timeScale = 1;
+	}
+
+	public void DisableTimeNMove() {
+		GameObject.FindGameObjectWithTag("Player").GetComponent<PCControls>().enabled = false;
+		Camera.main.GetComponentInChildren<TimerBarController>().enabled = false;
+	}
+
+	public void EnableTimeNMove() {
+		GameObject.FindGameObjectWithTag("Player").GetComponent<PCControls>().enabled = true;
+		Camera.main.GetComponentInChildren<TimerBarController>().enabled = true;
+	}
 }
