@@ -25,7 +25,8 @@ public class ItemController : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.gameObject.name == "Character")
+        Debug.Log("Collide!! " + col.gameObject.tag);
+        if (col.gameObject.tag == "Player")
         {
             // Do some logic to add score/item
             if (itemType == ItemType.ToiletPaper)
