@@ -555,7 +555,7 @@ public class CharacterController : MonoBehaviour {
         float t = 0;
 
         // Face the character the correct way
-        transform.rotation = Quaternion.Euler(0, 180, 0);
+        transform.rotation = Quaternion.Euler(0, 0, 0);
 
         // Animate
         animator.SetBool("isRunning", true);
