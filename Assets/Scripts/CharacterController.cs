@@ -10,6 +10,8 @@ public class CharacterController : MonoBehaviour {
     // Character States
     //[HideInInspector]
     public bool isMoving = false;
+    public bool isSlidingRight = false;
+    public bool isSlidingLeft = false;
     //[HideInInspector]
     public bool isHanging = false;
     //[HideInInspector]
@@ -52,6 +54,16 @@ public class CharacterController : MonoBehaviour {
 
             // Check if character is falling
             if (bottomCollider == null) StartCoroutine(freeFalling());
+
+            // Check if character is on slippery ground
+            if (isSlidingRight)
+            {
+                StartCoroutine(slidingRight());
+            }
+            if (isSlidingLeft)
+            {
+                StartCoroutine(slidingLeft());
+            }
         }
     }
 
@@ -78,6 +90,7 @@ public class CharacterController : MonoBehaviour {
         Collider2D leftUpCollider = Physics2D.OverlapPoint(new Vector2(startPosition.x - gridSize, startPosition.y + gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
         Collider2D leftDownCollider = Physics2D.OverlapPoint(new Vector2(startPosition.x - gridSize, startPosition.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
         Collider2D upCollider = Physics2D.OverlapPoint(new Vector2(startPosition.x, startPosition.y + gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
+        Collider2D bottomCollider = Physics2D.OverlapPoint(new Vector2(startPosition.x, startPosition.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
         
         if (!isHanging)
         {
@@ -501,15 +514,25 @@ public class CharacterController : MonoBehaviour {
         //Animate
         animator.SetBool("isRunning", true);
 
+        Collider2D downCollider;
         while (t < 1f)
         {
+            // Check if character is no longer on a slippery block and change animation accordingly
+            downCollider = Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
+            if (!isSlidingRight && downCollider != null && downCollider.transform.gameObject.GetComponent<BlockController>().Slippery())
+            {
+                if (Debug.isDebugBuild) Debug.Log("Sliding Right : " + transform.position.ToString());
+                animator.SetBool("isSliding", true);
+                isSlidingRight = true;
+            }
+
             t += Time.deltaTime * (moveSpeed / gridSize);
             transform.position = Vector3.Lerp(startPosition, endPosition, t);
             yield return null;
         }
 
         animator.SetBool("isRunning", false);
-        isMoving = false;
+        isMoving = false;   
     }
 
     public IEnumerator moveLeft()
@@ -530,8 +553,18 @@ public class CharacterController : MonoBehaviour {
         // Animate
         animator.SetBool("isRunning", true);
 
+        Collider2D downCollider;
         while (t < 1f)
         {
+            // Check if character is no longer on a slippery block and change animation accordingly
+            downCollider = Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
+            if (!isSlidingLeft && downCollider != null && downCollider.transform.gameObject.GetComponent<BlockController>().Slippery())
+            {
+                if (Debug.isDebugBuild) Debug.Log("Sliding Left : " + transform.position.ToString());
+                animator.SetBool("isSliding", true);
+                isSlidingLeft = true;
+            }
+
             t += Time.deltaTime * (moveSpeed / gridSize);
             transform.position = Vector3.Lerp(startPosition, endPosition, t);
             yield return null;
@@ -713,6 +746,15 @@ public class CharacterController : MonoBehaviour {
             yield return null;
         }
 
+        // Check if character is stepping into slippery block
+        var downCollider = Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
+        if (downCollider != null && downCollider.transform.gameObject.GetComponent<BlockController>().Slippery())
+        {
+            if (Debug.isDebugBuild) Debug.Log("Sliding Right : " + transform.position.ToString());
+            animator.SetBool("isSliding", true);
+            isSlidingRight = true;
+        }
+
         animator.SetBool("isRunning", false);
 
         isHanging = false;
@@ -757,8 +799,17 @@ public class CharacterController : MonoBehaviour {
             yield return null;
         }
 
-        animator.SetBool("isRunning", false);
+        // Check if character is stepping into slippery block
+        var downCollider = Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
+        if (downCollider != null && downCollider.transform.gameObject.GetComponent<BlockController>().Slippery())
+        {
+            if (Debug.isDebugBuild) Debug.Log("Sliding Left : " + transform.position.ToString());
+            animator.SetBool("isSliding", true);
+            isSlidingLeft = true;
+        }
 
+        animator.SetBool("isRunning", false);
+        
         isHanging = false;
         isMoving = false;
     }
@@ -785,6 +836,86 @@ public class CharacterController : MonoBehaviour {
                 yield return null;
             }
         }
+
+        isMoving = false;
+    }
+
+    public IEnumerator slidingRight()
+    {
+        // disable movement if destination has been reached
+        if (reachedDestination) yield return null;
+
+        // Set the movement flag on
+        isMoving = true;
+
+        Vector3 startPosition = transform.position;
+        Vector3 endPosition = new Vector3(transform.position.x + gridSize, transform.position.y, transform.position.z);
+        float t = 0;
+
+        // Face the character the correct way
+        transform.rotation = Quaternion.Euler(0, 0, 0);
+
+        // Animate
+        // Keep on moving (or sliding) if on slippery block.
+        Collider2D downCollider;
+        while ((downCollider = Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f)) != null &&
+               downCollider.gameObject.GetComponent<BlockController>().Slippery() &&
+               Physics2D.OverlapPoint(new Vector2(transform.position.x + gridSize, transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null)
+        {
+            startPosition = transform.position;
+            endPosition = new Vector3(transform.position.x + gridSize, transform.position.y, transform.position.z);
+            t = 0;
+            while (t < 1f)
+            {
+                t += Time.deltaTime * (moveSpeed / gridSize);
+                transform.position = Vector3.Lerp(startPosition, endPosition, t);
+                yield return null;
+            }
+        }
+
+        if (Debug.isDebugBuild) Debug.Log("STOP Sliding Right : " + transform.position.ToString());
+        animator.SetBool("isSliding", false);
+        isSlidingRight = false;
+
+        isMoving = false;
+    }
+
+    public IEnumerator slidingLeft()
+    {
+        // disable movement if destination has been reached
+        if (reachedDestination) yield return null;
+
+        // Set the movement flag on
+        isMoving = true;
+
+        Vector3 startPosition = transform.position;
+        Vector3 endPosition = new Vector3(transform.position.x + gridSize, transform.position.y, transform.position.z);
+        float t = 0;
+
+        // Face the character the correct way
+        transform.rotation = Quaternion.Euler(0, 180, 0);
+
+        // Animate
+        // Keep on moving (or sliding) if on slippery block.
+        Collider2D downCollider;
+        while ((downCollider = Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f)) != null &&
+               downCollider.gameObject.GetComponent<BlockController>().Slippery() &&
+               Physics2D.OverlapPoint(new Vector2(transform.position.x - gridSize, transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null)
+        {
+            startPosition = transform.position;
+            endPosition = new Vector3(transform.position.x - gridSize, transform.position.y, transform.position.z);
+            t = 0;
+            while (t < 1f)
+            {
+                t += Time.deltaTime * (moveSpeed / gridSize);
+                transform.position = Vector3.Lerp(startPosition, endPosition, t);
+                yield return null;
+            }
+        }
+
+        if (Debug.isDebugBuild) Debug.Log("STOP Sliding Left : " + transform.position.ToString());
+        animator.SetBool("isSliding", false);
+        isSlidingLeft = false;
 
         isMoving = false;
     }
