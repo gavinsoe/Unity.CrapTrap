@@ -73,10 +73,6 @@ public class CharacterController : MonoBehaviour {
         // disable movement if destination has been reached
         if (reachedDestination) yield return null;
 
-        // Set the movement flag on
-        bool stepUp = false;
-        bool hMove = false;
-        bool vMove = false;
         // Set the running animation
         //animator.SetBool("Running", true);	
 
@@ -511,8 +507,10 @@ public class CharacterController : MonoBehaviour {
         // Face the character the correct way
         transform.rotation = Quaternion.Euler(0, 0, 0);
         
-        //Animate
+        //Set Animator Variables
         animator.SetBool("isRunning", true);
+        animator.SetBool("isPushing", false);
+        animator.SetBool("isPulling", false);
 
         Collider2D downCollider;
         while (t < 1f)
@@ -531,7 +529,6 @@ public class CharacterController : MonoBehaviour {
             yield return null;
         }
 
-        animator.SetBool("isRunning", false);
         isMoving = false;   
     }
 
@@ -552,6 +549,8 @@ public class CharacterController : MonoBehaviour {
 
         // Animate
         animator.SetBool("isRunning", true);
+        animator.SetBool("isPushing", false);
+        animator.SetBool("isPulling", false);
 
         Collider2D downCollider;
         while (t < 1f)
@@ -570,7 +569,6 @@ public class CharacterController : MonoBehaviour {
             yield return null;
         }
 
-        animator.SetBool("isRunning", false);
         isMoving = false;
     }
 
@@ -942,7 +940,8 @@ public class CharacterController : MonoBehaviour {
         transform.rotation = Quaternion.Euler(0, 0, 0);
 
         //Animate
-        animator.SetBool("isRunning", true);
+        animator.SetBool("isPushing", true);
+        animator.SetBool("isPulling", false);
 
         while (t < 1f)
         {
@@ -952,7 +951,6 @@ public class CharacterController : MonoBehaviour {
             yield return null;
         }
 
-        animator.SetBool("isRunning", false);
         isMoving = false;
         block.NotMoving();
     }
@@ -979,7 +977,8 @@ public class CharacterController : MonoBehaviour {
         transform.rotation = Quaternion.Euler(0, 180, 0);
 
         //Animate
-        animator.SetBool("isRunning", true);
+        animator.SetBool("isPushing", true);
+        animator.SetBool("isPulling", false);
 
         while (t < 1f)
         {
@@ -989,7 +988,6 @@ public class CharacterController : MonoBehaviour {
             yield return null;
         }
 
-        animator.SetBool("isRunning", false);
         isMoving = false;
         block.NotMoving();
     }
@@ -1016,7 +1014,8 @@ public class CharacterController : MonoBehaviour {
         transform.rotation = Quaternion.Euler(0, 0, 0);
 
         //Animate
-        animator.SetBool("isRunning", true);
+        animator.SetBool("isPulling", true);
+        animator.SetBool("isPushing", false);
 
         while (t < 1f)
         {
@@ -1026,7 +1025,6 @@ public class CharacterController : MonoBehaviour {
             yield return null;
         }
 
-        animator.SetBool("isRunning", false);
         isMoving = false;
         block.NotMoving();
     }
@@ -1053,7 +1051,8 @@ public class CharacterController : MonoBehaviour {
         transform.rotation = Quaternion.Euler(0, 180, 0);
 
         //Animate
-        animator.SetBool("isRunning", true);
+        animator.SetBool("isPulling", true);
+        animator.SetBool("isPushing", false);
 
         while (t < 1f)
         {
@@ -1063,9 +1062,15 @@ public class CharacterController : MonoBehaviour {
             yield return null;
         }
 
-        animator.SetBool("isRunning", false);
         isMoving = false;
         block.NotMoving();
+    }
+
+    public void idle()
+    {
+        animator.SetBool("isRunning", false);
+        animator.SetBool("isPushing", false);
+        animator.SetBool("isPulling", false);
     }
     #endregion
 

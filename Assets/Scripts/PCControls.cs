@@ -50,6 +50,10 @@ public class PCControls : MonoBehaviour {
                 Time.timeScale = 0;
                 Camera.main.GetComponent<PauseGUI>().enabled = true;
             }
+            else
+            {
+                character.idle();
+            }
         }
     }
 }

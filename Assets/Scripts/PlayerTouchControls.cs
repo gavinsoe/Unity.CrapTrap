@@ -159,7 +159,7 @@ public class PlayerTouchControls : MonoBehaviour {
             }
 
             // Check for any queued commands and execute when possible
-            if (nextCommand != Commands.None && !character.isMoving)
+            if (!character.isMoving)
             {
                 if (nextCommand == Commands.MoveRight)
                 {
@@ -205,6 +205,10 @@ public class PlayerTouchControls : MonoBehaviour {
                 {
                     StartCoroutine(character.pull(transform));
                     touchState[touch.fingerId] = InputState.Done;
+                }
+                else if (nextCommand == Commands.None)
+                {
+                    character.idle();
                 }
 
                 nextCommand = Commands.None;
