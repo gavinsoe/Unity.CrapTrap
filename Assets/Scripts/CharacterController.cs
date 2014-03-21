@@ -128,15 +128,18 @@ public class CharacterController : MonoBehaviour {
             else if (grabRight && rightCollider != null)
             {
                 BlockController block = rightCollider.transform.gameObject.GetComponent<BlockController>();
-                if (sign < 0)
+                if (rightCollider.transform.gameObject.GetComponent<BlockController>().Movable())
                 {
-                    if (leftCollider == null) StartCoroutine(pullRight(block));
-                }
-                else
-                {
-                    if (Physics2D.OverlapPoint(new Vector2(block.transform.position.x + gridSize, block.transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null)
+                    if (sign < 0)
                     {
-                        StartCoroutine(pushRight(block));
+                        if (leftCollider == null) StartCoroutine(pullRight(block));
+                    }
+                    else
+                    {
+                        if (Physics2D.OverlapPoint(new Vector2(block.transform.position.x + gridSize, block.transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null)
+                        {
+                            StartCoroutine(pushRight(block));
+                        }
                     }
                 }
             }
@@ -144,18 +147,21 @@ public class CharacterController : MonoBehaviour {
             else if (grabLeft && leftCollider != null)
             {
                 BlockController block = leftCollider.transform.gameObject.GetComponent<BlockController>();
-                if (sign < 0)
+                if (leftCollider.transform.gameObject.GetComponent<BlockController>().Movable())
                 {
-                    if (Physics2D.OverlapPoint(new Vector2(block.transform.position.x - gridSize, block.transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null)
+                    if (sign < 0)
                     {
-                        StartCoroutine(pushLeft(block));
+                        if (Physics2D.OverlapPoint(new Vector2(block.transform.position.x - gridSize, block.transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null)
+                        {
+                            StartCoroutine(pushLeft(block));
+                        }
                     }
-                }
-                else
-                {
-                    if (rightCollider == null)
+                    else
                     {
-                        StartCoroutine(pullLeft(block));
+                        if (rightCollider == null)
+                        {
+                            StartCoroutine(pullLeft(block));
+                        }
                     }
                 }
             }
