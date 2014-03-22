@@ -52,8 +52,8 @@ public class BlockController : MonoBehaviour {
         if (col.gameObject.name == "Block Activator")
         {
             isActive = true;
-        }
-        if (col.gameObject.name == "Character")
+        } 
+        if (col.gameObject.tag == "Player")
         {
             if (blockType == BlockType.Fire)
             {

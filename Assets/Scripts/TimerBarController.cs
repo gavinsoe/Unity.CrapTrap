@@ -7,10 +7,14 @@ public class TimerBarController : MonoBehaviour {
 	private float timeElapsed;
     public float timerReductionRate = 1; // Defaults to 1
 
+    private MainGameController game;
+
 	// Use this for initialization
 	void Start () {
 		Time.timeScale = 1f;
 		timeElapsed = maxTime;
+
+        game = Camera.main.GetComponent<MainGameController>();
 	}
 	
 	// Update is called once per frame
@@ -19,8 +23,9 @@ public class TimerBarController : MonoBehaviour {
             timeElapsed -= Time.deltaTime * timerReductionRate;
 			transform.localScale = new Vector3 (timeElapsed / maxTime, 0.5f, 1f);
 		} else {
-			Time.timeScale = 0;
-			Camera.main.GetComponent<FailedGUI>().enabled = true;
+            game.GameOver();
+			/*Time.timeScale = 0;
+			Camera.main.GetComponent<FailedGUI>().enabled = true;*/
 		}
 	}
 
