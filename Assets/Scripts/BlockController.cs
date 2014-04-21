@@ -25,10 +25,9 @@ public class BlockController : MonoBehaviour {
     public bool pulledOut = true;  // Determines whether the block is pulled out or not.
     public bool explode = false; // Block explodes when set to true
 	private bool isMoving = false; // Toggles on when block is moving
-    private bool isActive = true;  // Toggles on when block is nearby character
 
 	// Components
-	protected Animator animator; // The box animator
+	protected SpriteRenderer SRenderer; // The box animator
 
 	// Falling speed
 	private float moveSpeed = 6f;
@@ -37,7 +36,8 @@ public class BlockController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         // Retrieve the animator and the collider component
-		animator = GetComponent<Animator>();
+		//animator = GetCompoent<Animator>();
+        SRenderer = GetComponentInChildren<SpriteRenderer>();
 
         // If block is of type 'Gate' always set block to start at a pushed in position
 		if ( blockType == BlockType.Gate ) pulledOut = false;
@@ -49,26 +49,36 @@ public class BlockController : MonoBehaviour {
     // Activates the block when it collides with the "Block Activator" collider, which is attached to the character
     void OnTriggerEnter2D(Collider2D col)
     {
+        //Debug.Log(gameObject.name + " | ENTER detected. :: " + col.gameObject.name);
         if (col.gameObject.name == "Block Activator")
         {
-            isActive = true;
-        } 
+            this.enabled = true;
+        }
         if (col.gameObject.tag == "Player")
         {
-            if (blockType == BlockType.Fire)
+            if (blockType == BlockController.BlockType.Fire)
             {
-                col.gameObject.GetComponent<CharacterController>().isBurning = true;
+                //col.gameObject.GetComponent<CharacterController>().isBurning = true;
             }
             else
             {
-                col.gameObject.GetComponent<CharacterController>().isBurning = false;
+                //col.gameObject.GetComponent<CharacterController>().isBurning = false;
             }
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D col)
+    {
+        //Debug.Log(gameObject.name + " | EXIT detected. :: " + col.gameObject.name);
+        if (col.gameObject.name == "Block Activator")
+        {
+            this.enabled = false;
         }
     }
 
 	// Update is called once per frame
 	void Update () {
-		if(!isMoving && isActive) {
+		if(!isMoving) {
             Collider2D col = Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), 1 << LayerMask.NameToLayer("Character"), -0.9f, 0.9f);
             if (col != null && col.gameObject.name == "Character" && blockType == BlockType.Gate)
             {
@@ -92,7 +102,7 @@ public class BlockController : MonoBehaviour {
     protected void PullOut()
     {
 		// Change the color of the block
-		animator.SetBool("Out", true);	
+        SRenderer.color = new Color(1, 1, 1);
 		// Set the z-depth
 		transform.position = new Vector3(transform.position.x, transform.position.y, 0);
 	}
@@ -100,8 +110,8 @@ public class BlockController : MonoBehaviour {
 	// Actions to take when block is pushed in
     protected void PushIn()
     {
-		// Change the color of the block
-		animator.SetBool("Out", false);	
+        // Change the color of the block
+        SRenderer.color = new Color(0.5f, 0.5f, 0.5f);
 		// Set the z-depth
 		transform.position = new Vector3(transform.position.x, transform.position.y, 1);
 	}
@@ -155,7 +165,7 @@ public class BlockController : MonoBehaviour {
         if (Debug.isDebugBuild) Debug.Log("Hit!! " + transform.name);
         if (blockType == BlockType.Ice)
         {
-            animator.SetTrigger("Evaporate");
+            // animator.SetTrigger("Evaporate");
             // Evaporate
             Destroy(gameObject);
         }
@@ -173,7 +183,7 @@ public class BlockController : MonoBehaviour {
         else
         {
             // Turn into fire block,
-            animator.SetTrigger("Burn");
+            // animator.SetTrigger("Burn");
 
             blockType = BlockType.Fire;
         }
@@ -206,7 +216,6 @@ public class BlockController : MonoBehaviour {
 			startPosition = transform.position;
 		}
 		isMoving = false;
-        isActive = false;
 
 		yield return 0;
 	}
