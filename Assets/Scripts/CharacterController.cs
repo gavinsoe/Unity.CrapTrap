@@ -86,7 +86,7 @@ public class CharacterController : MonoBehaviour {
         Collider2D leftUpCollider = Physics2D.OverlapPoint(new Vector2(startPosition.x - gridSize, startPosition.y + gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
         Collider2D leftDownCollider = Physics2D.OverlapPoint(new Vector2(startPosition.x - gridSize, startPosition.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
         Collider2D upCollider = Physics2D.OverlapPoint(new Vector2(startPosition.x, startPosition.y + gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
-        Collider2D bottomCollider = Physics2D.OverlapPoint(new Vector2(startPosition.x, startPosition.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
+        Collider2D bottomCollider = Physics2D.OverlapPoint(new Vector2(startPosition.x, startPosition.y - gridSize/2), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
         
         if (!isHanging)
         {
@@ -473,17 +473,19 @@ public class CharacterController : MonoBehaviour {
 
         Collider2D box = Physics2D.OverlapPoint(new Vector2(startPosition.x, startPosition.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.1f, 0.9f);
 
-        // if the character is not hanging and the down button is pushed: go to hanging on the block below
+        // if the character is not hanging and the down button is pushed: hang on the block below
         if (!isHanging && sign < 0 && box.transform.gameObject.GetComponent<BlockController>().Hangable())
         {
             endPosition.y -= gridSize / 2;
             isHanging = true;
-            // if the character is hanging and the up button is pushed: climb up if there are no blocks in the way
+            animator.SetBool("isHanging", true);
         }
+            // if the character is hanging and the up button is pushed: climb up if there are no blocks in the way
         else if (isHanging && sign > 0 && Physics2D.OverlapPoint(new Vector2(startPosition.x, startPosition.y + gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null)
         {
             endPosition.y += gridSize / 2;
             isHanging = false;
+            animator.SetBool("isHanging", false);
         }
         while (t < 1f)
         {
@@ -720,6 +722,8 @@ public class CharacterController : MonoBehaviour {
         // Set the movement flag on
         isMoving = true;
 
+        
+
         Vector3 startPosition = transform.position;
         Vector3 midPosition = new Vector3(transform.position.x + gridSize / 2, transform.position.y, transform.position.z);
         Vector3 endPosition = new Vector3(transform.position.x + gridSize, transform.position.y - gridSize, transform.position.z);
@@ -733,6 +737,8 @@ public class CharacterController : MonoBehaviour {
         transform.rotation = Quaternion.Euler(0, 0, 0);
 
         //Animate
+        // No longer hanging  (if character was previously hanging)
+        animator.SetBool("isHanging", false);
         animator.SetBool("isRunning", true);
 
         while (t < 1f)
@@ -786,6 +792,8 @@ public class CharacterController : MonoBehaviour {
         transform.rotation = Quaternion.Euler(0, 180, 0);
 
         //Animate
+        // No longer hanging  (if character was previously hanging)
+        animator.SetBool("isHanging", false);
         animator.SetBool("isRunning", true);
 
         while (t < 1f)
@@ -826,6 +834,9 @@ public class CharacterController : MonoBehaviour {
         // Set the movement flag on
         isMoving = true;
 
+        // No longer hanging  (if character was previously hanging)
+        animator.SetBool("isFalling", true);
+
         // Keep on falling if no ground underneath
         while (Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null && !isHanging)
         {
@@ -841,6 +852,7 @@ public class CharacterController : MonoBehaviour {
             }
         }
 
+        animator.SetBool("isFalling", false);
         isMoving = false;
     }
 
@@ -1078,6 +1090,6 @@ public class CharacterController : MonoBehaviour {
         animator.SetBool("isPushing", false);
         animator.SetBool("isPulling", false);
     }
-    #endregion
 
+    #endregion
 }
