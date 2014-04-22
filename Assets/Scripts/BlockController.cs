@@ -49,7 +49,7 @@ public class BlockController : MonoBehaviour {
     // Activates the block when it collides with the "Block Activator" collider, which is attached to the character
     void OnTriggerEnter2D(Collider2D col)
     {
-        //Debug.Log(gameObject.name + " | ENTER detected. :: " + col.gameObject.name);
+        //if (Debug.isDebugBuild) Debug.Log(gameObject.name + " | ENTER detected. :: " + col.gameObject.name);
         if (col.gameObject.name == "Block Activator")
         {
             this.enabled = true;
@@ -58,18 +58,18 @@ public class BlockController : MonoBehaviour {
         {
             if (blockType == BlockController.BlockType.Fire)
             {
-                //col.gameObject.GetComponent<CharacterController>().isBurning = true;
+                col.gameObject.GetComponent<CharacterController>().isBurning = true;
             }
             else
             {
-                //col.gameObject.GetComponent<CharacterController>().isBurning = false;
+                col.gameObject.GetComponent<CharacterController>().isBurning = false;
             }
         }
     }
 
     void OnTriggerExit2D(Collider2D col)
     {
-        //Debug.Log(gameObject.name + " | EXIT detected. :: " + col.gameObject.name);
+        //if (Debug.isDebugBuild) Debug.Log(gameObject.name + " | EXIT detected. :: " + col.gameObject.name);
         if (col.gameObject.name == "Block Activator")
         {
             this.enabled = false;
