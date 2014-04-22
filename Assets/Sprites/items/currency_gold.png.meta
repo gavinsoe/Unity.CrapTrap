@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b4a59a800d3fe4b4e8a124f594ecfb90
+guid: d70928e55b0ca4f86bbf7b231d5c5b09
 TextureImporter:
   serializedVersion: 2
   mipmaps:
@@ -30,12 +30,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: .5, y: .5}
-  spritePixelsToUnits: 500
+  spritePixelsToUnits: 1200
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings:
@@ -44,15 +44,6 @@ TextureImporter:
     textureFormat: -2
     compressionQuality: 50
   spriteSheet:
-    sprites:
-    - name: top_0
-      rect:
-        serializedVersion: 2
-        x: 34
-        y: 37
-        width: 79
-        height: 100
-      alignment: 9
-      pivot: {x: .895901859, y: .752342463}
+    sprites: []
   spritePackingTag: 
   userData: 

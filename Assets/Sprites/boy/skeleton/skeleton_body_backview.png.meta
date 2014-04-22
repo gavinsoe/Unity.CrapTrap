@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b4a59a800d3fe4b4e8a124f594ecfb90
+guid: fcefb8a74496d4d94b7f6acb8b850490
 TextureImporter:
   serializedVersion: 2
   mipmaps:
@@ -45,14 +45,14 @@ TextureImporter:
     compressionQuality: 50
   spriteSheet:
     sprites:
-    - name: top_0
+    - name: skeleton_body_backview_0
       rect:
         serializedVersion: 2
-        x: 34
-        y: 37
-        width: 79
-        height: 100
+        x: 40
+        y: 38
+        width: 69
+        height: 124
       alignment: 9
-      pivot: {x: .895901859, y: .752342463}
+      pivot: {x: .505150974, y: .692037106}
   spritePackingTag: 
   userData: 

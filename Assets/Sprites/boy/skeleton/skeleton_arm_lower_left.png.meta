@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b4a59a800d3fe4b4e8a124f594ecfb90
+guid: c6e8d9e2c0ff145269befca017b1ff41
 TextureImporter:
   serializedVersion: 2
   mipmaps:
@@ -45,14 +45,14 @@ TextureImporter:
     compressionQuality: 50
   spriteSheet:
     sprites:
-    - name: top_0
+    - name: skeleton_arm_lower_left_0
       rect:
         serializedVersion: 2
-        x: 34
-        y: 37
-        width: 79
-        height: 100
+        x: 28
+        y: 43
+        width: 47
+        height: 61
       alignment: 9
-      pivot: {x: .895901859, y: .752342463}
+      pivot: {x: .797895074, y: .866358638}
   spritePackingTag: 
   userData: 
