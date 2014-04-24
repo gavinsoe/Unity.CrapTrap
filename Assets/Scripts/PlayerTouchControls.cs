@@ -8,8 +8,8 @@ public class PlayerTouchControls : MonoBehaviour {
     private float minDragDistance = 25f; // Swipe distance before touch is regarded as 'touch and drag'
     private float minHoldTime = 0.15f; // Time before touch is regarded as 'touch and hold'
 
-    enum InputState { TouchLeft, TouchRight, Left_DragLeft, Left_DragRight, Right_DragRight, Right_DragLeft, SwipeDown, MovingRight, MovingLeft, Done };
-    enum Commands { None, MoveLeft, MoveRight, Left_DragLeft, Left_DragRight, Right_DragRight, Right_DragLeft, HangDown, ClimbUp, PullOut };
+    enum InputState { TouchLeft, TouchRight, DragLeft, DragRight, SwipeDown, MovingRight, MovingLeft, Done };
+    enum Commands { None, MoveLeft, MoveRight, DragLeft, DragRight, HangDown, ClimbUp, PullOut };
     private InputState[] touchState;
     private Vector2[] touchStartPosition;
     private float[] touchStartTime;
@@ -65,6 +65,15 @@ public class PlayerTouchControls : MonoBehaviour {
 
                 if (Mathf.Abs(deltaPosition.x) > Mathf.Abs(deltaPosition.y))
                 {
+                    if (deltaPosition.x > minDragDistance)
+                    {
+                        nextCommand = Commands.DragRight;
+                    }
+                    else if (deltaPosition.x < -minDragDistance)
+                    {
+                        nextCommand = Commands.DragLeft;
+                    }
+                    /*
                     if (touchState[touch.fingerId] == InputState.TouchLeft)
                     {
                         if (deltaPosition.x > minDragDistance)
@@ -77,8 +86,7 @@ public class PlayerTouchControls : MonoBehaviour {
                         }
                     }
                     else if (touchState[touch.fingerId] == InputState.TouchRight)
-                    {
-                        if (deltaPosition.x > minDragDistance)
+                    {                        if (deltaPosition.x > minDragDistance)
                         {
                             nextCommand = Commands.Right_DragRight;
                         }
@@ -86,7 +94,7 @@ public class PlayerTouchControls : MonoBehaviour {
                         {
                             nextCommand = Commands.Right_DragLeft;
                         }
-                    }
+                    }*/
                 }
                 else
                 {
@@ -124,21 +132,13 @@ public class PlayerTouchControls : MonoBehaviour {
                     {
                         nextCommand = Commands.MoveRight;
                     }
-                    else if (touchState[touch.fingerId] == InputState.Left_DragRight)
+                    else if (touchState[touch.fingerId] == InputState.DragRight)
                     {
-                        nextCommand = Commands.Left_DragRight;
+                        nextCommand = Commands.DragRight;
                     }
-                    else if (touchState[touch.fingerId] == InputState.Left_DragLeft)
+                    else if (touchState[touch.fingerId] == InputState.DragLeft)
                     {
-                        nextCommand = Commands.Left_DragLeft;
-                    }
-                    else if (touchState[touch.fingerId] == InputState.Right_DragRight)
-                    {
-                        nextCommand = Commands.Right_DragRight;
-                    }
-                    else if (touchState[touch.fingerId] == InputState.Right_DragLeft)
-                    {
-                        nextCommand = Commands.Right_DragLeft;
+                        nextCommand = Commands.DragLeft;
                     }
                 }
             }
@@ -163,12 +163,12 @@ public class PlayerTouchControls : MonoBehaviour {
             {
                 if (nextCommand == Commands.MoveRight)
                 {
-                    StartCoroutine(character.move(transform, 1, false, false));
+                    StartCoroutine(character.move(transform, 1, false));
                     touchState[touch.fingerId] = InputState.MovingRight;
                 }
                 else if (nextCommand == Commands.MoveLeft)
                 {
-                    StartCoroutine(character.move(transform, -1, false, false));
+                    StartCoroutine(character.move(transform, -1, false));
                     touchState[touch.fingerId] = InputState.MovingLeft;
                 }
                 else if (nextCommand == Commands.ClimbUp)
@@ -181,25 +181,15 @@ public class PlayerTouchControls : MonoBehaviour {
                     StartCoroutine(character.hang(transform, -1));
                     touchState[touch.fingerId] = InputState.Done;
                 }
-                else if (nextCommand == Commands.Left_DragLeft)
+                else if (nextCommand == Commands.DragLeft)
                 {
-                    StartCoroutine(character.move(transform, -1, true, false));
-                    touchState[touch.fingerId] = InputState.Left_DragLeft;
+                    StartCoroutine(character.move(transform, -1, true));
+                    touchState[touch.fingerId] = InputState.DragLeft;
                 }
-                else if (nextCommand == Commands.Left_DragRight)
+                else if (nextCommand == Commands.DragRight)
                 {
-                    StartCoroutine(character.move(transform, 1, true, false));
-                    touchState[touch.fingerId] = InputState.Left_DragRight;
-                }
-                else if (nextCommand == Commands.Right_DragLeft)
-                {
-                    StartCoroutine(character.move(transform, -1, false, true));
-                    touchState[touch.fingerId] = InputState.Right_DragLeft;
-                }
-                else if (nextCommand == Commands.Right_DragRight)
-                {
-                    StartCoroutine(character.move(transform, 1, false, true));
-                    touchState[touch.fingerId] = InputState.Right_DragRight;
+                    StartCoroutine(character.move(transform, 1, true));
+                    touchState[touch.fingerId] = InputState.DragRight;
                 }
                 else if (nextCommand == Commands.PullOut)
                 {

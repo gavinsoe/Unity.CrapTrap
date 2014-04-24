@@ -20,13 +20,16 @@ public class CharacterController : MonoBehaviour {
     //[HideInInspector]
     public bool reachedDestination = false;
 
+
     private MainGameController game;
     private Animator animator;
+    private PlayerTouchControls controller;
 
     void Start()
     {
         game = Camera.main.GetComponent<MainGameController>();
         animator = gameObject.GetComponent<Animator>();
+        controller = gameObject.GetComponent<PlayerTouchControls>();
     }
 
     void Update()
@@ -68,13 +71,10 @@ public class CharacterController : MonoBehaviour {
     }
 
     // Function to move the character
-    public IEnumerator move(Transform transform, int sign, bool grabLeft, bool grabRight)
+    public IEnumerator move(Transform transform, int sign, bool dragging)
     {
         // disable movement if destination has been reached
         if (reachedDestination) yield return null;
-
-        // Set the running animation
-        //animator.SetBool("Running", true);	
 
         Vector3 startPosition = transform.position;
         Vector3 endPosition = startPosition;
@@ -91,7 +91,7 @@ public class CharacterController : MonoBehaviour {
         if (!isHanging)
         {
             // If character is not grabbing on to any blocks (just moving)
-            if (!grabLeft && !grabRight)
+            if (!dragging)
             {
                 if (rightCollider == null && sign > 0)
                 {
@@ -124,6 +124,109 @@ public class CharacterController : MonoBehaviour {
                     StartCoroutine(climbLeft());
                 }
             }
+            // If player is trying to drag nearby block...
+            else if (dragging)
+            {
+                // If surrounded by 2 blocks, push blocks to the direction character is moving
+                if (leftCollider != null && rightCollider != null)
+                {
+                    if (sign < 0)
+                    {
+                        BlockController block = leftCollider.transform.gameObject.GetComponent<BlockController>();
+                        if (block.Movable())
+                        {
+                            if (Physics2D.OverlapPoint(new Vector2(block.transform.position.x - gridSize, block.transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null)
+                            {
+                                StartCoroutine(pushLeft(block));
+                            }
+                        }
+                    }
+                    else if (sign > 0)
+                    {
+                         BlockController block = rightCollider.transform.gameObject.GetComponent<BlockController>();
+                         if (block.Movable())
+                         {
+                             if (Physics2D.OverlapPoint(new Vector2(block.transform.position.x + gridSize, block.transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null)
+                             {
+                                 StartCoroutine(pushRight(block));
+                             }
+                         }
+                    }
+                }
+                // If block exists only on left side
+                else if (leftCollider != null)
+                {
+                    if (sign < 0)
+                    {
+                        BlockController block = leftCollider.transform.gameObject.GetComponent<BlockController>();
+                        if (block.Movable())
+                        {
+                            if (Physics2D.OverlapPoint(new Vector2(block.transform.position.x - gridSize, block.transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null)
+                            {
+                                StartCoroutine(pushLeft(block));
+                            }
+                        }
+                    }
+                    else if (sign > 0)
+                    {
+                        BlockController block = leftCollider.transform.gameObject.GetComponent<BlockController>();
+                        if (block.Movable())
+                        {
+                            StartCoroutine(pullLeft(block));
+                        }
+                    }
+                }
+                // If block exists only on right side
+                else if (rightCollider != null)
+                {
+                    if (sign < 0)
+                    {
+                        BlockController block = rightCollider.transform.gameObject.GetComponent<BlockController>();
+                        if (block.Movable())
+                        {
+                            StartCoroutine(pullRight(block));
+                        }
+                    }
+                    else if (sign > 0)
+                    {
+                        BlockController block = rightCollider.transform.gameObject.GetComponent<BlockController>();
+                        if (block.Movable())
+                        {
+                            if (Physics2D.OverlapPoint(new Vector2(block.transform.position.x + gridSize, block.transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null)
+                            {
+                                StartCoroutine(pushRight(block));
+                            }
+                        }
+                    }
+                }
+                // when no blocks around...
+                else
+                {
+                    if (sign > 0)
+                    {
+                        if (rightDownCollider == null)
+                        {
+                            StartCoroutine(fallRight());
+                        }
+                        else
+                        {
+                            StartCoroutine(moveRight());
+                        }
+                    }
+                    else if (sign < 0)
+                    {
+                        if (leftDownCollider == null)
+                        {
+                            StartCoroutine(fallLeft());
+                        }
+                        else
+                        {
+                            StartCoroutine(moveLeft());
+                        }
+                    }
+                }
+            }
+            /*
             // If player is grabbing on to right block
             else if (grabRight && rightCollider != null)
             {
@@ -165,6 +268,7 @@ public class CharacterController : MonoBehaviour {
                     }
                 }
             }
+            */
         }
         else
         {

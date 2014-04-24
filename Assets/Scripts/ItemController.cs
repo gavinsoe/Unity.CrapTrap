@@ -25,7 +25,7 @@ public class ItemController : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (Debug.isDebugBuild) Debug.Log("Collide!! " + col.gameObject.tag);
+        //if (Debug.isDebugBuild) Debug.Log("Collide!! " + col.gameObject.tag);
         if (col.gameObject.tag == "Player")
         {
             // Do some logic to add score/item

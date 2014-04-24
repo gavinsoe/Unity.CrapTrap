@@ -26,15 +26,15 @@ public class PCControls : MonoBehaviour {
             {
                 if (Input.GetKey("o"))
                 {
-                    StartCoroutine(character.move(transform, System.Math.Sign(inputH), true, false));
+                    StartCoroutine(character.move(transform, System.Math.Sign(inputH), true));
                 }
                 else if (Input.GetKey("p"))
                 {
-                    StartCoroutine(character.move(transform, System.Math.Sign(inputH), false, true));
+                    StartCoroutine(character.move(transform, System.Math.Sign(inputH), true));
                 }
                 else
                 {
-                    StartCoroutine(character.move(transform, System.Math.Sign(inputH), false, false));
+                    StartCoroutine(character.move(transform, System.Math.Sign(inputH), false));
                 }
             }
             else if (inputV != 0)
