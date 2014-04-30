@@ -638,7 +638,8 @@ public class CharacterController : MonoBehaviour {
 
             t += Time.deltaTime * (moveSpeed / gridSize);
             transform.position = Vector3.Lerp(startPosition, endPosition, t);
-            yield return null;
+            
+            if (t < 1f) yield return null;
         }
 
         isMoving = false;   
@@ -678,7 +679,7 @@ public class CharacterController : MonoBehaviour {
 
             t += Time.deltaTime * (moveSpeed / gridSize);
             transform.position = Vector3.Lerp(startPosition, endPosition, t);
-            yield return null;
+            if (t < 1f) yield return null;
         }
 
         isMoving = false;
@@ -702,6 +703,8 @@ public class CharacterController : MonoBehaviour {
 
         // Animate
         animator.SetBool("isRunning", true);
+        animator.SetBool("isPushing", false);
+        animator.SetBool("isPulling", false);
 
         while (t < 1f)
         {
@@ -715,10 +718,9 @@ public class CharacterController : MonoBehaviour {
         {
             t += Time.deltaTime * (2 * moveSpeed / gridSize);
             transform.position = Vector3.Lerp(midPosition, endPosition, t);
-            yield return null;
+            if (t < 1f) yield return null;
         }
 
-        animator.SetBool("isRunning", false);
         isMoving = false;
     }
 
@@ -740,6 +742,8 @@ public class CharacterController : MonoBehaviour {
 
         // Animate
         animator.SetBool("isRunning", true);
+        animator.SetBool("isPushing", false);
+        animator.SetBool("isPulling", false);
 
         while (t < 1f)
         {
@@ -753,10 +757,9 @@ public class CharacterController : MonoBehaviour {
         {
             t += Time.deltaTime * (2 * moveSpeed / gridSize);
             transform.position = Vector3.Lerp(midPosition, endPosition, t);
-            yield return null;
+            if (t < 1f) yield return null;
         }
 
-        animator.SetBool("isRunning", false);
         isMoving = false;
     }
 
@@ -782,10 +785,9 @@ public class CharacterController : MonoBehaviour {
         {
             t += Time.deltaTime * (moveSpeed / gridSize);
             transform.position = Vector3.Lerp(startPosition, endPosition, t);
-            yield return null;
+            if (t < 1f) yield return null;
         }
 
-        animator.SetBool("isRunning", false);
         isMoving = false;
     }
 
@@ -811,10 +813,9 @@ public class CharacterController : MonoBehaviour {
         {
             t += Time.deltaTime * (moveSpeed / gridSize);
             transform.position = Vector3.Lerp(startPosition, endPosition, t);
-            yield return null;
+            if (t < 1f) yield return null;
         }
 
-        animator.SetBool("isRunning", false);
         isMoving = false;
     }
 
@@ -857,7 +858,7 @@ public class CharacterController : MonoBehaviour {
         {
             t += Time.deltaTime * (2 * moveSpeed / gridSize);
             transform.position = Vector3.Lerp(midPosition, endPosition, t);
-            yield return null;
+            if (t < 1f) yield return null;
         }
 
         // Check if character is stepping into slippery block
@@ -912,7 +913,7 @@ public class CharacterController : MonoBehaviour {
         {
             t += Time.deltaTime * (2 * moveSpeed / gridSize);
             transform.position = Vector3.Lerp(midPosition, endPosition, t);
-            yield return null;
+            if (t < 1f) yield return null;
         }
 
         // Check if character is stepping into slippery block
@@ -952,7 +953,7 @@ public class CharacterController : MonoBehaviour {
             {
                 t += Time.deltaTime * (moveSpeed / gridSize);
                 transform.position = Vector3.Lerp(startPosition, endPosition, t);
-                yield return null;
+                if (t < 1f) yield return null;
             }
         }
 
@@ -978,9 +979,7 @@ public class CharacterController : MonoBehaviour {
         // Animate
         // Keep on moving (or sliding) if on slippery block.
         Collider2D downCollider;
-        while ((downCollider = Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f)) != null &&
-               downCollider.gameObject.GetComponent<BlockController>().Slippery() &&
-               Physics2D.OverlapPoint(new Vector2(transform.position.x + gridSize, transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null)
+        while (isSlidingRight)
         {
             startPosition = transform.position;
             endPosition = new Vector3(transform.position.x + gridSize, transform.position.y, transform.position.z);
@@ -989,13 +988,25 @@ public class CharacterController : MonoBehaviour {
             {
                 t += Time.deltaTime * (moveSpeed / gridSize);
                 transform.position = Vector3.Lerp(startPosition, endPosition, t);
+                if ( t < 1f ) yield return null;
+            }
+
+            // Check if character is still on slippery ground
+            downCollider = Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
+            if (downCollider != null &&
+               downCollider.gameObject.GetComponent<BlockController>().Slippery() &&
+               Physics2D.OverlapPoint(new Vector2(transform.position.x + gridSize, transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null)
+            {
                 yield return null;
+            }
+            else
+            {
+                animator.SetBool("isSliding", false);
+                isSlidingRight = false;
             }
         }
 
         if (Debug.isDebugBuild) Debug.Log("STOP Sliding Right : " + transform.position.ToString());
-        animator.SetBool("isSliding", false);
-        isSlidingRight = false;
 
         isMoving = false;
     }
@@ -1018,9 +1029,7 @@ public class CharacterController : MonoBehaviour {
         // Animate
         // Keep on moving (or sliding) if on slippery block.
         Collider2D downCollider;
-        while ((downCollider = Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f)) != null &&
-               downCollider.gameObject.GetComponent<BlockController>().Slippery() &&
-               Physics2D.OverlapPoint(new Vector2(transform.position.x - gridSize, transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null)
+        while (isSlidingLeft)
         {
             startPosition = transform.position;
             endPosition = new Vector3(transform.position.x - gridSize, transform.position.y, transform.position.z);
@@ -1029,13 +1038,26 @@ public class CharacterController : MonoBehaviour {
             {
                 t += Time.deltaTime * (moveSpeed / gridSize);
                 transform.position = Vector3.Lerp(startPosition, endPosition, t);
+                if (t < 1f) yield return null;
+            }
+
+            // Check if character is still on slippery ground
+            downCollider = Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
+            if (downCollider != null &&
+                downCollider.gameObject.GetComponent<BlockController>().Slippery() &&
+                Physics2D.OverlapPoint(new Vector2(transform.position.x - gridSize, transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null)
+            {
                 yield return null;
             }
+            else
+            {
+                animator.SetBool("isSliding", false);
+                isSlidingLeft = false;
+            }
+
         }
 
         if (Debug.isDebugBuild) Debug.Log("STOP Sliding Left : " + transform.position.ToString());
-        animator.SetBool("isSliding", false);
-        isSlidingLeft = false;
 
         isMoving = false;
     }
@@ -1070,7 +1092,7 @@ public class CharacterController : MonoBehaviour {
             t += Time.deltaTime * (moveSpeed / gridSize);
             transform.position = Vector3.Lerp(startPosition, endPosition, t);
             block.transform.position = Vector3.Lerp(boxStart, boxEnd, t);
-            yield return null;
+            if (t < 1f) yield return null;
         }
 
         isMoving = false;
@@ -1107,7 +1129,7 @@ public class CharacterController : MonoBehaviour {
             t += Time.deltaTime * (moveSpeed / gridSize);
             transform.position = Vector3.Lerp(startPosition, endPosition, t);
             block.transform.position = Vector3.Lerp(boxStart, boxEnd, t);
-            yield return null;
+            if (t < 1f) yield return null;
         }
 
         isMoving = false;
@@ -1144,7 +1166,7 @@ public class CharacterController : MonoBehaviour {
             t += Time.deltaTime * (moveSpeed / gridSize);
             transform.position = Vector3.Lerp(startPosition, endPosition, t);
             block.transform.position = Vector3.Lerp(boxStart, boxEnd, t);
-            yield return null;
+            if (t < 1f) yield return null;
         }
 
         isMoving = false;
@@ -1181,7 +1203,7 @@ public class CharacterController : MonoBehaviour {
             t += Time.deltaTime * (moveSpeed / gridSize);
             transform.position = Vector3.Lerp(startPosition, endPosition, t);
             block.transform.position = Vector3.Lerp(boxStart, boxEnd, t);
-            yield return null;
+            if (t < 1f) yield return null;
         }
 
         isMoving = false;
