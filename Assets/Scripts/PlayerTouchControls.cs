@@ -5,7 +5,7 @@ public class PlayerTouchControls : MonoBehaviour {
 
      // Variables related to the touch controls
     private int maxTouches = 2;	// up to 5 (iOS only supports 5 apparently)
-    private float minDragDistance = 25f; // Swipe distance before touch is regarded as 'touch and drag'
+    private float minDragDistance = 40f; // Swipe distance before touch is regarded as 'touch and drag'
     private float minHoldTime = 0.15f; // Time before touch is regarded as 'touch and hold'
 
     enum InputState { TouchLeft, TouchRight, DragLeft, DragRight, SwipeDown, MovingRight, MovingLeft, Done };
@@ -68,10 +68,12 @@ public class PlayerTouchControls : MonoBehaviour {
                     if (deltaPosition.x > minDragDistance)
                     {
                         nextCommand = Commands.DragRight;
+                        touchState[touch.fingerId] = InputState.DragRight;
                     }
                     else if (deltaPosition.x < -minDragDistance)
                     {
                         nextCommand = Commands.DragLeft;
+                        touchState[touch.fingerId] = InputState.DragLeft;
                     }
                     /*
                     if (touchState[touch.fingerId] == InputState.TouchLeft)
@@ -122,7 +124,7 @@ public class PlayerTouchControls : MonoBehaviour {
                 if (Time.time - touchStartTime[touch.fingerId] > minHoldTime)
                 {
                     // check on which side of the screen the tap occured
-                    if (touchState[touch.fingerId] == InputState.TouchLeft ||
+                    /*if (touchState[touch.fingerId] == InputState.TouchLeft ||
                         touchState[touch.fingerId] == InputState.MovingLeft)
                     {
                         nextCommand = Commands.MoveLeft;
@@ -131,6 +133,23 @@ public class PlayerTouchControls : MonoBehaviour {
                              touchState[touch.fingerId] == InputState.MovingRight)
                     {
                         nextCommand = Commands.MoveRight;
+                    }*/
+                    
+                    if (touchState[touch.fingerId] == InputState.TouchLeft  ||
+                        touchState[touch.fingerId] == InputState.TouchRight ||
+                        touchState[touch.fingerId] == InputState.MovingLeft ||
+                        touchState[touch.fingerId] == InputState.MovingRight )
+                    { 
+                        if (touch.position.x < Screen.width / 2)
+                        {
+                            nextCommand = Commands.MoveLeft;
+                            touchState[touch.fingerId] = InputState.TouchLeft;
+                        }
+                        else if (touch.position.x > Screen.width / 2)
+                        {
+                            nextCommand = Commands.MoveRight;
+                            touchState[touch.fingerId] = InputState.TouchRight;
+                        }
                     }
                     else if (touchState[touch.fingerId] == InputState.DragRight)
                     {
