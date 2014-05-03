@@ -6,11 +6,13 @@ public class MainGameController : MonoBehaviour {
     // Components
     private TimerBarController timer; // The game timer
     private ScoreController score;
+    private MainGameGUI main;
 
 	// Use this for initialization
 	void Start () {
         timer = gameObject.GetComponentInChildren<TimerBarController>();
         score = GameObject.FindGameObjectWithTag("Score").GetComponent<ScoreController>();
+        main = gameObject.GetComponentInChildren<MainGameGUI>();
 	}
 	
 	// Update is called once per frame
@@ -25,12 +27,12 @@ public class MainGameController : MonoBehaviour {
 
     public void pickupToiletPaper()
     {
-        score.toiletPaper += 1;
+        main.ntp += 1;
     }
 
     public void pickupGoldenToiletPaper()
     {
-        score.goldenToiletPaper += 1;
+        main.gtp += 1;
     }
 
     public void GameOver()
