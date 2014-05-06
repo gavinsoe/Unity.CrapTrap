@@ -71,6 +71,15 @@ public class MainGameGUI : MonoBehaviour
         Color color_alpha1 = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 1);
         Color color_alpha0 = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 0);
 
+        if (pulse_rate < 0.5)
+        {
+            timerBorderStyle.border = new RectOffset(5, 5, 5, 5);
+        }
+        else
+        {
+            timerBorderStyle.border = new RectOffset(10, 10, 10, 10);
+        }
+
         float timeState = Time.time % pulse_rate;
         if (timeState % pulse_rate < half_pulse_rate)
         {
