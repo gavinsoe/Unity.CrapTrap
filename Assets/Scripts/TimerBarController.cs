@@ -4,7 +4,7 @@ using System.Collections;
 public class TimerBarController : MonoBehaviour {
 
 	public float maxTime;
-	private float timeElapsed;
+	public float timeElapsed;
     public float timerReductionRate = 1; // Defaults to 1
 
     private MainGameController game;

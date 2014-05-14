@@ -20,6 +20,14 @@ public class CharacterController : MonoBehaviour {
     //[HideInInspector]
     public bool reachedDestination = false;
 
+    public int moves;
+    public int hangingMoves;
+    public int climbs;
+    public int pulls;
+    public int pushes;
+    public int slides;
+    public int pullOuts;
+
 
     private MainGameController game;
     private Animator animator;
@@ -28,6 +36,7 @@ public class CharacterController : MonoBehaviour {
     {
         game = Camera.main.GetComponent<MainGameController>();
         animator = gameObject.GetComponent<Animator>();
+        moves = hangingMoves = climbs = pulls = pushes = slides = pullOuts = 0;
     }
 
     void Update()
@@ -37,6 +46,7 @@ public class CharacterController : MonoBehaviour {
             // End game
             Time.timeScale = 0;
             Camera.main.GetComponent<GameCompletedGUI>().enabled = true;
+            Camera.main.GetComponent<MainGameController>().UpdateStats();
         }
         if (isBurning && !wasBurning)
         {
@@ -558,11 +568,12 @@ public class CharacterController : MonoBehaviour {
             }
         }
 
+        pullOuts += 1;
         isMoving = false;
         yield return 0;
     }
 
-    // hang will be called then the down button is pressed
+    // hang will be called when the down button is pressed
     public IEnumerator hang(Transform transform, int sign)
     {
         // disable movement if destination has been reached
@@ -642,6 +653,7 @@ public class CharacterController : MonoBehaviour {
             if (t < 1f) yield return null;
         }
 
+        moves += 1;
         isMoving = false;   
     }
 
@@ -682,6 +694,7 @@ public class CharacterController : MonoBehaviour {
             if (t < 1f) yield return null;
         }
 
+        moves += 1;
         isMoving = false;
     }
 
@@ -721,6 +734,7 @@ public class CharacterController : MonoBehaviour {
             if (t < 1f) yield return null;
         }
 
+        climbs += 1;
         isMoving = false;
     }
 
@@ -760,6 +774,7 @@ public class CharacterController : MonoBehaviour {
             if (t < 1f) yield return null;
         }
 
+        climbs += 1;
         isMoving = false;
     }
 
@@ -788,6 +803,7 @@ public class CharacterController : MonoBehaviour {
             if (t < 1f) yield return null;
         }
 
+        hangingMoves += 1;
         isMoving = false;
     }
 
@@ -816,6 +832,7 @@ public class CharacterController : MonoBehaviour {
             if (t < 1f) yield return null;
         }
 
+        hangingMoves += 1;
         isMoving = false;
     }
 
@@ -1016,6 +1033,7 @@ public class CharacterController : MonoBehaviour {
         }
 
         //if (Debug.isDebugBuild) Debug.Log("STOP Sliding Right : " + transform.position.ToString());
+        slides += 1;
         isMoving = false;
     }
 
@@ -1074,6 +1092,7 @@ public class CharacterController : MonoBehaviour {
         }
 
         //if (Debug.isDebugBuild) Debug.Log("STOP Sliding Left : " + transform.position.ToString());
+        slides += 1;
         isMoving = false;
     }
 
@@ -1110,6 +1129,7 @@ public class CharacterController : MonoBehaviour {
             if (t < 1f) yield return null;
         }
 
+        pushes += 1;
         isMoving = false;
         block.NotMoving();
     }
@@ -1147,6 +1167,7 @@ public class CharacterController : MonoBehaviour {
             if (t < 1f) yield return null;
         }
 
+        pushes += 1;
         isMoving = false;
         block.NotMoving();
     }
@@ -1184,6 +1205,7 @@ public class CharacterController : MonoBehaviour {
             if (t < 1f) yield return null;
         }
 
+        pulls += 1;
         isMoving = false;
         block.NotMoving();
     }
@@ -1221,6 +1243,7 @@ public class CharacterController : MonoBehaviour {
             if (t < 1f) yield return null;
         }
 
+        pulls += 1;
         isMoving = false;
         block.NotMoving();
     }

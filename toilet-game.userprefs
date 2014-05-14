@@ -1,23 +1,26 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\CharacterController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\MainGameController.cs">
     <Files>
+      <File FileName="Assets\Scripts\MainGameController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Objective.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Achievement.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\BlockGenerator.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\StoneTutorialGUI.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\BlockController.cs" Line="311" Column="2" />
-      <File FileName="Assets\Scripts\CharacterController.cs" Line="243" Column="14" />
+      <File FileName="Assets\Scripts\BlockController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\CharacterController.cs" Line="1" Column="1" />
       <File FileName="..\protoShit\Assets\ZombieController.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\LevelChunkFactory.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\BlockGenerator.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\TimerBarController.cs" Line="28" Column="1" />
+      <File FileName="Assets\Scripts\TimerBarController.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\PauseGUI.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\DestinationController.cs" Line="21" Column="1" />
+      <File FileName="Assets\Scripts\DestinationController.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GameCompletedGUI.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\FailedGUI.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\MainMenuGUI.cs" Line="110" Column="1" />
-      <File FileName="Assets\Scripts\StoneTuteController.cs" Line="20" Column="4" />
-      <File FileName="Assets\Scripts\MainGameController.cs" Line="46" Column="37" />
-      <File FileName="Assets\Scripts\CameraFollow.cs" Line="65" Column="54" />
-      <File FileName="Assets\Scripts\PCControls.cs" Line="26" Column="14" />
+      <File FileName="Assets\Scripts\MainMenuGUI.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\StoneTuteController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\MainGameController.cs" Line="18" Column="2" />
+      <File FileName="Assets\Scripts\CameraFollow.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PCControls.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
