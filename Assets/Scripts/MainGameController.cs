@@ -5,7 +5,14 @@ using System.Xml.Serialization;
 using System.Collections.Generic;
 using System.IO;
 
-public class MainGameController : MonoBehaviour {
+public class MainGameController : MonoBehaviour
+{
+
+    #region Timer Variables
+    public float maxTime;
+    private float timeElapsed;
+    private float timerReductionRate = 1; // Defaults to 1
+    #endregion
 
     public enum Type
     {
@@ -44,6 +51,7 @@ public class MainGameController : MonoBehaviour {
 
     // Components
     private TimerBarController timer; // The game timer
+<<<<<<< HEAD
     private ScoreController score;
     private int moves;
     private int hangingMoves;
@@ -58,20 +66,64 @@ public class MainGameController : MonoBehaviour {
 
     public bool[] objectiveFlags = new bool[3];
     public int reward;
+=======
+    private MainGameGUI main;
+>>>>>>> 2a610f05b6ee66c69c461e9d08b541c1eb81162e
 
 	// Use this for initialization
 	void Start () {
+        // Initialise timer components
+        Time.timeScale = 1f;
+        timeElapsed = maxTime;
+
         timer = gameObject.GetComponentInChildren<TimerBarController>();
+<<<<<<< HEAD
         score = GameObject.FindGameObjectWithTag("Score").GetComponent<ScoreController>();
         objectiveFlags[0] = false;
         objectiveFlags[1] = false;
         objectiveFlags[2] = false;
+=======
+        main = gameObject.GetComponentInChildren<MainGameGUI>();
+>>>>>>> 2a610f05b6ee66c69c461e9d08b541c1eb81162e
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+	    // Update timer
+        if (timeElapsed >= 0)
+        {
+            timeElapsed -= Time.deltaTime * timerReductionRate;
+            updateTimerPulseRate();
+        }
+        else
+        {
+            GameOver();
+        }
 	}
+
+    public void updateTimerPulseRate()
+    {
+        if ((timeElapsed / maxTime) > 0.75)
+        {
+            main.timerPulseRate = 2;
+        }
+        else if ((timeElapsed / maxTime) > 0.5)
+        {
+            main.timerPulseRate = 1f;
+        }
+        else if ((timeElapsed / maxTime) > 0.25)
+        {
+            main.timerPulseRate = 0.75f;
+        }
+        else if ((timeElapsed / maxTime) > 0.15)
+        {
+            main.timerPulseRate = 0.5f;
+        }
+        else if ((timeElapsed / maxTime) > 0.05)
+        {
+            main.timerPulseRate = 0.25f;
+        }
+    }
 
     public void setTimerReductionRate(float rate)
     {        
@@ -80,12 +132,12 @@ public class MainGameController : MonoBehaviour {
 
     public void pickupToiletPaper()
     {
-        score.toiletPaper += 1;
+        main.ntp += 1;
     }
 
     public void pickupGoldenToiletPaper()
     {
-        score.goldenToiletPaper += 1;
+        main.gtp += 1;
     }
 
     public void GameOver()
@@ -107,7 +159,7 @@ public class MainGameController : MonoBehaviour {
 		GameObject.FindGameObjectWithTag("Player").GetComponent<PCControls>().enabled = false;
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerTouchControls>().enabled = false;
         // Disable Timer
-		Camera.main.GetComponentInChildren<TimerBarController>().enabled = false;
+		// Camera.main.GetComponentInChildren<TimerBarController>().enabled = false;
 	}
 
 	public void EnableTimeNMove() {
@@ -115,7 +167,7 @@ public class MainGameController : MonoBehaviour {
         GameObject.FindGameObjectWithTag("Player").GetComponent<PCControls>().enabled = true;
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerTouchControls>().enabled = true;
         // Enable Timer
-		Camera.main.GetComponentInChildren<TimerBarController>().enabled = true;
+		//Camera.main.GetComponentInChildren<TimerBarController>().enabled = true;
 	}
 
     public void UpdateStats()
