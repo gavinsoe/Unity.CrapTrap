@@ -51,7 +51,6 @@ public class MainGameController : MonoBehaviour
 
     // Components
     private TimerBarController timer; // The game timer
-<<<<<<< HEAD
     private ScoreController score;
     private int moves;
     private int hangingMoves;
@@ -66,9 +65,7 @@ public class MainGameController : MonoBehaviour
 
     public bool[] objectiveFlags = new bool[3];
     public int reward;
-=======
     private MainGameGUI main;
->>>>>>> 2a610f05b6ee66c69c461e9d08b541c1eb81162e
 
 	// Use this for initialization
 	void Start () {
@@ -77,14 +74,11 @@ public class MainGameController : MonoBehaviour
         timeElapsed = maxTime;
 
         timer = gameObject.GetComponentInChildren<TimerBarController>();
-<<<<<<< HEAD
         score = GameObject.FindGameObjectWithTag("Score").GetComponent<ScoreController>();
         objectiveFlags[0] = false;
         objectiveFlags[1] = false;
         objectiveFlags[2] = false;
-=======
         main = gameObject.GetComponentInChildren<MainGameGUI>();
->>>>>>> 2a610f05b6ee66c69c461e9d08b541c1eb81162e
 	}
 	
 	// Update is called once per frame
