@@ -51,7 +51,6 @@ public class MainGameController : MonoBehaviour
 
     // Components
     private TimerBarController timer; // The game timer
-    private ScoreController score;
     private int moves;
     private int hangingMoves;
     private float time;
@@ -74,7 +73,6 @@ public class MainGameController : MonoBehaviour
         timeElapsed = maxTime;
 
         timer = gameObject.GetComponentInChildren<TimerBarController>();
-        score = GameObject.FindGameObjectWithTag("Score").GetComponent<ScoreController>();
         objectiveFlags[0] = false;
         objectiveFlags[1] = false;
         objectiveFlags[2] = false;
@@ -190,8 +188,8 @@ public class MainGameController : MonoBehaviour
         gameData.pushes += pushes;
         gameData.slides += slides;
         gameData.pullOuts += pullOuts;
-        gameData.toiletPapers += score.toiletPaper;
-        gameData.goldPapers += score.goldenToiletPaper;
+        gameData.toiletPapers += main.ntp;
+        gameData.goldPapers += main.gtp;
         gameData.stagesDone += 1;
 
         if (!gameData.levels.ContainsKey(Application.loadedLevel))
@@ -407,21 +405,21 @@ public class MainGameController : MonoBehaviour
             {
                 if (objectives[i].option == Option.lessThan)
                 {
-                    if (score.toiletPaper < objectives[i].counter)
+                    if (main.ntp < objectives[i].counter)
                     {
                         objectiveFlags[i] = true;
                     }
                 }
                 else if (objectives[i].option == Option.greaterThan)
                 {
-                    if (score.toiletPaper > objectives[i].counter)
+                    if (main.ntp > objectives[i].counter)
                     {
                         objectiveFlags[i] = true;
                     }
                 }
                 else
                 {
-                    if (score.toiletPaper == objectives[i].counter)
+                    if (main.ntp == objectives[i].counter)
                     {
                         objectiveFlags[i] = true;
                     }
@@ -431,21 +429,21 @@ public class MainGameController : MonoBehaviour
             {
                 if (objectives[i].option == Option.lessThan)
                 {
-                    if (score.goldenToiletPaper < objectives[i].counter)
+                    if (main.gtp < objectives[i].counter)
                     {
                         objectiveFlags[i] = true;
                     }
                 }
                 else if (objectives[i].option == Option.greaterThan)
                 {
-                    if (score.goldenToiletPaper > objectives[i].counter)
+                    if (main.gtp > objectives[i].counter)
                     {
                         objectiveFlags[i] = true;
                     }
                 }
                 else
                 {
-                    if (score.goldenToiletPaper == objectives[i].counter)
+                    if (main.gtp == objectives[i].counter)
                     {
                         objectiveFlags[i] = true;
                     }
