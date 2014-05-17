@@ -137,6 +137,7 @@ public class CharacterController : MonoBehaviour {
             // If player is trying to drag nearby block...
             else if (dragging)
             {
+                bool canMoveBlock = false; // A boolean value determines whether or not the block the character is attempting to move is movable.
                 // If surrounded by 2 blocks, push blocks to the direction character is moving
                 if (leftCollider != null && rightCollider != null)
                 {
@@ -147,9 +148,10 @@ public class CharacterController : MonoBehaviour {
                         {
                             if (Physics2D.OverlapPoint(new Vector2(block.transform.position.x - gridSize, block.transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null)
                             {
-                                StartCoroutine(pushLeft(block));
+                                canMoveBlock = true;
                             }
                         }
+                        StartCoroutine(pushLeft(block, canMoveBlock));
                     }
                     else if (sign > 0)
                     {
@@ -158,9 +160,10 @@ public class CharacterController : MonoBehaviour {
                          {
                              if (Physics2D.OverlapPoint(new Vector2(block.transform.position.x + gridSize, block.transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null)
                              {
-                                 StartCoroutine(pushRight(block));
+                                 canMoveBlock = true;
                              }
                          }
+                         StartCoroutine(pushRight(block, canMoveBlock));
                     }
                 }
                 // If block exists only on left side
@@ -173,17 +176,19 @@ public class CharacterController : MonoBehaviour {
                         {
                             if (Physics2D.OverlapPoint(new Vector2(block.transform.position.x - gridSize, block.transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null)
                             {
-                                StartCoroutine(pushLeft(block));
+                                canMoveBlock = true;
                             }
                         }
+                        StartCoroutine(pushLeft(block, canMoveBlock));
                     }
                     else if (sign > 0)
                     {
                         BlockController block = leftCollider.transform.gameObject.GetComponent<BlockController>();
                         if (block.Movable())
                         {
-                            StartCoroutine(pullLeft(block));
+                            canMoveBlock = true;
                         }
+                        StartCoroutine(pullLeft(block, canMoveBlock));
                     }
                 }
                 // If block exists only on right side
@@ -194,8 +199,9 @@ public class CharacterController : MonoBehaviour {
                         BlockController block = rightCollider.transform.gameObject.GetComponent<BlockController>();
                         if (block.Movable())
                         {
-                            StartCoroutine(pullRight(block));
+                            canMoveBlock = true;
                         }
+                        StartCoroutine(pullRight(block, canMoveBlock));
                     }
                     else if (sign > 0)
                     {
@@ -204,9 +210,10 @@ public class CharacterController : MonoBehaviour {
                         {
                             if (Physics2D.OverlapPoint(new Vector2(block.transform.position.x + gridSize, block.transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null)
                             {
-                                StartCoroutine(pushRight(block));
+                                canMoveBlock = true;
                             }
                         }
+                        StartCoroutine(pushRight(block, canMoveBlock));
                     }
                 }
                 // when no blocks around...
@@ -1096,7 +1103,7 @@ public class CharacterController : MonoBehaviour {
         isMoving = false;
     }
 
-    public IEnumerator pushRight(BlockController block)
+    public IEnumerator pushRight(BlockController block, bool canMove)
     {
         // disable movement if destination has been reached
         if (reachedDestination) yield return null;
@@ -1121,20 +1128,23 @@ public class CharacterController : MonoBehaviour {
         animator.SetBool("isPushing", true);
         animator.SetBool("isPulling", false);
 
-        while (t < 1f)
+        if (canMove)
         {
-            t += Time.deltaTime * (moveSpeed / gridSize);
-            transform.position = Vector3.Lerp(startPosition, endPosition, t);
-            block.transform.position = Vector3.Lerp(boxStart, boxEnd, t);
-            if (t < 1f) yield return null;
-        }
+            while (t < 1f)
+            {
+                t += Time.deltaTime * (moveSpeed / gridSize);
+                transform.position = Vector3.Lerp(startPosition, endPosition, t);
+                block.transform.position = Vector3.Lerp(boxStart, boxEnd, t);
+                if (t < 1f) yield return null;
+            }
 
-        pushes += 1;
+            pushes += 1;
+        }
         isMoving = false;
         block.NotMoving();
     }
 
-    public IEnumerator pushLeft(BlockController block)
+    public IEnumerator pushLeft(BlockController block, bool canMove)
     {
         // disable movement if destination has been reached
         if (reachedDestination) yield return null;
@@ -1159,20 +1169,23 @@ public class CharacterController : MonoBehaviour {
         animator.SetBool("isPushing", true);
         animator.SetBool("isPulling", false);
 
-        while (t < 1f)
+        if (canMove)
         {
-            t += Time.deltaTime * (moveSpeed / gridSize);
-            transform.position = Vector3.Lerp(startPosition, endPosition, t);
-            block.transform.position = Vector3.Lerp(boxStart, boxEnd, t);
-            if (t < 1f) yield return null;
-        }
+            while (t < 1f)
+            {
+                t += Time.deltaTime * (moveSpeed / gridSize);
+                transform.position = Vector3.Lerp(startPosition, endPosition, t);
+                block.transform.position = Vector3.Lerp(boxStart, boxEnd, t);
+                if (t < 1f) yield return null;
+            }
 
-        pushes += 1;
+            pushes += 1;
+        }
         isMoving = false;
         block.NotMoving();
     }
 
-    public IEnumerator pullRight(BlockController block)
+    public IEnumerator pullRight(BlockController block, bool canMove)
     {
         // disable movement if destination has been reached
         if (reachedDestination) yield return null;
@@ -1197,20 +1210,23 @@ public class CharacterController : MonoBehaviour {
         animator.SetBool("isPulling", true);
         animator.SetBool("isPushing", false);
 
-        while (t < 1f)
+        if (canMove)
         {
-            t += Time.deltaTime * (moveSpeed / gridSize);
-            transform.position = Vector3.Lerp(startPosition, endPosition, t);
-            block.transform.position = Vector3.Lerp(boxStart, boxEnd, t);
-            if (t < 1f) yield return null;
-        }
+            while (t < 1f)
+            {
+                t += Time.deltaTime * (moveSpeed / gridSize);
+                transform.position = Vector3.Lerp(startPosition, endPosition, t);
+                block.transform.position = Vector3.Lerp(boxStart, boxEnd, t);
+                if (t < 1f) yield return null;
+            }
 
-        pulls += 1;
+            pulls += 1;
+        }
         isMoving = false;
         block.NotMoving();
     }
 
-    public IEnumerator pullLeft(BlockController block)
+    public IEnumerator pullLeft(BlockController block, bool canMove)
     {
         // disable movement if destination has been reached
         if (reachedDestination) yield return null;
@@ -1235,15 +1251,18 @@ public class CharacterController : MonoBehaviour {
         animator.SetBool("isPulling", true);
         animator.SetBool("isPushing", false);
 
-        while (t < 1f)
+        if (canMove)
         {
-            t += Time.deltaTime * (moveSpeed / gridSize);
-            transform.position = Vector3.Lerp(startPosition, endPosition, t);
-            block.transform.position = Vector3.Lerp(boxStart, boxEnd, t);
-            if (t < 1f) yield return null;
-        }
+            while (t < 1f)
+            {
+                t += Time.deltaTime * (moveSpeed / gridSize);
+                transform.position = Vector3.Lerp(startPosition, endPosition, t);
+                block.transform.position = Vector3.Lerp(boxStart, boxEnd, t);
+                if (t < 1f) yield return null;
+            }
 
-        pulls += 1;
+            pulls += 1;
+        }
         isMoving = false;
         block.NotMoving();
     }
