@@ -94,9 +94,13 @@ public class CharacterController : MonoBehaviour {
         Collider2D leftUpCollider = Physics2D.OverlapPoint(new Vector2(startPosition.x - gridSize, startPosition.y + gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
         Collider2D leftDownCollider = Physics2D.OverlapPoint(new Vector2(startPosition.x - gridSize, startPosition.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
         Collider2D upCollider = Physics2D.OverlapPoint(new Vector2(startPosition.x, startPosition.y + gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
-        
+        Collider2D bottomCollider = Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
+
         if (!isHanging)
         {
+            // Do nothing if character is falling.
+            if (bottomCollider == null) yield break;
+
             // If character is not grabbing on to any blocks (just moving)
             if (!dragging)
             {
