@@ -28,7 +28,6 @@ public class CharacterController : MonoBehaviour {
     public int slides;
     public int pullOuts;
 
-
     private MainGameController game;
     private Animator animator;
 
@@ -81,6 +80,8 @@ public class CharacterController : MonoBehaviour {
     // Function to move the character
     public IEnumerator move(Transform transform, int sign, bool dragging)
     {
+        // disable movement when script is disabled
+        if (!this.enabled) yield break;
         // disable movement if destination has been reached
         if (reachedDestination) yield return null;
 
@@ -243,49 +244,6 @@ public class CharacterController : MonoBehaviour {
                     }
                 }
             }
-            /*
-            // If player is grabbing on to right block
-            else if (grabRight && rightCollider != null)
-            {
-                BlockController block = rightCollider.transform.gameObject.GetComponent<BlockController>();
-                if (rightCollider.transform.gameObject.GetComponent<BlockController>().Movable())
-                {
-                    if (sign < 0)
-                    {
-                        if (leftCollider == null) StartCoroutine(pullRight(block));
-                    }
-                    else
-                    {
-                        if (Physics2D.OverlapPoint(new Vector2(block.transform.position.x + gridSize, block.transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null)
-                        {
-                            StartCoroutine(pushRight(block));
-                        }
-                    }
-                }
-            }
-            // If player is grabbing on to left block
-            else if (grabLeft && leftCollider != null)
-            {
-                BlockController block = leftCollider.transform.gameObject.GetComponent<BlockController>();
-                if (leftCollider.transform.gameObject.GetComponent<BlockController>().Movable())
-                {
-                    if (sign < 0)
-                    {
-                        if (Physics2D.OverlapPoint(new Vector2(block.transform.position.x - gridSize, block.transform.position.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null)
-                        {
-                            StartCoroutine(pushLeft(block));
-                        }
-                    }
-                    else
-                    {
-                        if (rightCollider == null)
-                        {
-                            StartCoroutine(pullLeft(block));
-                        }
-                    }
-                }
-            }
-            */
         }
         else
         {
@@ -543,6 +501,8 @@ public class CharacterController : MonoBehaviour {
     // pull out a block
     public IEnumerator pull(Transform transform)
     {
+        // disable movement when script is disabled
+        if (!this.enabled) yield break;
         // disable movement if destination has been reached
         if (reachedDestination) yield return null;
 
@@ -583,6 +543,8 @@ public class CharacterController : MonoBehaviour {
     // hang will be called when the down button is pressed
     public IEnumerator hang(Transform transform, int sign)
     {
+        // disable movement when script is disabled
+        if (!this.enabled) yield break;
         // disable movement if destination has been reached
         if (reachedDestination) yield return null;
 
@@ -624,6 +586,7 @@ public class CharacterController : MonoBehaviour {
 
     public IEnumerator moveRight()
     {
+        if (isSlidingLeft || isSlidingRight) yield break;
         // disable movement if destination has been reached
         if (reachedDestination) yield return null;
 
@@ -666,6 +629,7 @@ public class CharacterController : MonoBehaviour {
 
     public IEnumerator moveLeft()
     {
+        if (isSlidingLeft || isSlidingRight) yield break;
         // disable movement if destination has been reached
         if (reachedDestination) yield return null;
 

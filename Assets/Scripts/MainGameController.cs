@@ -10,8 +10,9 @@ public class MainGameController : MonoBehaviour
 
     #region Timer Variables
     public float maxTime;
-    private float timeElapsed;
+    public float timeElapsed;
     private float timerReductionRate = 1; // Defaults to 1
+    private bool timerPaused = false;
     #endregion
 
     public enum Type
@@ -50,7 +51,7 @@ public class MainGameController : MonoBehaviour
     }
 
     // Components
-    private TimerBarController timer; // The game timer
+    private CharacterController character; // the character controller
     private int moves;
     private int hangingMoves;
     private float time;
@@ -64,7 +65,8 @@ public class MainGameController : MonoBehaviour
 
     public bool[] objectiveFlags = new bool[3];
     public int reward;
-    private MainGameGUI main;
+    private MainGameGUI mainGUI;
+    private PauseGUI pauseGUI;
 
 	// Use this for initialization
 	void Start () {
@@ -72,11 +74,12 @@ public class MainGameController : MonoBehaviour
         Time.timeScale = 1f;
         timeElapsed = maxTime;
 
-        timer = gameObject.GetComponentInChildren<TimerBarController>();
+        character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>();
         objectiveFlags[0] = false;
         objectiveFlags[1] = false;
         objectiveFlags[2] = false;
-        main = gameObject.GetComponentInChildren<MainGameGUI>();
+        mainGUI = gameObject.GetComponentInChildren<MainGameGUI>();
+        pauseGUI = gameObject.GetComponentInChildren<PauseGUI>();
 	}
 	
 	// Update is called once per frame
@@ -84,8 +87,11 @@ public class MainGameController : MonoBehaviour
 	    // Update timer
         if (timeElapsed >= 0)
         {
-            timeElapsed -= Time.deltaTime * timerReductionRate;
-            updateTimerPulseRate();
+            if (!timerPaused)
+            {
+                timeElapsed -= Time.deltaTime * timerReductionRate;
+                updateTimerPulseRate();
+            }
         }
         else
         {
@@ -97,39 +103,39 @@ public class MainGameController : MonoBehaviour
     {
         if ((timeElapsed / maxTime) > 0.75)
         {
-            main.timerPulseRate = 2;
+            mainGUI.timerPulseRate = 2;
         }
         else if ((timeElapsed / maxTime) > 0.5)
         {
-            main.timerPulseRate = 1f;
+            mainGUI.timerPulseRate = 1f;
         }
         else if ((timeElapsed / maxTime) > 0.25)
         {
-            main.timerPulseRate = 0.75f;
+            mainGUI.timerPulseRate = 0.75f;
         }
         else if ((timeElapsed / maxTime) > 0.15)
         {
-            main.timerPulseRate = 0.5f;
+            mainGUI.timerPulseRate = 0.5f;
         }
         else if ((timeElapsed / maxTime) > 0.05)
         {
-            main.timerPulseRate = 0.25f;
+            mainGUI.timerPulseRate = 0.25f;
         }
     }
 
     public void setTimerReductionRate(float rate)
     {        
-        timer.timerReductionRate = rate;
+        timerReductionRate = rate;
     }
 
     public void pickupToiletPaper()
     {
-        main.ntp += 1;
+        mainGUI.ntp += 1;
     }
 
     public void pickupGoldenToiletPaper()
     {
-        main.gtp += 1;
+        mainGUI.gtp += 1;
     }
 
     public void GameOver()
@@ -139,11 +145,21 @@ public class MainGameController : MonoBehaviour
     }
 
 	public void PauseGame() {
-		Time.timeScale = 0;
+        // Pause the timer
+        timerPaused = true;
+        // Disable Controls
+        character.enabled = false;
+        // Pop up the pause menu
+        pauseGUI.PauseGame();
 	}
 
 	public void ResumeGame() {
-		Time.timeScale = 1;
+		// Hide the pause menu
+        pauseGUI.ResumeGame();
+        //Enable Controls
+        character.enabled = true;
+        // Resume timer
+        timerPaused = false;
 	}
 
 	public void DisableTimeNMove() {
@@ -165,7 +181,7 @@ public class MainGameController : MonoBehaviour
     public void UpdateStats()
     {
         CharacterController character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>();
-        time += timer.maxTime - timer.timeElapsed;
+        time += maxTime - timeElapsed;
         // Get counters from CharacterController
         moves = character.moves;
         hangingMoves = character.hangingMoves;
@@ -188,8 +204,8 @@ public class MainGameController : MonoBehaviour
         gameData.pushes += pushes;
         gameData.slides += slides;
         gameData.pullOuts += pullOuts;
-        gameData.toiletPapers += main.ntp;
-        gameData.goldPapers += main.gtp;
+        gameData.toiletPapers += mainGUI.ntp;
+        gameData.goldPapers += mainGUI.gtp;
         gameData.stagesDone += 1;
 
         if (!gameData.levels.ContainsKey(Application.loadedLevel))
@@ -405,21 +421,21 @@ public class MainGameController : MonoBehaviour
             {
                 if (objectives[i].option == Option.lessThan)
                 {
-                    if (main.ntp < objectives[i].counter)
+                    if (mainGUI.ntp < objectives[i].counter)
                     {
                         objectiveFlags[i] = true;
                     }
                 }
                 else if (objectives[i].option == Option.greaterThan)
                 {
-                    if (main.ntp > objectives[i].counter)
+                    if (mainGUI.ntp > objectives[i].counter)
                     {
                         objectiveFlags[i] = true;
                     }
                 }
                 else
                 {
-                    if (main.ntp == objectives[i].counter)
+                    if (mainGUI.ntp == objectives[i].counter)
                     {
                         objectiveFlags[i] = true;
                     }
@@ -429,21 +445,21 @@ public class MainGameController : MonoBehaviour
             {
                 if (objectives[i].option == Option.lessThan)
                 {
-                    if (main.gtp < objectives[i].counter)
+                    if (mainGUI.gtp < objectives[i].counter)
                     {
                         objectiveFlags[i] = true;
                     }
                 }
                 else if (objectives[i].option == Option.greaterThan)
                 {
-                    if (main.gtp > objectives[i].counter)
+                    if (mainGUI.gtp > objectives[i].counter)
                     {
                         objectiveFlags[i] = true;
                     }
                 }
                 else
                 {
-                    if (main.gtp == objectives[i].counter)
+                    if (mainGUI.gtp == objectives[i].counter)
                     {
                         objectiveFlags[i] = true;
                     }
