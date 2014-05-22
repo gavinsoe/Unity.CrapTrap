@@ -9,10 +9,18 @@ public class MainGameController : MonoBehaviour
 {
 
     #region Timer Variables
+
     public float maxTime;
     public float timeElapsed;
     private float timerReductionRate = 1; // Defaults to 1
     private bool timerPaused = false;
+
+    #endregion
+    #region Map Variables
+
+    public bool mapEnabled = true;
+    private Camera minimap;
+
     #endregion
 
     public enum Type
@@ -74,12 +82,16 @@ public class MainGameController : MonoBehaviour
         Time.timeScale = 1f;
         timeElapsed = maxTime;
 
+        // Initialise objectives
         character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>();
         objectiveFlags[0] = false;
         objectiveFlags[1] = false;
         objectiveFlags[2] = false;
         mainGUI = gameObject.GetComponentInChildren<MainGameGUI>();
         pauseGUI = gameObject.GetComponentInChildren<PauseGUI>();
+
+        // Obtain the minimap component
+        minimap = GameObject.FindGameObjectWithTag("Minimap").GetComponent<Camera>();
 	}
 	
 	// Update is called once per frame
@@ -161,6 +173,36 @@ public class MainGameController : MonoBehaviour
         // Resume timer
         timerPaused = false;
 	}
+
+    public void RetryLevel()
+    {
+        // Restart level
+        Application.LoadLevel(Application.loadedLevel);
+    }
+
+    public void ReturnToTitle()
+    {
+        // Return to title screen
+        Application.LoadLevel("GUI_TitleScreen");
+    }
+
+    public void ToggleMap(bool enabled)
+    {
+        mapEnabled = enabled;
+        minimap.enabled = enabled;
+    }
+
+    public void ToggleSound(bool enabled)
+    {
+        if (enabled)
+        {
+            AudioListener.volume = 1.0f;
+        }
+        else
+        {
+            AudioListener.volume = 0.0f;
+        }
+    }
 
 	public void DisableTimeNMove() {
         // Disable Controls

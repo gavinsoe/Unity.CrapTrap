@@ -86,12 +86,6 @@ public class MainGameGUI : MonoBehaviour
     // Draw the GUI
     void OnGUI()
     {
-        #region temp
-
-        
-        
-        #endregion
-
         // Draw the timer border
         TimerPulseBorder(timerPulseRate);
 
@@ -140,7 +134,10 @@ public class MainGameGUI : MonoBehaviour
 
     void MinimapBorder()
     {
-        GUI.Box(mapCanvas, "", activeSkin.customStyles[2]);
+        if (mainController.mapEnabled)
+        {
+            GUI.Box(mapCanvas, "", activeSkin.customStyles[2]);
+        }
     }
 
     void NTPScore(float width, float height)

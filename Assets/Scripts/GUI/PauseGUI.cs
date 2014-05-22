@@ -193,22 +193,22 @@ public class PauseGUI : MonoBehaviour {
         // Draw the retry button
         if (GUI.Button(A_BtnRect, "", activeSkin.customStyles[4]))
         {
-            // Restart level
-            Application.LoadLevel(Application.loadedLevel);
+            mainController.RetryLevel();
         }
 
         // Draw the home button
         if (GUI.Button(B_BtnRect, "", activeSkin.customStyles[3]))
         {
-            // Return to title screen
-            Application.LoadLevel("GUI_TitleScreen");
+            mainController.ReturnToTitle();
         }
 
         // Draw the sound button
         sound = GUI.Toggle(C_BtnRect, sound, "", activeSkin.customStyles[5]);
+        mainController.ToggleSound(!sound);
 
         // Draw the retry button
         map = GUI.Toggle(D_BtnRect, map, "", activeSkin.customStyles[6]);
+        mainController.ToggleMap(!map);
 
         GUI.EndGroup();
     }
