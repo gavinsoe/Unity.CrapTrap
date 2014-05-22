@@ -30,6 +30,11 @@ public class ReviewGUI : MonoBehaviour
     private string[] toolbarStrings = new string[] { "1", "2", "3", "4", "5" };
     private Vector2 scrollPosition = new Vector2(0, 0);
 
+    private float labelFontScaling = 0.04f;
+    private float headerFontScaling = 0.075f;
+    private float buttonFontScaling = 0.04f;
+    private float contentFontScaling = 0.05f;
+
     #if UNITY_EDITOR
         public static bool Validator(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
         { return true; }
@@ -50,8 +55,31 @@ public class ReviewGUI : MonoBehaviour
         username = SystemInfo.deviceUniqueIdentifier;
     }
 
+    void Update()
+    {
+        foreach (Touch touch in Input.touches)
+        {
+            if (touch.phase == TouchPhase.Moved)
+            {
+                     scrollPosition.y += touch.deltaPosition.y;        // dragging
+            }
+        }
+    }
+
     void OnGUI()
     {
+        #region GUI stuff
+
+        activeSkin.label.fontSize = (int)(Screen.height * labelFontScaling);
+        activeSkin.textField.fontSize = (int)(Screen.height * contentFontScaling);
+        activeSkin.textArea.fontSize = (int)(Screen.height * contentFontScaling);
+        activeSkin.button.fontSize = (int)(Screen.height * buttonFontScaling);
+        // header font scaling
+        activeSkin.customStyles[0].fontSize = (int)(Screen.height * headerFontScaling);
+        activeSkin.customStyles[1].fontSize = (int)(Screen.height * labelFontScaling);
+
+        #endregion
+
         GUI.skin = activeSkin;
         DemoReviewForm();
     }
@@ -67,7 +95,7 @@ public class ReviewGUI : MonoBehaviour
         scrollPosition = GUILayout.BeginScrollView(scrollPosition);
         GUILayout.BeginVertical();
         
-        GUILayout.Label("Thank you for trying out our game! Let us know what you think!", activeSkin.customStyles[0]);
+        GUILayout.Label("Thank you for trying out our game! \nLet us know what you think!", activeSkin.customStyles[0]);
 
         if (!String.IsNullOrEmpty(error))
         {
@@ -80,30 +108,30 @@ public class ReviewGUI : MonoBehaviour
         }
 
         GUILayout.Label("What did you LIKE about the game?");
-        feedback_1 = GUILayout.TextArea(feedback_1, GUILayout.Height(50));
+        feedback_1 = GUILayout.TextArea(feedback_1);
         
         GUILayout.Label("What did you HATE about the game?");
-        feedback_2 = GUILayout.TextArea(feedback_2, GUILayout.Height(50));
+        feedback_2 = GUILayout.TextArea(feedback_2);
 
         GUILayout.Label("Help us make the game better!");
-        feedback_3 = GUILayout.TextArea(feedback_3, GUILayout.Height(50));
+        feedback_3 = GUILayout.TextArea(feedback_3);
 
         GUILayout.Label("Any additional comments? :D");
-        feedback_4 = GUILayout.TextArea(feedback_4, GUILayout.Height(50));
+        feedback_4 = GUILayout.TextArea(feedback_4);
 
         GUILayout.Label("Rate the game!");
         toolbarInt = GUILayout.Toolbar(toolbarInt, toolbarStrings);
 
         GUILayout.BeginHorizontal();
 
-        if (GUILayout.Button("Back to main menu"))
+        if (GUILayout.Button("main menu"))
         {
             // Open Contact us modal
             Application.LoadLevel("GUI_TitleScreen");
         }
 
         // Submit
-        if (GUILayout.Button("Submit"))
+        if (GUILayout.Button("submit"))
         {
             // Clear Error message
             error = String.Empty;

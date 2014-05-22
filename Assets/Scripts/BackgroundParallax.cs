@@ -4,6 +4,7 @@ using System.Collections;
 public class BackgroundParallax : MonoBehaviour {
 
     public bool FollowCamera;
+    public bool MoveContinously;
     public float speed;
 
     private float X;
@@ -23,11 +24,25 @@ public class BackgroundParallax : MonoBehaviour {
         // The parallax effect. (With the offset from above)
         if (FollowCamera)
         {
-            renderer.material.mainTextureOffset = new Vector2((camera_pos.x - X) * speed, 0f);
+            if (MoveContinously) 
+            {
+                renderer.material.mainTextureOffset = new Vector2(Time.time * speed, 0f);
+            }
+            else
+            {
+                renderer.material.mainTextureOffset = new Vector2((camera_pos.x - X) * speed, 0f);
+            }
         }
         else
         {
-            renderer.material.mainTextureOffset = new Vector2((X - camera_pos.x) * speed, 0f);
+            if (MoveContinously)
+            {
+                renderer.material.mainTextureOffset = new Vector2(-Time.time * speed, 0f);
+            }
+            else
+            {
+                renderer.material.mainTextureOffset = new Vector2((X - camera_pos.x) * speed, 0f);
+            }
         }
 	}
 }

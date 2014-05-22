@@ -25,6 +25,11 @@ public class ContactUsGUI : MonoBehaviour {
     Constants constants = new Constants();
     ContactUsResponse callBack = new ContactUsResponse();
 
+    private float labelFontScaling = 0.04f;
+    private float headerFontScaling = 0.075f;
+    private float buttonFontScaling = 0.04f;
+    private float contentFontScaling = 0.05f;
+
     #if UNITY_EDITOR
         public static bool Validator(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
         { return true; }
@@ -41,10 +46,33 @@ public class ContactUsGUI : MonoBehaviour {
         // Build Email Service
         emailService = serviceAPI.BuildEmailService();
     }
-	
+
+    void Update()
+    {
+        foreach (Touch touch in Input.touches)
+        {
+            if (touch.phase == TouchPhase.Moved)
+            {
+                scrollPosition.y += touch.deltaPosition.y;        // dragging
+            }
+        }
+    }
+
 	// Update is called once per frame
     void OnGUI()
     {
+        #region GUI stuff
+
+        activeSkin.label.fontSize = (int)(Screen.height * labelFontScaling);
+        activeSkin.textField.fontSize = (int)(Screen.height * contentFontScaling);
+        activeSkin.textArea.fontSize = (int)(Screen.height * contentFontScaling);
+        activeSkin.button.fontSize = (int)(Screen.height * buttonFontScaling);
+        // header font scaling
+        activeSkin.customStyles[0].fontSize = (int)(Screen.height * headerFontScaling);
+        activeSkin.customStyles[1].fontSize = (int)(Screen.height * labelFontScaling);
+
+        #endregion
+
         GUI.skin = activeSkin;
         ContactUsForm();
 	}
@@ -72,15 +100,16 @@ public class ContactUsGUI : MonoBehaviour {
             GUILayout.Label(error, activeSkin.customStyles[1]);
         }
 
+        var paddingOffset = activeSkin.textField.padding.left + activeSkin.textField.padding.right;
         GUILayout.Label("Name");
-        senderName = GUILayout.TextField(senderName, GUILayout.MaxWidth(formWidth - 8));
+        senderName = GUILayout.TextField(senderName, GUILayout.MaxWidth(formWidth - paddingOffset));
 
         GUILayout.Label("Email");
-        senderEmail = GUILayout.TextField(senderEmail, GUILayout.MaxWidth(formWidth - 8));
+        senderEmail = GUILayout.TextField(senderEmail, GUILayout.MaxWidth(formWidth - paddingOffset));
 
         GUILayout.Label("Subject");
-        emailSubject = GUILayout.TextField(emailSubject, GUILayout.MaxWidth(formWidth - 8));
-        emailBody = GUILayout.TextArea(emailBody, GUILayout.MinHeight(100), GUILayout.ExpandHeight(true));
+        emailSubject = GUILayout.TextField(emailSubject, GUILayout.MaxWidth(formWidth - paddingOffset));
+        emailBody = GUILayout.TextArea(emailBody, GUILayout.MinHeight(100));
 
         GUILayout.BeginHorizontal();
 
