@@ -21,6 +21,8 @@ public class ReviewGUI : MonoBehaviour
     public GUISkin activeSkin;
 
     // GUI variables
+    private Rect formRect;
+
     private string error = String.Empty;
     private string feedback_1 = String.Empty;
     private string feedback_2 = String.Empty;
@@ -33,7 +35,11 @@ public class ReviewGUI : MonoBehaviour
     private float labelFontScaling = 0.04f;
     private float headerFontScaling = 0.075f;
     private float buttonFontScaling = 0.04f;
+    public float buttonVertPadding = 0.8f;
+    public float buttonHorPadding = 1.8f;
     private float contentFontScaling = 0.05f;
+    private float radioButtonFontScaling = 0.06f;
+    private float radioButtonSize = 2.5f;
 
     #if UNITY_EDITOR
         public static bool Validator(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
@@ -69,14 +75,30 @@ public class ReviewGUI : MonoBehaviour
     void OnGUI()
     {
         #region GUI stuff
+        var formOffset_X = Screen.width * 0.1f;
+        var formOffset_Y = Screen.height * 0.05f;
+        var formWidth = Screen.width * 0.8f;
+        var formHeight = Screen.height * 0.9f;
+        formRect = new Rect(formOffset_X, formOffset_Y, formWidth, formHeight);
 
         activeSkin.label.fontSize = (int)(Screen.height * labelFontScaling);
         activeSkin.textField.fontSize = (int)(Screen.height * contentFontScaling);
         activeSkin.textArea.fontSize = (int)(Screen.height * contentFontScaling);
         activeSkin.button.fontSize = (int)(Screen.height * buttonFontScaling);
+        
+        RectOffset btnPadding = new RectOffset((int)(activeSkin.button.fontSize*buttonHorPadding),
+                                               (int)(activeSkin.button.fontSize*buttonHorPadding),
+                                               (int)(activeSkin.button.fontSize*buttonVertPadding),
+                                               (int)(activeSkin.button.fontSize*buttonVertPadding));
+        activeSkin.button.padding = btnPadding;
         // header font scaling
         activeSkin.customStyles[0].fontSize = (int)(Screen.height * headerFontScaling);
         activeSkin.customStyles[1].fontSize = (int)(Screen.height * labelFontScaling);
+        activeSkin.customStyles[2].fontSize = (int)(Screen.height * radioButtonFontScaling);
+        var dimension = (int)(activeSkin.customStyles[2].fontSize * radioButtonSize);
+        activeSkin.customStyles[2].fixedHeight = dimension;
+        activeSkin.customStyles[2].fixedWidth = dimension;
+        activeSkin.customStyles[2].margin.right = (int)((float)dimension*0.05);
 
         #endregion
 
@@ -86,12 +108,8 @@ public class ReviewGUI : MonoBehaviour
 
     void DemoReviewForm()
     {
-        var formOffset_X = Screen.width * 0.1f;
-        var formOffset_Y = Screen.height * 0.05f;
-        var formWidth    = Screen.width * 0.8f;
-        var formHeight   = Screen.height * 0.9f;
 
-        GUILayout.BeginArea(new Rect(formOffset_X, formOffset_Y, formWidth, formHeight));
+        GUILayout.BeginArea(formRect);
         scrollPosition = GUILayout.BeginScrollView(scrollPosition);
         GUILayout.BeginVertical();
         
@@ -106,7 +124,6 @@ public class ReviewGUI : MonoBehaviour
             }
             GUILayout.Label(error, activeSkin.customStyles[1]);
         }
-
         GUILayout.Label("What did you LIKE about the game?");
         feedback_1 = GUILayout.TextArea(feedback_1);
         
@@ -115,12 +132,17 @@ public class ReviewGUI : MonoBehaviour
 
         GUILayout.Label("Help us make the game better!");
         feedback_3 = GUILayout.TextArea(feedback_3);
-
+        
         GUILayout.Label("Any additional comments? :D");
         feedback_4 = GUILayout.TextArea(feedback_4);
 
         GUILayout.Label("Rate the game!");
-        toolbarInt = GUILayout.Toolbar(toolbarInt, toolbarStrings);
+
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        toolbarInt = GUILayout.Toolbar(toolbarInt, toolbarStrings, activeSkin.customStyles[2]);
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
 
@@ -129,6 +151,8 @@ public class ReviewGUI : MonoBehaviour
             // Open Contact us modal
             Application.LoadLevel("GUI_TitleScreen");
         }
+
+        GUILayout.FlexibleSpace();
 
         // Submit
         if (GUILayout.Button("submit"))
@@ -164,7 +188,7 @@ public class ReviewGUI : MonoBehaviour
             #endregion
         }
         GUILayout.EndHorizontal();
-
+        
         GUILayout.EndVertical();
         GUILayout.EndScrollView();
         GUILayout.EndArea();
