@@ -28,6 +28,8 @@ public class ContactUsGUI : MonoBehaviour {
     private float labelFontScaling = 0.04f;
     private float headerFontScaling = 0.075f;
     private float buttonFontScaling = 0.04f;
+    private float buttonVertPadding = 0.8f;
+    private float buttonHorPadding = 1.8f;
     private float contentFontScaling = 0.05f;
 
     #if UNITY_EDITOR
@@ -67,6 +69,11 @@ public class ContactUsGUI : MonoBehaviour {
         activeSkin.textField.fontSize = (int)(Screen.height * contentFontScaling);
         activeSkin.textArea.fontSize = (int)(Screen.height * contentFontScaling);
         activeSkin.button.fontSize = (int)(Screen.height * buttonFontScaling);
+        RectOffset btnPadding = new RectOffset((int)(activeSkin.button.fontSize * buttonHorPadding),
+                                               (int)(activeSkin.button.fontSize * buttonHorPadding),
+                                               (int)(activeSkin.button.fontSize * buttonVertPadding),
+                                               (int)(activeSkin.button.fontSize * buttonVertPadding));
+        activeSkin.button.padding = btnPadding;
         // header font scaling
         activeSkin.customStyles[0].fontSize = (int)(Screen.height * headerFontScaling);
         activeSkin.customStyles[1].fontSize = (int)(Screen.height * labelFontScaling);
@@ -113,13 +120,16 @@ public class ContactUsGUI : MonoBehaviour {
 
         GUILayout.BeginHorizontal();
 
-        if (GUILayout.Button("Back"))
+        if (GUILayout.Button("main menu"))
         {
             // Open Contact us modal
             Application.LoadLevel("GUI_TitleScreen");
         }
+
+        GUILayout.FlexibleSpace();
+
         // Submit button
-        if (GUILayout.Button("Submit"))
+        if (GUILayout.Button("submit"))
         {
             // Clear Error message
             error = String.Empty;
