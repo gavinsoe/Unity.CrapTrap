@@ -17,9 +17,11 @@ public class MainGameGUI : MonoBehaviour
     public int ntp = 0; // Keeps track of the number of normal toilet papers collected
     public int gtp = 0; // Keeps track of the number of golden toilet papers collected
 
-    private float currencyFontScale = 0.04f; // Variable used to scale font for different window sizes
-    private float currencyXOffset = -0.06f; // Variable used to control the x offset of the text in the box
+    private float currencyFontScale = 0.031f; // Variable used to scale font for different window sizes
+    private float currencyXOffset = -0.135f; // Variable used to control the x offset of the text in the box
     private float currencyYOffset = 0.009f; // Variable used to control the y offset of the text in the box
+    private float currencySpacing = 1.10f; // Spacing between the two currency boxes;
+    private float currencyEdgeSpacing = 0.95f; // Space between the currency box and the edge of the screen.
 
     private float currencyBoxHeight; // The calculated height of the currency box
     private float currencyBoxWidth; // The calculated width of the currency box
@@ -48,16 +50,26 @@ public class MainGameGUI : MonoBehaviour
 
     void Start()
     {
+        
+
+    }
+
+    // Draw the GUI
+    void OnGUI()
+    {
+        #region temp
+
         // Retrieve the main game controller
         mainController = gameObject.GetComponentInChildren<MainGameController>();
 
         // set the timer border
         var timer_margin = Screen.height * 0.02f;
-        timerBorder = new Rect(timer_margin/2, timer_margin/2, Screen.width - timer_margin, Screen.height - timer_margin);
+        timerBorder = new Rect(timer_margin / 2, timer_margin / 2, Screen.width - timer_margin, Screen.height - timer_margin);
 
         // Calculate currency box dimensions.
+        Texture currencyTexture = activeSkin.customStyles[0].normal.background;
         currencyBoxHeight = Screen.height / 8;
-        currencyBoxWidth = currencyBoxHeight * 2;
+        currencyBoxWidth = currencyBoxHeight * ((float)currencyTexture.width / (float)currencyTexture.height);
 
         // Font auto scaling
         activeSkin.customStyles[0].fontSize = (int)(Screen.height * currencyFontScale);
@@ -81,11 +93,8 @@ public class MainGameGUI : MonoBehaviour
         minimap.pixelRect = mapCanvas;
         mapCanvas.y = Screen.height - mapCanvas.y - mapCanvas.height;
 
-    }
+        #endregion
 
-    // Draw the GUI
-    void OnGUI()
-    {
         // Draw the timer border
         TimerPulseBorder(timerPulseRate);
 
@@ -142,12 +151,12 @@ public class MainGameGUI : MonoBehaviour
 
     void NTPScore(float width, float height)
     {
-        GUI.Label(new Rect(Screen.width - (1.15f * width), height * 0.1f, width, height), ntp.ToString(), activeSkin.customStyles[1]);
+        GUI.Label(new Rect(Screen.width - (currencySpacing * width), height * 0.1f, width, height), ntp.ToString(), activeSkin.customStyles[1]);
     }
 
     void GTPScore(float width, float height)
     {
-        GUI.Label(new Rect(Screen.width - 2 * (1.15f * width), height * 0.1f, width, height), gtp.ToString(), activeSkin.customStyles[0]);
+        GUI.Label(new Rect(Screen.width - ((currencyEdgeSpacing + currencySpacing) * width), height * 0.1f, width, height), gtp.ToString(), activeSkin.customStyles[0]);
     }
 
     void PauseButton()
