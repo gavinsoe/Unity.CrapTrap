@@ -45,7 +45,7 @@ public class CharacterController : MonoBehaviour {
             // End game
             Time.timeScale = 0;
             Camera.main.GetComponent<GameCompletedGUI>().enabled = true;
-            Camera.main.GetComponent<MainGameController>().UpdateStats();
+            //Camera.main.GetComponent<MainGameController>().UpdateStats();
         }
         if (isBurning && !wasBurning)
         {
