@@ -16,14 +16,16 @@ public class PauseGUI : MonoBehaviour {
     private MainGameController mainController;
 
     // Triggers
-    public bool paused = false;
-    public bool resumed = false;
+    public bool show = false;
+    public bool hide = false;
     private bool sound = false;
     private bool map = false;
 
     #region GUI related
 
     private Rect containerRect;  // The Rect object that contains the whole pause menu
+    private Rect openPosition; // Position of the pause menu when game is paused
+    private Rect closedPosition; // Position of the pause menu when game is running
 
     #region Background
 
@@ -56,8 +58,6 @@ public class PauseGUI : MonoBehaviour {
     private float menuWidth; // width of the pause menu
     private float menuXOffset; // Variables used to calculate x offsets for the menu
     private float menuYOffset; // Variables used to calculate y offsets for the menu
-    private Rect openPosition; // Position of the pause menu when game is paused
-    private Rect closedPosition; // Position of the pause menu when game is running
 
     #endregion
     #region Pause menu buttons
@@ -143,15 +143,15 @@ public class PauseGUI : MonoBehaviour {
 
     void OnGUI()
     {
-        if (paused)
+        if (show)
         {
             iTween.ValueTo(gameObject, iTween.Hash("from", containerRect, "to", openPosition, "onupdate", "AnimatePauseMenu", "easetype", "easeOutBounce"));
-            paused = false;
+            show = false;
         }
-        else if (resumed)
+        else if (hide)
         {
             iTween.ValueTo(gameObject, iTween.Hash("from", containerRect, "to", closedPosition, "onupdate", "AnimatePauseMenu", "easetype", "easeOutExpo"));
-            resumed = false;
+            hide = false;
         }
 
         // Set the active skin
@@ -188,7 +188,7 @@ public class PauseGUI : MonoBehaviour {
     {
         GUI.BeginGroup(menuContainerRect);
 
-        GUI.DrawTexture(menuRect, activeSkin.customStyles[2].normal.background);
+        GUI.DrawTexture(menuRect, menuTexture);
 
         // Draw the retry button
         if (GUI.Button(A_BtnRect, "", activeSkin.customStyles[4]))
@@ -222,11 +222,11 @@ public class PauseGUI : MonoBehaviour {
 
     public void PauseGame()
     {
-        paused = true;
+        show = true;
     }
 
     public void ResumeGame()
     {
-        resumed = true;
+        hide = true;
     }
 }

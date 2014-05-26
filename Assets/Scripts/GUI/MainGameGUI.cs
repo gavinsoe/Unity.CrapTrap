@@ -50,15 +50,6 @@ public class MainGameGUI : MonoBehaviour
 
     void Start()
     {
-        
-
-    }
-
-    // Draw the GUI
-    void OnGUI()
-    {
-        #region temp
-
         // Retrieve the main game controller
         mainController = gameObject.GetComponentInChildren<MainGameController>();
 
@@ -92,9 +83,11 @@ public class MainGameGUI : MonoBehaviour
         mapCanvas.y = Screen.height - mapCanvas.y - mapCanvas.height;
         minimap.pixelRect = mapCanvas;
         mapCanvas.y = Screen.height - mapCanvas.y - mapCanvas.height;
+    }
 
-        #endregion
-
+    // Draw the GUI
+    void OnGUI()
+    {
         // Draw the timer border
         TimerPulseBorder(timerPulseRate);
 

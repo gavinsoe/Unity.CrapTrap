@@ -43,9 +43,7 @@ public class CharacterController : MonoBehaviour {
         if (reachedDestination && !isMoving)
         {
             // End game
-            Time.timeScale = 0;
-            Camera.main.GetComponent<GameCompletedGUI>().enabled = true;
-            //Camera.main.GetComponent<MainGameController>().UpdateStats();
+            game.StageComplete();
         }
         if (isBurning && !wasBurning)
         {

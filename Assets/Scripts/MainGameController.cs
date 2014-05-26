@@ -22,6 +22,10 @@ public class MainGameController : MonoBehaviour
     private Camera minimap;
 
     #endregion
+    #region CUrrency Variables
+    int ntpMax; // Stores the total number of ntp in a stage
+    int gtpMax; // Stores the total number of gtp in a stage
+    #endregion
 
     public enum Type
     {
@@ -75,12 +79,13 @@ public class MainGameController : MonoBehaviour
     public int reward;
     private MainGameGUI mainGUI;
     private PauseGUI pauseGUI;
+    private GameCompletedGUI stageCompleteGUI;
 
 	// Use this for initialization
 	void Start () {
         // Initialise timer components
         Time.timeScale = 1f;
-        timeElapsed = maxTime;
+        timeElapsed = 0;
 
         // Initialise objectives
         character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>();
@@ -89,19 +94,24 @@ public class MainGameController : MonoBehaviour
         objectiveFlags[2] = false;
         mainGUI = gameObject.GetComponentInChildren<MainGameGUI>();
         pauseGUI = gameObject.GetComponentInChildren<PauseGUI>();
+        stageCompleteGUI = gameObject.GetComponentInChildren<GameCompletedGUI>();
 
         // Obtain the minimap component
         minimap = GameObject.FindGameObjectWithTag("Minimap").GetComponent<Camera>();
+
+        // Get the total number of ntp and gtp
+        ntpMax = GameObject.FindGameObjectsWithTag("ntp").Length;
+        gtpMax = GameObject.FindGameObjectsWithTag("gtp").Length;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	    // Update timer
-        if (timeElapsed >= 0)
+        if (timeElapsed < maxTime)
         {
             if (!timerPaused)
             {
-                timeElapsed -= Time.deltaTime * timerReductionRate;
+                timeElapsed += Time.deltaTime * timerReductionRate;
                 updateTimerPulseRate();
             }
         }
@@ -113,23 +123,23 @@ public class MainGameController : MonoBehaviour
 
     public void updateTimerPulseRate()
     {
-        if ((timeElapsed / maxTime) > 0.75)
+        if ((timeElapsed / maxTime) < 0.25)
         {
             mainGUI.timerPulseRate = 2;
         }
-        else if ((timeElapsed / maxTime) > 0.5)
+        else if ((timeElapsed / maxTime) < 0.5)
         {
             mainGUI.timerPulseRate = 1f;
         }
-        else if ((timeElapsed / maxTime) > 0.25)
+        else if ((timeElapsed / maxTime) < 0.75)
         {
             mainGUI.timerPulseRate = 0.75f;
         }
-        else if ((timeElapsed / maxTime) > 0.15)
+        else if ((timeElapsed / maxTime) < 0.85)
         {
             mainGUI.timerPulseRate = 0.5f;
         }
-        else if ((timeElapsed / maxTime) > 0.05)
+        else if ((timeElapsed / maxTime) < 0.95)
         {
             mainGUI.timerPulseRate = 0.25f;
         }
@@ -148,6 +158,16 @@ public class MainGameController : MonoBehaviour
     public void pickupGoldenToiletPaper()
     {
         mainGUI.gtp += 1;
+    }
+
+    public void StageComplete()
+    {
+        // Stop the timer
+        timerPaused = true;
+        // Disable controls
+        character.enabled = false;
+        // Pop the stage complete menu
+        stageCompleteGUI.StageComplete(timeElapsed,mainGUI.ntp,ntpMax,mainGUI.gtp,gtpMax);
     }
 
     public void GameOver()
@@ -184,6 +204,12 @@ public class MainGameController : MonoBehaviour
     {
         // Return to title screen
         Application.LoadLevel("GUI_TitleScreen");
+    }
+
+    public void NextStage()
+    {
+        // Loads the next stage (or screen)
+        Application.LoadLevel(Application.loadedLevel + 1);
     }
 
     public void ToggleMap(bool enabled)
@@ -223,7 +249,7 @@ public class MainGameController : MonoBehaviour
     public void UpdateStats()
     {
         CharacterController character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>();
-        time += maxTime - timeElapsed;
+        time += timeElapsed;
         // Get counters from CharacterController
         moves = character.moves;
         hangingMoves = character.hangingMoves;

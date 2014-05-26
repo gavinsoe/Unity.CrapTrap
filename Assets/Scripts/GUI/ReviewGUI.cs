@@ -35,8 +35,8 @@ public class ReviewGUI : MonoBehaviour
     private float labelFontScaling = 0.04f;
     private float headerFontScaling = 0.075f;
     private float buttonFontScaling = 0.04f;
-    public float buttonVertPadding = 0.8f;
-    public float buttonHorPadding = 1.8f;
+    private float buttonVertPadding = 0.8f;
+    private float buttonHorPadding = 1.8f;
     private float contentFontScaling = 0.05f;
     private float radioButtonFontScaling = 0.06f;
     private float radioButtonSize = 2.5f;
