@@ -79,6 +79,7 @@ public class MainGameController : MonoBehaviour
     public int reward;
     private MainGameGUI mainGUI;
     private PauseGUI pauseGUI;
+    private FailedGUI failedGUI;
     private GameCompletedGUI stageCompleteGUI;
 
 	// Use this for initialization
@@ -95,6 +96,7 @@ public class MainGameController : MonoBehaviour
         mainGUI = gameObject.GetComponentInChildren<MainGameGUI>();
         pauseGUI = gameObject.GetComponentInChildren<PauseGUI>();
         stageCompleteGUI = gameObject.GetComponentInChildren<GameCompletedGUI>();
+        failedGUI = gameObject.GetComponentInChildren<FailedGUI>();
 
         // Obtain the minimap component
         minimap = GameObject.FindGameObjectWithTag("Minimap").GetComponent<Camera>();
@@ -117,7 +119,10 @@ public class MainGameController : MonoBehaviour
         }
         else
         {
-            GameOver();
+            if (!timerPaused)
+            {
+                GameOver();
+            }
         }
 	}
 
@@ -172,8 +177,12 @@ public class MainGameController : MonoBehaviour
 
     public void GameOver()
     {
-        Time.timeScale = 0;
-        Camera.main.GetComponent<FailedGUI>().enabled = true;
+        // Stop the timer
+        timerPaused = true;
+        // Disable controls
+        character.enabled = false;
+        // pop up the failed menu
+        failedGUI.StageFailed();
     }
 
 	public void PauseGame() {

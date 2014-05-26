@@ -22,8 +22,6 @@ public class GameCompletedGUI : MonoBehaviour {
     // Triggers
     public bool show = false;
     public bool hide = false;
-    private bool sound = false;
-    private bool map = false;
 
     #region GUI related
 
@@ -108,7 +106,7 @@ public class GameCompletedGUI : MonoBehaviour {
     #endregion
     #region Navigation Buttons
 
-    Rect navContainerRect; // Navigation Container
+    public Rect navContainerRect; // Navigation Container
     private float navContainerYOffset = 0.435f;
 
     private float navButtonScale = 0.34f;
@@ -146,12 +144,6 @@ public class GameCompletedGUI : MonoBehaviour {
         // Set the page to start as closed.
         containerRect = closedPosition;
 
-	}
-	
-	void OnGUI()
-    {
-        #region temp
-
         // Initialise menu background variables
         backgroundRect = new Rect(0, 0, Screen.width, Screen.height);
         backgroundTexture = activeSkin.customStyles[0].normal.background;
@@ -165,11 +157,11 @@ public class GameCompletedGUI : MonoBehaviour {
         menuYOffset = menuHeight * 0f;
         menuContainerRect = new Rect(menuXOffset, menuYOffset, menuWidth, menuHeight);
         menuRect = new Rect(0, 0, menuWidth, menuHeight);
-        
+
         // Initialise the header stuff
         activeSkin.customStyles[2].fontSize = (int)(Screen.height * headerFontScale);
         headerRect = new Rect(0, menuContainerRect.height * headerYOffset, menuContainerRect.width, activeSkin.customStyles[2].fontSize);
-        
+
         #region Stats
 
         // Initialise the stats rect
@@ -188,7 +180,7 @@ public class GameCompletedGUI : MonoBehaviour {
 
         // Vertical spacing
         statVerticalSpacing = Mathf.Max(A_iconHeight, B_iconHeight, C_iconHeight) * 1.05f;
-        
+
         // Set the location of the icons
         A_iconRect = new Rect(0, 0, iconWidth, A_iconHeight);
         B_iconRect = new Rect(0, statVerticalSpacing, iconWidth, B_iconHeight);
@@ -210,17 +202,16 @@ public class GameCompletedGUI : MonoBehaviour {
         navButtonWidth = navButtonHeight * ((float)activeSkin.customStyles[7].normal.background.width /
                                             (float)activeSkin.customStyles[7].normal.background.height);
         var navButtonSpacing = navButtonWidth * navButtonSpacingScale;
-        
-        float navWidth = navButtonWidth*3 + navButtonSpacing*2;
+
+        float navWidth = navButtonWidth * 3 + navButtonSpacing * 2;
         navContainerRect = new Rect((menuWidth - navWidth) / 2, menuHeight * navContainerYOffset, navWidth, navButtonHeight);
 
         retryBtnRect = new Rect(0, 0, navButtonWidth, navButtonHeight);
         homeBtnRect = new Rect(navButtonWidth + navButtonSpacing, 0, navButtonWidth, navButtonHeight);
-        nextBtnRect = new Rect(2*(navButtonWidth + navButtonSpacing), 0, navButtonWidth, navButtonHeight);
+        nextBtnRect = new Rect(2 * (navButtonWidth + navButtonSpacing), 0, navButtonWidth, navButtonHeight);
 
         #endregion
         #region Feedback Button
-
 
         var fontSize = (int)(Screen.height * feedbackFontScaling);
         activeSkin.customStyles[10].fontSize = fontSize;
@@ -229,6 +220,13 @@ public class GameCompletedGUI : MonoBehaviour {
         feedbackBtnRect = new Rect(backgroundRect.width * feedbackXOffset, backgroundRect.height * feedbackYOffset, btnWidth, btnHeight);
 
         #endregion
+	}
+	
+	void OnGUI()
+    {
+        #region temp
+
+        
         #endregion
 
         if (show)
@@ -251,12 +249,16 @@ public class GameCompletedGUI : MonoBehaviour {
         // Draw the main display
         MainDisplay();
 
-        GUI.Button(feedbackBtnRect, "feedback", activeSkin.customStyles[10]);
+        if (GUI.Button(feedbackBtnRect, "feedback", activeSkin.customStyles[10]))
+        {
+            // Open Contact us modal
+            Application.LoadLevel("GUI_Review");
+        }
 
         GUI.EndGroup();
     }
 
-    #region GUI
+    #region GUI sections
 
     void MainDisplay()
     {
