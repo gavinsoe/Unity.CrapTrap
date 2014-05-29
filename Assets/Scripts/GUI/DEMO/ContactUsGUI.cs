@@ -18,6 +18,7 @@ public class ContactUsGUI : MonoBehaviour {
     private string emailSubject = String.Empty;
     private string emailBody = String.Empty;
     private Vector2 scrollPosition = new Vector2(0, 0);
+    private bool newAlert = false;
 
     // App42 Stuff
     ServiceAPI serviceAPI;
@@ -25,15 +26,71 @@ public class ContactUsGUI : MonoBehaviour {
     Constants constants = new Constants();
     ContactUsResponse callBack = new ContactUsResponse();
 
-    private float labelFontScaling = 0.04f;
-    private float headerFontScaling = 0.075f;
-    private float buttonFontScaling = 0.04f;
-    private float buttonVertPadding = 0.8f;
-    private float buttonHorPadding = 1.8f;
-    private float contentFontScaling = 0.05f;
+    #region GUI styling
+    
+    // Container and inner frame
+    public Rect containerRect;
+    public Rect innerFrameRect;
+    private float containerWidth = 0.75f; // As a percentage of whole screen
+    private float containerHeight = 0.9f; // As a percentage of whole screen
+    private float innerFrameWidth = 0.725f; // As a percentage of the whole screen
+    private float innerFrameHeight; // Stores the actual height of the inner container
 
-    #if UNITY_EDITOR
-        public static bool Validator(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
+    // Headers
+    private GUIStyle headerStyle;
+    private float headerFontScaling = 0.075f;
+    private Rect headerRect;
+
+    // Scaling for text
+    private float fontHeightScale = 1.2f; // The height of each line based on the font size
+    // Normal and alert messages
+    private GUIStyle labelStyle;
+    private GUIStyle alertMsgStyle;
+    private float labelFontScaling = 0.06f;
+    private float labelHorPadding = 0.01f;
+    private float labelHeight;
+
+    private Rect label_NameRect;
+    private Rect label_EmailRect;
+    private Rect label_EmailSubjectRect;
+    private Rect label_AlertRect;
+
+    // TextArea
+    private GUIStyle txtAreaStyle;
+    private float txtAreaFontScaling = 0.05f;
+    private float txtAreaTopPadding = 0.5f;
+    private float txtAreaBtmPadding = 0.5f;
+    private float txtAreaHeight;
+
+    private Rect txtArea_NameRect;
+    private Rect txtArea_EmailRect;
+    private Rect txtArea_EmailSubjectRect;
+    private Rect txtArea_EmailBodyRect;
+
+    // buttons
+    private float buttonFontScaling = 0.5f;
+    private float buttonTopPadding = 0.39f;
+
+    /* ╔══════════════╗   ╔══════════════╗
+     * ║   Button A   ║   ║   Button B   ║
+     * ╚══════════════╝   ╚══════════════╝
+     */
+
+    public float btnWidth;
+    public float btnHeight;
+
+    public Rect A_btnRect;
+    public Rect B_btnRect;
+
+    private ButtonHandler A_btnScale;
+    private ButtonHandler B_btnScale;
+
+    private GUIStyle A_btnStyle;
+    private GUIStyle B_btnStyle;
+
+    #endregion
+#if UNITY_EDITOR
+    public static bool Validator(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
         { return true; }
     #endif
     void Start()
@@ -47,6 +104,114 @@ public class ContactUsGUI : MonoBehaviour {
 
         // Build Email Service
         emailService = serviceAPI.BuildEmailService();
+
+        #region GUI stuff
+        containerRect = new Rect(Screen.width * ((1 - containerWidth) / 2),
+                                 Screen.height * ((1 - containerHeight) / 2),
+                                 Screen.width * containerWidth,
+                                 Screen.height * containerHeight);
+
+        // Set the header style
+        headerStyle = new GUIStyle(activeSkin.customStyles[0]);
+        headerStyle.fontSize = (int)(Screen.height * headerFontScaling);
+        headerStyle.padding.left = (int)(containerRect.width * labelHorPadding);
+        headerStyle.padding.right = (int)(containerRect.width * labelHorPadding);
+
+        // Set the label style
+        labelStyle = activeSkin.label;
+        labelStyle.fontSize = (int)(Screen.height * labelFontScaling);
+        labelStyle.padding.left = (int)(containerRect.width * labelHorPadding);
+        labelStyle.padding.right = (int)(containerRect.width * labelHorPadding);
+
+        // set the error msg style
+        alertMsgStyle = new GUIStyle(activeSkin.customStyles[1]);
+        alertMsgStyle.fontSize = labelStyle.fontSize;
+        alertMsgStyle.padding.left = (int)(containerRect.width * labelHorPadding);
+        alertMsgStyle.padding.right = (int)(containerRect.width * labelHorPadding);
+
+        // Set the textArea style
+        txtAreaStyle = activeSkin.textArea;
+        txtAreaStyle.fontSize = (int)(Screen.height * txtAreaFontScaling);
+        txtAreaStyle.padding.top = (int)(txtAreaStyle.fontSize * txtAreaTopPadding);
+        txtAreaStyle.padding.bottom = (int)(txtAreaStyle.fontSize * txtAreaBtmPadding);
+
+        // Set the button styles
+        btnWidth = Screen.width * 0.3f;
+        btnHeight = btnWidth * ((float)activeSkin.button.normal.background.height /
+                                (float)activeSkin.button.normal.background.width);
+
+        // Font scaling
+        activeSkin.button.fontSize = (int)(btnHeight * buttonFontScaling);
+        // Padding Scaling
+        activeSkin.button.padding.top = (int)(activeSkin.button.fontSize * buttonTopPadding);
+
+        A_btnStyle = new GUIStyle(activeSkin.button);
+        B_btnStyle = new GUIStyle(activeSkin.button);
+
+        // Calculate positions
+        #region positioning
+
+        // initialise variable to calculate total height
+        float totalHeight = 0;
+        float frameWidth = Screen.width * innerFrameWidth;
+
+        // header label
+        labelHeight = headerStyle.fontSize * fontHeightScale + headerStyle.padding.top + headerStyle.padding.bottom;
+        headerRect = new Rect(0, totalHeight, frameWidth, labelHeight);
+        totalHeight += labelHeight;
+
+        // name label
+        labelHeight = labelStyle.fontSize * fontHeightScale + labelStyle.padding.top + labelStyle.padding.bottom;
+        label_NameRect = new Rect(0, totalHeight, frameWidth, labelHeight);
+        totalHeight += labelHeight;
+
+        // sender's name
+        txtAreaHeight = txtAreaStyle.fontSize * fontHeightScale + txtAreaStyle.padding.top + txtAreaStyle.padding.bottom;
+        txtArea_NameRect = new Rect(0, totalHeight, frameWidth, txtAreaHeight);
+        totalHeight += txtAreaHeight;
+
+        // email label
+        labelHeight = labelStyle.fontSize * fontHeightScale + labelStyle.padding.top + labelStyle.padding.bottom;
+        label_EmailRect = new Rect(0, totalHeight, frameWidth, labelHeight);
+        totalHeight += labelHeight;
+
+        // sender's email
+        txtAreaHeight = txtAreaStyle.fontSize * fontHeightScale + txtAreaStyle.padding.top + txtAreaStyle.padding.bottom;
+        txtArea_EmailRect = new Rect(0, totalHeight, frameWidth, txtAreaHeight);
+        totalHeight += txtAreaHeight;
+
+        // email subject label
+        labelHeight = labelStyle.fontSize * fontHeightScale + labelStyle.padding.top + labelStyle.padding.bottom;
+        label_EmailSubjectRect = new Rect(0, totalHeight, frameWidth, labelHeight);
+        totalHeight += labelHeight;
+
+        // email subject
+        txtAreaHeight = txtAreaStyle.fontSize * fontHeightScale + txtAreaStyle.padding.top + txtAreaStyle.padding.bottom;
+        txtArea_EmailSubjectRect = new Rect(0, totalHeight, frameWidth, txtAreaHeight);
+        totalHeight += txtAreaHeight;
+
+        // email body
+        txtAreaHeight = (txtAreaStyle.fontSize * fontHeightScale) * 5 + txtAreaStyle.padding.top + txtAreaStyle.padding.bottom;
+        txtArea_EmailBodyRect = new Rect(0, totalHeight, frameWidth, txtAreaHeight);
+        totalHeight += txtAreaHeight;
+
+        // main menu and submit buttons
+        A_btnRect = new Rect(0, totalHeight, btnWidth, btnHeight);
+        B_btnRect = new Rect(frameWidth - btnWidth, totalHeight, btnWidth, btnHeight);
+        totalHeight += btnHeight;
+
+
+        // Initialise button scalers
+        A_btnScale = new ButtonHandler(A_btnRect, gameObject, 0.9f, "A_ContactUs");
+        B_btnScale = new ButtonHandler(B_btnRect, gameObject, 0.9f, "B_ScaleButton");
+
+        
+        #endregion
+
+        innerFrameRect = new Rect(0, 0, frameWidth, totalHeight);
+        innerFrameHeight = totalHeight;
+
+        #endregion
     }
 
     void Update()
@@ -58,78 +223,67 @@ public class ContactUsGUI : MonoBehaviour {
                 scrollPosition.y += touch.deltaPosition.y;        // dragging
             }
         }
+
+        #region Alert Message
+        if (newAlert)
+        {
+            // Scroll to very bottom
+            scrollPosition.y = Mathf.Infinity;
+            // set flag to false
+            newAlert = false;
+        }
+
+        if (!String.IsNullOrEmpty(callBack.result))
+        {
+            error = callBack.result;
+            callBack.result = String.Empty;
+            // Scroll to very bottom
+            scrollPosition.y = Mathf.Infinity;
+        }
+        if (!String.IsNullOrEmpty(error))
+        {
+            labelHeight = alertMsgStyle.CalcHeight(new GUIContent(error), innerFrameRect.width);
+            label_AlertRect = new Rect(0, innerFrameHeight, innerFrameRect.width, labelHeight);
+            innerFrameRect = new Rect(0, 0, innerFrameRect.width, innerFrameHeight + labelHeight);
+        }
+        else
+        {
+            innerFrameRect = new Rect(0, 0, innerFrameRect.width, innerFrameHeight);
+        }
+        #endregion
     }
 
 	// Update is called once per frame
     void OnGUI()
     {
-        #region GUI stuff
-
-        activeSkin.label.fontSize = (int)(Screen.height * labelFontScaling);
-        activeSkin.textField.fontSize = (int)(Screen.height * contentFontScaling);
-        activeSkin.textArea.fontSize = (int)(Screen.height * contentFontScaling);
-        activeSkin.button.fontSize = (int)(Screen.height * buttonFontScaling);
-        RectOffset btnPadding = new RectOffset((int)(activeSkin.button.fontSize * buttonHorPadding),
-                                               (int)(activeSkin.button.fontSize * buttonHorPadding),
-                                               (int)(activeSkin.button.fontSize * buttonVertPadding),
-                                               (int)(activeSkin.button.fontSize * buttonVertPadding));
-        activeSkin.button.padding = btnPadding;
-        // header font scaling
-        activeSkin.customStyles[0].fontSize = (int)(Screen.height * headerFontScaling);
-        activeSkin.customStyles[1].fontSize = (int)(Screen.height * labelFontScaling);
-
-        #endregion
-
         GUI.skin = activeSkin;
-        ContactUsForm();
-	}
 
-    void ContactUsForm()
-    {
-        var formOffset_X = Screen.width * 0.2f;
-        var formOffset_Y = Screen.height * 0.05f;
-        var formWidth = Screen.width * 0.6f;
-        var formHeight = Screen.height * 0.9f;
-
-        GUILayout.BeginArea(new Rect(formOffset_X, formOffset_Y, formWidth, formHeight));
-        scrollPosition = GUILayout.BeginScrollView(scrollPosition);
-        GUILayout.BeginVertical();
-
-        GUILayout.Label("Contact Us!", activeSkin.customStyles[0]);
+        scrollPosition = GUI.BeginScrollView(containerRect, scrollPosition, innerFrameRect);
 
         if (!String.IsNullOrEmpty(error))
         {
-            if (!String.IsNullOrEmpty(callBack.result))
-            {
-                error = callBack.result;
-                callBack.result = String.Empty;
-            }
-            GUILayout.Label(error, activeSkin.customStyles[1]);
+            GUI.Label(label_AlertRect, error, alertMsgStyle);
         }
 
-        var paddingOffset = activeSkin.textField.padding.left + activeSkin.textField.padding.right;
-        GUILayout.Label("Name");
-        senderName = GUILayout.TextField(senderName, GUILayout.MaxWidth(formWidth - paddingOffset));
+        GUI.Label(headerRect, "Contact Us!", headerStyle);
 
-        GUILayout.Label("Email");
-        senderEmail = GUILayout.TextField(senderEmail, GUILayout.MaxWidth(formWidth - paddingOffset));
+        GUI.Label(label_NameRect, "Name", labelStyle);
+        senderName = GUI.TextArea(txtArea_NameRect, senderName);
 
-        GUILayout.Label("Subject");
-        emailSubject = GUILayout.TextField(emailSubject, GUILayout.MaxWidth(formWidth - paddingOffset));
-        emailBody = GUILayout.TextArea(emailBody, GUILayout.MinHeight(100));
+        GUI.Label(label_EmailRect, "Email", labelStyle);
+        senderEmail = GUI.TextArea(txtArea_EmailRect, senderEmail);
 
-        GUILayout.BeginHorizontal();
+        GUI.Label(label_EmailSubjectRect, "Subject", labelStyle);
+        emailSubject = GUI.TextArea(txtArea_EmailSubjectRect, emailSubject);
+        emailBody = GUI.TextArea(txtArea_EmailBodyRect, emailBody);
 
-        if (GUILayout.Button("main menu"))
+        if (GUI.Button(A_btnRect, "main menu", A_btnStyle))
         {
             // Open Contact us modal
             Application.LoadLevel("GUI_TitleScreen");
         }
 
-        GUILayout.FlexibleSpace();
-
-        // Submit button
-        if (GUILayout.Button("submit"))
+        if (GUI.Button(B_btnRect, "submit", B_btnStyle))
         {
             // Clear Error message
             error = String.Empty;
@@ -143,6 +297,7 @@ public class ContactUsGUI : MonoBehaviour {
             {
                 if (!String.IsNullOrEmpty(error)) error += "\n";
                 error += "Please fill in all fields :)";
+                newAlert = true;
             }
             // Check if email is valid
             Regex regex = new Regex(constants.regexEmail, RegexOptions.IgnoreCase);
@@ -150,6 +305,7 @@ public class ContactUsGUI : MonoBehaviour {
             {
                 if (!String.IsNullOrEmpty(error)) error += "\n";
                 error += "Email is invalid!";
+                newAlert = true;
             }
 
             #endregion
@@ -168,14 +324,37 @@ public class ContactUsGUI : MonoBehaviour {
                 emailService.SendMail(constants.contactEmail, formattedSubject, formattedBody, constants.senderEmail, EmailMIME.HTML_TEXT_MIME_TYPE, callBack);
 
                 error = "Sending...";
+                newAlert = true;
             }
             #endregion
         }
-        GUILayout.EndHorizontal();
-        GUILayout.EndVertical();
-        GUILayout.EndScrollView();
-        GUILayout.EndArea();
+
+        A_btnScale.OnMouseOver(A_btnRect);
+        B_btnScale.OnMouseOver(B_btnRect);
+        GUI.EndScrollView();
+	}
+
+    //applies the values from iTween:
+    void A_ContactUs(Rect size)
+    {
+        A_btnRect = size; 
+        // Font Scaling
+        A_btnStyle.fontSize = (int)(A_btnRect.height * buttonFontScaling);
+        // Padding Scaling
+        A_btnStyle.padding.top = (int)(A_btnStyle.fontSize * buttonTopPadding);
+
     }
+
+    //applies the values from iTween:
+    void B_ScaleButton(Rect size)
+    {
+        B_btnRect = size;
+        // Font Scaling
+        B_btnStyle.fontSize = (int)(B_btnRect.height * buttonFontScaling);
+        // Padding Scaling
+        B_btnStyle.padding.top = (int)(B_btnStyle.fontSize * buttonTopPadding);
+    }
+
 }
 
 public class ContactUsResponse : App42CallBack

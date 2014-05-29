@@ -9,7 +9,6 @@ public class DemoTitleScreenGUI : MonoBehaviour {
     enum Pages { TitleScreen, ContactUs }
 
     // Page variables
-    private Vector2 scrollPosition = new Vector2(0, 0);
     public Rect logoContainerRect;
     public float logoContainerWidth;
     public float logoContainerHeight;
@@ -89,10 +88,6 @@ public class DemoTitleScreenGUI : MonoBehaviour {
         activeSkin.label.fontSize = (int)(Screen.height * demoTextFontScale);
         demoTextRect = new Rect(0, logoHeight * 0.8f, logoContainerWidth, activeSkin.label.fontSize * 2);
 
-
-
-        #region new
-
         navContainerWidth = Screen.width * 0.3f;
         navContainerXOffset = logoContainerWidth;
 
@@ -128,8 +123,6 @@ public class DemoTitleScreenGUI : MonoBehaviour {
         C_btnStyle = new GUIStyle(activeSkin.button);
         D_btnStyle = new GUIStyle(activeSkin.button);
         E_btnStyle = new GUIStyle(activeSkin.button);
-
-        #endregion
     }
 
     void OnGUI()
@@ -153,7 +146,7 @@ public class DemoTitleScreenGUI : MonoBehaviour {
         if (GUI.Button(A_btnRect, "tutorial", A_btnStyle))
         {
             // Redirect to Tutorial Stage
-             Application.LoadLevel("stage_tutorial");
+            Application.LoadLevel("stage_tutorial");
         }
 
         // Settings Button
@@ -189,8 +182,8 @@ public class DemoTitleScreenGUI : MonoBehaviour {
         C_btnScale.OnMouseOver(C_btnRect);
         D_btnScale.OnMouseOver(D_btnRect);
         E_btnScale.OnMouseOver(E_btnRect);
-        GUI.EndGroup();
 
+        GUI.EndGroup();
 
     }
 
@@ -203,6 +196,7 @@ public class DemoTitleScreenGUI : MonoBehaviour {
         // Padding Scaling
         A_btnStyle.padding.top = (int)(A_btnStyle.fontSize * navTopPaddingScaling);
         A_btnStyle.padding.bottom = (int)(A_btnStyle.fontSize * navBottomPaddingScaling);
+
     }
 
     //applies the values from iTween:
@@ -250,51 +244,6 @@ public class DemoTitleScreenGUI : MonoBehaviour {
     }
 }
 
-public class ButtonHandler
-{
-    private enum ButtonState { Normal, Scaled };
-    private Rect _currentSize;
-    private Rect _normalSize;
-    private Rect _scaledSize;
-    private float _scale;
-    private string _callback;
-    private ButtonState _state;
-    private GameObject _gameObject;
 
-    public ButtonHandler(Rect normal, GameObject gameObject, float scale, string callback)
-    {
-        _currentSize = normal;
-        _normalSize = normal;
-        _scale = scale;
-        _state = ButtonState.Normal;
-        _gameObject = gameObject;
-        _callback = callback;
-
-        float scaledBtnWidth = normal.width * scale;
-        float scaledBtnHeight = normal.height * scale;
-        float scaledBtnXOffset = normal.x + ((normal.width - scaledBtnWidth) / 2);
-        float scaledBtnYOffset = normal.y + ((normal.height - scaledBtnHeight) / 2);
-        _scaledSize = new Rect(scaledBtnXOffset,scaledBtnYOffset,scaledBtnWidth,scaledBtnHeight);
-    }
-
-    public void OnMouseOver(Rect buttonRect){
-        if (_normalSize.Contains(Event.current.mousePosition) &&
-            _state == ButtonState.Normal)
-        {
-            //iTween.Stop(_gameObject, "value");
-            _state = ButtonState.Scaled;
-            iTween.ValueTo(_gameObject, iTween.Hash("from", buttonRect, "to", _scaledSize, "easetype", iTween.EaseType.easeOutBack, "onupdate", _callback, "time", .2));
-        }
-
-        else if (!_normalSize.Contains(Event.current.mousePosition) &&
-            _state == ButtonState.Scaled)
-        {
-            //iTween.Stop(_gameObject, "value");
-            _state = ButtonState.Normal;
-            iTween.ValueTo(_gameObject, iTween.Hash("from", buttonRect, "to", _normalSize, "easetype", iTween.EaseType.easeOutExpo, "onupdate", _callback, "time", .2));    
-        }
-
-    }
-}
 
 
