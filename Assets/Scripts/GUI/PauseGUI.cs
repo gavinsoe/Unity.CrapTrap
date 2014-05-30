@@ -62,7 +62,7 @@ public class PauseGUI : MonoBehaviour {
     #endregion
     #region Pause menu buttons
 
-    private float btnDimensionPercentage = 0.087f;
+    private float btnDimensionPercentage = 0.12f;
     private float btnHeight;
     private float btnWidth;
     /* Button Offsets
@@ -77,18 +77,22 @@ public class PauseGUI : MonoBehaviour {
      * -----------------
      */
 
-    private float A_BtnXOffset = 0.331f; // X offset for the A button
+    private float A_BtnXOffset = 0.312f; // X offset for the A button
     private float A_BtnYOffset = 0.251f; // Y offset for the A button
-    private float B_BtnXOffset = 0.540f; // X offset for the B button
+    private float B_BtnXOffset = 0.525f; // X offset for the B button
     private float B_BtnYOffset = 0.251f; // Y offset for the B button
-    private float C_BtnXOffset = 0.331f; // X offset for the C button
+    private float C_BtnXOffset = 0.312f; // X offset for the C button
     private float C_BtnYOffset = 0.384f; // Y offset for the C button
-    private float D_BtnXOffset = 0.540f; // X offset for the D button
+    private float D_BtnXOffset = 0.525f; // X offset for the D button
     private float D_BtnYOffset = 0.384f; // Y offset for the D button
     private Rect A_BtnRect;
     private Rect B_BtnRect;
     private Rect C_BtnRect;
     private Rect D_BtnRect;
+    private ButtonHandler A_BtnScale;
+    private ButtonHandler B_BtnScale;
+    private ButtonHandler C_BtnScale;
+    private ButtonHandler D_BtnScale;
 
     #endregion
 
@@ -124,7 +128,7 @@ public class PauseGUI : MonoBehaviour {
         menuYOffset = menuHeight * 0.05f;
         menuContainerRect = new Rect(menuXOffset, menuYOffset, menuWidth, menuHeight);
         menuRect = new Rect(0, 0, menuWidth, menuHeight);
-        
+
         // Calculate and scale the buttons on the menu
         // Calculate button dimensions (assumes all buttons have same dimensions)
         btnHeight = menuRect.height * btnDimensionPercentage;
@@ -136,10 +140,21 @@ public class PauseGUI : MonoBehaviour {
         C_BtnRect = new Rect(menuRect.width * C_BtnXOffset, menuRect.height * C_BtnYOffset, btnWidth, btnHeight);
         D_BtnRect = new Rect(menuRect.width * D_BtnXOffset, menuRect.height * D_BtnYOffset, btnWidth, btnHeight);
 
+
+        // Initialise button scalers
+        A_BtnScale = new ButtonHandler(A_BtnRect, gameObject, 0.9f, "A_ScaleButton");
+        B_BtnScale = new ButtonHandler(B_BtnRect, gameObject, 0.9f, "B_ScaleButton");
+        C_BtnScale = new ButtonHandler(C_BtnRect, gameObject, 0.9f, "C_ScaleButton");
+        D_BtnScale = new ButtonHandler(D_BtnRect, gameObject, 0.9f, "D_ScaleButton");
+
         // Scale and position the 'pause' text
         activeSkin.customStyles[7].fontSize = (int)(Screen.height * pauseTxtFontScale);
-        pauseTextRect = new Rect(0, Screen.height * pauseTxtYOffset, Screen.width, activeSkin.customStyles[7].fontSize);
+        pauseTextRect = new Rect(0, Screen.height * pauseTxtYOffset, Screen.width, activeSkin.customStyles[7].fontSize);   
 	}
+
+    void Update()
+    {
+    }
 
     void OnGUI()
     {
@@ -210,6 +225,10 @@ public class PauseGUI : MonoBehaviour {
         map = GUI.Toggle(D_BtnRect, map, "", activeSkin.customStyles[6]);
         mainController.ToggleMap(!map);
 
+        A_BtnScale.OnMouseOver(A_BtnRect);
+        B_BtnScale.OnMouseOver(B_BtnRect);
+        C_BtnScale.OnMouseOver(C_BtnRect);
+        D_BtnScale.OnMouseOver(D_BtnRect);
         GUI.EndGroup();
     }
 
@@ -228,5 +247,31 @@ public class PauseGUI : MonoBehaviour {
     public void ResumeGame()
     {
         hide = true;
+    }
+
+    //applies the values from iTween:
+    void A_ScaleButton(Rect size)
+    {
+        A_BtnRect = size;
+
+    }
+
+    //applies the values from iTween:
+    void B_ScaleButton(Rect size)
+    {
+        B_BtnRect = size;
+    }
+
+    //applies the values from iTween:
+    void C_ScaleButton(Rect size)
+    {
+        C_BtnRect = size;
+
+    }
+
+    //applies the values from iTween:
+    void D_ScaleButton(Rect size)
+    {
+        D_BtnRect = size;
     }
 }

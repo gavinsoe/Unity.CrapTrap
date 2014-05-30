@@ -32,7 +32,7 @@ public class PlayerTouchControls : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+        
         // Detect Touch input
         foreach (Touch touch in Input.touches)
         {

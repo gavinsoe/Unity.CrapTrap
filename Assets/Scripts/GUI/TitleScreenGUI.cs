@@ -72,10 +72,10 @@ public class TitleScreenGUI : MonoBehaviour {
         #endregion
 
         GUI.skin = activeSkin;
-        DemoTitleScreen();
+        TitleScreen();
     }
 
-    void DemoTitleScreen()
+    private void TitleScreen()
     {
         GUI.BeginGroup(logoContainerRect);
         
@@ -91,10 +91,10 @@ public class TitleScreenGUI : MonoBehaviour {
 
 
         // Tutorial Stage
-        if (GUILayout.Button("tutorial stage"))
+        if (GUILayout.Button("tutorial"))
         {
             // Redirect to Tutorial Stage
-            // Application.LoadLevel("TutorialStage");
+             Application.LoadLevel("stage_tutorial");
         }
 
         // Settings Button
