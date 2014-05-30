@@ -27,10 +27,9 @@ public class ContactUsGUI : MonoBehaviour {
     ContactUsResponse callBack = new ContactUsResponse();
 
     #region GUI styling
-    
     // Container and inner frame
-    public Rect containerRect;
-    public Rect innerFrameRect;
+    private Rect containerRect;
+    private Rect innerFrameRect;
     private float containerWidth = 0.75f; // As a percentage of whole screen
     private float containerHeight = 0.9f; // As a percentage of whole screen
     private float innerFrameWidth = 0.725f; // As a percentage of the whole screen
@@ -89,9 +88,9 @@ public class ContactUsGUI : MonoBehaviour {
     private GUIStyle B_btnStyle;
 
     #endregion
-#if UNITY_EDITOR
-    public static bool Validator(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
-        { return true; }
+    #if UNITY_EDITOR
+        public static bool Validator(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
+            { return true; }
     #endif
     void Start()
     {
@@ -202,7 +201,7 @@ public class ContactUsGUI : MonoBehaviour {
 
 
         // Initialise button scalers
-        A_btnScale = new ButtonHandler(A_btnRect, gameObject, 0.9f, "A_ContactUs");
+        A_btnScale = new ButtonHandler(A_btnRect, gameObject, 0.9f, "A_ScaleButton");
         B_btnScale = new ButtonHandler(B_btnRect, gameObject, 0.9f, "B_ScaleButton");
 
         
@@ -335,7 +334,7 @@ public class ContactUsGUI : MonoBehaviour {
 	}
 
     //applies the values from iTween:
-    void A_ContactUs(Rect size)
+    void A_ScaleButton(Rect size)
     {
         A_btnRect = size; 
         // Font Scaling

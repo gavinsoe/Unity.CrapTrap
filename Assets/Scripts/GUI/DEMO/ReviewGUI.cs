@@ -24,25 +24,96 @@ public class ReviewGUI : MonoBehaviour
     private Rect formRect;
 
     private string error = String.Empty;
+    private string header = "Let us know what you think!";
+    private string question_1 = "What did you LIKE about the game?";
+    private string question_2 = "What did you HATE about the game?";
+    private string question_3 = "Help us make the game better!";
+    private string question_4 = "Any additional comments? :D";
+    private string label_rate = "Rate the demo!";
     private string feedback_1 = String.Empty;
     private string feedback_2 = String.Empty;
     private string feedback_3 = String.Empty;
     private string feedback_4 = String.Empty;
-    private int toolbarInt = 0;
+    private int toolbarInt = 2;
     private string[] toolbarStrings = new string[] { "1", "2", "3", "4", "5" };
     private Vector2 scrollPosition = new Vector2(0, 0);
+    private bool newAlert = false;
 
-    private float labelFontScaling = 0.04f;
-    private float headerFontScaling = 0.075f;
-    private float buttonFontScaling = 0.04f;
-    private float buttonVertPadding = 0.8f;
-    private float buttonHorPadding = 1.8f;
-    private float contentFontScaling = 0.05f;
+
+    #region GUI Styling
+
+    // Container and inner frame
+    private Rect containerRect;
+    private Rect innerFrameRect;
+    private float containerWidth = 0.75f; // As a percentage of whole screen
+    private float containerHeight = 0.9f; // As a percentage of whole screen
+    private float innerFrameWidth = 0.725f; // As a percentage of the whole screen
+    private float innerFrameHeight; // Stores the actual height of the inner container
+
+    // Headers
+    private GUIStyle headerStyle;
+    public float headerFontScaling = 0.075f;
+    private Rect headerRect;
+
+    // Scaling for text
+    private float fontHeightScale = 1.2f; // The height of each line based on the font size
+    // Normal and alert messages
+    private GUIStyle labelStyle;
+    private GUIStyle alertMsgStyle;
+    public float labelFontScaling = 0.06f;
+    private float labelHorPadding = 0.01f;
+    private float labelHeight;
+
+    private Rect label_Feedback1Rect;
+    private Rect label_Feedback2Rect;
+    private Rect label_Feedback3Rect;
+    private Rect label_Feedback4Rect;
+    private Rect label_RateRect;
+    private Rect label_AlertRect;
+
+    // TextArea
+    private GUIStyle txtAreaStyle;
+    private float txtAreaFontScaling = 0.05f;
+    private float txtAreaTopPadding = 0.5f;
+    private float txtAreaBtmPadding = 0.5f;
+    private float txtAreaHeight;
+
+    private Rect txtArea_Feedback1;
+    private Rect txtArea_Feedback2;
+    private Rect txtArea_Feedback3;
+    private Rect txtArea_Feedback4;
+
+    // radion/toolbar buttons
+    private GUIStyle radioBtnStyle;
+    private Rect radioBtnRect;
     private float radioButtonFontScaling = 0.06f;
     private float radioButtonSize = 2.5f;
 
-    #if UNITY_EDITOR
-        public static bool Validator(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
+    // buttons
+    private float buttonFontScaling = 0.5f;
+    private float buttonTopPadding = 0.39f;
+
+    /* ╔══════════════╗   ╔══════════════╗
+     * ║   Button A   ║   ║   Button B   ║
+     * ╚══════════════╝   ╚══════════════╝
+     */
+
+    public float btnWidth;
+    public float btnHeight;
+
+    public Rect A_btnRect;
+    public Rect B_btnRect;
+
+    private ButtonHandler A_btnScale;
+    private ButtonHandler B_btnScale;
+
+    private GUIStyle A_btnStyle;
+    private GUIStyle B_btnStyle;
+
+    #endregion
+
+#if UNITY_EDITOR
+    public static bool Validator(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
         { return true; }
     #endif
     void Start()
@@ -59,6 +130,137 @@ public class ReviewGUI : MonoBehaviour
 
         // Get the device number
         username = SystemInfo.deviceUniqueIdentifier;
+
+
+        #region GUI Styling
+
+        containerRect = new Rect(Screen.width * ((1 - containerWidth) / 2),
+                                 Screen.height * ((1 - containerHeight) / 2),
+                                 Screen.width * containerWidth,
+                                 Screen.height * containerHeight);
+
+        // Set the header style
+        headerStyle = new GUIStyle(activeSkin.customStyles[0]);
+        headerStyle.fontSize = (int)(Screen.height * headerFontScaling);
+        headerStyle.padding.left = (int)(containerRect.width * labelHorPadding);
+        headerStyle.padding.right = (int)(containerRect.width * labelHorPadding);
+
+        // Set the label style
+        labelStyle = activeSkin.label;
+        labelStyle.fontSize = (int)(Screen.height * labelFontScaling);
+        labelStyle.padding.left = (int)(containerRect.width * labelHorPadding);
+        labelStyle.padding.right = (int)(containerRect.width * labelHorPadding);
+
+        // set the error msg style
+        alertMsgStyle = new GUIStyle(activeSkin.customStyles[1]);
+        alertMsgStyle.fontSize = labelStyle.fontSize;
+        alertMsgStyle.padding.left = (int)(containerRect.width * labelHorPadding);
+        alertMsgStyle.padding.right = (int)(containerRect.width * labelHorPadding);
+
+        // Set the textArea style
+        txtAreaStyle = activeSkin.textArea;
+        txtAreaStyle.fontSize = (int)(Screen.height * txtAreaFontScaling);
+        txtAreaStyle.padding.top = (int)(txtAreaStyle.fontSize * txtAreaTopPadding);
+        txtAreaStyle.padding.bottom = (int)(txtAreaStyle.fontSize * txtAreaBtmPadding);
+
+        // Set the radio button styles
+        radioBtnStyle = new GUIStyle(activeSkin.customStyles[2]);
+        radioBtnStyle.fontSize = (int)(Screen.height * radioButtonFontScaling);
+        var dimension = (int)(radioBtnStyle.fontSize * radioButtonSize);
+        radioBtnStyle.fixedHeight = dimension;
+        radioBtnStyle.fixedWidth = dimension;
+        radioBtnStyle.margin.right = (int)((float)dimension * 0.25f);
+        radioBtnStyle.margin.left = (int)((float)dimension * 0.25f);
+
+        // Set the button styles
+        btnWidth = Screen.width * 0.3f;
+        btnHeight = btnWidth * ((float)activeSkin.button.normal.background.height /
+                                (float)activeSkin.button.normal.background.width);
+
+        // Font scaling
+        activeSkin.button.fontSize = (int)(btnHeight * buttonFontScaling);
+        // Padding Scaling
+        activeSkin.button.padding.top = (int)(activeSkin.button.fontSize * buttonTopPadding);
+
+        A_btnStyle = new GUIStyle(activeSkin.button);
+        B_btnStyle = new GUIStyle(activeSkin.button);
+
+
+        #region positioning
+
+        // initialise variable to calculate total height
+        float totalHeight = 0;
+        float frameWidth = Screen.width * innerFrameWidth;
+
+        // header label
+        labelHeight = headerStyle.CalcHeight(new GUIContent(header), frameWidth);
+        headerRect = new Rect(0, totalHeight, frameWidth, labelHeight);
+        totalHeight += labelHeight;
+
+        // feedback 1 label
+        labelHeight = labelStyle.CalcHeight(new GUIContent(feedback_1), frameWidth);
+        label_Feedback1Rect = new Rect(0, totalHeight, frameWidth, labelHeight);
+        totalHeight += labelHeight;
+
+        // feedback 1 text area
+        txtAreaHeight = (txtAreaStyle.fontSize * fontHeightScale) * 3 + txtAreaStyle.padding.top + txtAreaStyle.padding.bottom;
+        txtArea_Feedback1 = new Rect(0, totalHeight, frameWidth, txtAreaHeight);
+        totalHeight += txtAreaHeight;
+
+        // feedback 2 label
+        labelHeight = labelStyle.CalcHeight(new GUIContent(feedback_2), frameWidth);
+        label_Feedback2Rect = new Rect(0, totalHeight, frameWidth, labelHeight);
+        totalHeight += labelHeight;
+
+        // feedback 2 text area
+        txtAreaHeight = (txtAreaStyle.fontSize * fontHeightScale) * 3 + txtAreaStyle.padding.top + txtAreaStyle.padding.bottom;
+        txtArea_Feedback2 = new Rect(0, totalHeight, frameWidth, txtAreaHeight);
+        totalHeight += txtAreaHeight;
+
+        // feedback 3 label
+        labelHeight = labelStyle.CalcHeight(new GUIContent(feedback_3), frameWidth);
+        label_Feedback3Rect = new Rect(0, totalHeight, frameWidth, labelHeight);
+        totalHeight += labelHeight;
+
+        // feedback 3 text area
+        txtAreaHeight = (txtAreaStyle.fontSize * fontHeightScale) * 3 + txtAreaStyle.padding.top + txtAreaStyle.padding.bottom;
+        txtArea_Feedback3 = new Rect(0, totalHeight, frameWidth, txtAreaHeight);
+        totalHeight += txtAreaHeight;
+
+        // feedback 4 label
+        labelHeight = labelStyle.CalcHeight(new GUIContent(feedback_4), frameWidth);
+        label_Feedback4Rect = new Rect(0, totalHeight, frameWidth, labelHeight);
+        totalHeight += labelHeight;
+
+        // feedback 4 text area
+        txtAreaHeight = (txtAreaStyle.fontSize * fontHeightScale) * 3 + txtAreaStyle.padding.top + txtAreaStyle.padding.bottom;
+        txtArea_Feedback4 = new Rect(0, totalHeight, frameWidth, txtAreaHeight);
+        totalHeight += txtAreaHeight;
+
+        // feedback 5 label
+        labelHeight = labelStyle.CalcHeight(new GUIContent(label_rate), frameWidth);
+        label_RateRect = new Rect(0, totalHeight, frameWidth, labelHeight);
+        totalHeight += labelHeight;
+
+        // radio button
+        radioBtnRect = new Rect(0, totalHeight, frameWidth, dimension);
+        totalHeight += dimension;
+
+        // main menu and submit buttons
+        A_btnRect = new Rect(0, totalHeight, btnWidth, btnHeight);
+        B_btnRect = new Rect(frameWidth - btnWidth, totalHeight, btnWidth, btnHeight);
+        totalHeight += btnHeight;
+
+        // Initialise button scalers
+        A_btnScale = new ButtonHandler(A_btnRect, gameObject, 0.9f, "A_ScaleButton");
+        B_btnScale = new ButtonHandler(B_btnRect, gameObject, 0.9f, "B_ScaleButton");
+
+        #endregion
+
+        innerFrameRect = new Rect(0, 0, frameWidth, totalHeight);
+        innerFrameHeight = totalHeight;
+
+        #endregion
     }
 
     void Update()
@@ -70,92 +272,80 @@ public class ReviewGUI : MonoBehaviour
                      scrollPosition.y += touch.deltaPosition.y;        // dragging
             }
         }
+
+
+        #region Alert Message
+        if (newAlert)
+        {
+            // Scroll to very bottom
+            scrollPosition.y = Mathf.Infinity;
+            // set flag to false
+            newAlert = false;
+        }
+
+        if (!String.IsNullOrEmpty(callBack.result))
+        {
+            error = callBack.result;
+            callBack.result = String.Empty;
+            // Scroll to very bottom
+            scrollPosition.y = Mathf.Infinity;
+        }
+        if (!String.IsNullOrEmpty(error))
+        {
+            labelHeight = alertMsgStyle.CalcHeight(new GUIContent(error), innerFrameRect.width);
+            label_AlertRect = new Rect(0, innerFrameHeight, innerFrameRect.width, labelHeight);
+            innerFrameRect = new Rect(0, 0, innerFrameRect.width, innerFrameHeight + labelHeight);
+        }
+        else
+        {
+            innerFrameRect = new Rect(0, 0, innerFrameRect.width, innerFrameHeight);
+        }
+        #endregion
     }
 
     void OnGUI()
     {
-        #region GUI stuff
-        var formOffset_X = Screen.width * 0.1f;
-        var formOffset_Y = Screen.height * 0.05f;
-        var formWidth = Screen.width * 0.8f;
-        var formHeight = Screen.height * 0.9f;
-        formRect = new Rect(formOffset_X, formOffset_Y, formWidth, formHeight);
-
-        activeSkin.label.fontSize = (int)(Screen.height * labelFontScaling);
-        activeSkin.textField.fontSize = (int)(Screen.height * contentFontScaling);
-        activeSkin.textArea.fontSize = (int)(Screen.height * contentFontScaling);
-        activeSkin.button.fontSize = (int)(Screen.height * buttonFontScaling);
-        
-        RectOffset btnPadding = new RectOffset((int)(activeSkin.button.fontSize*buttonHorPadding),
-                                               (int)(activeSkin.button.fontSize*buttonHorPadding),
-                                               (int)(activeSkin.button.fontSize*buttonVertPadding),
-                                               (int)(activeSkin.button.fontSize*buttonVertPadding));
-        activeSkin.button.padding = btnPadding;
-        // header font scaling
-        activeSkin.customStyles[0].fontSize = (int)(Screen.height * headerFontScaling);
-        activeSkin.customStyles[1].fontSize = (int)(Screen.height * labelFontScaling);
-        activeSkin.customStyles[2].fontSize = (int)(Screen.height * radioButtonFontScaling);
-        var dimension = (int)(activeSkin.customStyles[2].fontSize * radioButtonSize);
-        activeSkin.customStyles[2].fixedHeight = dimension;
-        activeSkin.customStyles[2].fixedWidth = dimension;
-        activeSkin.customStyles[2].margin.right = (int)((float)dimension*0.05);
-
-        #endregion
-
         GUI.skin = activeSkin;
-        DemoReviewForm();
-    }
 
-    void DemoReviewForm()
-    {
-
-        GUILayout.BeginArea(formRect);
-        scrollPosition = GUILayout.BeginScrollView(scrollPosition);
-        GUILayout.BeginVertical();
-        
-        GUILayout.Label("Thank you for trying out our game! \nLet us know what you think!", activeSkin.customStyles[0]);
+        scrollPosition = GUI.BeginScrollView(containerRect, scrollPosition, innerFrameRect);
 
         if (!String.IsNullOrEmpty(error))
         {
-            if (!String.IsNullOrEmpty(callBack.result))
-            {
-                error = callBack.result;
-                callBack.result = String.Empty;
-            }
-            GUILayout.Label(error, activeSkin.customStyles[1]);
+            GUI.Label(label_AlertRect, error, alertMsgStyle);
         }
-        GUILayout.Label("What did you LIKE about the game?");
-        feedback_1 = GUILayout.TextArea(feedback_1);
-        
-        GUILayout.Label("What did you HATE about the game?");
-        feedback_2 = GUILayout.TextArea(feedback_2);
 
-        GUILayout.Label("Help us make the game better!");
-        feedback_3 = GUILayout.TextArea(feedback_3);
-        
-        GUILayout.Label("Any additional comments? :D");
-        feedback_4 = GUILayout.TextArea(feedback_4);
+        GUI.Label(headerRect, header, headerStyle);
 
-        GUILayout.Label("Rate the game!");
+        GUI.Label(label_Feedback1Rect, question_1, labelStyle);
+        feedback_1 = GUI.TextArea(txtArea_Feedback1, feedback_1);
 
+        GUI.Label(label_Feedback2Rect, question_2, labelStyle);
+        feedback_2 = GUI.TextArea(txtArea_Feedback2, feedback_2);
+
+        GUI.Label(label_Feedback3Rect, question_3, labelStyle);
+        feedback_3 = GUI.TextArea(txtArea_Feedback3, feedback_3);
+
+        GUI.Label(label_Feedback4Rect, question_4, labelStyle);
+        feedback_4 = GUI.TextArea(txtArea_Feedback4, feedback_4);
+
+        GUI.Label(label_RateRect, label_rate, labelStyle);
+        GUILayout.BeginArea(radioBtnRect);
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
-        toolbarInt = GUILayout.Toolbar(toolbarInt, toolbarStrings, activeSkin.customStyles[2]);
+        toolbarInt = GUILayout.Toolbar(toolbarInt, toolbarStrings, radioBtnStyle);
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
+        GUILayout.EndArea();
+        //toolbarInt = GUI.Toolbar(radioBtnRect,toolbarInt, toolbarStrings, radioBtnStyle);
 
-        GUILayout.BeginHorizontal();
-
-        if (GUILayout.Button("main menu"))
+        if (GUI.Button(A_btnRect,"main menu", A_btnStyle))
         {
             // Open Contact us modal
             Application.LoadLevel("GUI_TitleScreen");
         }
 
-        GUILayout.FlexibleSpace();
-
         // Submit
-        if (GUILayout.Button("submit"))
+        if (GUI.Button(B_btnRect,"submit",B_btnStyle))
         {
             // Clear Error message
             error = String.Empty;
@@ -169,6 +359,7 @@ public class ReviewGUI : MonoBehaviour
             {
                 if (!String.IsNullOrEmpty(error)) error += "\n";
                 error += "Please fill in all fields :)";
+                newAlert = true;
             }
             #endregion
             #region Format and send
@@ -179,19 +370,40 @@ public class ReviewGUI : MonoBehaviour
                                   "[ HATES ] " + feedback_2 + " " +
                                   "[ TOADD ] " + feedback_3 + " " +
                                   "[ OTHER ] " + feedback_4;
-                            
+
                 // Do something...
                 reviewService.CreateReview(username, itemId, feedback, toolbarInt + 1, callBack);
-                
+
                 error = "Sending...";
+                newAlert = true;
             }
             #endregion
         }
-        GUILayout.EndHorizontal();
-        
-        GUILayout.EndVertical();
-        GUILayout.EndScrollView();
-        GUILayout.EndArea();
+
+        A_btnScale.OnMouseOver(A_btnRect);
+        B_btnScale.OnMouseOver(B_btnRect);
+        GUI.EndScrollView();
+        //DemoReviewForm();
+    }
+
+    //applies the values from iTween:
+    void A_ScaleButton(Rect size)
+    {
+        A_btnRect = size;
+        // Font Scaling
+        A_btnStyle.fontSize = (int)(A_btnRect.height * buttonFontScaling);
+        // Padding Scaling
+        A_btnStyle.padding.top = (int)(A_btnStyle.fontSize * buttonTopPadding);
+    }
+
+    //applies the values from iTween:
+    void B_ScaleButton(Rect size)
+    {
+        B_btnRect = size;
+        // Font Scaling
+        B_btnStyle.fontSize = (int)(B_btnRect.height * buttonFontScaling);
+        // Padding Scaling
+        B_btnStyle.padding.top = (int)(B_btnStyle.fontSize * buttonTopPadding);
     }
 }
 
