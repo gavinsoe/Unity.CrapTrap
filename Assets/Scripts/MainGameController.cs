@@ -83,7 +83,7 @@ public class MainGameController : MonoBehaviour
     private GameCompletedGUI stageCompleteGUI;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         // Initialise timer components
         Time.timeScale = 1f;
         timeElapsed = 0;
@@ -167,29 +167,24 @@ public class MainGameController : MonoBehaviour
 
     public void StageComplete()
     {
-        // Stop the timer
-        timerPaused = true;
-        // Disable controls
-        character.enabled = false;
+        // Disable time and movement
+        DisableTimeNMove();
         // Pop the stage complete menu
         stageCompleteGUI.StageComplete(timeElapsed,mainGUI.ntp,ntpMax,mainGUI.gtp,gtpMax);
     }
 
     public void GameOver()
     {
-        // Stop the timer
-        timerPaused = true;
-        // Disable controls
-        character.enabled = false;
+        // Disable time and movement
+        DisableTimeNMove();
         // pop up the failed menu
         failedGUI.StageFailed();
     }
 
-	public void PauseGame() {
-        // Pause the timer
-        timerPaused = true;
-        // Disable Controls
-        character.enabled = false;
+	public void PauseGame() 
+    {
+        // Disable time and movement
+        DisableTimeNMove();
         // Pop up the pause menu
         pauseGUI.PauseGame();
 	}
@@ -197,10 +192,8 @@ public class MainGameController : MonoBehaviour
 	public void ResumeGame() {
 		// Hide the pause menu
         pauseGUI.ResumeGame();
-        //Enable Controls
-        character.enabled = true;
-        // Resume timer
-        timerPaused = false;
+        // Disable time and movement
+        EnableTimeNMove();
 	}
 
     public void RetryLevel()
@@ -240,19 +233,18 @@ public class MainGameController : MonoBehaviour
     }
 
 	public void DisableTimeNMove() {
+        // Pause the timer
+        timerPaused = true;
         // Disable Controls
-		GameObject.FindGameObjectWithTag("Player").GetComponent<PCControls>().enabled = false;
-        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerTouchControls>().enabled = false;
-        // Disable Timer
-		// Camera.main.GetComponentInChildren<TimerBarController>().enabled = false;
+        character.enabled = false;
 	}
 
-	public void EnableTimeNMove() {
-        // Enable Controls
-        GameObject.FindGameObjectWithTag("Player").GetComponent<PCControls>().enabled = true;
-        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerTouchControls>().enabled = true;
-        // Enable Timer
-		//Camera.main.GetComponentInChildren<TimerBarController>().enabled = true;
+    public void EnableTimeNMove()
+    {
+        //Enable Controls
+        character.enabled = true;
+        // Resume timer
+        timerPaused = false;
 	}
 
     public void UpdateStats()
