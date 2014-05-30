@@ -31,7 +31,7 @@ public class CharacterController : MonoBehaviour {
     private MainGameController game;
     private Animator animator;
 
-    void Start()
+    void Awake()
     {
         game = Camera.main.GetComponent<MainGameController>();
         animator = gameObject.GetComponent<Animator>();
