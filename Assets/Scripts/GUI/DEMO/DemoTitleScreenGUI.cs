@@ -160,7 +160,7 @@ public class DemoTitleScreenGUI : MonoBehaviour {
         if (GUI.Button(C_btnRect, "stage 2", C_btnStyle))
         {
             // Redirect to Stage 2
-            // Application.LoadLevel("DemoStage2");
+            Application.LoadLevel("stage_Demo-2");
         }
 
         // Credits Button

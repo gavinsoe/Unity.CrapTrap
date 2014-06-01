@@ -27,6 +27,8 @@ public class MainGameController : MonoBehaviour
     int gtpMax; // Stores the total number of gtp in a stage
     #endregion
 
+    public AudioClip loopingClip;
+
     public enum Type
     {
         steps = 1,
@@ -123,6 +125,14 @@ public class MainGameController : MonoBehaviour
             {
                 GameOver();
             }
+        }
+
+        // play audio
+        if (!audio.isPlaying)
+        {
+            audio.clip = loopingClip;
+            audio.loop = true;
+            audio.Play();
         }
 	}
 

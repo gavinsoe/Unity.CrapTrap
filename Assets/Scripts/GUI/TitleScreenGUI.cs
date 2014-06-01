@@ -101,14 +101,14 @@ public class TitleScreenGUI : MonoBehaviour {
         if (GUILayout.Button("stage 1"))
         {
             // Redirect to Stage 1
-             Application.LoadLevel("stage_Demo_1");
+             Application.LoadLevel("stage_Demo-1");
         }
 
         // Settings Button
         if (GUILayout.Button("stage 2"))
         {
             // Redirect to Stage 2
-            Application.LoadLevel("stage_Demo_2");
+            Application.LoadLevel("stage_Demo-2");
         }
 
         // Credits Button
