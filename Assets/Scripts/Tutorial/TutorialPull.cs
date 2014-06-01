@@ -13,9 +13,6 @@ public class TutorialPull : MonoBehaviour {
 
     #region GUI related
 
-    private Color color_alpha1; //  shows GUI
-    private Color color_alpha0; //  hides GUI
-    private Color color_current;
     private float color_alpha; // transparency
 
     private Rect containerRect;
@@ -30,15 +27,6 @@ public class TutorialPull : MonoBehaviour {
     #region Text
 
     private float fontScale = 0.35f;
-
-    #endregion
-    #region Blue shit
-
-    public Rect blueCircle1Rect;
-    public Rect blueCircle2Rect;
-
-    private Texture blueCircleTexture;
-    private float blueCircleScale = 0.23f; // Dimension of the blue circle (percentage of screen height)
 
     #endregion
 
@@ -66,26 +54,11 @@ public class TutorialPull : MonoBehaviour {
         containerRect = new Rect(_containerXOffset, _containerYOffset, _containerWidth, _containerHeight);
         bgContainerRect = new Rect(_bgContainerXOffset, _bgContainerYOffset, _bgContainerWidth, _bgContainerHeight);
 
-        Color color_alpha1 = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 1);
-        Color color_alpha0 = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 0);
-        color_current = color_alpha0;
     }
 
     // Update is called once per frame
 	void OnGUI ()
     {
-        #region temp
-
-        // Blue circles
-        blueCircleTexture = activeSkin.customStyles[2].normal.background;
-        var circleDimension = Screen.height * blueCircleScale;
-
-        blueCircle1Rect = new Rect(Screen.width / 4 - circleDimension / 2, (Screen.height - circleDimension) * 0.5f, circleDimension, circleDimension);
-        blueCircle2Rect = new Rect(3 * (Screen.width / 4) - circleDimension / 2, (Screen.height - circleDimension) * 0.5f, circleDimension, circleDimension);
-
-        #endregion
-
-
         if (show)
         {
             iTween.ValueTo(gameObject, iTween.Hash("from", color_alpha, "to", 1, "onupdate", "AnimateTransparency", "easetype", iTween.EaseType.easeOutQuart));
@@ -98,20 +71,20 @@ public class TutorialPull : MonoBehaviour {
         }
 
         GUI.skin = activeSkin;
-        GUI.depth = -1;
         GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, color_alpha);
 
         // The Background
         GUI.Box(bgContainerRect, "");
-
         GUILayout.BeginArea(containerRect);
         GUILayout.BeginVertical();
         GUILayout.FlexibleSpace();
+
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
         GUILayout.Label("this time, pull the block to make a path", activeSkin.customStyles[0]);
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
+
         GUILayout.FlexibleSpace();
         GUILayout.EndVertical();
 
@@ -121,8 +94,7 @@ public class TutorialPull : MonoBehaviour {
     // Detects collision with character and start tutorial
     void OnTriggerEnter2D(Collider2D col)
     {
-        //if (Debug.isDebugBuild) Debug.Log(gameObject.name + " | ENTER detected. :: " + col.gameObject.name);
-        if (col.gameObject.tag == "Player" && !triggered && mainCamera.camState == CameraFollow.CameraStatus.TrackPlayer)
+        if (col.gameObject.tag == "Player" && !triggered && mainCamera.camState == CameraFollow.CameraStatus.FollowPlayer)
         {
             show = true;
             triggered = true;
@@ -131,7 +103,6 @@ public class TutorialPull : MonoBehaviour {
 
     void OnTriggerStay2D(Collider2D col)
     {
-        //if (Debug.isDebugBuild) Debug.Log(gameObject.name + " | ENTER detected. :: " + col.gameObject.name);
         if (col.gameObject.tag == "Player" && !triggered && mainCamera.camState == CameraFollow.CameraStatus.TrackPlayer)
         {
             show = true;
@@ -141,7 +112,6 @@ public class TutorialPull : MonoBehaviour {
 
     void OnTriggerExit2D(Collider2D col)
     {
-        //if (Debug.isDebugBuild) Debug.Log(gameObject.name + " | ENTER detected. :: " + col.gameObject.name);
         if (col.gameObject.tag == "Player")
         {
             hide = true;

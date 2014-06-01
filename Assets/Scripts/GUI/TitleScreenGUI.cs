@@ -33,7 +33,6 @@ public class TitleScreenGUI : MonoBehaviour {
     private float navTopPaddingScaling = 0.5f;
     private float navBottomPaddingScaling = 0.65f;
 
-
     void Start()
     {
     }

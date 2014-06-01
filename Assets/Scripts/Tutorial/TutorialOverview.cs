@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TutorialPhysics1 : MonoBehaviour {
+public class TutorialOverview : MonoBehaviour {
 
     public GUISkin activeSkin;
     private MainGameController mainController;
     private CameraFollow mainCamera;
+    public int screen = 0;
+
     // State variables
     private bool triggered = false;
     public bool show = false;
@@ -13,20 +15,22 @@ public class TutorialPhysics1 : MonoBehaviour {
 
     #region GUI related
 
-    private float color_alpha; // transparency
+    private Color color_alpha1; //  shows GUI
+    private Color color_alpha0; //  hides GUI
+    private float color_alpha = 0; // transparency
 
     private Rect containerRect;
     private Rect bgContainerRect;
 
-    private float containerWidth = 0.45f; // Width of the container (percentage of screen size)
+    private float containerWidth = 0.5f; // Width of the container (percentage of screen size)
     private float containerHeight = 0.16f; // Height of the container (percentage of screen size)
-    private float containerYOffset = 0.1f; // Y Offset of the container (percentage of the screen size)
+    private float containerYOffset = 0.366f; // Y Offset of the container (percentage of the screen size)
     private float containerHPadding = 0.1f; // Horizontal padding of the container (percentage of the container)
     private float containerVPadding = 0.1f; // Vertical padding of the container (percentage of the container)
 
     #region Text
 
-    private float fontScale = 0.32f;
+    private float fontScale = 0.35f;
 
     #endregion
 
@@ -53,12 +57,24 @@ public class TutorialPhysics1 : MonoBehaviour {
 
         containerRect = new Rect(_containerXOffset, _containerYOffset, _containerWidth, _containerHeight);
         bgContainerRect = new Rect(_bgContainerXOffset, _bgContainerYOffset, _bgContainerWidth, _bgContainerHeight);
+
     }
 
     // Update is called once per frame
+    void Update()
+    {
+        if (mainCamera.camState == CameraFollow.CameraStatus.TrackPlayer && !triggered)
+        {
+            mainCamera.paused = true;
+            triggered = true;
+            show = true;
+        }
+    }
+
 	void OnGUI ()
     {
         #region temp
+
         // Locate the textbox
         float _containerXOffset = Screen.width * ((1 - containerWidth) / 2);
         float _containerYOffset = Screen.width * containerYOffset;
@@ -76,7 +92,9 @@ public class TutorialPhysics1 : MonoBehaviour {
 
         containerRect = new Rect(_containerXOffset, _containerYOffset, _containerWidth, _containerHeight);
         bgContainerRect = new Rect(_bgContainerXOffset, _bgContainerYOffset, _bgContainerWidth, _bgContainerHeight);
+
         #endregion
+        
 
         if (show)
         {
@@ -85,7 +103,7 @@ public class TutorialPhysics1 : MonoBehaviour {
         }
         else if (hide)
         {
-            iTween.ValueTo(gameObject, iTween.Hash("from", color_alpha, "to", 0, "onupdate", "AnimateTransparency", "easetype", iTween.EaseType.easeInQuart));
+            iTween.ValueTo(gameObject, iTween.Hash("from", color_alpha, "to", 0, "onupdate", "AnimateTransparency", "easetype", iTween.EaseType.easeInQuart,"time", 0.2f));
             hide = false;
         }
 
@@ -94,58 +112,64 @@ public class TutorialPhysics1 : MonoBehaviour {
 
         // The Background
         GUI.Box(bgContainerRect, "");
-
         GUILayout.BeginArea(containerRect);
+
         GUILayout.BeginVertical();
         GUILayout.FlexibleSpace();
+        if (screen == 0)
+        {
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            GUILayout.Label("quickly get to the", activeSkin.customStyles[0]);
+            GUILayout.Label("toilet", activeSkin.customStyles[1]);
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+            
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            GUILayout.Label("before your", activeSkin.customStyles[0]);
+            GUILayout.Label("bowels burst!", activeSkin.customStyles[1]);
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+        }
+        else if (screen == 1)
+        {
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            GUILayout.Label("the", activeSkin.customStyles[0]);
+            GUILayout.Label("pulsing red border", activeSkin.customStyles[1]);
+            GUILayout.Label("indicates", activeSkin.customStyles[0]);
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
 
-        GUILayout.BeginHorizontal();
-        GUILayout.FlexibleSpace();
-        GUILayout.Label("blocks", activeSkin.customStyles[1]);
-        GUILayout.Label("will not fall when a", activeSkin.customStyles[0]);
-        GUILayout.FlexibleSpace();
-        GUILayout.EndHorizontal();
-
-        GUILayout.BeginHorizontal();
-        GUILayout.FlexibleSpace();
-        GUILayout.Label("corner", activeSkin.customStyles[1]);
-        GUILayout.Label("is touching another block", activeSkin.customStyles[0]);
-        GUILayout.FlexibleSpace();
-        GUILayout.EndHorizontal();
-
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            GUILayout.Label("how close you are from", activeSkin.customStyles[0]);
+            GUILayout.Label("bursting", activeSkin.customStyles[1]);
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+        }
+        else if (screen == 2)
+        {
+            hide = true;
+            mainCamera.paused = false;
+            screen++;
+        }
+        else if (screen == 3)
+        {
+            if (color_alpha == 0) this.enabled = false;
+        }
 
         GUILayout.FlexibleSpace();
         GUILayout.EndVertical();
 
         GUILayout.EndArea();
+        if (GUI.Button(new Rect(0,0,Screen.width, Screen.height), "",activeSkin.customStyles[6]))
+        {
+            if (screen < 2 && color_alpha == 1) screen ++;
+        }
+        
 	}
-
-    // Detects collision with character and start tutorial
-    void OnTriggerEnter2D(Collider2D col)
-    {
-        if (col.gameObject.tag == "Player" && !triggered && mainCamera.camState == CameraFollow.CameraStatus.FollowPlayer)
-        {
-            show = true;
-            triggered = true;
-        }
-    }
-
-    void OnTriggerStay2D(Collider2D col)
-    {
-        if (col.gameObject.tag == "Player" && !triggered && mainCamera.camState == CameraFollow.CameraStatus.FollowPlayer)
-        {
-            show = true;
-            triggered = true;
-        }
-    }
-
-    void OnTriggerExit2D(Collider2D col)
-    {
-        if (col.gameObject.tag == "Player")
-        {
-            hide = true;
-        }
-    }
 
     // animate iTween
     void AnimateTransparency(float alpha)

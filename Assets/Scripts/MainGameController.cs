@@ -13,7 +13,7 @@ public class MainGameController : MonoBehaviour
     public float maxTime;
     public float timeElapsed;
     private float timerReductionRate = 1; // Defaults to 1
-    private bool timerPaused = false;
+    public bool timerPaused = false;
 
     #endregion
     #region Map Variables

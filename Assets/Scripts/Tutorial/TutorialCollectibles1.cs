@@ -13,15 +13,12 @@ public class TutorialCollectibles1 : MonoBehaviour {
 
     #region GUI related
 
-    private Color color_alpha1; //  shows GUI
-    private Color color_alpha0; //  hides GUI
-    private Color color_current;
     private float color_alpha; // transparency
 
     private Rect containerRect;
     private Rect bgContainerRect;
 
-    private float containerWidth = 0.5f; // Width of the container (percentage of screen size)
+    private float containerWidth = 0.45f; // Width of the container (percentage of screen size)
     private float containerHeight = 0.16f; // Height of the container (percentage of screen size)
     private float containerYOffset = 0.1f; // Y Offset of the container (percentage of the screen size)
     private float containerHPadding = 0.1f; // Horizontal padding of the container (percentage of the container)
@@ -30,15 +27,6 @@ public class TutorialCollectibles1 : MonoBehaviour {
     #region Text
 
     private float fontScale = 0.35f;
-
-    #endregion
-    #region Blue shit
-
-    public Rect blueCircle1Rect;
-    public Rect blueCircle2Rect;
-
-    private Texture blueCircleTexture;
-    private float blueCircleScale = 0.23f; // Dimension of the blue circle (percentage of screen height)
 
     #endregion
 
@@ -66,26 +54,11 @@ public class TutorialCollectibles1 : MonoBehaviour {
         containerRect = new Rect(_containerXOffset, _containerYOffset, _containerWidth, _containerHeight);
         bgContainerRect = new Rect(_bgContainerXOffset, _bgContainerYOffset, _bgContainerWidth, _bgContainerHeight);
 
-        Color color_alpha1 = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 1);
-        Color color_alpha0 = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 0);
-        color_current = color_alpha0;
     }
 
     // Update is called once per frame
 	void OnGUI ()
     {
-        #region temp
-
-        // Blue circles
-        blueCircleTexture = activeSkin.customStyles[2].normal.background;
-        var circleDimension = Screen.height * blueCircleScale;
-
-        blueCircle1Rect = new Rect(Screen.width / 4 - circleDimension / 2, (Screen.height - circleDimension) * 0.5f, circleDimension, circleDimension);
-        blueCircle2Rect = new Rect(3 * (Screen.width / 4) - circleDimension / 2, (Screen.height - circleDimension) * 0.5f, circleDimension, circleDimension);
-
-        #endregion
-
-
         if (show)
         {
             iTween.ValueTo(gameObject, iTween.Hash("from", color_alpha, "to", 1, "onupdate", "AnimateTransparency", "easetype", iTween.EaseType.easeOutQuart));
@@ -110,14 +83,14 @@ public class TutorialCollectibles1 : MonoBehaviour {
 
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
-        GUILayout.Label("you will find", activeSkin.customStyles[0]);
-        GUILayout.Label("toilet paper", activeSkin.customStyles[1]);
+        GUILayout.Label("make sure you pick up", activeSkin.customStyles[0]);
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
-        GUILayout.Label("lying everywhere, collect them!", activeSkin.customStyles[0]);
+        GUILayout.Label("some", activeSkin.customStyles[0]);
+        GUILayout.Label("toilet paper!", activeSkin.customStyles[1]);
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
 
@@ -131,8 +104,7 @@ public class TutorialCollectibles1 : MonoBehaviour {
     // Detects collision with character and start tutorial
     void OnTriggerEnter2D(Collider2D col)
     {
-        //if (Debug.isDebugBuild) Debug.Log(gameObject.name + " | ENTER detected. :: " + col.gameObject.name);
-        if (col.gameObject.tag == "Player" && !triggered && mainCamera.camState == CameraFollow.CameraStatus.TrackPlayer)
+        if (col.gameObject.tag == "Player" && !triggered && mainCamera.camState == CameraFollow.CameraStatus.FollowPlayer)
         {
             show = true;
             triggered = true;
@@ -141,8 +113,7 @@ public class TutorialCollectibles1 : MonoBehaviour {
 
     void OnTriggerStay2D(Collider2D col)
     {
-        //if (Debug.isDebugBuild) Debug.Log(gameObject.name + " | ENTER detected. :: " + col.gameObject.name);
-        if (col.gameObject.tag == "Player" && !triggered && mainCamera.camState == CameraFollow.CameraStatus.TrackPlayer)
+        if (col.gameObject.tag == "Player" && !triggered && mainCamera.camState == CameraFollow.CameraStatus.FollowPlayer)
         {
             show = true;
             triggered = true;
@@ -151,7 +122,6 @@ public class TutorialCollectibles1 : MonoBehaviour {
 
     void OnTriggerExit2D(Collider2D col)
     {
-        //if (Debug.isDebugBuild) Debug.Log(gameObject.name + " | ENTER detected. :: " + col.gameObject.name);
         if (col.gameObject.tag == "Player")
         {
             hide = true;
