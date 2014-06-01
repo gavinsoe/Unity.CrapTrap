@@ -19,6 +19,7 @@ public class CameraFollow : MonoBehaviour
     public float yOffset = 1.1f;
 
 	private Transform player;		// Reference to the player's transform.
+    private Transform prevPos;      // Stores the position during the last frame
 
     void Start()
     {
@@ -61,9 +62,15 @@ public class CameraFollow : MonoBehaviour
 
             if ((gameplayZoom - camera.orthographicSize) < 0.01)
             {
-                camera.orthographicSize = gameplayZoom;
-                camState = CameraStatus.TrackPlayer;
-				Camera.main.GetComponent<MainGameController>().EnableTimeNMove();
+                TrackPlayer();
+                
+                if (Mathf.Abs(transform.position.x - player.position.x) < xMargin &&
+                    Mathf.Abs(transform.position.y - player.position.y) < (yMargin + yOffset))
+                {
+                    camera.orthographicSize = gameplayZoom;
+                    camState = CameraStatus.TrackPlayer;
+                    Camera.main.GetComponent<MainGameController>().EnableTimeNMove();
+                }
             }
         }
         else if (camState == CameraStatus.TrackPlayer)

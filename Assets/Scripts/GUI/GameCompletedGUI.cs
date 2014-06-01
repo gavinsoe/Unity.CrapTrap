@@ -231,12 +231,12 @@ public class GameCompletedGUI : MonoBehaviour {
 
         if (show)
         {
-            iTween.ValueTo(gameObject, iTween.Hash("from", containerRect, "to", openPosition, "onupdate", "AnimateGameCompletedMenu", "easetype", "easeOutBounce"));
+            iTween.ValueTo(gameObject, iTween.Hash("from", containerRect, "to", openPosition, "onupdate", "AnimateGameCompletedMenu", "easetype", iTween.EaseType.easeOutQuart));
             show = false;
         }
         else if (hide)
         {
-            iTween.ValueTo(gameObject, iTween.Hash("from", containerRect, "to", closedPosition, "onupdate", "AnimateGameCompletedMenu", "easetype", "easeOutExpo"));
+            iTween.ValueTo(gameObject, iTween.Hash("from", containerRect, "to", closedPosition, "onupdate", "AnimateGameCompletedMenu", "easetype", iTween.EaseType.easeInQuart));
             hide = false;
         }
 

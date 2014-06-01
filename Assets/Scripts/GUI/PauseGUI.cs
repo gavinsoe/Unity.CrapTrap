@@ -160,12 +160,12 @@ public class PauseGUI : MonoBehaviour {
     {
         if (show)
         {
-            iTween.ValueTo(gameObject, iTween.Hash("from", containerRect, "to", openPosition, "onupdate", "AnimatePauseMenu", "easetype", "easeOutBounce"));
+            iTween.ValueTo(gameObject, iTween.Hash("from", containerRect, "to", openPosition, "onupdate", "AnimatePauseMenu", "easetype", iTween.EaseType.easeOutQuart));
             show = false;
         }
         else if (hide)
         {
-            iTween.ValueTo(gameObject, iTween.Hash("from", containerRect, "to", closedPosition, "onupdate", "AnimatePauseMenu", "easetype", "easeOutExpo"));
+            iTween.ValueTo(gameObject, iTween.Hash("from", containerRect, "to", closedPosition, "onupdate", "AnimatePauseMenu", "easetype", iTween.EaseType.easeInQuart));
             hide = false;
         }
 

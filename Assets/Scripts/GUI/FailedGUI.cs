@@ -100,12 +100,12 @@ public class FailedGUI : MonoBehaviour {
         #endregion
         if (show)
         {
-            iTween.ValueTo(gameObject, iTween.Hash("from", containerRect, "to", openPosition, "onupdate", "AnimateFailedMenu", "easetype", "easeOutBounce"));
+            iTween.ValueTo(gameObject, iTween.Hash("from", containerRect, "to", openPosition, "onupdate", "AnimateFailedMenu", "easetype", iTween.EaseType.easeOutQuart));
             show = false;
         }
         else if (hide)
         {
-            iTween.ValueTo(gameObject, iTween.Hash("from", containerRect, "to", closedPosition, "onupdate", "AnimateFailedMenu", "easetype", "easeOutExpo"));
+            iTween.ValueTo(gameObject, iTween.Hash("from", containerRect, "to", closedPosition, "onupdate", "AnimateFailedMenu", "easetype", iTween.EaseType.easeInQuart));
             hide = false;
         }
 

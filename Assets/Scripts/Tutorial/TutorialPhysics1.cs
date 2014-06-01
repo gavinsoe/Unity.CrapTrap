@@ -1,17 +1,27 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MovementTutorial : MonoBehaviour {
+public class TutorialPhysics1 : MonoBehaviour {
 
     public GUISkin activeSkin;
     private MainGameController mainController;
+    private CameraFollow mainCamera;
+    // State variables
+    private bool triggered = false;
+    public bool show = false;
+    public bool hide = false;
 
     #region GUI related
+
+    private Color color_alpha1; //  shows GUI
+    private Color color_alpha0; //  hides GUI
+    private Color color_current;
+    private float color_alpha; // transparency
 
     private Rect containerRect;
     private Rect bgContainerRect;
 
-    private float containerWidth = 0.4f; // Width of the container (percentage of screen size)
+    private float containerWidth = 0.5f; // Width of the container (percentage of screen size)
     private float containerHeight = 0.16f; // Height of the container (percentage of screen size)
     private float containerYOffset = 0.1f; // Y Offset of the container (percentage of the screen size)
     private float containerHPadding = 0.1f; // Horizontal padding of the container (percentage of the container)
@@ -34,8 +44,10 @@ public class MovementTutorial : MonoBehaviour {
 
     #endregion
 
-    void Start()
+    void Awake()
     {
+        mainCamera = Camera.main.GetComponent<CameraFollow>();
+
         // Locate the textbox
         float _containerXOffset = Screen.width * ((1 - containerWidth) / 2);
         float _containerYOffset = Screen.width * containerYOffset;
@@ -53,6 +65,10 @@ public class MovementTutorial : MonoBehaviour {
 
         containerRect = new Rect(_containerXOffset, _containerYOffset, _containerWidth, _containerHeight);
         bgContainerRect = new Rect(_bgContainerXOffset, _bgContainerYOffset, _bgContainerWidth, _bgContainerHeight);
+
+        Color color_alpha1 = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 1);
+        Color color_alpha0 = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 0);
+        color_current = color_alpha0;
     }
 
     // Update is called once per frame
@@ -69,7 +85,21 @@ public class MovementTutorial : MonoBehaviour {
 
         #endregion
 
+
+        if (show)
+        {
+            iTween.ValueTo(gameObject, iTween.Hash("from", color_alpha, "to", 1, "onupdate", "AnimateTransparency", "easetype", iTween.EaseType.easeOutQuart));
+            show = false;
+        }
+        else if (hide)
+        {
+            iTween.ValueTo(gameObject, iTween.Hash("from", color_alpha, "to", 0, "onupdate", "AnimateTransparency", "easetype", iTween.EaseType.easeInQuart));
+            hide = false;
+        }
+
         GUI.skin = activeSkin;
+        GUI.depth = -1;
+        GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, color_alpha);
 
         // The Background
         GUI.Box(bgContainerRect, "");
@@ -77,21 +107,61 @@ public class MovementTutorial : MonoBehaviour {
         GUILayout.BeginArea(containerRect);
         GUILayout.BeginVertical();
         GUILayout.FlexibleSpace();
+
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
-        GUILayout.Label("tap", activeSkin.customStyles[1]);
-        GUILayout.Label("right or left to move", activeSkin.customStyles[0]);
+        GUILayout.Label("blocks", activeSkin.customStyles[1]);
+        GUILayout.Label("will not fall when a", activeSkin.customStyles[0]);
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
+
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        GUILayout.Label("corner", activeSkin.customStyles[1]);
+        GUILayout.Label("is touching another block", activeSkin.customStyles[0]);
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
+
+
         GUILayout.FlexibleSpace();
         GUILayout.EndVertical();
 
         GUILayout.EndArea();
-
-        // Blue circles
-
-        GUI.DrawTexture(blueCircle1Rect, blueCircleTexture);
-        GUI.DrawTexture(blueCircle2Rect, blueCircleTexture);
-        
 	}
+
+    // Detects collision with character and start tutorial
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        //if (Debug.isDebugBuild) Debug.Log(gameObject.name + " | ENTER detected. :: " + col.gameObject.name);
+        if (col.gameObject.tag == "Player" && !triggered && mainCamera.camState == CameraFollow.CameraStatus.TrackPlayer)
+        {
+            show = true;
+            triggered = true;
+        }
+    }
+
+    void OnTriggerStay2D(Collider2D col)
+    {
+        //if (Debug.isDebugBuild) Debug.Log(gameObject.name + " | ENTER detected. :: " + col.gameObject.name);
+        if (col.gameObject.tag == "Player" && !triggered && mainCamera.camState == CameraFollow.CameraStatus.TrackPlayer)
+        {
+            show = true;
+            triggered = true;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D col)
+    {
+        //if (Debug.isDebugBuild) Debug.Log(gameObject.name + " | ENTER detected. :: " + col.gameObject.name);
+        if (col.gameObject.tag == "Player")
+        {
+            hide = true;
+        }
+    }
+
+    // animate iTween
+    void AnimateTransparency(float alpha)
+    {
+        color_alpha = alpha;
+    }
 }
