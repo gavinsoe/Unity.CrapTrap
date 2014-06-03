@@ -3,8 +3,9 @@ using System.Collections;
 
 public class CameraFollow : MonoBehaviour 
 {
-    public enum CameraStatus { Introduction, TrackPlayer }
+    public enum CameraStatus { Introduction, TrackPlayer, FollowPlayer }
     public CameraStatus camState; // Defaults to introduction
+    public bool paused = false;
 
     public float initialZoom = 1f;  // Initial zoom level when previewing the destination
     public float gameplayZoom = 3f; // Zoom level for gameplay
@@ -62,44 +63,51 @@ public class CameraFollow : MonoBehaviour
 
             if ((gameplayZoom - camera.orthographicSize) < 0.01)
             {
-                TrackPlayer();
-                
-                if (Mathf.Abs(transform.position.x - player.position.x) < xMargin &&
-                    Mathf.Abs(transform.position.y - player.position.y) < (yMargin + yOffset))
-                {
-                    camera.orthographicSize = gameplayZoom;
-                    camState = CameraStatus.TrackPlayer;
-                    Camera.main.GetComponent<MainGameController>().EnableTimeNMove();
-                }
+                camState = CameraStatus.TrackPlayer;
             }
         }
         else if (camState == CameraStatus.TrackPlayer)
         {
-            TrackPlayer();
+            FollowPlayer();
+
+            if (Mathf.Abs(transform.position.x - player.position.x) < xMargin &&
+                Mathf.Abs(transform.position.y - player.position.y) < (yMargin + yOffset))
+            {
+                camera.orthographicSize = gameplayZoom;
+                camState = CameraStatus.FollowPlayer;
+                Camera.main.GetComponent<MainGameController>().EnableTimeNMove();
+            }
+        }
+        else if (camState == CameraStatus.FollowPlayer)
+        {
+            FollowPlayer();
         }
 	}
-	
-	void TrackPlayer ()
+
+    void FollowPlayer()
 	{
-		// By default the target x and y coordinates of the camera are it's current x and y coordinates.
-		float targetX = transform.position.x;
-		float targetY = transform.position.y;
-		
-		// If the player has moved beyond the x margin...
-		if(CheckXMargin())
-			// ... the target x coordinate should be a Lerp between the camera's current x position and the player's current x position.
-			targetX = Mathf.Lerp(transform.position.x, player.position.x, xSmooth * Time.deltaTime);
-		
-		// If the player has moved beyond the y margin...
-		if(CheckYMargin())
-			// ... the target y coordinate should be a Lerp between the camera's current y position and the player's current y position.
-            targetY = Mathf.Lerp(transform.position.y, player.position.y + yOffset, ySmooth * Time.deltaTime);
-		
-		// The target x and y coordinates should not be larger than the maximum or smaller than the minimum.
-		//targetX = Mathf.Clamp(targetX, minXAndY.x, maxXAndY.x);
-		//targetY = Mathf.Clamp(targetY, minXAndY.y, maxXAndY.y);
-		
-		// Set the camera's position to the target position with the same z component.
-		transform.position = new Vector3(targetX, targetY, transform.position.z);
+        if (!paused)
+        {
+            // By default the target x and y coordinates of the camera are it's current x and y coordinates.
+            float targetX = transform.position.x;
+            float targetY = transform.position.y;
+
+            // If the player has moved beyond the x margin...
+            if (CheckXMargin())
+                // ... the target x coordinate should be a Lerp between the camera's current x position and the player's current x position.
+                targetX = Mathf.Lerp(transform.position.x, player.position.x, xSmooth * Time.deltaTime);
+
+            // If the player has moved beyond the y margin...
+            if (CheckYMargin())
+                // ... the target y coordinate should be a Lerp between the camera's current y position and the player's current y position.
+                targetY = Mathf.Lerp(transform.position.y, player.position.y + yOffset, ySmooth * Time.deltaTime);
+
+            // The target x and y coordinates should not be larger than the maximum or smaller than the minimum.
+            //targetX = Mathf.Clamp(targetX, minXAndY.x, maxXAndY.x);
+            //targetY = Mathf.Clamp(targetY, minXAndY.y, maxXAndY.y);
+
+            // Set the camera's position to the target position with the same z component.
+            transform.position = new Vector3(targetX, targetY, transform.position.z);
+        }
 	}
 }
