@@ -6,7 +6,6 @@ public class DemoTitleScreenGUI : MonoBehaviour {
 
     // GUI Skin
     public GUISkin activeSkin;
-    enum Pages { TitleScreen, ContactUs }
 
     // Page variables
     public Rect logoContainerRect;

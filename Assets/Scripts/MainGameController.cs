@@ -7,6 +7,7 @@ using System.IO;
 
 public class MainGameController : MonoBehaviour
 {
+    public bool isGameMenu = false;
 
     #region Timer Variables
 
@@ -86,53 +87,59 @@ public class MainGameController : MonoBehaviour
 
 	// Use this for initialization
 	void Awake () {
-        // Initialise timer components
-        Time.timeScale = 1f;
-        timeElapsed = 0;
+        if (!isGameMenu)
+        {
+            // Initialise timer components
+            Time.timeScale = 1f;
+            timeElapsed = 0;
 
-        // Initialise objectives
-        character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>();
-        objectiveFlags[0] = false;
-        objectiveFlags[1] = false;
-        objectiveFlags[2] = false;
-        mainGUI = gameObject.GetComponentInChildren<MainGameGUI>();
-        pauseGUI = gameObject.GetComponentInChildren<PauseGUI>();
-        stageCompleteGUI = gameObject.GetComponentInChildren<GameCompletedGUI>();
-        failedGUI = gameObject.GetComponentInChildren<FailedGUI>();
+            // Initialise objectives
+            character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>();
+            objectiveFlags[0] = false;
+            objectiveFlags[1] = false;
+            objectiveFlags[2] = false;
+            mainGUI = gameObject.GetComponentInChildren<MainGameGUI>();
+            pauseGUI = gameObject.GetComponentInChildren<PauseGUI>();
+            stageCompleteGUI = gameObject.GetComponentInChildren<GameCompletedGUI>();
+            failedGUI = gameObject.GetComponentInChildren<FailedGUI>();
 
-        // Obtain the minimap component
-        minimap = GameObject.FindGameObjectWithTag("Minimap").GetComponent<Camera>();
+            // Obtain the minimap component
+            minimap = GameObject.FindGameObjectWithTag("Minimap").GetComponent<Camera>();
 
-        // Get the total number of ntp and gtp
-        ntpMax = GameObject.FindGameObjectsWithTag("ntp").Length;
-        gtpMax = GameObject.FindGameObjectsWithTag("gtp").Length;
+            // Get the total number of ntp and gtp
+            ntpMax = GameObject.FindGameObjectsWithTag("ntp").Length;
+            gtpMax = GameObject.FindGameObjectsWithTag("gtp").Length;
+        }
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	    // Update timer
-        if (timeElapsed < maxTime)
+        if (!isGameMenu)
         {
-            if (!timerPaused)
+            // Update timer
+            if (timeElapsed < maxTime)
             {
-                timeElapsed += Time.deltaTime * timerReductionRate;
-                updateTimerPulseRate();
+                if (!timerPaused)
+                {
+                    timeElapsed += Time.deltaTime * timerReductionRate;
+                    updateTimerPulseRate();
+                }
             }
-        }
-        else
-        {
-            if (!timerPaused)
+            else
             {
-                GameOver();
+                if (!timerPaused)
+                {
+                    GameOver();
+                }
             }
-        }
 
-        // play audio
-        if (!audio.isPlaying)
-        {
-            audio.clip = loopingClip;
-            audio.loop = true;
-            audio.Play();
+            // play looping part of audio
+            if (!audio.isPlaying)
+            {
+                audio.clip = loopingClip;
+                audio.loop = true;
+                audio.Play();
+            }
         }
 	}
 
