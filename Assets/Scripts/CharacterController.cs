@@ -31,6 +31,10 @@ public class CharacterController : MonoBehaviour {
     private MainGameController game;
     private Animator animator;
 
+    // audio clips
+    public AudioClip leftFoot;
+    public AudioClip rightFoot;
+
     void Awake()
     {
         game = Camera.main.GetComponent<MainGameController>();
@@ -1076,7 +1080,6 @@ public class CharacterController : MonoBehaviour {
 
         // Set the movement flag on (for both character and block)
         isMoving = true;
-        block.Moving();
 
         // Calculate where character will be
         Vector3 startPosition = transform.position;
@@ -1096,6 +1099,7 @@ public class CharacterController : MonoBehaviour {
 
         if (canMove)
         {
+            block.Moving();
             while (t < 1f)
             {
                 t += Time.deltaTime * (moveSpeed / gridSize);
@@ -1105,9 +1109,9 @@ public class CharacterController : MonoBehaviour {
             }
 
             pushes += 1;
+            block.NotMoving();
         }
         isMoving = false;
-        block.NotMoving();
     }
 
     public IEnumerator pushLeft(BlockController block, bool canMove)
@@ -1117,7 +1121,6 @@ public class CharacterController : MonoBehaviour {
 
         // Set the movement flag on (for both character and block)
         isMoving = true;
-        block.Moving();
 
         // Calculate where character will be
         Vector3 startPosition = transform.position;
@@ -1137,6 +1140,7 @@ public class CharacterController : MonoBehaviour {
 
         if (canMove)
         {
+            block.Moving();
             while (t < 1f)
             {
                 t += Time.deltaTime * (moveSpeed / gridSize);
@@ -1146,9 +1150,9 @@ public class CharacterController : MonoBehaviour {
             }
 
             pushes += 1;
+            block.NotMoving();
         }
         isMoving = false;
-        block.NotMoving();
     }
 
     public IEnumerator pullRight(BlockController block, bool canMove)
@@ -1238,6 +1242,19 @@ public class CharacterController : MonoBehaviour {
         animator.SetBool("isRunning", false);
         animator.SetBool("isPushing", false);
         animator.SetBool("isPulling", false);
+    }
+
+    #endregion
+    #region Audio
+
+    public void sfxLeftFoot()
+    {
+        audio.PlayOneShot(leftFoot);
+    }
+
+    public void sfxRightFoot()
+    {
+        audio.PlayOneShot(rightFoot);
     }
 
     #endregion
