@@ -3,6 +3,10 @@ using System.Collections;
 
 public class BlockController : MonoBehaviour {
 
+    // Audio clips
+    public AudioClip leftFoot;
+    public AudioClip rightFoot;
+
     // Block types
     public enum BlockType
     {
@@ -64,6 +68,16 @@ public class BlockController : MonoBehaviour {
             {
                 col.gameObject.GetComponent<CharacterController>().isBurning = false;
             }
+        }
+        if (col.gameObject.name == "Leg RIGHT LOWER")
+        {
+            Debug.Log("RIGHT touch");
+            audio.PlayOneShot(rightFoot, 1f);
+        }
+        if (col.gameObject.name == "Leg LEFT LOWER")
+        {
+            Debug.Log("Left touch");
+            audio.PlayOneShot(leftFoot, 1f);
         }
     }
 
