@@ -27,7 +27,8 @@ public class BlockController : MonoBehaviour {
     // Block states
     public bool pulledOut = true;  // Determines whether the block is pulled out or not.
     public bool explode = false; // Block explodes when set to true
-	public bool isMoving = false; // Toggles on when block is moving
+	public bool isMoving = false; // Toggles on when block is sliding
+    public bool isFalling = false; // Toggles on when block is falling
 
 	// Components
 	protected SpriteRenderer SRenderer; // The box animator
@@ -81,7 +82,7 @@ public class BlockController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-        if (!isMoving)
+        if (!isMoving && !isFalling)
         {
             Collider2D col = Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), 1 << LayerMask.NameToLayer("Character"), -0.9f, 0.9f);
             if (col != null && col.gameObject.name == "Character" && blockType == BlockType.Gate)
@@ -197,7 +198,7 @@ public class BlockController : MonoBehaviour {
     // Check if block us supposed to fall
 	public IEnumerator FallDown(Transform transform) {
 		Vector3 startPosition = transform.position;
-		isMoving = true;
+        isFalling = true;
 
         while (Physics2D.OverlapPoint(new Vector2(startPosition.x + (gridSize), startPosition.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null && //right
               Physics2D.OverlapPoint(new Vector2(startPosition.x - gridSize, startPosition.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null && //left
@@ -219,18 +220,16 @@ public class BlockController : MonoBehaviour {
 			}
 			startPosition = transform.position;
 		}
-		isMoving = false;
+        isFalling = false;
 
 		yield return 0;
 	}
 
 	public void Moving() {
 		isMoving = true;
-        Debug.Log("[" + gameObject.GetInstanceID() + "] Moving triggered");
         
         if (!audio.isPlaying)
         {
-            Debug.Log("No audio playing... start playing");
             audio.clip = slidingSound;
             audio.loop = true;
             audio.Play();
@@ -239,7 +238,6 @@ public class BlockController : MonoBehaviour {
 
 	public void NotMoving() {
 		isMoving = false;
-        Debug.Log("[" + gameObject.GetInstanceID() + "] Not moving triggered");
 
         StartCoroutine(DelayBeforeStop());
 	}
