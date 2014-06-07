@@ -6,21 +6,15 @@ public class CreditsGUI : MonoBehaviour {
 
     // GUI Skin
     public GUISkin activeSkin;
-    private MainGameController mainController;
-
-    // Triggers
-    private bool sound = false;
 
     // Page variables
     private Rect bgRect;
     private Texture bgTexture;
-    private float screenPaddingPercentage = 0.01f; // percentage of screen size;
 
     // Credits Container
     private Rect containerRect;
     private Rect containerBgRect;
     private Rect contentRect;
-    private Texture containerBgTexture;
     private float contentXMargin = 0.125f;
     private float contentYMargin = 0.11f;
 
@@ -55,9 +49,6 @@ public class CreditsGUI : MonoBehaviour {
 
     void Start()
     {
-        // Retrieve the main game controller
-        mainController = gameObject.GetComponentInChildren<MainGameController>();
-
         #region GUI
 
         bgRect = new Rect(0, 0, Screen.width, Screen.height);
@@ -77,7 +68,6 @@ public class CreditsGUI : MonoBehaviour {
         btnWebScale = new ButtonHandler(btnWebRect, gameObject, 0.9f, "Web_ScaleButton");
 
         // Container and container background
-        containerBgTexture = activeSkin.customStyles[2].normal.background;
         var containerHeight = Screen.height;
         var containerWidth = Screen.width - 2 * btnWidth - 2 * xMargin;
         containerRect = new Rect((Screen.width - containerWidth) * 0.5f, 0, containerWidth, containerHeight);
@@ -132,7 +122,6 @@ public class CreditsGUI : MonoBehaviour {
         {
             GUI.Box(containerBgRect, "");
             
-
             GUILayout.BeginArea(contentRect);
             {
                 GUILayout.BeginVertical();

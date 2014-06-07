@@ -50,7 +50,7 @@ public class CameraFollow : MonoBehaviour
 	bool CheckYMargin()
 	{
 		// Returns true if the distance between the camera and the player in the y axis is greater than the y margin.
-		return Mathf.Abs(transform.position.y - player.position.y) > yMargin;
+        return Mathf.Abs(transform.position.y - yOffset - player.position.y) > (yMargin); ;
 	}
 	
 	void FixedUpdate ()
@@ -70,8 +70,9 @@ public class CameraFollow : MonoBehaviour
         {
             FollowPlayer();
 
-            if (Mathf.Abs(transform.position.x - player.position.x) < xMargin &&
-                Mathf.Abs(transform.position.y - player.position.y) < (yMargin + yOffset))
+            if (!CheckXMargin() && !CheckYMargin())
+            //if (Mathf.Abs(transform.position.x - player.position.x) <= xMargin &&
+            //Mathf.Abs(transform.position.y - player.position.y) <= (yMargin + yOffset))
             {
                 camera.orthographicSize = gameplayZoom;
                 camState = CameraStatus.FollowPlayer;
