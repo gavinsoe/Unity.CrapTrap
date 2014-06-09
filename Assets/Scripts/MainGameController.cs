@@ -610,20 +610,11 @@ public class MainGameController : MonoBehaviour
 
         reward = 0;
 
-        if (objectiveFlags[0] == false)
-        {
-            objectiveFlags[1] = false;
-            objectiveFlags[2] = false;
-        }
-        else
+        if (objectiveFlags[0] == true)
         {
             reward += 1;
         }
-        if (objectiveFlags[1] == false)
-        {
-            objectiveFlags[2] = false;
-        }
-        else
+        if (objectiveFlags[1] == true)
         {
             reward += 1;
         }
