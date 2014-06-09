@@ -27,7 +27,7 @@ public class FailedByFallingGUI : MonoBehaviour
     #region header
 
     private Rect headerRect;
-    private float headerYOffset = 0.29f;
+    private float headerYOffset = 0.19f;
     private float headerFontScale = 0.19f;
 
     #endregion

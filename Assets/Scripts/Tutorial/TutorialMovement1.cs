@@ -29,13 +29,17 @@ public class TutorialMovement1 : MonoBehaviour {
     private float fontScale = 0.35f;
 
     #endregion
-    #region Blue shit
+    #region shininggg fingeeerrr
 
-    public Rect blueCircle1Rect;
-    public Rect blueCircle2Rect;
-
-    private Texture blueCircleTexture;
-    private float blueCircleScale = 0.23f; // Dimension of the blue circle (percentage of screen height)
+    private float finger_scale = 0.5f;
+    private Rect fingerRect;
+    private Texture fingerTexture;
+    private float fingerXOffset = 0.65f;
+    private float fingerYOffset = 0.5f;
+    private float fingerAlpha;
+    private bool animationStarted = true;
+    private int blinkCount;
+    private const int MAX_COUNT = 2;
 
     #endregion
 
@@ -63,12 +67,13 @@ public class TutorialMovement1 : MonoBehaviour {
         containerRect = new Rect(_containerXOffset, _containerYOffset, _containerWidth, _containerHeight);
         bgContainerRect = new Rect(_bgContainerXOffset, _bgContainerYOffset, _bgContainerWidth, _bgContainerHeight);
 
-        // Blue circles
-        blueCircleTexture = activeSkin.customStyles[2].normal.background;
-        var circleDimension = Screen.height * blueCircleScale;
+        // Le finger
+        fingerTexture = activeSkin.customStyles[9].normal.background;
+        float fingerDimension = Screen.height * finger_scale;
+        fingerAlpha = 0;
+        fingerRect = new Rect(Screen.width * fingerXOffset, Screen.height * fingerYOffset, fingerDimension, fingerDimension);
+        blinkCount = 0;
 
-        blueCircle1Rect = new Rect(Screen.width / 4 - circleDimension / 2, (Screen.height - circleDimension) * 0.5f, circleDimension, circleDimension);
-        blueCircle2Rect = new Rect(3 * (Screen.width / 4) - circleDimension / 2, (Screen.height - circleDimension) * 0.5f, circleDimension, circleDimension);
     }
 
     // Update is called once per frame
@@ -78,6 +83,7 @@ public class TutorialMovement1 : MonoBehaviour {
         {
             iTween.ValueTo(gameObject, iTween.Hash("from", color_alpha, "to", 1, "onupdate", "AnimateTransparency", "easetype", iTween.EaseType.easeOutQuart));
             show = false;
+            animationStarted = false;
         }
         else if (hide)
         {
@@ -105,10 +111,20 @@ public class TutorialMovement1 : MonoBehaviour {
         GUILayout.EndVertical();
         GUILayout.EndArea();
 
-        // Blue circles
-
-        GUI.DrawTexture(blueCircle1Rect, blueCircleTexture);
-        GUI.DrawTexture(blueCircle2Rect, blueCircleTexture);
+        // Finger
+        GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, fingerAlpha);
+        if (!animationStarted)
+        {
+            iTween.ValueTo(gameObject, 
+                           iTween.Hash("from", fingerAlpha, 
+                                       "to", 1, 
+                                       "onupdate", "AnimateFinger", 
+                                       "oncomplete", "AnimateFingerAlpha0",
+                                       "easetype", iTween.EaseType.easeInQuart,
+                                       "time", 1f));
+            animationStarted = true;
+        }
+        GUI.DrawTexture(fingerRect, fingerTexture);
 	}
 
     // Detects collision with character and start tutorial
@@ -142,5 +158,37 @@ public class TutorialMovement1 : MonoBehaviour {
     void AnimateTransparency(float alpha)
     {
         color_alpha = alpha;
+    }
+
+    // animate iTween
+    void AnimateFinger(float alpha)
+    {
+        fingerAlpha = alpha;
+    }
+
+    void AnimateFingerAlpha0()
+    {
+        iTween.ValueTo(gameObject,
+                              iTween.Hash("from", fingerAlpha,
+                                          "to", 0,
+                                          "onupdate", "AnimateFinger",
+                                          "oncomplete", "AnimateFingerAlpha1",
+                                          "easetype", iTween.EaseType.easeInQuart,
+                                       "time", 0.5f));
+    }
+
+    void AnimateFingerAlpha1()
+    {
+        blinkCount++;
+        if (blinkCount < MAX_COUNT)
+        {
+            iTween.ValueTo(gameObject,
+                                  iTween.Hash("from", fingerAlpha,
+                                              "to", 1,
+                                              "onupdate", "AnimateFinger",
+                                              "oncomplete", "AnimateFingerAlpha0",
+                                              "easetype", iTween.EaseType.easeInQuart,
+                                           "time", 0.5f));
+        }
     }
 }

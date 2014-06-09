@@ -29,7 +29,24 @@ public class TutorialPull : MonoBehaviour {
     private float fontScale = 0.35f;
 
     #endregion
+    #region shininggg fingeeerrr
 
+    private float finger_scale = 0.5f;
+
+    private Rect cur_fingerRect;
+    private Rect pos1_fingerRect;
+    private Rect pos2_fingerRect;
+    private Texture fingerTexture;
+
+    private float fingerXOffset1 = 0.85f;
+    private float fingerXOffset2 = 0.6f;
+    private float fingerYOffset = 0.5f;
+
+    private bool animationStarted = true;
+    private int blinkCount;
+    private const int MAX_COUNT = 2;
+    
+    #endregion
     #endregion
 
     void Awake()
@@ -54,6 +71,13 @@ public class TutorialPull : MonoBehaviour {
         containerRect = new Rect(_containerXOffset, _containerYOffset, _containerWidth, _containerHeight);
         bgContainerRect = new Rect(_bgContainerXOffset, _bgContainerYOffset, _bgContainerWidth, _bgContainerHeight);
 
+        // Finger
+        fingerTexture = activeSkin.customStyles[9].normal.background;
+        float fingerDimension = Screen.height * 0.5f;
+        pos1_fingerRect = new Rect(Screen.width * fingerXOffset1, Screen.height * fingerYOffset, fingerDimension, fingerDimension);
+        pos2_fingerRect = new Rect(Screen.width * fingerXOffset2, Screen.height * fingerYOffset, fingerDimension, fingerDimension);
+        cur_fingerRect = pos1_fingerRect;
+        blinkCount = 0;
     }
 
     // Update is called once per frame
@@ -63,6 +87,7 @@ public class TutorialPull : MonoBehaviour {
         {
             iTween.ValueTo(gameObject, iTween.Hash("from", color_alpha, "to", 1, "onupdate", "AnimateTransparency", "easetype", iTween.EaseType.easeOutQuart));
             show = false;
+            animationStarted = false;
         }
         else if (hide)
         {
@@ -81,7 +106,13 @@ public class TutorialPull : MonoBehaviour {
 
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
-        GUILayout.Label("this time, pull the block to make a path", activeSkin.customStyles[0]);
+        GUILayout.Label("this time, pull the block ", activeSkin.customStyles[0]);
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
+
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        GUILayout.Label("to make a path", activeSkin.customStyles[0]);
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
 
@@ -89,6 +120,19 @@ public class TutorialPull : MonoBehaviour {
         GUILayout.EndVertical();
 
         GUILayout.EndArea();
+
+        if (!animationStarted)
+        {
+            animationStarted = true;
+            iTween.ValueTo(gameObject,
+                      iTween.Hash("from", cur_fingerRect,
+                                  "to", pos2_fingerRect,
+                                  "onupdate", "AnimateFinger",
+                                  "oncomplete", "onAnimateFingerComplete",
+                                  "time", 1f));
+        }
+
+        if (blinkCount < MAX_COUNT) GUI.DrawTexture(cur_fingerRect, fingerTexture);
 	}
 
     // Detects collision with character and start tutorial
@@ -122,5 +166,26 @@ public class TutorialPull : MonoBehaviour {
     void AnimateTransparency(float alpha)
     {
         color_alpha = alpha;
+    }
+
+    // animate finger
+    void AnimateFinger(Rect size)
+    {
+        cur_fingerRect = size;
+    }
+
+    void onAnimateFingerComplete()
+    {
+        blinkCount++;
+        if (blinkCount < MAX_COUNT)
+        {
+            cur_fingerRect = pos1_fingerRect;
+            iTween.ValueTo(gameObject,
+                      iTween.Hash("from", cur_fingerRect,
+                                  "to", pos2_fingerRect,
+                                  "onupdate", "AnimateFinger",
+                                  "oncomplete", "onAnimateFingerComplete",
+                                  "time", 1f));
+        }
     }
 }

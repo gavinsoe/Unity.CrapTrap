@@ -29,23 +29,33 @@ public class TutorialPush : MonoBehaviour {
     private float fontScale = 0.35f;
 
     #endregion
-    #region Blue shit
-
-    public Rect blueCircle1Rect;
-    public Rect blueCircle2Rect;
-
-    private Texture blueCircleTexture;
-    private float blueCircleScale = 0.23f; // Dimension of the blue circle (percentage of screen height)
-
-    #endregion
     #region Blue Arrow
 
-    public Rect blueArrowRect;
+    private Rect blueArrowRect;
     private Texture blueArrowTexture;
-    public float blueArrowScale = 0.23f; // Dimension of the blue circle (percentage of screen height)
+    private float blueArrowScale = 0.23f; // Dimension of the blue circle (percentage of screen height)
+    private float blueArrowXOffset = 0.66f;
+    private float blueArrowYOffset = 0.47f;
 
     #endregion
+    #region shininggg fingeeerrr
 
+    private float finger_scale = 0.5f;
+
+    private Rect cur_fingerRect;
+    private Rect pos1_fingerRect;
+    private Rect pos2_fingerRect;
+    private Texture fingerTexture;
+
+    private float fingerXOffset1 = 0.6f;
+    private float fingerXOffset2 = 0.85f;
+    private float fingerYOffset = 0.5f;
+
+    private bool animationStarted = true;
+    private int blinkCount;
+    private const int MAX_COUNT = 2;
+
+    #endregion
     #endregion
 
     void Awake()
@@ -70,18 +80,20 @@ public class TutorialPush : MonoBehaviour {
         containerRect = new Rect(_containerXOffset, _containerYOffset, _containerWidth, _containerHeight);
         bgContainerRect = new Rect(_bgContainerXOffset, _bgContainerYOffset, _bgContainerWidth, _bgContainerHeight);
 
-        // Blue circles
-        blueCircleTexture = activeSkin.customStyles[2].normal.background;
-        var circleDimension = Screen.height * blueCircleScale;
-
         // Blue Arrow
         blueArrowTexture = activeSkin.customStyles[3].normal.background;
         var blueArrowHeight = Screen.height * blueArrowScale;
         var blueArrowWidth = blueArrowHeight * ((float)blueArrowTexture.width / (float)blueArrowTexture.height);
 
-        blueCircle1Rect = new Rect((Screen.width - blueArrowWidth) * 0.5f - circleDimension, (Screen.height - circleDimension) * 0.5f, circleDimension, circleDimension);
-        blueArrowRect = new Rect((Screen.width - blueArrowWidth) * 0.5f, (Screen.height - blueArrowHeight) * 0.5f, blueArrowWidth, blueArrowHeight);
-        blueCircle2Rect = new Rect(blueArrowRect.x + blueArrowWidth, (Screen.height - circleDimension) * 0.5f, circleDimension, circleDimension);
+        blueArrowRect = new Rect(Screen.width * blueArrowXOffset, Screen.height*blueArrowYOffset, blueArrowWidth, blueArrowHeight);
+
+        // Finger
+        fingerTexture = activeSkin.customStyles[9].normal.background;
+        float fingerDimension = Screen.height * 0.5f;
+        pos1_fingerRect = new Rect(Screen.width * fingerXOffset1, Screen.height * fingerYOffset, fingerDimension, fingerDimension);
+        pos2_fingerRect = new Rect(Screen.width * fingerXOffset2, Screen.height * fingerYOffset, fingerDimension, fingerDimension);
+        cur_fingerRect = pos1_fingerRect;
+        blinkCount = 0;
     }
 
     // Update is called once per frame
@@ -91,6 +103,7 @@ public class TutorialPush : MonoBehaviour {
         {
             iTween.ValueTo(gameObject, iTween.Hash("from", color_alpha, "to", 1, "onupdate", "AnimateTransparency", "easetype", iTween.EaseType.easeOutQuart));
             show = false;
+            animationStarted = false;
         }
         else if (hide)
         {
@@ -112,24 +125,32 @@ public class TutorialPush : MonoBehaviour {
         GUILayout.Label("tap", activeSkin.customStyles[1]);
         GUILayout.Label("and", activeSkin.customStyles[0]);
         GUILayout.Label("drag", activeSkin.customStyles[1]);
-        GUILayout.Label("beside", activeSkin.customStyles[0]);
+        GUILayout.Label("while standing", activeSkin.customStyles[0]);
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
-        GUILayout.Label("a block to move them", activeSkin.customStyles[0]);
+        GUILayout.Label("beside a block to move them", activeSkin.customStyles[0]);
         GUILayout.EndHorizontal();
 
         GUILayout.FlexibleSpace();
         GUILayout.EndVertical();
         GUILayout.EndArea();
 
-        // Blue circles
+        //GUI.DrawTexture(blueArrowRect, blueArrowTexture);
 
-        GUI.DrawTexture(blueCircle1Rect, blueCircleTexture);
-        GUI.DrawTexture(blueCircle2Rect, blueCircleTexture);
-        GUI.DrawTexture(blueArrowRect, blueArrowTexture);
-        
+        if (!animationStarted)
+        {
+            animationStarted = true;
+            iTween.ValueTo(gameObject,
+                      iTween.Hash("from", cur_fingerRect,
+                                  "to", pos2_fingerRect,
+                                  "onupdate", "AnimateFinger",
+                                  "oncomplete", "onAnimateFingerComplete",
+                                  "time", 1f));
+        }
+
+        if (blinkCount < MAX_COUNT) GUI.DrawTexture(cur_fingerRect, fingerTexture);
 	}
 
     // Detects collision with character and start tutorial
@@ -163,5 +184,26 @@ public class TutorialPush : MonoBehaviour {
     void AnimateTransparency(float alpha)
     {
         color_alpha = alpha;
+    }
+
+    // animate finger
+    void AnimateFinger(Rect size)
+    {
+        cur_fingerRect = size;
+    }
+
+    void onAnimateFingerComplete()
+    {
+        blinkCount++;
+        if (blinkCount < MAX_COUNT)
+        {
+            cur_fingerRect = pos1_fingerRect;
+            iTween.ValueTo(gameObject,
+                      iTween.Hash("from", cur_fingerRect,
+                                  "to", pos2_fingerRect,
+                                  "onupdate", "AnimateFinger",
+                                  "oncomplete", "onAnimateFingerComplete",
+                                  "time", 1f));
+        }
     }
 }

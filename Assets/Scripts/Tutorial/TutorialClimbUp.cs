@@ -33,7 +33,27 @@ public class TutorialClimbUp : MonoBehaviour {
 
     public Rect blueArrowRect;
     private Texture blueArrowTexture;
-    public float blueArrowScale = 0.23f; // Dimension of the blue circle (percentage of screen height)
+    private float blueArrowScale = 0.3f; // Dimension of the blue circle (percentage of screen height)
+    private float blueArrowXOffset = 0.59f;
+    private float blueArrowYOffset = 0.46f;
+
+    #endregion
+    #region shininggg fingeeerrr
+
+    private float finger_scale = 0.5f;
+
+    private Rect cur_fingerRect;
+    private Rect pos1_fingerRect;
+    private Rect pos2_fingerRect;
+    private Texture fingerTexture;
+
+    private float fingerXOffset = 0.6f;
+    private float fingerYOffset1 = 0.75f;
+    private float fingerYOffset2 = 0.5f;
+
+    private bool animationStarted = true;
+    private int blinkCount;
+    private const int MAX_COUNT = 2;
 
     #endregion
 
@@ -66,7 +86,15 @@ public class TutorialClimbUp : MonoBehaviour {
         var blueArrowHeight = Screen.height * blueArrowScale;
         var blueArrowWidth = blueArrowHeight * ((float)blueArrowTexture.width / (float)blueArrowTexture.height);
 
-        blueArrowRect = new Rect(0.6f * Screen.width - blueArrowWidth * 0.5f, (Screen.height - blueArrowHeight) * 0.5f, blueArrowWidth, blueArrowHeight);
+        blueArrowRect = new Rect(Screen.width * blueArrowXOffset, Screen.height * blueArrowYOffset, blueArrowWidth, blueArrowHeight);
+
+        // Finger
+        fingerTexture = activeSkin.customStyles[9].normal.background;
+        float fingerDimension = Screen.height * 0.5f;
+        pos1_fingerRect = new Rect(Screen.width * fingerXOffset, Screen.height * fingerYOffset1, fingerDimension, fingerDimension);
+        pos2_fingerRect = new Rect(Screen.width * fingerXOffset, Screen.height * fingerYOffset2, fingerDimension, fingerDimension);
+        cur_fingerRect = pos1_fingerRect;
+        blinkCount = 0;
     }
 
     // Update is called once per frame
@@ -76,6 +104,7 @@ public class TutorialClimbUp : MonoBehaviour {
         {
             iTween.ValueTo(gameObject, iTween.Hash("from", color_alpha, "to", 1, "onupdate", "AnimateTransparency", "easetype", iTween.EaseType.easeOutQuart));
             show = false;
+            animationStarted = false;
         }
         else if (hide)
         {
@@ -103,8 +132,18 @@ public class TutorialClimbUp : MonoBehaviour {
         GUILayout.EndVertical();
         GUILayout.EndArea();
 
-        GUI.DrawTexture(blueArrowRect, blueArrowTexture);
-        
+        //GUI.DrawTexture(blueArrowRect, blueArrowTexture);
+        if (!animationStarted)
+        {
+            animationStarted = true;
+            iTween.ValueTo(gameObject,
+                      iTween.Hash("from", cur_fingerRect,
+                                  "to", pos2_fingerRect,
+                                  "onupdate", "AnimateFinger",
+                                  "oncomplete", "onAnimateFingerComplete",
+                                  "time", 1f));
+        }
+        if (blinkCount < MAX_COUNT) GUI.DrawTexture(cur_fingerRect, fingerTexture);
 	}
 
     // Detects collision with character and start tutorial
@@ -138,5 +177,26 @@ public class TutorialClimbUp : MonoBehaviour {
     void AnimateTransparency(float alpha)
     {
         color_alpha = alpha;
+    }
+
+    // animate finger
+    void AnimateFinger(Rect size)
+    {
+        cur_fingerRect = size;
+    }
+
+    void onAnimateFingerComplete()
+    {
+        blinkCount++;
+        if (blinkCount < MAX_COUNT)
+        {
+            cur_fingerRect = pos1_fingerRect;
+            iTween.ValueTo(gameObject,
+                      iTween.Hash("from", cur_fingerRect,
+                                  "to", pos2_fingerRect,
+                                  "onupdate", "AnimateFinger",
+                                  "oncomplete", "onAnimateFingerComplete",
+                                  "time", 1f));
+        }
     }
 }
