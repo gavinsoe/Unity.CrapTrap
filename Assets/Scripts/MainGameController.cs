@@ -20,7 +20,7 @@ public class MainGameController : MonoBehaviour
     #region Map Variables
 
     public bool mapEnabled = true;
-    private Camera minimap;
+    public Camera minimap;
 
     #endregion
     #region CUrrency Variables
@@ -82,7 +82,8 @@ public class MainGameController : MonoBehaviour
     public int reward;
     private MainGameGUI mainGUI;
     private PauseGUI pauseGUI;
-    private FailedGUI failedGUI;
+    private FailedGUI failGUI;
+    private FailedByFallingGUI failByFallingGUI;
     private GameCompletedGUI stageCompleteGUI;
 
 	// Use this for initialization
@@ -101,7 +102,9 @@ public class MainGameController : MonoBehaviour
             mainGUI = gameObject.GetComponentInChildren<MainGameGUI>();
             pauseGUI = gameObject.GetComponentInChildren<PauseGUI>();
             stageCompleteGUI = gameObject.GetComponentInChildren<GameCompletedGUI>();
-            failedGUI = gameObject.GetComponentInChildren<FailedGUI>();
+            failGUI = gameObject.GetComponentInChildren<FailedGUI>();
+
+            failByFallingGUI = GameObject.Find("GUI Fail by Falling").GetComponent<FailedByFallingGUI>();
 
             // Obtain the minimap component
             minimap = GameObject.FindGameObjectWithTag("Minimap").GetComponent<Camera>();
@@ -129,7 +132,7 @@ public class MainGameController : MonoBehaviour
             {
                 if (!timerPaused)
                 {
-                    GameOver();
+                    GameOver(false);
                 }
             }
 
@@ -172,14 +175,16 @@ public class MainGameController : MonoBehaviour
         timerReductionRate = rate;
     }
 
-    public void pickupToiletPaper()
+    public void pickupToiletPaper(AudioClip sfxPickup)
     {
         mainGUI.ntp += 1;
+        audio.PlayOneShot(sfxPickup, 1f);
     }
 
-    public void pickupGoldenToiletPaper()
+    public void pickupGoldenToiletPaper(AudioClip sfxPickup)
     {
         mainGUI.gtp += 1;
+        audio.PlayOneShot(sfxPickup, 1f);
     }
 
     public void StageComplete()
@@ -187,15 +192,27 @@ public class MainGameController : MonoBehaviour
         // Disable time and movement
         DisableTimeNMove();
         // Pop the stage complete menu
-        stageCompleteGUI.StageComplete(timeElapsed,mainGUI.ntp,ntpMax,mainGUI.gtp,gtpMax);
+        stageCompleteGUI.StageComplete(timeElapsed, mainGUI.ntp, ntpMax, mainGUI.gtp, gtpMax);
     }
 
-    public void GameOver()
+    public void GameOver(bool fell)
     {
         // Disable time and movement
         DisableTimeNMove();
         // pop up the failed menu
-        failedGUI.StageFailed();
+        if (fell)
+        {
+            failByFallingGUI.enabled = true;
+            failByFallingGUI.StageFailed();
+            
+            character.enabled = false;
+            mainGUI.enabled = false;
+            minimap.enabled = false;
+        }
+        else
+        {
+            failGUI.StageFailed();
+        }
     }
 
 	public void PauseGame() 
@@ -233,8 +250,11 @@ public class MainGameController : MonoBehaviour
 
     public void ToggleMap(bool enabled)
     {
-        mapEnabled = enabled;
-        minimap.enabled = enabled;
+        if (mapEnabled != enabled)
+        {
+            mapEnabled = enabled;
+            minimap.enabled = enabled;
+        }
     }
 
     public void ToggleSound(bool enabled)
@@ -590,20 +610,11 @@ public class MainGameController : MonoBehaviour
 
         reward = 0;
 
-        if (objectiveFlags[0] == false)
-        {
-            objectiveFlags[1] = false;
-            objectiveFlags[2] = false;
-        }
-        else
+        if (objectiveFlags[0] == true)
         {
             reward += 1;
         }
-        if (objectiveFlags[1] == false)
-        {
-            objectiveFlags[2] = false;
-        }
-        else
+        if (objectiveFlags[1] == true)
         {
             reward += 1;
         }

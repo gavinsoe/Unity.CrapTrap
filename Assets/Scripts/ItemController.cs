@@ -4,6 +4,7 @@ using System.Collections;
 public class ItemController : MonoBehaviour {
 
     private MainGameController game;
+    public AudioClip sfxPickup;
 
     // Item list
     public enum ItemType
@@ -31,11 +32,11 @@ public class ItemController : MonoBehaviour {
             // Do some logic to add score/item
             if (itemType == ItemType.ToiletPaper)
             {
-                game.pickupToiletPaper();
+                game.pickupToiletPaper(sfxPickup);
             }
             else if (itemType == ItemType.GoldenToiletPaper)
             {
-                game.pickupGoldenToiletPaper();
+                game.pickupGoldenToiletPaper(sfxPickup);
             }
 
             // Destroy this thing

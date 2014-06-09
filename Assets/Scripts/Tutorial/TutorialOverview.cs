@@ -15,8 +15,6 @@ public class TutorialOverview : MonoBehaviour {
 
     #region GUI related
 
-    private Color color_alpha1; //  shows GUI
-    private Color color_alpha0; //  hides GUI
     private float color_alpha = 0; // transparency
 
     private Rect containerRect;

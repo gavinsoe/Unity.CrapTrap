@@ -1249,12 +1249,12 @@ public class CharacterController : MonoBehaviour {
 
     public void sfxLeftFoot()
     {
-        audio.PlayOneShot(leftFoot);
+        audio.PlayOneShot(leftFoot, 0.75f);
     }
 
     public void sfxRightFoot()
     {
-        audio.PlayOneShot(rightFoot);
+        audio.PlayOneShot(rightFoot, 0.75f);
     }
 
     #endregion
