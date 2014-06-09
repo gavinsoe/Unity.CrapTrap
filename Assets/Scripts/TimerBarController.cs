@@ -23,7 +23,7 @@ public class TimerBarController : MonoBehaviour {
             timeElapsed -= Time.deltaTime * timerReductionRate;
 			transform.localScale = new Vector3 (timeElapsed / maxTime, 0.5f, 1f);
 		} else {
-            game.GameOver();
+            game.GameOver(false);
 			/*Time.timeScale = 0;
 			Camera.main.GetComponent<FailedGUI>().enabled = true;*/
 		}

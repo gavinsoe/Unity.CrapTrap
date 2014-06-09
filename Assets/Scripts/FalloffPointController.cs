@@ -15,7 +15,7 @@ public class FalloffPointController : MonoBehaviour {
     {
         if (col.gameObject.tag == "Player")
         {
-            game.GameOver();
+            game.GameOver(true);
         }
     }
 }

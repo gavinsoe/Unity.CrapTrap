@@ -4,8 +4,7 @@ using System.Collections;
 public class BlockController : MonoBehaviour {
 
     // Audio clips
-    public AudioClip leftFoot;
-    public AudioClip rightFoot;
+    public AudioClip slidingSound;
 
     // Block types
     public enum BlockType
@@ -28,7 +27,8 @@ public class BlockController : MonoBehaviour {
     // Block states
     public bool pulledOut = true;  // Determines whether the block is pulled out or not.
     public bool explode = false; // Block explodes when set to true
-	private bool isMoving = false; // Toggles on when block is moving
+	public bool isMoving = false; // Toggles on when block is sliding
+    public bool isFalling = false; // Toggles on when block is falling
 
 	// Components
 	protected SpriteRenderer SRenderer; // The box animator
@@ -69,16 +69,6 @@ public class BlockController : MonoBehaviour {
                 col.gameObject.GetComponent<CharacterController>().isBurning = false;
             }
         }
-        if (col.gameObject.name == "Leg RIGHT LOWER")
-        {
-            Debug.Log("RIGHT touch");
-            audio.PlayOneShot(rightFoot, 1f);
-        }
-        if (col.gameObject.name == "Leg LEFT LOWER")
-        {
-            Debug.Log("Left touch");
-            audio.PlayOneShot(leftFoot, 1f);
-        }
     }
 
     void OnTriggerExit2D(Collider2D col)
@@ -92,18 +82,19 @@ public class BlockController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if(!isMoving) {
+        if (!isMoving && !isFalling)
+        {
             Collider2D col = Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), 1 << LayerMask.NameToLayer("Character"), -0.9f, 0.9f);
             if (col != null && col.gameObject.name == "Character" && blockType == BlockType.Gate)
             {
-				pulledOut = true;
-			}
+                pulledOut = true;
+            }
 
             if (Movable())
             {
-				StartCoroutine(FallDown(transform));
-			}
-		}
+                StartCoroutine(FallDown(transform));
+            }
+        }
 
         // Check the pulledOut state and initialise block accordingly
         if (pulledOut) PullOut(); else PushIn();
@@ -207,7 +198,7 @@ public class BlockController : MonoBehaviour {
     // Check if block us supposed to fall
 	public IEnumerator FallDown(Transform transform) {
 		Vector3 startPosition = transform.position;
-		isMoving = true;
+        isFalling = true;
 
         while (Physics2D.OverlapPoint(new Vector2(startPosition.x + (gridSize), startPosition.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null && //right
               Physics2D.OverlapPoint(new Vector2(startPosition.x - gridSize, startPosition.y), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f) == null && //left
@@ -229,18 +220,39 @@ public class BlockController : MonoBehaviour {
 			}
 			startPosition = transform.position;
 		}
-		isMoving = false;
+        isFalling = false;
 
 		yield return 0;
 	}
 
 	public void Moving() {
 		isMoving = true;
+        
+        if (!audio.isPlaying)
+        {
+            audio.clip = slidingSound;
+            audio.loop = true;
+            audio.Play();
+        }
 	}
 
 	public void NotMoving() {
 		isMoving = false;
+
+        StartCoroutine(DelayBeforeStop());
 	}
+
+    private IEnumerator DelayBeforeStop()
+    {
+        yield return new WaitForSeconds(0.1f);
+        if (!isMoving && audio.isPlaying)
+        {
+            Debug.Log("Stop audio");
+            audio.clip = slidingSound;
+            audio.loop = true;
+            audio.Stop();
+        }
+    }
 
 	public void Pull() {
 		pulledOut = true;
