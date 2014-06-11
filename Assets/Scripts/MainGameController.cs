@@ -1,12 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Net;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Collections.Generic;
 using System.IO;
+using com.shephertz.app42.paas.sdk.csharp;
+using com.shephertz.app42.paas.sdk.csharp.storage;
+using com.shephertz.app42.paas.sdk.csharp.log;
 
 public class MainGameController : MonoBehaviour
 {
+    // App42 Stuff
+    ServiceAPI serviceAPI;
+    LogService logService;
+    StorageService storageService;
+    Constants constants = new Constants();
+    LogResponse logCallBack = new LogResponse();
+
     public bool isGameMenu = false;
 
     #region Timer Variables
@@ -86,7 +97,12 @@ public class MainGameController : MonoBehaviour
     private FailedByFallingGUI failByFallingGUI;
     private GameCompletedGUI stageCompleteGUI;
 
-	// Use this for initialization
+
+    #if UNITY_EDITOR
+        public static bool Validator(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
+        { return true; }
+    #endif
+
 	void Awake () {
         if (!isGameMenu)
         {
@@ -112,9 +128,30 @@ public class MainGameController : MonoBehaviour
             // Get the total number of ntp and gtp
             ntpMax = GameObject.FindGameObjectsWithTag("ntp").Length;
             gtpMax = GameObject.FindGameObjectsWithTag("gtp").Length;
+
+            #region App42
+
+            #if UNITY_EDITOR
+                ServicePointManager.ServerCertificateValidationCallback = Validator;
+            #endif
+
+            // Connect to the app service
+            serviceAPI = new ServiceAPI(constants.apiKey, constants.secretKey);
+
+            // Build the log service
+            logService = serviceAPI.BuildLogService();
+
+            // Build the storage service
+            storageService = serviceAPI.BuildStorageService();
+
+            // Log the event
+            logService.SetEvent(Application.loadedLevelName, "Landed", logCallBack);
+            logService.SetEvent(Application.loadedLevelName, logCallBack);
+
+            #endregion
         }
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
         if (!isGameMenu)
@@ -145,6 +182,12 @@ public class MainGameController : MonoBehaviour
             }
         }
 	}
+
+    void OnDestroy()
+    {
+        // Log result
+        logService.SetEvent(Application.loadedLevelName, "Escaped", logCallBack);
+    }
 
     public void updateTimerPulseRate()
     {
@@ -192,7 +235,23 @@ public class MainGameController : MonoBehaviour
         // Disable time and movement
         DisableTimeNMove();
         // Pop the stage complete menu
-        stageCompleteGUI.StageComplete(timeElapsed, mainGUI.ntp, ntpMax, mainGUI.gtp, gtpMax);
+        int mins = (int)(timeElapsed / 60);
+        int seconds = (int)(timeElapsed % 60);
+        string timeTaken = string.Format("{0:00}:{1:00}", mins, seconds);
+        stageCompleteGUI.StageComplete(timeTaken, mainGUI.ntp, ntpMax, mainGUI.gtp, gtpMax);
+        
+        // Package the result
+        SimpleJSON.JSONClass json = new SimpleJSON.JSONClass();
+        json.Add("Device id", SystemInfo.deviceUniqueIdentifier);
+        json.Add("Stage", Application.loadedLevelName);
+        json.Add("Time", timeTaken);
+        json.Add("NTP", (mainGUI.ntp + @"/" + ntpMax).ToString());
+        json.Add("GTP", (mainGUI.gtp + @"/" + gtpMax).ToString());
+        json.Add("Result", "Complete");
+
+        // Log result
+        storageService.InsertJSONDocument(constants.dbName, constants.collectionStageStats, json, logCallBack);
+        logService.SetEvent(Application.loadedLevelName + constants.logStageComplete, logCallBack);
     }
 
     public void GameOver(bool fell)
@@ -208,10 +267,44 @@ public class MainGameController : MonoBehaviour
             character.enabled = false;
             mainGUI.enabled = false;
             minimap.enabled = false;
+
+            // Package the result
+            int mins = (int)(timeElapsed / 60);
+            int seconds = (int)(timeElapsed % 60);
+            string timeTaken = string.Format("{0:00}:{1:00}", mins, seconds);
+
+            SimpleJSON.JSONClass json = new SimpleJSON.JSONClass();
+            json.Add("Device id", SystemInfo.deviceUniqueIdentifier);
+            json.Add("Stage", Application.loadedLevelName);
+            json.Add("Time", timeTaken);
+            json.Add("NTP", (mainGUI.ntp + @"/" + ntpMax).ToString());
+            json.Add("GTP", (mainGUI.gtp + @"/" + gtpMax).ToString());
+            json.Add("Result", "Fell down");
+
+            // Log result
+            storageService.InsertJSONDocument(constants.dbName, constants.collectionStageStats, json, logCallBack);
+            logService.SetEvent(Application.loadedLevelName + constants.logStageFailed, logCallBack);
         }
         else
         {
             failGUI.StageFailed();
+
+            // Package the result
+            int mins = (int)(timeElapsed / 60);
+            int seconds = (int)(timeElapsed % 60);
+            string timeTaken = string.Format("{0:00}:{1:00}", mins, seconds);
+
+            SimpleJSON.JSONClass json = new SimpleJSON.JSONClass();
+            json.Add("Device id", SystemInfo.deviceUniqueIdentifier);
+            json.Add("Stage", Application.loadedLevelName);
+            json.Add("Time", timeTaken);
+            json.Add("NTP", (mainGUI.ntp + @"/" + ntpMax).ToString());
+            json.Add("GTP", (mainGUI.gtp + @"/" + gtpMax).ToString());
+            json.Add("Result", "Out of time");
+
+            // Log result
+            storageService.InsertJSONDocument(constants.dbName, constants.collectionStageStats, json, logCallBack);
+            logService.SetEvent(Application.loadedLevelName + constants.logStageFailed, logCallBack);
         }
     }
 
@@ -234,12 +327,16 @@ public class MainGameController : MonoBehaviour
     {
         // Restart level
         Application.LoadLevel(Application.loadedLevel);
+
+        logService.SetEvent(Application.loadedLevelName + constants.logStageRetry, logCallBack);
     }
 
     public void ReturnToTitle()
     {
         // Return to title screen
         Application.LoadLevel("GUI_TitleScreen");
+
+        logService.SetEvent(Application.loadedLevelName + constants.logStageQuit, logCallBack);
     }
 
     public void NextStage()
@@ -623,4 +720,5 @@ public class MainGameController : MonoBehaviour
             reward += 1;
         }
     }
+
 }

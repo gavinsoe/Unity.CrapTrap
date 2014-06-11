@@ -89,7 +89,7 @@ public class TutorialHangDown : MonoBehaviour {
 
         // Finger
         fingerTexture = activeSkin.customStyles[9].normal.background;
-        float fingerDimension = Screen.height * 0.5f;
+        float fingerDimension = Screen.height * finger_scale;
         pos1_fingerRect = new Rect(Screen.width * fingerXOffset, Screen.height * fingerYOffset1, fingerDimension, fingerDimension);
         pos2_fingerRect = new Rect(Screen.width * fingerXOffset, Screen.height * fingerYOffset2, fingerDimension, fingerDimension);
         cur_fingerRect = pos1_fingerRect;

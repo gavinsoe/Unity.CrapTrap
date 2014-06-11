@@ -59,4 +59,14 @@ public class ButtonHandler
         }
 
     }
+
+    public void OnClick(Rect buttonRect)
+    {
+        if (_state == ButtonState.Normal)
+        {
+            //iTween.Stop(_gameObject, "value");
+            _state = ButtonState.Scaled;
+            iTween.ValueTo(_gameObject, iTween.Hash("from", buttonRect, "to", _scaledSize, "easetype", iTween.EaseType.easeOutBack, "onupdate", _callback, "time", 0));
+        }
+    }
 }

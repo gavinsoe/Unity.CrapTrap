@@ -3,8 +3,13 @@ using System.Collections;
 
 public class Constants {
     // App42
-    public string apiKey = "92ebb600c27cc47273d4b59ebc6fec5027d6059c43633b6e4ac68b63f3635c26";
-    public string secretKey = "657df3402a2569aedae419a6af0f2c225cfbbd07458f91ff89a1b62960da6e4b";
+    public string apiKey = "ea64f1c53a17e32313f7145f3adc28f10df79706f7fc004a1cd2c3754a855c8d";
+    public string secretKey = "4a7d6066fc132c000ecaaa5b08c377e43075d858e9832fe71c9fae9f8fcf1795";
+
+    // App42 main database
+    public string dbName = "craptrap";
+    public string collectionReviews = "Reviews";
+    public string collectionStageStats = "Stage Stats";
 
     // Emails
     public string senderEmail = "admin@articonnect.com";
@@ -14,4 +19,11 @@ public class Constants {
     public string regexEmail = @"^(?!\.)(""([^""\r\\]|\\[""\r\\])*""|" 
                               + @"([-a-z0-9!#$%&'*+/=?^_`{|}~]|(?<!\.)\.)*)(?<!\.)" 
                               + @"@[a-z0-9][\w\.-]*[a-z0-9]\.[a-z][a-z\.]*[a-z]$";
+
+    // Logging suffixes
+    public string logStageComplete = " Complete";
+    public string logStageFailed = " Failed";
+    public string logStageRetry = " Retry";
+    public string logStageQuit = " Quit";
+
 }

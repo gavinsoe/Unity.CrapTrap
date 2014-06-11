@@ -1,8 +1,19 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using System.Net;
+using com.shephertz.app42.paas.sdk.csharp;
+using com.shephertz.app42.paas.sdk.csharp.log;
+using com.shephertz.app42.paas.sdk.csharp.storage;
 
 public class DemoTitleScreenGUI : MonoBehaviour {
+
+    // App42 Stuff
+    ServiceAPI serviceAPI;
+    LogService logService;
+    StorageService storageService;
+    Constants constants = new Constants();
+    LogResponse logCallBack = new LogResponse();
 
     // GUI Skin
     public GUISkin activeSkin;
@@ -69,9 +80,34 @@ public class DemoTitleScreenGUI : MonoBehaviour {
     private GUIStyle E_btnStyle;
 
     #endregion
+#if UNITY_EDITOR
+    public static bool Validator(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
+    { return true; }
+#endif
 
-    void Start()
+    void Awake()
     {
+        #region App42
+
+        #if UNITY_EDITOR
+            ServicePointManager.ServerCertificateValidationCallback = Validator;
+        #endif
+
+        // Connect to the app service
+        serviceAPI = new ServiceAPI(constants.apiKey, constants.secretKey);
+
+        // Build the log service
+        logService = serviceAPI.BuildLogService();
+        
+        // Build the storage service
+        storageService = serviceAPI.BuildStorageService();
+
+        // Log the event
+        logService.SetEvent("[DEMO] Title Screen", "Landed", logCallBack);
+
+        #endregion
+
+        #region GUI
         logoContainerWidth = Screen.width * 0.6f;
         logoContainerHeight = Screen.height;
         logoContainerRect = new Rect(0, 0, logoContainerWidth, logoContainerHeight);
@@ -122,6 +158,7 @@ public class DemoTitleScreenGUI : MonoBehaviour {
         C_btnStyle = new GUIStyle(activeSkin.button);
         D_btnStyle = new GUIStyle(activeSkin.button);
         E_btnStyle = new GUIStyle(activeSkin.button);
+        #endregion
     }
 
     void OnGUI()
@@ -132,6 +169,7 @@ public class DemoTitleScreenGUI : MonoBehaviour {
 
     private void DemoTitleScreen()
     {
+
         GUI.BeginGroup(logoContainerRect);
         
         GUI.DrawTexture(logoRect, logoTexture);
@@ -140,40 +178,40 @@ public class DemoTitleScreenGUI : MonoBehaviour {
         GUI.EndGroup();
 
         GUI.BeginGroup(navContainerRect);
-        
+
         // Tutorial Stage
         if (GUI.Button(A_btnRect, "tutorial", A_btnStyle))
         {
             // Redirect to Tutorial Stage
-            Application.LoadLevel("stage_tutorial");
+            Application.LoadLevel("[DEMO] Tutorial");
         }
 
         // Settings Button
         if (GUI.Button(B_btnRect, "stage 1", B_btnStyle))
         {
             // Redirect to Stage 1
-            Application.LoadLevel("stage_Demo-1");
+            Application.LoadLevel("[DEMO] Stage 1");
         }
 
         // Settings Button
         if (GUI.Button(C_btnRect, "stage 2", C_btnStyle))
         {
             // Redirect to Stage 2
-            Application.LoadLevel("stage_Demo-2");
+            Application.LoadLevel("[DEMO] Stage 2");
         }
 
         // Credits Button
         if (GUI.Button(D_btnRect, "feedback", D_btnStyle))
         {
             // Open Contact us modal
-            Application.LoadLevel("GUI_Review");
+            Application.LoadLevel("[DEMO] Feedback");
         }
 
         // Credits Button
         if (GUI.Button(E_btnRect, "contact us!", E_btnStyle))
         {
             // Open Contact us modal
-            Application.LoadLevel("GUI_ContactUs");
+            Application.LoadLevel("[DEMO] Contact");
         }
 
         A_btnScale.OnMouseOver(A_btnRect);
@@ -184,6 +222,12 @@ public class DemoTitleScreenGUI : MonoBehaviour {
 
         GUI.EndGroup();
 
+    }
+
+    void OnDestroy()
+    {
+        // Log the event
+        logService.SetEvent("[DEMO] Title Screen", "Escaped", logCallBack);
     }
 
     //applies the values from iTween:
@@ -242,7 +286,3 @@ public class DemoTitleScreenGUI : MonoBehaviour {
         E_btnStyle.padding.bottom = (int)(E_btnStyle.fontSize * navBottomPaddingScaling);
     }
 }
-
-
-
-

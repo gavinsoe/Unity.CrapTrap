@@ -73,7 +73,7 @@ public class TutorialPull : MonoBehaviour {
 
         // Finger
         fingerTexture = activeSkin.customStyles[9].normal.background;
-        float fingerDimension = Screen.height * 0.5f;
+        float fingerDimension = Screen.height * finger_scale;
         pos1_fingerRect = new Rect(Screen.width * fingerXOffset1, Screen.height * fingerYOffset, fingerDimension, fingerDimension);
         pos2_fingerRect = new Rect(Screen.width * fingerXOffset2, Screen.height * fingerYOffset, fingerDimension, fingerDimension);
         cur_fingerRect = pos1_fingerRect;

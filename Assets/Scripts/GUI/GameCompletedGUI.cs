@@ -252,7 +252,7 @@ public class GameCompletedGUI : MonoBehaviour {
         if (GUI.Button(feedbackBtnRect, "feedback", activeSkin.customStyles[10]))
         {
             // Open Contact us modal
-            Application.LoadLevel("GUI_Review");
+            Application.LoadLevel("[DEMO] Feedback");
         }
 
         GUI.EndGroup();
@@ -315,11 +315,9 @@ public class GameCompletedGUI : MonoBehaviour {
         containerRect = newCoordinates;
     }
 
-    public void StageComplete(float _time, int _ntpCollected, int _ntpAvailable, int _gtpCollected, int _gtpAvailable)
+    public void StageComplete(string _time, int _ntpCollected, int _ntpAvailable, int _gtpCollected, int _gtpAvailable)
     {
-        int mins = (int)(_time / 60);
-        int seconds = (int)(_time % 60);
-        time = string.Format("{0:00}:{1:00}",mins,seconds);
+        time = _time;
 
         ntpCollected = _ntpCollected;
         ntpAvailable = _ntpAvailable;

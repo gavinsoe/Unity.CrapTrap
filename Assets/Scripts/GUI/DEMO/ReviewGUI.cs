@@ -3,18 +3,21 @@ using System;
 using System.Collections;
 using System.Net;
 using com.shephertz.app42.paas.sdk.csharp;
-using com.shephertz.app42.paas.sdk.csharp.review;
+using com.shephertz.app42.paas.sdk.csharp.storage;
+using com.shephertz.app42.paas.sdk.csharp.log;
 
 public class ReviewGUI : MonoBehaviour
 {
-    private string username = "";//Guid.NewGuid().ToString();
+    private string deviceId = "";//Guid.NewGuid().ToString();
     
     private string itemId = "CTvDEMO";
 
     // App42 Stuff
     ServiceAPI serviceAPI;
-    ReviewService reviewService;
+    LogService logService;
+    StorageService storageService;
     Constants constants = new Constants();
+    LogResponse logCallBack = new LogResponse();
     ReviewResponse callBack = new ReviewResponse();
 
     // GUI Skin
@@ -38,7 +41,6 @@ public class ReviewGUI : MonoBehaviour
     private string[] toolbarStrings = new string[] { "1", "2", "3", "4", "5" };
     private Vector2 scrollPosition = new Vector2(0, 0);
     private bool newAlert = false;
-
 
     #region GUI Styling
 
@@ -125,12 +127,17 @@ public class ReviewGUI : MonoBehaviour
         // Connect to the app service
         serviceAPI = new ServiceAPI(constants.apiKey, constants.secretKey);
 
-        // Build Review Service
-        reviewService = serviceAPI.BuildReviewService();
+        // Build the log service
+        logService = serviceAPI.BuildLogService();
+
+        // Build the storage service
+        storageService = serviceAPI.BuildStorageService();
 
         // Get the device number
-        username = SystemInfo.deviceUniqueIdentifier;
+        deviceId = SystemInfo.deviceUniqueIdentifier;
 
+        // Log the event
+        logService.SetEvent("[DEMO] Feedback", "Landed", logCallBack);
 
         #region GUI Styling
 
@@ -269,10 +276,9 @@ public class ReviewGUI : MonoBehaviour
         {
             if (touch.phase == TouchPhase.Moved)
             {
-                     scrollPosition.y += touch.deltaPosition.y;        // dragging
+                scrollPosition.y += (touch.deltaPosition.y * 3);        // dragging
             }
         }
-
 
         #region Alert Message
         if (newAlert)
@@ -365,14 +371,20 @@ public class ReviewGUI : MonoBehaviour
             #region Format and send
             if (String.IsNullOrEmpty(error))
             {
-                // Parse together the feedback
-                string feedback = "[ LIKES ] " + feedback_1 + " " +
-                                  "[ HATES ] " + feedback_2 + " " +
-                                  "[ TOADD ] " + feedback_3 + " " +
-                                  "[ OTHER ] " + feedback_4;
+                // Package the review
+                SimpleJSON.JSONClass json = new SimpleJSON.JSONClass();
+                json.Add("Device id", deviceId);
+                json.Add("Likes", feedback_1);
+                json.Add("Hates", feedback_2);
+                json.Add("Suggestions", feedback_3);
+                json.Add("Other", feedback_4);
+                json.Add("Rating", (toolbarInt + 1).ToString());
 
                 // Do something...
-                reviewService.CreateReview(username, itemId, feedback, toolbarInt + 1, callBack);
+                storageService.InsertJSONDocument(constants.dbName, constants.collectionReviews, json, callBack);
+
+                // Log the event
+                logService.SetEvent("[DEMO] Feedback Submitted", logCallBack);
 
                 error = "Sending...";
                 newAlert = true;
@@ -384,6 +396,12 @@ public class ReviewGUI : MonoBehaviour
         B_btnScale.OnMouseOver(B_btnRect);
         GUI.EndScrollView();
         //DemoReviewForm();
+    }
+
+    void OnDestroy()
+    {
+        // Log the event
+        logService.SetEvent("[DEMO] Feedback", "Escaped", logCallBack);
     }
 
     //applies the values from iTween:
@@ -405,27 +423,28 @@ public class ReviewGUI : MonoBehaviour
         // Padding Scaling
         B_btnStyle.padding.top = (int)(B_btnStyle.fontSize * buttonTopPadding);
     }
-}
 
-// Callback
-public class ReviewResponse : App42CallBack
-{
-    public string result { get; set; }
-
-    public void OnSuccess(object response)
+    // Callback
+    public class ReviewResponse : App42CallBack
     {
-        try
+        public string result { get; set; }
+
+        public void OnSuccess(object response)
         {
-            result = "Thank you for making our game better! :D";
+            try
+            {
+                result = "Thank you for making our game better! :D";
+            }
+            catch (App42Exception e)
+            {
+                result = e.ToString();
+            }
         }
-        catch (App42Exception e)
+
+        public void OnException(Exception e)
         {
-            result = e.ToString();
+            result = "Unfortunately something weird happened :( \nFeel free to email us your thoughts at contact@articonnect.com if it continues to not work!";
         }
     }
-
-    public void OnException(Exception e)
-    {
-        result = "Unfortunately something weird happened :( \nFeel free to email us your thoughts at contact@articonnect.com if it continues to not work!";
-    }
 }
+

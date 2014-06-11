@@ -5,6 +5,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using com.shephertz.app42.paas.sdk.csharp;
 using com.shephertz.app42.paas.sdk.csharp.email;
+using com.shephertz.app42.paas.sdk.csharp.log;
 
 public class ContactUsGUI : MonoBehaviour {
 
@@ -23,8 +24,10 @@ public class ContactUsGUI : MonoBehaviour {
     // App42 Stuff
     ServiceAPI serviceAPI;
     EmailService emailService;
+    LogService logService;
     Constants constants = new Constants();
     ContactUsResponse callBack = new ContactUsResponse();
+    LogResponse logCallBack = new LogResponse();
 
     #region GUI styling
     // Container and inner frame
@@ -101,9 +104,14 @@ public class ContactUsGUI : MonoBehaviour {
         // Connect to the app service
         serviceAPI = new ServiceAPI(constants.apiKey, constants.secretKey);
 
+        // Build the log service
+        logService = serviceAPI.BuildLogService();
+
         // Build Email Service
         emailService = serviceAPI.BuildEmailService();
 
+        // Log the event
+        logService.SetEvent("[DEMO] Contact", "Landed", logCallBack);
         #region GUI stuff
         containerRect = new Rect(Screen.width * ((1 - containerWidth) / 2),
                                  Screen.height * ((1 - containerHeight) / 2),
@@ -219,7 +227,7 @@ public class ContactUsGUI : MonoBehaviour {
         {
             if (touch.phase == TouchPhase.Moved)
             {
-                scrollPosition.y += touch.deltaPosition.y;        // dragging
+                scrollPosition.y += (touch.deltaPosition.y * 3);        // dragging
             }
         }
 
@@ -322,6 +330,9 @@ public class ContactUsGUI : MonoBehaviour {
                 // Send email
                 emailService.SendMail(constants.contactEmail, formattedSubject, formattedBody, constants.senderEmail, EmailMIME.HTML_TEXT_MIME_TYPE, callBack);
 
+                // Log event
+                logService.SetEvent("[DEMO] Contact Submitted", logCallBack);
+
                 error = "Sending...";
                 newAlert = true;
             }
@@ -332,6 +343,12 @@ public class ContactUsGUI : MonoBehaviour {
         B_btnScale.OnMouseOver(B_btnRect);
         GUI.EndScrollView();
 	}
+
+    void OnDestroy()
+    {
+        // Log the event
+        logService.SetEvent("[DEMO] Contact", "Escaped", logCallBack);
+    }
 
     //applies the values from iTween:
     void A_ScaleButton(Rect size)
