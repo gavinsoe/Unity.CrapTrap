@@ -104,6 +104,7 @@ public class DemoTitleScreenGUI : MonoBehaviour {
 
         // Log the event
         logService.SetEvent("[DEMO] Title Screen", "Landed", logCallBack);
+		logService.SetEvent("[DEMO] Title Screen", logCallBack);
 
         #endregion
 
