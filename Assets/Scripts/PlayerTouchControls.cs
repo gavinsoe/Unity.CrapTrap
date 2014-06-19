@@ -5,8 +5,8 @@ public class PlayerTouchControls : MonoBehaviour {
 
      // Variables related to the touch controls
     private int maxTouches = 2;	// up to 5 (iOS only supports 5 apparently)
-    private float minDragDistance = 40f; // Swipe distance before touch is regarded as 'touch and drag'
-    private float minHoldTime = 0.15f; // Time before touch is regarded as 'touch and hold'
+    private float minDragDistance = 50f; // Swipe distance before touch is regarded as 'touch and drag'
+    private float minHoldTime = 0.1f; // Time before touch is regarded as 'touch and hold'
 
     enum InputState { TouchLeft, TouchRight, DragLeft, DragRight, SwipeDown, MovingRight, MovingLeft, Done };
     enum Commands { None, MoveLeft, MoveRight, DragLeft, DragRight, HangDown, ClimbUp, PullOut };
@@ -30,12 +30,17 @@ public class PlayerTouchControls : MonoBehaviour {
         touchState = new InputState[maxTouches];
 	}
 	
-	// Update is called once per frame
-	void Update () {
-        
+    // Update is called once per frame
+	void Update ()
+    {
+        if (!character.isMoving)
+        {
+            character.idle();
+        }
         // Detect Touch input
         foreach (Touch touch in Input.touches)
         {
+            #region old
             //if (Debug.isDebugBuild) Debug.Log("[" + touch.fingerId + "] NextCommand : " + nextCommand.ToString());
             //if (Debug.isDebugBuild) Debug.Log("[" + touch.fingerId + "] Phase : " + touch.phase.ToString() + " | Time : " + (Time.time - touchStartTime[touch.fingerId]));
             // When a finger touches the screen...
@@ -43,10 +48,11 @@ public class PlayerTouchControls : MonoBehaviour {
             {
                 //if (Debug.isDebugBuild) Debug.Log("[" + touch.fingerId + "] Touch detected at : " + touch.position.ToString());
 
-                // Store data on where the user touched the screen, and the time of when it is pressed
+                // Store the location and time of the initial touch position
                 touchStartPosition[touch.fingerId] = touch.position;
                 touchStartTime[touch.fingerId] = Time.time;
 
+                // Check which side the touch occurs at
                 if (touch.position.x < Screen.width / 2)
                 {
                     touchState[touch.fingerId] = InputState.TouchLeft;
@@ -56,7 +62,9 @@ public class PlayerTouchControls : MonoBehaviour {
                     touchState[touch.fingerId] = InputState.TouchRight;
                 }
 
+                // When a new touch comes in, reset the queued commands to none.
                 nextCommand = Commands.None;
+                character.wasMoving = false;
             }
 
             if (touch.phase == TouchPhase.Moved)
@@ -121,8 +129,8 @@ public class PlayerTouchControls : MonoBehaviour {
             if (touch.phase == TouchPhase.Stationary)
             {
                 // check how long user has been touching the screen
-                if (Time.time - touchStartTime[touch.fingerId] > minHoldTime)
-                {
+                //if (Time.time - touchStartTime[touch.fingerId] > minHoldTime)
+                //{
                     // check on which side of the screen the tap occured
                     /*if (touchState[touch.fingerId] == InputState.TouchLeft ||
                         touchState[touch.fingerId] == InputState.MovingLeft)
@@ -134,11 +142,13 @@ public class PlayerTouchControls : MonoBehaviour {
                     {
                         nextCommand = Commands.MoveRight;
                     }*/
-                    
+
+                if (Time.time - touchStartTime[touch.fingerId] > minHoldTime)
+                {
                     if (touchState[touch.fingerId] == InputState.TouchLeft  ||
                         touchState[touch.fingerId] == InputState.TouchRight ||
                         touchState[touch.fingerId] == InputState.MovingLeft ||
-                        touchState[touch.fingerId] == InputState.MovingRight )
+                        touchState[touch.fingerId] == InputState.MovingRight)
                     { 
                         if (touch.position.x < Screen.width / 2)
                         {
@@ -164,19 +174,19 @@ public class PlayerTouchControls : MonoBehaviour {
 
             if (touch.phase == TouchPhase.Ended)
             {
-                // check on which side of the screen the tap occured
-                if (touchState[touch.fingerId] == InputState.TouchLeft ||
-                    touchState[touch.fingerId] == InputState.MovingLeft)
-                {
-                    nextCommand = Commands.MoveLeft;
-                }
-                else if (touchState[touch.fingerId] == InputState.TouchRight ||
-                            touchState[touch.fingerId] == InputState.MovingRight)
-                {
-                    nextCommand = Commands.MoveRight;
-                }
+                    // check on which side of the screen the tap occured
+                    if (touchState[touch.fingerId] == InputState.TouchLeft ||
+                        touchState[touch.fingerId] == InputState.MovingLeft)
+                    {
+                        nextCommand = Commands.MoveLeft;
+                    }
+                    else if (touchState[touch.fingerId] == InputState.TouchRight ||
+                                touchState[touch.fingerId] == InputState.MovingRight)
+                    {
+                        nextCommand = Commands.MoveRight;
+                    }
             }
-
+            #endregion
             // Check for any queued commands and execute when possible
             if (!character.isMoving)
             {
@@ -215,11 +225,7 @@ public class PlayerTouchControls : MonoBehaviour {
                     StartCoroutine(character.pull(transform));
                     touchState[touch.fingerId] = InputState.Done;
                 }
-                else if (nextCommand == Commands.None)
-                {
-                    character.idle();
-                }
-
+                
                 nextCommand = Commands.None;
             }
         }

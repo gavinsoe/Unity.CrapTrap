@@ -19,6 +19,7 @@ public class CharacterController : MonoBehaviour {
     private bool wasBurning = false;
     //[HideInInspector]
     public bool reachedDestination = false;
+    public bool wasMoving = false;
 
     public int moves;
     public int hangingMoves;
@@ -65,14 +66,16 @@ public class CharacterController : MonoBehaviour {
             Collider2D bottomCollider = Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y - gridSize), 1 << LayerMask.NameToLayer("Terrain"), -0.9f, 0.9f);
 
             // Check if character is falling
-            if (bottomCollider == null) StartCoroutine(freeFalling());
-
+            if (bottomCollider == null)
+            {
+                StartCoroutine(freeFalling());
+            }
             // Check if character is on slippery ground
-            if (isSlidingRight)
+            else if (isSlidingRight)
             {
                 StartCoroutine(slidingRight());
             }
-            if (isSlidingLeft)
+            else if (isSlidingLeft)
             {
                 StartCoroutine(slidingLeft());
             }
@@ -106,6 +109,7 @@ public class CharacterController : MonoBehaviour {
             // If character is not grabbing on to any blocks (just moving)
             if (!dragging)
             {
+                wasMoving = true;
                 // If there is no block on the right side and character is moving right...
                 if (rightCollider == null && sign > 0)
                 {
@@ -146,7 +150,7 @@ public class CharacterController : MonoBehaviour {
             {
                 bool canMoveBlock = false; // A boolean value determines whether or not the block the character is attempting to move is movable.
                 // If surrounded by 2 blocks, push blocks to the direction character is moving
-                if (leftCollider != null && rightCollider != null)
+                if (leftCollider != null && rightCollider != null && !wasMoving)
                 {
                     if (sign < 0)
                     {
@@ -174,7 +178,7 @@ public class CharacterController : MonoBehaviour {
                     }
                 }
                 // If block exists only on left side
-                else if (leftCollider != null)
+                else if (leftCollider != null && !wasMoving)
                 {
                     if (sign < 0)
                     {
@@ -199,7 +203,7 @@ public class CharacterController : MonoBehaviour {
                     }
                 }
                 // If block exists only on right side
-                else if (rightCollider != null)
+                else if (rightCollider != null && !wasMoving)
                 {
                     if (sign < 0)
                     {
@@ -226,7 +230,9 @@ public class CharacterController : MonoBehaviour {
                 // when no blocks around...
                 else
                 {
-                    if (sign > 0)
+                    wasMoving = true;
+                    // If there is no block on the right side and character is moving right...
+                    if (rightCollider == null && sign > 0)
                     {
                         if (rightDownCollider == null)
                         {
@@ -237,7 +243,8 @@ public class CharacterController : MonoBehaviour {
                             StartCoroutine(moveRight());
                         }
                     }
-                    else if (sign < 0)
+                    // If there is no block on the left side and character is moving left...
+                    else if (leftCollider == null && sign < 0)
                     {
                         if (leftDownCollider == null)
                         {
@@ -247,6 +254,16 @@ public class CharacterController : MonoBehaviour {
                         {
                             StartCoroutine(moveLeft());
                         }
+                    }
+                    // If character is moving right and there is space for him to step up towards the right
+                    else if (rightCollider != null && rightUpCollider == null && upCollider == null && sign > 0)
+                    {
+                        StartCoroutine(climbRight());
+                    }
+                    // If character is moving left and tehre is space for him to step up towards the left
+                    else if (leftCollider != null && leftUpCollider == null && upCollider == null && sign < 0)
+                    {
+                        StartCoroutine(climbLeft());
                     }
                 }
             }
@@ -630,7 +647,7 @@ public class CharacterController : MonoBehaviour {
         }
 
         moves += 1;
-        isMoving = false;   
+        isMoving = false;
     }
 
     public IEnumerator moveLeft()

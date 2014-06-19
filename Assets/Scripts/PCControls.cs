@@ -19,6 +19,7 @@ public class PCControls : MonoBehaviour {
 
         if (!character.isMoving)
         {
+            //character.wasMoving = false;
             var inputH = Input.GetAxis("Horizontal");
             var inputV = Input.GetAxis("Vertical");
 

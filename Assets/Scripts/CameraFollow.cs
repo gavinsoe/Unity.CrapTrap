@@ -53,7 +53,7 @@ public class CameraFollow : MonoBehaviour
         return Mathf.Abs(transform.position.y - yOffset - player.position.y) > (yMargin); ;
 	}
 	
-	void FixedUpdate ()
+	void Update ()
 	{
         if (camState == CameraStatus.Introduction)
         {
