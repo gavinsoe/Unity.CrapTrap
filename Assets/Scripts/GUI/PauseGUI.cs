@@ -54,6 +54,7 @@ public class PauseGUI : MonoBehaviour {
     Rect menuRect;
     Rect menuContainerRect;
     Texture menuTexture;
+    private float menuScale = 1.448f;
     private float menuHeight; // height of the pause menu
     private float menuWidth; // width of the pause menu
     private float menuXOffset; // Variables used to calculate x offsets for the menu
@@ -121,10 +122,10 @@ public class PauseGUI : MonoBehaviour {
 
         // Initialise menu variables
         menuTexture = activeSkin.customStyles[2].normal.background;
-        menuWidth = Screen.width * 0.9f;
-        menuHeight = menuWidth * ((float)menuTexture.height / (float)menuTexture.width);
+        menuHeight = Screen.height * menuScale;
+        menuWidth = menuHeight * ((float)menuTexture.width / (float)menuTexture.height);
 
-        menuXOffset = Screen.width * 0.05f;
+        menuXOffset = (Screen.width - menuWidth) * 0.5f;
         menuYOffset = menuHeight * 0.05f;
         menuContainerRect = new Rect(menuXOffset, menuYOffset, menuWidth, menuHeight);
         menuRect = new Rect(0, 0, menuWidth, menuHeight);
@@ -139,7 +140,6 @@ public class PauseGUI : MonoBehaviour {
         B_BtnRect = new Rect(menuRect.width * B_BtnXOffset, menuRect.height * B_BtnYOffset, btnWidth, btnHeight);
         C_BtnRect = new Rect(menuRect.width * C_BtnXOffset, menuRect.height * C_BtnYOffset, btnWidth, btnHeight);
         D_BtnRect = new Rect(menuRect.width * D_BtnXOffset, menuRect.height * D_BtnYOffset, btnWidth, btnHeight);
-
 
         // Initialise button scalers
         A_BtnScale = new ButtonHandler(A_BtnRect, gameObject, 0.9f, "A_ScaleButton");
