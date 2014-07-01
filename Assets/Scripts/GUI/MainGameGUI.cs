@@ -13,6 +13,9 @@ public class MainGameGUI : MonoBehaviour
     public GUISkin activeSkin;
     private MainGameController mainController;
 
+    public float color_alpha = 0; // transparency
+    public float alpha_to = 0; // the target alpha value when dissapearing (the border)
+
     #region Currency boxes variables
     public int ntp = 0; // Keeps track of the number of normal toilet papers collected
     public int gtp = 0; // Keeps track of the number of golden toilet papers collected
@@ -83,14 +86,14 @@ public class MainGameGUI : MonoBehaviour
         mapCanvas.y = Screen.height - mapCanvas.y - mapCanvas.height;
         minimap.pixelRect = mapCanvas;
         mapCanvas.y = Screen.height - mapCanvas.y - mapCanvas.height;
+
+        // Start the pu;se
+        onStartPulse();
     }
 
     // Draw the GUI
     void OnGUI()
     {
-        // Draw the timer border
-        TimerPulseBorder(timerPulseRate);
-
         // Draw the minimap border
         MinimapBorder();
 
@@ -100,38 +103,16 @@ public class MainGameGUI : MonoBehaviour
         
         // Draw the Pause Button
         PauseButton();
+
+        // Draw the timer border
+        TimerPulseBorder(timerPulseRate);
     }
 
     void TimerPulseBorder(float pulse_rate)
     {
-        float half_pulse_rate = pulse_rate / 2;
-        Color color_alpha1 = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 1);
-        Color color_alpha0 = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 0);
+        GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, color_alpha);
 
-        if (pulse_rate < 0.5)
-        {
-            activeSkin.customStyles[3].border = new RectOffset(5, 5, 5, 5);
-        }
-        else
-        {
-            activeSkin.customStyles[3].border = new RectOffset(10, 10, 10, 10);
-        }
-
-        float timeState = Time.time % pulse_rate;
-        if (timeState % pulse_rate < half_pulse_rate)
-        {
-            GUI.color = Color.Lerp(color_alpha1, color_alpha0, timeState / half_pulse_rate);
-            GUI.Box(timerBorder, "", activeSkin.customStyles[3]);
-            //Set the color back for other GUI elements
-            GUI.color = color_alpha1;
-        }
-        else
-        {
-            GUI.color = Color.Lerp(color_alpha0, color_alpha1, (timeState - half_pulse_rate) / half_pulse_rate);
-            GUI.Box(timerBorder, "", activeSkin.customStyles[3]);
-            //Set the color back for other GUI elements
-            GUI.color = color_alpha1;
-        }
+        GUI.Box(timerBorder, "", activeSkin.customStyles[3]);
     }
 
     void MinimapBorder()
@@ -160,6 +141,48 @@ public class MainGameGUI : MonoBehaviour
         {
             mainController.PauseGame();
         }
+    }
+
+    // animate border pulse
+    void AnimateBorder(float alpha)
+    {
+        color_alpha = alpha;
+    }
+
+    void onStartPulse()
+    {
+        timerPulseRate = (1 - mainController.timeElapsed / mainController.maxTime) * 1.5f;
+
+        if (timerPulseRate < 0.5)
+        {
+            alpha_to = (0.5f - timerPulseRate) * 1.5f;
+            activeSkin.customStyles[3].border = new RectOffset(5, 5, 5, 5);
+
+            //timerPulseRate = 0.45f;
+        }
+        else
+        {
+            alpha_to = 0f;
+            activeSkin.customStyles[3].border = new RectOffset(10, 10, 10, 10);
+        }
+        iTween.ValueTo(gameObject, 
+                       iTween.Hash("from", color_alpha, 
+                                   "to", 1,
+                                   "onupdate", "AnimateBorder",
+                                   "oncomplete", "onEndPulse",
+                                   "easetype", iTween.EaseType.easeInCirc,
+                                   "time", timerPulseRate));
+    }
+
+    void onEndPulse()
+    {
+        iTween.ValueTo(gameObject,
+                       iTween.Hash("from", color_alpha,
+                                   "to", alpha_to,
+                                   "onupdate", "AnimateBorder",
+                                   "oncomplete", "onStartPulse",
+                                   "easetype", iTween.EaseType.easeOutCirc,
+                                   "time", timerPulseRate));
     }
 
 }

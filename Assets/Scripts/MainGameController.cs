@@ -162,7 +162,6 @@ public class MainGameController : MonoBehaviour
                 if (!timerPaused)
                 {
                     timeElapsed += Time.deltaTime * timerReductionRate;
-                    updateTimerPulseRate();
                 }
             }
             else
@@ -187,30 +186,6 @@ public class MainGameController : MonoBehaviour
     {
         // Log result
         logService.SetEvent(Application.loadedLevelName, "Escaped", logCallBack);
-    }
-
-    public void updateTimerPulseRate()
-    {
-        if ((timeElapsed / maxTime) < 0.25)
-        {
-            mainGUI.timerPulseRate = 2;
-        }
-        else if ((timeElapsed / maxTime) < 0.5)
-        {
-            mainGUI.timerPulseRate = 1f;
-        }
-        else if ((timeElapsed / maxTime) < 0.75)
-        {
-            mainGUI.timerPulseRate = 0.75f;
-        }
-        else if ((timeElapsed / maxTime) < 0.85)
-        {
-            mainGUI.timerPulseRate = 0.5f;
-        }
-        else if ((timeElapsed / maxTime) < 0.95)
-        {
-            mainGUI.timerPulseRate = 0.25f;
-        }
     }
 
     public void setTimerReductionRate(float rate)
