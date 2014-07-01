@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerTouchControls : MonoBehaviour {
+public class PlayerTouchControlsv2 : MonoBehaviour {
 
      // Variables related to the touch controls
     private int maxTouches = 2;	// up to 5 (iOS only supports 5 apparently)
@@ -40,8 +40,9 @@ public class PlayerTouchControls : MonoBehaviour {
         // Detect Touch input
         foreach (Touch touch in Input.touches)
         {
-            //if (Debug.isDebugBuild) Debug.Log("[" + touch.fingerId + "] NextCommand : " + nextCommand.ToString());
-            //if (Debug.isDebugBuild) Debug.Log("[" + touch.fingerId + "] Phase : " + touch.phase.ToString() + " | Time : " + (Time.time - touchStartTime[touch.fingerId]));
+            #region old
+            if (Debug.isDebugBuild) Debug.Log("[" + touch.fingerId + "] NextCommand : " + nextCommand.ToString());
+            if (Debug.isDebugBuild) Debug.Log("[" + touch.fingerId + "] Phase : " + touch.phase.ToString() + " | Time : " + (Time.time - touchStartTime[touch.fingerId]));
             // When a finger touches the screen...
             if (touch.phase == TouchPhase.Began)
             {
@@ -72,15 +73,31 @@ public class PlayerTouchControls : MonoBehaviour {
 
                 if (Mathf.Abs(deltaPosition.x) > Mathf.Abs(deltaPosition.y))
                 {
-                    if (deltaPosition.x > minDragDistance)
+                    if (Input.touches.Length == 1)
                     {
-                        nextCommand = Commands.DragRight;
-                        touchState[touch.fingerId] = InputState.DragRight;
+                        if (deltaPosition.x > minDragDistance)
+                        {
+                            nextCommand = Commands.MoveRight;
+                            touchState[touch.fingerId] = InputState.MovingRight;
+                        }
+                        else if (deltaPosition.x < -minDragDistance)
+                        {
+                            nextCommand = Commands.MoveLeft;
+                            touchState[touch.fingerId] = InputState.MovingLeft;
+                        }
                     }
-                    else if (deltaPosition.x < -minDragDistance)
+                    else
                     {
-                        nextCommand = Commands.DragLeft;
-                        touchState[touch.fingerId] = InputState.DragLeft;
+                        if (deltaPosition.x > minDragDistance)
+                        {
+                            nextCommand = Commands.DragRight;
+                            touchState[touch.fingerId] = InputState.DragRight;
+                        }
+                        else if (deltaPosition.x < -minDragDistance)
+                        {
+                            nextCommand = Commands.DragLeft;
+                            touchState[touch.fingerId] = InputState.DragLeft;
+                        }
                     }
                     /*
                     if (touchState[touch.fingerId] == InputState.TouchLeft)
@@ -144,47 +161,39 @@ public class PlayerTouchControls : MonoBehaviour {
 
                 if (Time.time - touchStartTime[touch.fingerId] > minHoldTime)
                 {
-                    if (touchState[touch.fingerId] == InputState.TouchLeft  ||
-                        touchState[touch.fingerId] == InputState.TouchRight ||
-                        touchState[touch.fingerId] == InputState.MovingLeft ||
-                        touchState[touch.fingerId] == InputState.MovingRight)
-                    { 
-                        if (touch.position.x < Screen.width / 2)
+                    if (Input.touches.Length == 1)
+                    {
+                        if (touchState[touch.fingerId] == InputState.MovingLeft)
                         {
                             nextCommand = Commands.MoveLeft;
-                            touchState[touch.fingerId] = InputState.TouchLeft;
                         }
-                        else if (touch.position.x > Screen.width / 2)
+                        else if (touchState[touch.fingerId] == InputState.MovingRight)
                         {
                             nextCommand = Commands.MoveRight;
-                            touchState[touch.fingerId] = InputState.TouchRight;
+                        }
+                        else
+                        {
+                            nextCommand = Commands.None;
                         }
                     }
-                    else if (touchState[touch.fingerId] == InputState.DragRight)
+                    else
                     {
-                        nextCommand = Commands.DragRight;
-                    }
-                    else if (touchState[touch.fingerId] == InputState.DragLeft)
-                    {
-                        nextCommand = Commands.DragLeft;
+                        if (touchState[touch.fingerId] == InputState.DragRight)
+                        {
+                            nextCommand = Commands.DragRight;
+                        }
+                        else if (touchState[touch.fingerId] == InputState.DragLeft)
+                        {
+                            nextCommand = Commands.DragLeft;
+                        }
+                        else
+                        {
+                            nextCommand = Commands.None;
+                        }
                     }
                 }
             }
-
-            if (touch.phase == TouchPhase.Ended)
-            {
-                    // check on which side of the screen the tap occured
-                    if (touchState[touch.fingerId] == InputState.TouchLeft ||
-                        touchState[touch.fingerId] == InputState.MovingLeft)
-                    {
-                        nextCommand = Commands.MoveLeft;
-                    }
-                    else if (touchState[touch.fingerId] == InputState.TouchRight ||
-                                touchState[touch.fingerId] == InputState.MovingRight)
-                    {
-                        nextCommand = Commands.MoveRight;
-                    }
-            }
+            #endregion
             // Check for any queued commands and execute when possible
             if (!character.isMoving)
             {
