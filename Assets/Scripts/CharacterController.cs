@@ -228,6 +228,8 @@ public class CharacterController : MonoBehaviour {
                     }
                 }
                 // when no blocks around...
+                #region temoirarily removed? Auto move when no blocks
+                /*
                 else
                 {
                     wasMoving = true;
@@ -266,6 +268,8 @@ public class CharacterController : MonoBehaviour {
                         StartCoroutine(climbLeft());
                     }
                 }
+                */
+                #endregion
             }
         }
         else
