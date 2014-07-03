@@ -8,21 +8,23 @@ public class PlayerTouchControls : MonoBehaviour {
     private float minDragDistance = 50f; // Swipe distance before touch is regarded as 'touch and drag'
     private float minHoldTime = 0.1f; // Time before touch is regarded as 'touch and hold'
 
-    enum InputState { TouchLeft, TouchRight, DragLeft, DragRight, SwipeDown, MovingRight, MovingLeft, Done };
-    enum Commands { None, MoveLeft, MoveRight, DragLeft, DragRight, HangDown, ClimbUp, PullOut };
-    private InputState[] touchState;
+    public enum InputState { TouchLeft, TouchRight, DragLeft, DragRight, SwipeDown, MovingRight, MovingLeft, Done };
+    public enum Commands { None, MoveLeft, MoveRight, DragLeft, DragRight, HangDown, ClimbUp, PullOut, ZoomOut, ZoomIn };
+    public InputState[] touchState;
     private Vector2[] touchStartPosition;
     private float[] touchStartTime;
-    private Commands nextCommand;
+    public Commands nextCommand;
 
     // The component that handles all the character movement.
     private CharacterController character;
+    private MainGameController main;
 
     // Use this for initialization
 	void Start () {
 
         // Retrieve the characterController
         character = GetComponent<CharacterController>();
+        main = Camera.main.GetComponent<MainGameController>();
 
         // inititialise the arrays used for manipulating the touch controls
         touchStartPosition = new Vector2[maxTouches];
@@ -66,7 +68,7 @@ public class PlayerTouchControls : MonoBehaviour {
                 character.wasMoving = false;
             }
 
-            if (touch.phase == TouchPhase.Moved)
+            else if (touch.phase == TouchPhase.Moved)
             {
                 var deltaPosition = touch.position - touchStartPosition[touch.fingerId];
 
@@ -74,36 +76,82 @@ public class PlayerTouchControls : MonoBehaviour {
                 {
                     if (deltaPosition.x > minDragDistance)
                     {
-                        nextCommand = Commands.DragRight;
                         touchState[touch.fingerId] = InputState.DragRight;
+                        if (Input.touches.Length == 1)
+                        {
+                            nextCommand = Commands.DragRight;
+                        }
+                        else if (Input.touches.Length == 2)
+                        {
+                            if (touch.fingerId == 0)
+                            {
+                                if (touchState[1] == InputState.DragLeft)
+                                {
+                                    if (touchStartPosition[0].x > touchStartPosition[1].x)
+                                    {
+                                        nextCommand = Commands.ZoomIn;
+                                    }
+                                    else if (touchStartPosition[0].x < touchStartPosition[1].x)
+                                    {
+                                        nextCommand = Commands.ZoomOut;
+                                    }
+                                }
+                            }
+                            else if (touch.fingerId == 1)
+                            {
+                                if (touchState[0] == InputState.DragLeft)
+                                {
+                                    if (touchStartPosition[0].x > touchStartPosition[1].x)
+                                    {
+                                        nextCommand = Commands.ZoomOut;
+                                    }
+                                    else if (touchStartPosition[0].x < touchStartPosition[1].x)
+                                    {
+                                        nextCommand = Commands.ZoomIn;
+                                    }
+                                }
+                            }
+                        }
                     }
                     else if (deltaPosition.x < -minDragDistance)
                     {
-                        nextCommand = Commands.DragLeft;
                         touchState[touch.fingerId] = InputState.DragLeft;
+                        if (Input.touches.Length == 1)
+                        {
+                            nextCommand = Commands.DragLeft;
+                        }
+                        else if (Input.touches.Length == 2)
+                        {
+                            if (touch.fingerId == 0)
+                            {
+                                if (touchState[1] == InputState.DragRight)
+                                {
+                                    if (touchStartPosition[0].x > touchStartPosition[1].x)
+                                    {
+                                        nextCommand = Commands.ZoomOut;
+                                    }
+                                    else if (touchStartPosition[0].x < touchStartPosition[1].x)
+                                    {
+                                        nextCommand = Commands.ZoomIn;
+                                    }
+                                }
+                            }
+                            else if (touch.fingerId == 1)
+                            {
+                                if (touchState[0] == InputState.DragRight)
+                                {
+                                    if (touchStartPosition[0].x > touchStartPosition[1].x)
+                                    {
+                                        nextCommand = Commands.ZoomIn;
+                                    }
+                                    else if (touchStartPosition[0].x < touchStartPosition[1].x)
+                                    {
+                                        nextCommand = Commands.ZoomOut;
+                                    }
+                                }
+                            }
+                        }
                     }
-                    /*
-                    if (touchState[touch.fingerId] == InputState.TouchLeft)
-                    {
-                        if (deltaPosition.x > minDragDistance)
-                        {
-                            nextCommand = Commands.Left_DragRight;
-                        }
-                        else if (deltaPosition.x < -minDragDistance)
-                        {
-                            nextCommand = Commands.Left_DragLeft;
-                        }
-                    }
-                    else if (touchState[touch.fingerId] == InputState.TouchRight)
-                    {                        if (deltaPosition.x > minDragDistance)
-                        {
-                            nextCommand = Commands.Right_DragRight;
-                        }
-                        else if (deltaPosition.x < -minDragDistance)
-                        {
-                            nextCommand = Commands.Right_DragLeft;
-                        }
-                    }*/
                 }
                 else
                 {
@@ -125,7 +173,7 @@ public class PlayerTouchControls : MonoBehaviour {
                 }
             }
 
-            if (touch.phase == TouchPhase.Stationary)
+            else if (touch.phase == TouchPhase.Stationary)
             {
                 // check how long user has been touching the screen
                 //if (Time.time - touchStartTime[touch.fingerId] > minHoldTime)
@@ -144,35 +192,40 @@ public class PlayerTouchControls : MonoBehaviour {
 
                 if (Time.time - touchStartTime[touch.fingerId] > minHoldTime)
                 {
-                    if (touchState[touch.fingerId] == InputState.TouchLeft  ||
-                        touchState[touch.fingerId] == InputState.TouchRight ||
-                        touchState[touch.fingerId] == InputState.MovingLeft ||
-                        touchState[touch.fingerId] == InputState.MovingRight)
-                    { 
-                        if (touch.position.x < Screen.width / 2)
-                        {
-                            nextCommand = Commands.MoveLeft;
-                            touchState[touch.fingerId] = InputState.TouchLeft;
-                        }
-                        else if (touch.position.x > Screen.width / 2)
-                        {
-                            nextCommand = Commands.MoveRight;
-                            touchState[touch.fingerId] = InputState.TouchRight;
-                        }
-                    }
-                    else if (touchState[touch.fingerId] == InputState.DragRight)
+                    if (Input.touches.Length == 1)
                     {
-                        nextCommand = Commands.DragRight;
-                    }
-                    else if (touchState[touch.fingerId] == InputState.DragLeft)
-                    {
-                        nextCommand = Commands.DragLeft;
+                        if (touchState[touch.fingerId] == InputState.TouchLeft ||
+                            touchState[touch.fingerId] == InputState.TouchRight ||
+                            touchState[touch.fingerId] == InputState.MovingLeft ||
+                            touchState[touch.fingerId] == InputState.MovingRight)
+                        {
+                            if (touch.position.x < Screen.width / 2)
+                            {
+                                nextCommand = Commands.MoveLeft;
+                                touchState[touch.fingerId] = InputState.TouchLeft;
+                            }
+                            else if (touch.position.x > Screen.width / 2)
+                            {
+                                nextCommand = Commands.MoveRight;
+                                touchState[touch.fingerId] = InputState.TouchRight;
+                            }
+                        }
+                        else if (touchState[touch.fingerId] == InputState.DragRight)
+                        {
+                            nextCommand = Commands.DragRight;
+                        }
+                        else if (touchState[touch.fingerId] == InputState.DragLeft)
+                        {
+                            nextCommand = Commands.DragLeft;
+                        }
                     }
                 }
             }
 
-            if (touch.phase == TouchPhase.Ended)
+            else if (touch.phase == TouchPhase.Ended)
             {
+                if (Input.touches.Length == 1)
+                {
                     // check on which side of the screen the tap occured
                     if (touchState[touch.fingerId] == InputState.TouchLeft ||
                         touchState[touch.fingerId] == InputState.MovingLeft)
@@ -184,11 +237,21 @@ public class PlayerTouchControls : MonoBehaviour {
                     {
                         nextCommand = Commands.MoveRight;
                     }
+                }
             }
+
             // Check for any queued commands and execute when possible
             if (!character.isMoving)
             {
-                if (nextCommand == Commands.MoveRight)
+                if (nextCommand == Commands.ZoomIn)
+                {
+                    main.ZoomIn();
+                }
+                else if (nextCommand == Commands.ZoomOut)
+                {
+                    main.ZoomOut();
+                }
+                else if (nextCommand == Commands.MoveRight)
                 {
                     StartCoroutine(character.move(transform, 1, false));
                     touchState[touch.fingerId] = InputState.MovingRight;

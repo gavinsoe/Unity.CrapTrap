@@ -31,7 +31,16 @@ public class MainGameController : MonoBehaviour
     #region Map Variables
 
     public bool mapEnabled = true;
-    public Camera minimap;
+    public Camera mainCamera;
+    public float zoomLevel = 3;
+    public bool zoomIn;
+    public bool zoomOut;
+
+    public float bgScaling = 2;
+    private Vector3 bgZoomOutScale;
+    private Vector3 bgZoomInScale;
+    private Vector3 curBgScale;
+    private GameObject[] backgrounds;
 
     #endregion
     #region CUrrency Variables
@@ -122,13 +131,15 @@ public class MainGameController : MonoBehaviour
 
             failByFallingGUI = GameObject.Find("GUI Fail by Falling").GetComponent<FailedByFallingGUI>();
 
-            // Obtain the minimap component
-            minimap = GameObject.FindGameObjectWithTag("Minimap").GetComponent<Camera>();
-
             // Get the total number of ntp and gtp
             ntpMax = GameObject.FindGameObjectsWithTag("ntp").Length;
             gtpMax = GameObject.FindGameObjectsWithTag("gtp").Length;
 
+            // Retrieve all backgrounds
+            backgrounds = GameObject.FindGameObjectsWithTag("Background");
+            bgZoomInScale = backgrounds[0].transform.localScale;
+            bgZoomOutScale = bgZoomInScale * bgScaling;
+            curBgScale = bgZoomInScale;
             #region App42
 
             #if UNITY_EDITOR
@@ -178,6 +189,17 @@ public class MainGameController : MonoBehaviour
                 audio.clip = loopingClip;
                 audio.loop = true;
                 audio.Play();
+            }
+
+            if (zoomIn)
+            {
+                ZoomIn();
+                zoomIn = false;
+            }
+            if (zoomOut)
+            {
+                ZoomOut();
+                zoomOut = false;
             }
         }
 	}
@@ -241,7 +263,6 @@ public class MainGameController : MonoBehaviour
             
             character.enabled = false;
             mainGUI.enabled = false;
-            minimap.enabled = false;
 
             // Package the result
             int mins = (int)(timeElapsed / 60);
@@ -325,7 +346,6 @@ public class MainGameController : MonoBehaviour
         if (mapEnabled != enabled)
         {
             mapEnabled = enabled;
-            minimap.enabled = enabled;
         }
     }
 
@@ -339,6 +359,50 @@ public class MainGameController : MonoBehaviour
         {
             AudioListener.volume = 0.0f;
         }
+    }
+
+    public void ZoomIn()
+    {
+        // Set ismoving flag (to prevent other commands from coming in)
+        character.isMoving = true;
+        //Enable Controls
+        character.enabled = true;
+        // Animate the zoom
+        iTween.ValueTo(gameObject,
+                       iTween.Hash("from", zoomLevel,
+                                   "to", 3,
+                                   "onupdate", "animateZoom",
+                                   "oncomplete", "zoomComplete",
+                                   "easetype", iTween.EaseType.linear,
+                                   "time", 0.5));
+        iTween.ValueTo(gameObject,
+                       iTween.Hash("from", curBgScale,
+                                   "to", bgZoomInScale,
+                                   "onupdate", "scaleBackground",
+                                   "easetype", iTween.EaseType.linear,
+                                   "time", 0.5));
+    }
+
+    public void ZoomOut()
+    {
+        // Set ismoving flag (to prevent other commands from coming in)
+        character.isMoving = true;
+        // Disable Controls
+        character.enabled = false;
+        // Animate the zoom
+        iTween.ValueTo(gameObject,
+                       iTween.Hash("from", zoomLevel,
+                                   "to", 6,
+                                   "onupdate", "animateZoom",
+                                   "oncomplete", "zoomComplete",
+                                   "easetype", iTween.EaseType.linear,
+                                   "time", 0.5));
+        iTween.ValueTo(gameObject,
+                       iTween.Hash("from", curBgScale,
+                                   "to", bgZoomOutScale,
+                                   "onupdate", "scaleBackground",
+                                   "easetype", iTween.EaseType.linear,
+                                   "time", 0.5));
     }
 
 	public void DisableTimeNMove() {
@@ -696,4 +760,24 @@ public class MainGameController : MonoBehaviour
         }
     }
 
+    // iTween camera ortographic size
+    void animateZoom(float zoom)
+    {
+        zoomLevel = zoom;
+        Camera.main.GetComponent<Camera>().orthographicSize = zoom;
+    }
+
+    void scaleBackground(Vector3 scale)
+    {
+        curBgScale = scale;
+        foreach (GameObject background in backgrounds)
+        {
+            background.transform.localScale = scale;
+        }
+    }
+
+    void zoomComplete()
+    {
+        character.isMoving = false;
+    }
 }

@@ -30,13 +30,6 @@ public class MainGameGUI : MonoBehaviour
     private float currencyBoxWidth; // The calculated width of the currency box
     #endregion
 
-    #region Minimap variables
-    private Camera minimap; // the object holding the minimap
-    private float minimapXOffset = 24f;
-    private float minimapYOffset = 20f;
-    private Rect mapCanvas; // the size of the minimap
-    #endregion
-
     #region Timer border variables
     private Rect timerBorder; // Timer border (around edges of screen
     public float timerPulseRate; // The rate at which the timer border pulses
@@ -76,17 +69,7 @@ public class MainGameGUI : MonoBehaviour
         ppButtonDimensions = Screen.height / 8;
         ppButtonTextureDimensions = ppButtonDimensions * 0.625f;
         ppButtonPos = new Rect(ppButtonXOffset, ppButtonYOffset, ppButtonDimensions, ppButtonDimensions);
-
-        // set the minimap dimensions and positions.
-        minimap = GameObject.FindGameObjectWithTag("Minimap").GetComponent<Camera>();
-
-        mapCanvas = minimap.pixelRect;
-        mapCanvas.x = minimapXOffset;
-        mapCanvas.y = minimapYOffset + ppButtonTextureDimensions;
-        mapCanvas.y = Screen.height - mapCanvas.y - mapCanvas.height;
-        minimap.pixelRect = mapCanvas;
-        mapCanvas.y = Screen.height - mapCanvas.y - mapCanvas.height;
-
+        
         // Start the pu;se
         onStartPulse();
     }
@@ -94,9 +77,6 @@ public class MainGameGUI : MonoBehaviour
     // Draw the GUI
     void OnGUI()
     {
-        // Draw the minimap border
-        MinimapBorder();
-
         // Draw the currency boxes.
         NTPScore(currencyBoxWidth, currencyBoxHeight);
         GTPScore(currencyBoxWidth, currencyBoxHeight);
@@ -113,14 +93,6 @@ public class MainGameGUI : MonoBehaviour
         GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, color_alpha);
 
         GUI.Box(timerBorder, "", activeSkin.customStyles[3]);
-    }
-
-    void MinimapBorder()
-    {
-        if (mainController.mapEnabled)
-        {
-            GUI.Box(mapCanvas, "", activeSkin.customStyles[2]);
-        }
     }
 
     void NTPScore(float width, float height)
