@@ -163,6 +163,13 @@ public class MainGameController : MonoBehaviour
         }
 	}
 
+    void Start()
+    {
+        // Disable the gui (until they need to be popped up
+        pauseGUI.enabled = false;
+        failGUI.enabled = false;
+    }
+
 	// Update is called once per frame
 	void Update () {
         if (!isGameMenu)
@@ -283,7 +290,9 @@ public class MainGameController : MonoBehaviour
         }
         else
         {
-            failGUI.StageFailed();
+            failGUI.enabled = true;
+            mainGUI.Hide();
+            failGUI.Show();
 
             // Package the result
             int mins = (int)(timeElapsed / 60);

@@ -13,8 +13,9 @@ public class MainGameGUI : MonoBehaviour
     public GUISkin activeSkin;
     private MainGameController mainController;
 
-    public float color_alpha = 0; // transparency
-    public float alpha_to = 0; // the target alpha value when dissapearing (the border)
+    private float guiAlpha = 1;
+    private float borderAlpha = 0; // transparency
+    private float borderTargetAlpha; // Target transparency for the border
 
     #region Currency boxes variables
     public int ntp = 0; // Keeps track of the number of normal toilet papers collected
@@ -77,6 +78,8 @@ public class MainGameGUI : MonoBehaviour
     // Draw the GUI
     void OnGUI()
     {
+        GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, guiAlpha);
+
         // Draw the currency boxes.
         NTPScore(currencyBoxWidth, currencyBoxHeight);
         GTPScore(currencyBoxWidth, currencyBoxHeight);
@@ -88,9 +91,10 @@ public class MainGameGUI : MonoBehaviour
         TimerPulseBorder(timerPulseRate);
     }
 
+    #region GUI components
     void TimerPulseBorder(float pulse_rate)
     {
-        GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, color_alpha);
+        GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, borderAlpha);
 
         GUI.Box(timerBorder, "", activeSkin.customStyles[3]);
     }
@@ -107,18 +111,17 @@ public class MainGameGUI : MonoBehaviour
 
     void PauseButton()
     {
-        // Texture is smaller than 'pressable' area.  Hence a texture and button
-        //GUI.DrawTexture(ppButtonTexturePos, pauseButton);
         if (GUI.Button(ppButtonPos, "", activeSkin.customStyles[4]))
         {
             mainController.PauseGame();
         }
     }
+    #endregion
 
-    // animate border pulse
+    #region border pulse animation
     void AnimateBorder(float alpha)
     {
-        color_alpha = alpha;
+        borderAlpha = alpha;
     }
 
     void onStartPulse()
@@ -127,18 +130,18 @@ public class MainGameGUI : MonoBehaviour
 
         if (timerPulseRate < 0.5)
         {
-            alpha_to = (0.5f - timerPulseRate) * 1.5f;
+            borderTargetAlpha = (0.5f - timerPulseRate) * 1.5f;
             activeSkin.customStyles[3].border = new RectOffset(5, 5, 5, 5);
 
             //timerPulseRate = 0.45f;
         }
         else
         {
-            alpha_to = 0f;
+            borderTargetAlpha = 0f;
             activeSkin.customStyles[3].border = new RectOffset(10, 10, 10, 10);
         }
-        iTween.ValueTo(gameObject, 
-                       iTween.Hash("from", color_alpha, 
+        iTween.ValueTo(gameObject,
+                       iTween.Hash("from", borderAlpha, 
                                    "to", 1,
                                    "onupdate", "AnimateBorder",
                                    "oncomplete", "onEndPulse",
@@ -149,12 +152,30 @@ public class MainGameGUI : MonoBehaviour
     void onEndPulse()
     {
         iTween.ValueTo(gameObject,
-                       iTween.Hash("from", color_alpha,
-                                   "to", alpha_to,
+                       iTween.Hash("from", borderAlpha,
+                                   "to", borderTargetAlpha,
                                    "onupdate", "AnimateBorder",
                                    "oncomplete", "onStartPulse",
                                    "easetype", iTween.EaseType.easeOutCirc,
                                    "time", timerPulseRate));
     }
+    #endregion
 
+    #region show and/or hide the gui
+
+    void FadeOutGUI(float alpha)
+    {
+        guiAlpha = alpha;
+    }
+    // Hide the menu
+    public void Hide()
+    {
+        iTween.ValueTo(gameObject,
+                       iTween.Hash("from", guiAlpha,
+                                   "to", 0,
+                                   "onupdate", "FadeOutGUI",
+                                   "easetype", iTween.EaseType.easeInQuart,
+                                   "time", 0.5f));
+    }
+    #endregion
 }

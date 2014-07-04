@@ -21,16 +21,17 @@ public class FailedGUI : MonoBehaviour {
 
     private Rect containerRect;  // The Rect object that encapsulates the whole page
 
-    private Rect openPosition; // Position of the page when it is shown
-    private Rect closedPosition; // Position of the page when it is hidden
-
     #region Background
 
-    private Rect backgroundRect; // The Rect object that holds the background of the page
-    private Texture backgroundTexture; // The texture for the pause menu background
-    private Texture poopTexture; //
+    private Rect bgRect; // The Rect object that holds the background of the page
+    private Rect bgRectOpen; // The position of the background when open
+    private Rect bgRectClose; // The position of the background when closed
+    private float bgAlpha; // The transparency of the background
+    private Texture poopTexture; // The poop texture
 
     #endregion
+
+    private float guiAlpha;
     #region header
 
     private Rect headerRect;
@@ -50,40 +51,43 @@ public class FailedGUI : MonoBehaviour {
 
     private Rect retryBtnRect;
     private Rect homeBtnRect;
+
     #endregion
     #endregion
 
+    // audio clips
+    public AudioClip fart;
+
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         // Retrieve the main game controller
         mainController = gameObject.GetComponentInChildren<MainGameController>();
 
-        // Set the page open/closed positions
-        openPosition = new Rect(0, 0, Screen.width, Screen.height);
-        closedPosition = new Rect(0, Screen.height, Screen.width, Screen.height);
+        // Set the size of the frame
+        containerRect = new Rect(0, 0, Screen.width, Screen.height);
 
-        // Set the page to start as closed.
-        containerRect = closedPosition;
+        #region background
+
+        // Set the page open/closed positions
+        bgRectOpen = new Rect(0, 0, Screen.width, Screen.height);
+        bgRectClose = new Rect(Screen.width * 0.5f, Screen.height * 0.5f, 0, 0);
 
         // Initialise menu background variables
-        backgroundRect = new Rect(0, 0, Screen.width, Screen.height);
-        backgroundTexture = activeSkin.customStyles[0].normal.background;
-        poopTexture = activeSkin.customStyles[1].normal.background;
+        bgRect = bgRectClose; // Set initial background position to closed
+        bgAlpha = 0; // Set initial background to transparency to 0
+        poopTexture = activeSkin.customStyles[1].normal.background; // grab the background texture
 
-        
-	}
+        #endregion
+        #region Text and navigation
 
-	void OnGUI()
-    {
-        #region temp
+        guiAlpha = 0; // Transparency of every other GUI stuff
 
-        // Initialise the header stuff
+        // header stuff
         activeSkin.customStyles[2].fontSize = (int)(Screen.height * headerFontScale);
         headerRect = new Rect(0, containerRect.height * headerYOffset, containerRect.width, activeSkin.customStyles[2].fontSize);
-
-        #region Navigation
-
+        
+        // navigation buttons
         navButtonHeight = containerRect.height * navButtonScale;
         navButtonWidth = navButtonHeight * ((float)activeSkin.customStyles[3].normal.background.width /
                                             (float)activeSkin.customStyles[3].normal.background.height);
@@ -96,31 +100,25 @@ public class FailedGUI : MonoBehaviour {
         homeBtnRect = new Rect(navButtonWidth + navButtonSpacing, 0, navButtonWidth, navButtonHeight);
 
         #endregion
+	}
 
-        #endregion
-        if (show)
-        {
-            iTween.ValueTo(gameObject, iTween.Hash("from", containerRect, "to", openPosition, "onupdate", "AnimateFailedMenu", "easetype", iTween.EaseType.easeOutQuart));
-            show = false;
-        }
-        else if (hide)
-        {
-            iTween.ValueTo(gameObject, iTween.Hash("from", containerRect, "to", closedPosition, "onupdate", "AnimateFailedMenu", "easetype", iTween.EaseType.easeInQuart));
-            hide = false;
-        }
-
+	void OnGUI()
+    {
         //Set the active skin
         GUI.skin = activeSkin;
 
         // The container
         GUI.BeginGroup(containerRect);
-        // Draw the background
-        GUI.DrawTexture(backgroundRect, backgroundTexture, ScaleMode.ScaleAndCrop);
-        // Draw the header
-        GUI.Label(headerRect, "YOU\nFAILED",activeSkin.customStyles[2]);
         // Draw the poop
-        GUI.DrawTexture(backgroundRect, poopTexture, ScaleMode.ScaleAndCrop);
+        GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, bgAlpha);
+        GUI.DrawTexture(bgRect, poopTexture, ScaleMode.ScaleAndCrop);
+
+        GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, guiAlpha);
+        // Draw the header
+        GUI.Label(headerRect, "YOU\nFAILED", activeSkin.customStyles[2]);
+
         #region navigation
+        
         GUI.BeginGroup(navContainerRect);
 
         if (GUI.Button(retryBtnRect, "", activeSkin.customStyles[3]))
@@ -133,17 +131,49 @@ public class FailedGUI : MonoBehaviour {
         }
 
         GUI.EndGroup();
+        
         #endregion
+
         GUI.EndGroup();
 	}
 
-    void AnimateFailedMenu(Rect newCoordinates)
+    void AnimatePoopTransparency(float alpha)
     {
-        containerRect = newCoordinates;
+        bgAlpha = alpha;
     }
 
-    public void StageFailed()
+    void AnimateGUITransparency(float alpha)
     {
-        show = true;
+        guiAlpha = alpha;
+    }
+
+    void AnimateFailedMenu(Rect newCoordinates)
+    {
+        bgRect = newCoordinates;
+    }
+
+    // Show the menu
+    public void Show()
+    {
+        audio.PlayOneShot(fart, 1f);
+        iTween.ValueTo(gameObject,
+                          iTween.Hash("from", bgRect,
+                                      "to", bgRectOpen,
+                                      "onupdate", "AnimateFailedMenu",
+                                      "easetype", iTween.EaseType.easeInQuart,
+                                      "time", 0.5f));
+        iTween.ValueTo(gameObject,
+                       iTween.Hash("from", bgAlpha,
+                                   "to", 1,
+                                   "onupdate", "AnimatePoopTransparency",
+                                   "easetype", iTween.EaseType.easeInQuart,
+                                   "time", 0.5f));
+
+        iTween.ValueTo(gameObject,
+                       iTween.Hash("from", guiAlpha,
+                                   "to", 1,
+                                   "onupdate", "AnimateGUITransparency",
+                                   "easetype", iTween.EaseType.easeInQuart,
+                                   "time", 1f));
     }
 }
