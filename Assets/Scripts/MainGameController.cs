@@ -168,6 +168,9 @@ public class MainGameController : MonoBehaviour
         // Disable the gui (until they need to be popped up
         pauseGUI.enabled = false;
         failGUI.enabled = false;
+
+        // <Insert Event Handling initialization here>
+        Soomla.Store.SoomlaStore.Initialize(new Soomla.Store.CrapTrap.CrapTrapAssets());
     }
 
 	// Update is called once per frame
