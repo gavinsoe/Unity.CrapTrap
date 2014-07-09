@@ -37,7 +37,7 @@ namespace Soomla.Store.CrapTrap
             return new NonConsumableItem[] { NO_ADDS_NONCONS };
         }
 
-        // Static Final Members
+        #region Static Final Members
 
         public const string TOILET_PAPER_ITEM_ID        = "toilet_paper";
         public const string GOLDEN_TOILET_PAPER_ITEM_ID = "golden_toilet_paper";
@@ -46,7 +46,8 @@ namespace Soomla.Store.CrapTrap
         public const string NO_ADDS_NONCONS_PRODUCT_ID  = "no_ads";
         public const string NORIT_ITEM_ID               = "norit";
 
-        // Virtual Currencies
+        #endregion
+        #region Virtual Currencies
 
         public static VirtualCurrency TOILET_PAPER = new VirtualCurrency(
             "Toilet Paper",         // name
@@ -60,7 +61,8 @@ namespace Soomla.Store.CrapTrap
             GOLDEN_TOILET_PAPER_ITEM_ID     // item id
         );
 
-        // Virtual Currency Packs
+        #endregion
+        #region Virtual Currency Packs
 
         public static VirtualCurrencyPack TENGTP_PACK = new VirtualCurrencyPack(
             "5 GTP",                                            // name
@@ -71,7 +73,8 @@ namespace Soomla.Store.CrapTrap
             new PurchaseWithMarket(TENGTP_PACK_ITEM_ID, 2.99)   // the way the good is purchased
         );
 
-        // Item Packs
+        #endregion
+        #region Item Packs
 
         public static VirtualGood FIVENORIT_PACK = new SingleUsePackVG(
             NORIT_ITEM_ID,                                          // item associated
@@ -82,7 +85,8 @@ namespace Soomla.Store.CrapTrap
             new PurchaseWithMarket(FIVENORIT_PACK_ITEM_ID, 2.99)
         );
 
-        // Virtual Goods
+        #endregion
+        #region Virtual Goods
 
         public static VirtualGood NORIT_GOOD = new SingleUseVG(
             "Charcoal Medicine",                                    // name
@@ -91,13 +95,16 @@ namespace Soomla.Store.CrapTrap
             new PurchaseWithVirtualItem(TOILET_PAPER_ITEM_ID, 50)   // the way the good is purchased
         );
 
-        // Virtual Categories
+        #endregion
+        #region Virtual Categories
+
         public static VirtualCategory EQUIP_CATEGORY = new VirtualCategory(
             "Equipment",                                        // name
             new List<string>(new string[] { NORIT_ITEM_ID })    // items in category
         );
 
-        // Market MANAGED Items
+        #endregion
+        #region Market MANAGED Items
 
         public static NonConsumableItem NO_ADDS_NONCONS = new NonConsumableItem(
             "No Ads",
@@ -105,5 +112,7 @@ namespace Soomla.Store.CrapTrap
             "no_ads",
             new PurchaseWithMarket(new MarketItem(NO_ADDS_NONCONS_PRODUCT_ID, MarketItem.Consumable.NONCONSUMABLE, 0.99))
         );
+
+        #endregion
     }
 }

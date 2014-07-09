@@ -106,6 +106,12 @@
  <Reference Include="App42_Unity3D_SDK_2.6.1">
  <HintPath>D:/Prj/Unity/Toilet Game/Assets/Extensions/App42/App42_Unity3D_SDK_2.6.1.dll</HintPath>
  </Reference>
+ <Reference Include="Mono.Data.Sqlite">
+ <HintPath>C:/Users/Bayoe/Documents/toilet-game/Assets/Plugins/Mono.Data.Sqlite.dll</HintPath>
+ </Reference>
+ <Reference Include="System.Data">
+ <HintPath>C:/Users/Bayoe/Documents/toilet-game/Assets/Plugins/System.Data.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
