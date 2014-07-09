@@ -50,41 +50,6 @@ public class MainGameController : MonoBehaviour
 
     public AudioClip loopingClip;
 
-    public enum Type
-    {
-        steps = 1,
-        climbs = 2,
-        time = 3,
-        withoutClimb = 4,
-        toiletPapers = 5,
-        goldenPapers = 6,
-        pulls = 7,
-        pushes = 8,
-        pullOuts = 9,
-        hangingSteps = 10,
-        slides = 11,
-        noHanging = 12,
-        noPulling = 13,
-        noPushing = 14,
-        treasures = 15,
-        noPullOuts = 16,
-    }
-
-    public enum Option
-    {
-        lessThan = 1,
-        greaterThan = 2,
-        equal = 3,
-    }
-
-    [System.Serializable]
-    public class Objective
-    {
-        public Type type;
-        public Option option;
-        public int counter;
-    }
-
     // Components
     private CharacterController character; // the character controller
     private int moves;
@@ -98,13 +63,12 @@ public class MainGameController : MonoBehaviour
 
     public Objective[] objectives = new Objective[3];
 
-    public bool[] objectiveFlags = new bool[3];
     public int reward;
     private MainGameGUI mainGUI;
     private PauseGUI pauseGUI;
     private FailedGUI failGUI;
     private FailedByFallingGUI failByFallingGUI;
-    private GameCompletedGUI stageCompleteGUI;
+    private StageCompleteGUI stageCompleteGUI;
 
 
     #if UNITY_EDITOR
@@ -121,12 +85,9 @@ public class MainGameController : MonoBehaviour
 
             // Initialise objectives
             character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>();
-            objectiveFlags[0] = false;
-            objectiveFlags[1] = false;
-            objectiveFlags[2] = false;
             mainGUI = gameObject.GetComponentInChildren<MainGameGUI>();
             pauseGUI = gameObject.GetComponentInChildren<PauseGUI>();
-            stageCompleteGUI = gameObject.GetComponentInChildren<GameCompletedGUI>();
+            stageCompleteGUI = gameObject.GetComponentInChildren<StageCompleteGUI>();
             failGUI = gameObject.GetComponentInChildren<FailedGUI>();
 
             failByFallingGUI = GameObject.Find("GUI Fail by Falling").GetComponent<FailedByFallingGUI>();
@@ -242,7 +203,7 @@ public class MainGameController : MonoBehaviour
         int mins = (int)(timeElapsed / 60);
         int seconds = (int)(timeElapsed % 60);
         string timeTaken = string.Format("{0:00}:{1:00}", mins, seconds);
-        stageCompleteGUI.StageComplete(timeTaken, mainGUI.ntp, ntpMax, mainGUI.gtp, gtpMax);
+        stageCompleteGUI.StageComplete(timeTaken, mainGUI.ntp, ntpMax, mainGUI.gtp, gtpMax, objectives);
         
         // Package the result
         SimpleJSON.JSONClass json = new SimpleJSON.JSONClass();
@@ -266,11 +227,9 @@ public class MainGameController : MonoBehaviour
         if (fell)
         {
             failByFallingGUI.enabled = true;
+            mainGUI.Hide();
             failByFallingGUI.StageFailed();
-            
-            character.enabled = false;
-            mainGUI.enabled = false;
-
+        
             // Package the result
             int mins = (int)(timeElapsed / 60);
             int seconds = (int)(timeElapsed % 60);
@@ -482,21 +441,21 @@ public class MainGameController : MonoBehaviour
                 {
                     if (moves < objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
                 else if (objectives[i].option == Option.greaterThan)
                 {
                     if (moves > objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
                 else
                 {
                     if (moves == objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
             }
@@ -506,21 +465,21 @@ public class MainGameController : MonoBehaviour
                 {
                     if (climbs < objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
                 else if (objectives[i].option == Option.greaterThan)
                 {
                     if (climbs > objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
                 else
                 {
                     if (climbs == objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
             }
@@ -530,21 +489,21 @@ public class MainGameController : MonoBehaviour
                 {
                     if (time < objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
                 else if (objectives[i].option == Option.greaterThan)
                 {
                     if (time > objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
                 else
                 {
                     if (time == objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
             }
@@ -554,21 +513,21 @@ public class MainGameController : MonoBehaviour
                 {
                     if (pulls < objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
                 else if (objectives[i].option == Option.greaterThan)
                 {
                     if (pulls > objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
                 else
                 {
                     if (pulls == objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
             }
@@ -578,21 +537,21 @@ public class MainGameController : MonoBehaviour
                 {
                     if (pushes < objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
                 else if (objectives[i].option == Option.greaterThan)
                 {
                     if (pushes > objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
                 else
                 {
                     if (pushes == objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
             }
@@ -602,21 +561,21 @@ public class MainGameController : MonoBehaviour
                 {
                     if (pullOuts < objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
                 else if (objectives[i].option == Option.greaterThan)
                 {
                     if (pullOuts > objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
                 else
                 {
                     if (pullOuts == objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
             }
@@ -626,21 +585,21 @@ public class MainGameController : MonoBehaviour
                 {
                     if (hangingMoves < objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
                 else if (objectives[i].option == Option.greaterThan)
                 {
                     if (hangingMoves > objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
                 else
                 {
                     if (hangingMoves == objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
             }
@@ -650,21 +609,21 @@ public class MainGameController : MonoBehaviour
                 {
                     if (slides < objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
                 else if (objectives[i].option == Option.greaterThan)
                 {
                     if (slides > objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
                 else
                 {
                     if (slides == objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
             }
@@ -674,21 +633,21 @@ public class MainGameController : MonoBehaviour
                 {
                     if (mainGUI.ntp < objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
                 else if (objectives[i].option == Option.greaterThan)
                 {
                     if (mainGUI.ntp > objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
                 else
                 {
                     if (mainGUI.ntp == objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
             }
@@ -698,21 +657,21 @@ public class MainGameController : MonoBehaviour
                 {
                     if (mainGUI.gtp < objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
                 else if (objectives[i].option == Option.greaterThan)
                 {
                     if (mainGUI.gtp > objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
                 else
                 {
                     if (mainGUI.gtp == objectives[i].counter)
                     {
-                        objectiveFlags[i] = true;
+                        objectives[i].completed = true;
                     }
                 }
             }
@@ -720,50 +679,50 @@ public class MainGameController : MonoBehaviour
             {
                 if (climbs == 0)
                 {
-                    objectiveFlags[i] = true;
+                    objectives[i].completed = true;
                 }
             }
             else if (objectives[i].type == Type.noHanging)
             {
                 if (hangingMoves == 0)
                 {
-                    objectiveFlags[i] = true;
+                    objectives[i].completed = true;
                 }
             }
             else if (objectives[i].type == Type.noPulling)
             {
                 if (pulls == 0)
                 {
-                    objectiveFlags[i] = true;
+                    objectives[i].completed = true;
                 }
             }
             else if (objectives[i].type == Type.noPushing)
             {
                 if (pushes == 0)
                 {
-                    objectiveFlags[i] = true;
+                    objectives[i].completed = true;
                 }
             }
             else if (objectives[i].type == Type.noPullOuts)
             {
                 if (pullOuts == 0)
                 {
-                    objectiveFlags[i] = true;
+                    objectives[i].completed = true;
                 }
             }
         }
 
         reward = 0;
 
-        if (objectiveFlags[0] == true)
+        if (objectives[0].completed == true)
         {
             reward += 1;
         }
-        if (objectiveFlags[1] == true)
+        if (objectives[1].completed == true)
         {
             reward += 1;
         }
-        if (objectiveFlags[2] == true)
+        if (objectives[2].completed == true)
         {
             reward += 1;
         }
