@@ -576,6 +576,7 @@ public class StageCompleteGUI : MonoBehaviour {
 
         GUI.EndGroup();
     }
+
     #endregion
 
     void AnimateGameCompletedMenu(Rect newCoordinates)

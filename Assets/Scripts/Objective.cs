@@ -55,6 +55,22 @@ public class Objective : System.Object
                 stringified = "Finish stage in " + counter + " moves";
             }
         }
+        else if (type == Type.time)
+        {
+            int mins = (int)(counter / 60);
+            int seconds = (int)(counter % 60);
+            string time = string.Format("{0:00}:{1:00}", mins, seconds);
+
+            if (option == Option.lessThan)
+            {
+                stringified = "Finish stage within " + time;
+            }
+        }
+        else if (type == Type.noHanging)
+        {
+            stringified = "Finish stage withough hanging";
+        }
+
         else
         {
             stringified = "<objective unknown>";
