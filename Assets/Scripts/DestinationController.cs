@@ -6,7 +6,23 @@ public class DestinationController : MonoBehaviour {
     {
         if (col.gameObject.tag == "Player")
         {
-            col.gameObject.GetComponent<CharacterController>().reachedDestination = true;
+            CharacterController character = col.gameObject.GetComponent<CharacterController>();
+            if (!character.isHanging)
+            {
+                col.gameObject.GetComponent<CharacterController>().reachedDestination = true;
+            }
+        }
+    }
+
+    void OnTriggerStay2D(Collider2D col)
+    {
+        if (col.gameObject.tag == "Player")
+        {
+            CharacterController character = col.gameObject.GetComponent<CharacterController>();
+            if (!character.isHanging)
+            {
+                col.gameObject.GetComponent<CharacterController>().reachedDestination = true;
+            }
         }
     }
 }
