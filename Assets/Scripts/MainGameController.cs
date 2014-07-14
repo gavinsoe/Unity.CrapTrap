@@ -33,6 +33,7 @@ public class MainGameController : MonoBehaviour
     public bool mapEnabled = true;
     public Camera mainCamera;
     public float zoomLevel = 3;
+    public float zoomOutLevel;
     public bool zoomIn;
     public bool zoomOut;
 
@@ -363,7 +364,7 @@ public class MainGameController : MonoBehaviour
         // Animate the zoom
         iTween.ValueTo(gameObject,
                        iTween.Hash("from", zoomLevel,
-                                   "to", 6,
+                                   "to", zoomOutLevel,
                                    "onupdate", "animateZoom",
                                    "oncomplete", "zoomComplete",
                                    "easetype", iTween.EaseType.linear,
