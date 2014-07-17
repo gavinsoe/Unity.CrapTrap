@@ -23,10 +23,6 @@ public class StageCompleteGUI : MonoBehaviour {
     private MainGameController mainController;
     public int screen = 0;
 
-    // Triggers
-    public bool show = false;
-    public bool hide = false;
-
     #region GUI related
 
     private Rect containerRect;  // The Rect object that encapsulates the whole page
@@ -370,7 +366,7 @@ public class StageCompleteGUI : MonoBehaviour {
         navButtonHeight = menuRect.height * navButtonScale;
         navButtonWidth = navButtonHeight * ((float)activeSkin.customStyles[7].normal.background.width /
                                             (float)activeSkin.customStyles[7].normal.background.height);
-        var navButtonSpacing = navButtonWidth * navButtonSpacingScale;
+        float navButtonSpacing = navButtonWidth * navButtonSpacingScale;
 
         float navWidth = navButtonWidth * 3 + navButtonSpacing * 2;
         navContainerRect = new Rect((menuWidth - navWidth) / 2, menuHeight * navContainerYOffset, navWidth, navButtonHeight);
@@ -388,22 +384,6 @@ public class StageCompleteGUI : MonoBehaviour {
         #region temp
 
         #endregion
-
-        if (show)
-        {
-            iTween.ValueTo(gameObject, 
-                           iTween.Hash("from", containerRect, 
-                                       "to", openPosition, 
-                                       "onupdate", "AnimateGameCompletedMenu",
-                                       "oncomplete", "ShowStar1",
-                                       "easetype", iTween.EaseType.easeOutQuart));
-            show = false;
-        }
-        else if (hide)
-        {
-            iTween.ValueTo(gameObject, iTween.Hash("from", containerRect, "to", closedPosition, "onupdate", "AnimateGameCompletedMenu", "easetype", iTween.EaseType.easeInQuart));
-            hide = false;
-        }
 
         // Set the active skin
         GUI.skin = activeSkin;

@@ -18,8 +18,8 @@ public class MainGameGUI : MonoBehaviour
     private float borderTargetAlpha; // Target transparency for the border
 
     #region Currency boxes variables
-    public int ntp = 0; // Keeps track of the number of normal toilet papers collected
-    public int gtp = 0; // Keeps track of the number of golden toilet papers collected
+    public int ntp = 0; // Keeps track of the number of ntp
+    public int gtp = 0; // Keeps track of the number of gtp
 
     private float currencyFontScale = 0.031f; // Variable used to scale font for different window sizes
     private float currencyXOffset = -0.135f; // Variable used to control the x offset of the text in the box

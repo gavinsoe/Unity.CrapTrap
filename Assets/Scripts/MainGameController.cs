@@ -307,6 +307,21 @@ public class MainGameController : MonoBehaviour
         logService.SetEvent(Application.loadedLevelName + constants.logStageQuit, logCallBack);
     }
 
+    public void NavToAchievements()
+    {
+        // Navigate to achievements page
+    }
+
+    public void NavToCharacterPage()
+    {
+        // Navigate to character page
+    }
+
+    public void NavToItemShop()
+    {
+        // Navigate to Item Shop
+    }
+
     public void NextStage()
     {
         // Loads the next stage (or screen)
