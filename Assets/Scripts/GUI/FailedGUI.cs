@@ -22,7 +22,7 @@ public class FailedGUI : MonoBehaviour {
     private Rect containerRect;  // The Rect object that encapsulates the whole page
 
     #region Background
-
+    private Rect bgContainerRect; 
     private Rect bgRect; // The Rect object that holds the background of the page
     private Rect bgRectOpen; // The position of the background when open
     private Rect bgRectClose; // The position of the background when closed
@@ -69,12 +69,14 @@ public class FailedGUI : MonoBehaviour {
 
         #region background
 
-        // Set the page open/closed positions
         bgRectOpen = new Rect(0, 0, Screen.width, Screen.height);
-        bgRectClose = new Rect(Screen.width * 0.5f, Screen.height * 0.5f, 0, 0);
+        bgRectClose = new Rect(0, Screen.height, 0, Screen.height);
+        bgContainerRect = bgRectClose;
+
+        // Set the page open/closed positions
 
         // Initialise menu background variables
-        bgRect = bgRectClose; // Set initial background position to closed
+        bgRect = new Rect(0, 0, Screen.width, Screen.height); ; // Set initial background position to closed
         bgAlpha = 0; // Set initial background to transparency to 0
         poopTexture = activeSkin.customStyles[1].normal.background; // grab the background texture
 
@@ -109,33 +111,38 @@ public class FailedGUI : MonoBehaviour {
 
         // The container
         GUI.BeginGroup(containerRect);
-        // Draw the poop
-        GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, bgAlpha);
-        GUI.DrawTexture(bgRect, poopTexture, ScaleMode.ScaleAndCrop);
-
-        GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, guiAlpha);
-        // Draw the header
-        GUI.Label(headerRect, "YOU\nFAILED", activeSkin.customStyles[2]);
-
-        #region navigation
-        
-        GUI.BeginGroup(navContainerRect);
-
-        if (GUI.Button(retryBtnRect, "", activeSkin.customStyles[3]))
         {
-            mainController.RetryLevel();
-        }
-        if (GUI.Button(homeBtnRect, "", activeSkin.customStyles[4]))
-        {
-            mainController.ReturnToTitle();
-        }
+            // Draw the poop
+            GUI.BeginGroup(bgContainerRect);
+            {
+                //GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, bgAlpha);
+                GUI.DrawTexture(bgRect, poopTexture, ScaleMode.ScaleAndCrop);
+            }
+            GUI.EndGroup();
 
-        GUI.EndGroup();
-        
-        #endregion
+            GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, guiAlpha);
+            // Draw the header
+            GUI.Label(headerRect, "YOU\nFAILED", activeSkin.customStyles[2]);
 
+            #region navigation
+
+            GUI.BeginGroup(navContainerRect);
+
+            if (GUI.Button(retryBtnRect, "", activeSkin.customStyles[3]))
+            {
+                mainController.RetryLevel();
+            }
+            if (GUI.Button(homeBtnRect, "", activeSkin.customStyles[4]))
+            {
+                mainController.ReturnToTitle();
+            }
+
+            GUI.EndGroup();
+
+            #endregion
+        }
         GUI.EndGroup();
-	}
+    }
 
     void AnimatePoopTransparency(float alpha)
     {
@@ -147,9 +154,10 @@ public class FailedGUI : MonoBehaviour {
         guiAlpha = alpha;
     }
 
-    void AnimateFailedMenu(Rect newCoordinates)
+    void AnimateFailedMenu(Rect size)
     {
-        bgRect = newCoordinates;
+        bgContainerRect = size;
+        bgRect.y = -size.y;
     }
 
     // Show the menu
@@ -157,11 +165,11 @@ public class FailedGUI : MonoBehaviour {
     {
         audio.PlayOneShot(fart, 1f);
         iTween.ValueTo(gameObject,
-                          iTween.Hash("from", bgRect,
+                          iTween.Hash("from", bgContainerRect,
                                       "to", bgRectOpen,
                                       "onupdate", "AnimateFailedMenu",
-                                      "easetype", iTween.EaseType.easeInQuart,
-                                      "time", 0.5f));
+                                      "easetype", iTween.EaseType.easeOutCirc,
+                                      "time", 0.4f));
         iTween.ValueTo(gameObject,
                        iTween.Hash("from", bgAlpha,
                                    "to", 1,
