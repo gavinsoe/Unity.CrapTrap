@@ -322,6 +322,10 @@ public class MainGameController : MonoBehaviour
         // Navigate to Item Shop
     }
 
+    public void NavToChapterSelect()
+    {
+    }
+
     public void NextStage()
     {
         // Loads the next stage (or screen)
