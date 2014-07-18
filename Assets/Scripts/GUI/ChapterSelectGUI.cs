@@ -47,15 +47,19 @@ public class ChapterSelectGUI : MonoBehaviour
 
     private Rect achievementsBtnRect;
     private GUIStyle achievementsBtnStyle;
+    private ButtonHandler achievementsHandler;
     private Rect characterBtnRect;
     private GUIStyle characterBtnStyle;
+    private ButtonHandler characterHandler;
     private Rect itemShopBtnRect;
     private GUIStyle itemShopBtnStyle;
+    private ButtonHandler itemShopHandler;
 
     // Sound Buttons
     private bool sound = false;
     private Rect soundBtnRect;
     private GUIStyle soundBtnStyle;
+    private ButtonHandler soundBtnHandler;
     private float soundBtnScale = 0.09f;
     private float soundBtnXOffset = 0.01f;
     private float soundBtnYOffset = 0.9f;
@@ -109,11 +113,6 @@ public class ChapterSelectGUI : MonoBehaviour
     {
         // Retrieve the main game controller
         mainController = gameObject.GetComponentInChildren<MainGameController>();
-    }
-
-    void OnGUI()
-    {
-        #region temp
 
         // Set the container rect
         containerRect = new Rect(0, 0, Screen.width, Screen.height);
@@ -150,6 +149,10 @@ public class ChapterSelectGUI : MonoBehaviour
         characterBtnRect = new Rect(navButtonWidth + navButtonSpacing, 0, navButtonWidth, navButtonHeight);
         itemShopBtnRect = new Rect(2 * (navButtonWidth + navButtonSpacing), 0, navButtonWidth, navButtonHeight);
 
+        achievementsHandler = new ButtonHandler(achievementsBtnRect, gameObject, 0.9f, "ScaleAchievementsButton");
+        characterHandler = new ButtonHandler(characterBtnRect, gameObject, 0.9f, "ScaleCharacterButton");
+        itemShopHandler = new ButtonHandler(itemShopBtnRect, gameObject, 0.9f, "ScaleItemShopButton");
+
         #endregion
         #region Sound button
 
@@ -160,6 +163,7 @@ public class ChapterSelectGUI : MonoBehaviour
         float soundXOffset = Screen.width * soundBtnXOffset;
         float soundYOffset = Screen.height * soundBtnYOffset;
         soundBtnRect = new Rect(soundXOffset, soundYOffset, soundBtnWidth, soundBtnHeight);
+        soundBtnHandler = new ButtonHandler(soundBtnRect, gameObject, 0.9f, "ScaleSoundButton");
 
         #endregion
         #region currency boxes
@@ -212,19 +216,23 @@ public class ChapterSelectGUI : MonoBehaviour
         chapter3Rect = new Rect(2 * (chapterBoxWidth + chapterSpacing), 0, chapterBoxWidth, chapterBoxHeight);
         chapterBgRect = new Rect(0, 0, chapterBoxWidth, chapterBoxHeight);
 
-        float labelYOffset = chapterBoxHeight* chapterLabelYOffset;
+        float labelYOffset = chapterBoxHeight * chapterLabelYOffset;
         chapterLabelRect = new Rect(0, labelYOffset, chapterBoxWidth, chapterBoxHeight - labelYOffset);
         chapterFontStyle.fontSize = (int)(chapterFontScale * chapterBoxHeight);
 
-        
         #endregion
+    }
+
+    void OnGUI()
+    {
+        #region temp
+
 
         #endregion
 
         // Set the active skin
         GUI.skin = activeSkin;
         // The container
-
         GUI.BeginGroup(containerRect);
         {
             GUI.DrawTexture(bgRect, bgTexture, ScaleMode.ScaleAndCrop);
@@ -244,27 +252,32 @@ public class ChapterSelectGUI : MonoBehaviour
     void Buttons()
     {
         // Navigation buttons
-
         GUI.BeginGroup(navContainerRect);
         {
             if (GUI.Button(achievementsBtnRect, "", achievementsBtnStyle))
             {
                 mainController.NavToAchievements();
             }
+            achievementsHandler.OnMouseOver(achievementsBtnRect);
+
             if (GUI.Button(characterBtnRect, "", characterBtnStyle))
             {
                 mainController.NavToCharacterPage();
             }
+            characterHandler.OnMouseOver(characterBtnRect);
+
             if (GUI.Button(itemShopBtnRect, "", itemShopBtnStyle))
             {
                 mainController.NavToItemShop();
             }
+            itemShopHandler.OnMouseOver(itemShopBtnRect);
         } 
         GUI.EndGroup();
 
         // Sound Button
         sound = GUI.Toggle(soundBtnRect, sound, "", soundBtnStyle);
         //mainController.ToggleSound(!sound);
+        soundBtnHandler.OnMouseOver(soundBtnRect);
     }
 
     void Currency()
@@ -283,6 +296,10 @@ public class ChapterSelectGUI : MonoBehaviour
             {
                 GUI.DrawTexture(chapterBgRect, chapter1Texture);
                 GUI.Label(chapterLabelRect, "Chapter 1\n 3/10", chapterFontStyle);
+                if (GUI.Button(chapterBgRect, ""))
+                {
+                    Application.LoadLevel("GUI_Chapter1StageSelect");
+                }
             }
             GUI.EndGroup();
 
@@ -299,6 +316,33 @@ public class ChapterSelectGUI : MonoBehaviour
             GUI.EndGroup();
         }
         GUI.EndGroup();
+    }
+
+    #endregion
+    #region Button Animators
+
+    // animate the achievements button
+    void ScaleAchievementsButton(Rect size)
+    {
+        achievementsBtnRect = size;
+    }
+
+    // animate the character button
+    void ScaleCharacterButton(Rect size)
+    {
+        characterBtnRect = size;
+    }
+
+    // animate the item shop button
+    void ScaleItemShopButton(Rect size)
+    {
+        itemShopBtnRect = size;
+    }
+
+    // animate the sound button
+    void ScaleSoundButton(Rect size)
+    {
+        soundBtnRect = size;
     }
 
     #endregion

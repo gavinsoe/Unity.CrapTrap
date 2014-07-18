@@ -324,6 +324,8 @@ public class MainGameController : MonoBehaviour
 
     public void NavToChapterSelect()
     {
+        // Navigate to chapter select
+        Application.LoadLevel("GUI_ChapterSelect");
     }
 
     public void NextStage()
