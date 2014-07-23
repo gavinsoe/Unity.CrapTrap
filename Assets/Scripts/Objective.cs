@@ -36,7 +36,7 @@ public class Objective : System.Object
     public int counter;
     public bool completed = false; // default state to false
 
-    public string ToString()
+    public override string ToString()
     {
         string stringified = "";
 
