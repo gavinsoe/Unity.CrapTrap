@@ -1,0 +1,28 @@
+﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
+[System.Serializable]
+public class Achievements
+{
+    public Achievement[] rows;
+};
+
+public class AchievementController : MonoBehaviour {
+
+    // Achievement Variables
+    public Achievements[] achievements = new Achievements[5];
+    public string[] titles;
+    public Texture[] rewards;
+    public string[] rewardAmount;
+
+	// Use this for initialization
+	void Start () {
+	
+	}
+	
+	// Update is called once per frame
+	void Update () {
+	
+	}
+}
