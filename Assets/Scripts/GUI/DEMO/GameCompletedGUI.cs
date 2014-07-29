@@ -18,6 +18,7 @@ public class GameCompletedGUI : MonoBehaviour {
      */
     public GUISkin activeSkin;
     private MainGameController mainController;
+    private NavigationManager navManager;
 
     // Triggers
     public bool show = false;
@@ -136,6 +137,9 @@ public class GameCompletedGUI : MonoBehaviour {
     {
         // Retrieve the main game controller
         mainController = gameObject.GetComponentInChildren<MainGameController>();
+
+        // Retrieve the nav manager
+        navManager = gameObject.GetComponentInChildren<NavigationManager>();
 
         // Set the page open/closed positions
         openPosition = new Rect(0, 0, Screen.width, Screen.height);
@@ -295,15 +299,15 @@ public class GameCompletedGUI : MonoBehaviour {
 
         if (GUI.Button(retryBtnRect, "", activeSkin.customStyles[7]))
         {
-            mainController.RetryLevel();
+            navManager.RetryLevel();
         }
         if (GUI.Button(homeBtnRect, "", activeSkin.customStyles[8]))
         {
-            mainController.ReturnToTitle();
+            navManager.NavToTitle();
         }
         if (GUI.Button(nextBtnRect, "", activeSkin.customStyles[9]))
         {
-            mainController.NextStage();
+            navManager.NextStage();
         }
 
         GUI.EndGroup();

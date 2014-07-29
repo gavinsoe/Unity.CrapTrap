@@ -78,6 +78,7 @@ public class MainGameGUI : MonoBehaviour
     // Draw the GUI
     void OnGUI()
     {
+        GUI.depth = 2;
         GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, guiAlpha);
 
         // Draw the currency boxes.

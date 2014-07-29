@@ -14,6 +14,7 @@ public class PauseGUI : MonoBehaviour {
      */
     public GUISkin activeSkin;
     private MainGameController mainController;
+    private NavigationManager navManager;
 
     // Triggers
     public bool show = false;
@@ -104,6 +105,9 @@ public class PauseGUI : MonoBehaviour {
         // Retrieve the main game controller
         mainController = gameObject.GetComponentInChildren<MainGameController>();
 
+        // Retrieve the nav manager
+        navManager = gameObject.GetComponentInChildren<NavigationManager>();
+
         // Set the pause menu open/closed positions
         openPosition = new Rect(0, 0, Screen.width, Screen.height);
         closedPosition = new Rect(0, Screen.height, Screen.width, Screen.height);
@@ -169,6 +173,7 @@ public class PauseGUI : MonoBehaviour {
             hide = false;
         }
 
+        GUI.depth = 1;
         // Set the active skin
         GUI.skin = activeSkin;
 
@@ -208,13 +213,13 @@ public class PauseGUI : MonoBehaviour {
         // Draw the retry button
         if (GUI.Button(A_BtnRect, "", activeSkin.customStyles[4]))
         {
-            mainController.RetryLevel();
+            navManager.RetryLevel();
         }
 
         // Draw the home button
         if (GUI.Button(B_BtnRect, "", activeSkin.customStyles[3]))
         {
-            mainController.ReturnToTitle();
+            navManager.NavToTitle();
         }
 
         // Draw the sound button

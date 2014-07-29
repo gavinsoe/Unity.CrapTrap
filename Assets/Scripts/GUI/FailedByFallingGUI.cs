@@ -13,6 +13,7 @@ public class FailedByFallingGUI : MonoBehaviour
      */
     public GUISkin activeSkin;
     private MainGameController mainController;
+    private NavigationManager navManager;
     private GameObject backgroundObject;
 
     // Triggers
@@ -51,6 +52,9 @@ public class FailedByFallingGUI : MonoBehaviour
     {
         // Retrieve the main game controller
         mainController = Camera.main.GetComponentInChildren<MainGameController>();
+
+        // Retrieve the nav manager
+        navManager = gameObject.GetComponentInChildren<NavigationManager>();
 
         // Set the container position
         containerRect = new Rect(0, 0, Screen.width, Screen.height);
@@ -111,11 +115,11 @@ public class FailedByFallingGUI : MonoBehaviour
 
         if (GUI.Button(retryBtnRect, "", activeSkin.customStyles[3]))
         {
-            mainController.RetryLevel();
+            navManager.RetryLevel();
         }
         if (GUI.Button(homeBtnRect, "", activeSkin.customStyles[4]))
         {
-            mainController.ReturnToTitle();
+            navManager.NavToTitle();
         }
 
         GUI.EndGroup();
