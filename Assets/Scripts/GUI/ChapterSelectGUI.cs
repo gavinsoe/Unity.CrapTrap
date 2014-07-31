@@ -19,6 +19,7 @@ public class ChapterSelectGUI : MonoBehaviour
      */
     public GUISkin activeSkin;
     private MainGameController mainController;
+    private NavigationManager navManager;
 
     #region GUI Related
 
@@ -113,6 +114,9 @@ public class ChapterSelectGUI : MonoBehaviour
     {
         // Retrieve the main game controller
         mainController = gameObject.GetComponentInChildren<MainGameController>();
+
+        // Retrieve the nav manager
+        navManager = gameObject.GetComponentInChildren<NavigationManager>();
 
         // Set the container rect
         containerRect = new Rect(0, 0, Screen.width, Screen.height);
@@ -256,19 +260,19 @@ public class ChapterSelectGUI : MonoBehaviour
         {
             if (GUI.Button(achievementsBtnRect, "", achievementsBtnStyle))
             {
-                mainController.NavToAchievements();
+                navManager.NavToAchievements();
             }
             achievementsHandler.OnMouseOver(achievementsBtnRect);
 
             if (GUI.Button(characterBtnRect, "", characterBtnStyle))
             {
-                mainController.NavToCharacterPage();
+                navManager.NavToCharacterPage();
             }
             characterHandler.OnMouseOver(characterBtnRect);
 
             if (GUI.Button(itemShopBtnRect, "", itemShopBtnStyle))
             {
-                mainController.NavToItemShop();
+                navManager.NavToItemShop();
             }
             itemShopHandler.OnMouseOver(itemShopBtnRect);
         } 

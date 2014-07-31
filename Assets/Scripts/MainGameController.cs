@@ -78,103 +78,88 @@ public class MainGameController : MonoBehaviour
     #endif
 
 	void Awake () {
-        if (!isGameMenu)
-        {
-            // Initialise timer components
-            Time.timeScale = 1f;
-            timeElapsed = 0;
+        // Initialise timer components
+        Time.timeScale = 1f;
+        timeElapsed = 0;
 
-            // Initialise objectives
-            character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>();
-            mainGUI = gameObject.GetComponentInChildren<MainGameGUI>();
-            pauseGUI = gameObject.GetComponentInChildren<PauseGUI>();
-            stageCompleteGUI = gameObject.GetComponentInChildren<StageCompleteGUI>();
-            failGUI = gameObject.GetComponentInChildren<FailedGUI>();
+        // Initialise objectives
+        character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>();
+        mainGUI = gameObject.GetComponentInChildren<MainGameGUI>();
+        pauseGUI = gameObject.GetComponentInChildren<PauseGUI>();
+        stageCompleteGUI = gameObject.GetComponentInChildren<StageCompleteGUI>();
+        failGUI = gameObject.GetComponentInChildren<FailedGUI>();
 
-            failByFallingGUI = GameObject.Find("GUI Fail by Falling").GetComponent<FailedByFallingGUI>();
+        failByFallingGUI = GameObject.Find("GUI Fail by Falling").GetComponent<FailedByFallingGUI>();
 
-            // Get the total number of ntp and gtp
-            ntpMax = GameObject.FindGameObjectsWithTag("ntp").Length;
-            gtpMax = GameObject.FindGameObjectsWithTag("gtp").Length;
+        // Get the total number of ntp and gtp
+        ntpMax = GameObject.FindGameObjectsWithTag("ntp").Length;
+        gtpMax = GameObject.FindGameObjectsWithTag("gtp").Length;
 
-            // Retrieve all backgrounds
-            backgrounds = GameObject.FindGameObjectsWithTag("Background");
-            bgZoomInScale = backgrounds[0].transform.localScale;
-            bgZoomOutScale = bgZoomInScale * bgScaling;
-            curBgScale = bgZoomInScale;
-            #region App42
+        // Retrieve all backgrounds
+        backgrounds = GameObject.FindGameObjectsWithTag("Background");
+        bgZoomInScale = backgrounds[0].transform.localScale;
+        bgZoomOutScale = bgZoomInScale * bgScaling;
+        curBgScale = bgZoomInScale;
+        #region App42
 
-            #if UNITY_EDITOR
-                ServicePointManager.ServerCertificateValidationCallback = Validator;
-            #endif
+        #if UNITY_EDITOR
+            ServicePointManager.ServerCertificateValidationCallback = Validator;
+        #endif
 
-            // Connect to the app service
-            serviceAPI = new ServiceAPI(constants.apiKey, constants.secretKey);
+        // Connect to the app service
+        serviceAPI = new ServiceAPI(constants.apiKey, constants.secretKey);
 
-            // Build the log service
-            logService = serviceAPI.BuildLogService();
+        // Build the log service
+        logService = serviceAPI.BuildLogService();
 
-            // Build the storage service
-            storageService = serviceAPI.BuildStorageService();
+        // Build the storage service
+        storageService = serviceAPI.BuildStorageService();
 
-            // Log the event
-            logService.SetEvent(Application.loadedLevelName, "Landed", logCallBack);
-            logService.SetEvent(Application.loadedLevelName, logCallBack);
+        // Log the event
+        logService.SetEvent(Application.loadedLevelName, "Landed", logCallBack);
+        logService.SetEvent(Application.loadedLevelName, logCallBack);
 
-            #endregion
-        }
+        #endregion
 	}
-
-    void Start()
-    {
-        // Disable the gui (until they need to be popped up
-        pauseGUI.enabled = false;
-        failGUI.enabled = false;
-
-        // <Insert Event Handling initialization here>
-        Soomla.Store.SoomlaStore.Initialize(new Soomla.Store.CrapTrap.CrapTrapAssets());
-    }
 
 	// Update is called once per frame
-	void Update () {
-        if (!isGameMenu)
+    void Update()
+    {
+        // Update timer
+        if (timeElapsed < maxTime)
         {
-            // Update timer
-            if (timeElapsed < maxTime)
+            if (!timerPaused)
             {
-                if (!timerPaused)
-                {
-                    timeElapsed += Time.deltaTime * timerReductionRate;
-                }
-            }
-            else
-            {
-                if (!timerPaused)
-                {
-                    GameOver(false);
-                }
-            }
-
-            // play looping part of audio
-            if (!audio.isPlaying)
-            {
-                audio.clip = loopingClip;
-                audio.loop = true;
-                audio.Play();
-            }
-
-            if (zoomIn)
-            {
-                ZoomIn();
-                zoomIn = false;
-            }
-            if (zoomOut)
-            {
-                ZoomOut();
-                zoomOut = false;
+                timeElapsed += Time.deltaTime * timerReductionRate;
             }
         }
-	}
+        else
+        {
+            if (!timerPaused)
+            {
+                GameOver(false);
+            }
+        }
+
+        // play looping part of audio
+        if (!audio.isPlaying)
+        {
+            audio.clip = loopingClip;
+            audio.loop = true;
+            audio.Play();
+        }
+
+        if (zoomIn)
+        {
+            ZoomIn();
+            zoomIn = false;
+        }
+        if (zoomOut)
+        {
+            ZoomOut();
+            zoomOut = false;
+        }
+    }
 
     void OnDestroy()
     {
@@ -230,7 +215,6 @@ public class MainGameController : MonoBehaviour
         // pop up the failed menu
         if (fell)
         {
-            failByFallingGUI.enabled = true;
             mainGUI.Hide();
             failByFallingGUI.StageFailed();
         
@@ -253,7 +237,6 @@ public class MainGameController : MonoBehaviour
         }
         else
         {
-            failGUI.enabled = true;
             mainGUI.Hide();
             failGUI.Show();
 
@@ -290,49 +273,6 @@ public class MainGameController : MonoBehaviour
         // Disable time and movement
         EnableTimeNMove();
 	}
-
-    public void RetryLevel()
-    {
-        // Restart level
-        Application.LoadLevel(Application.loadedLevel);
-
-        logService.SetEvent(Application.loadedLevelName + constants.logStageRetry, logCallBack);
-    }
-
-    public void ReturnToTitle()
-    {
-        // Return to title screen
-        Application.LoadLevel("GUI_TitleScreen");
-
-        logService.SetEvent(Application.loadedLevelName + constants.logStageQuit, logCallBack);
-    }
-
-    public void NavToAchievements()
-    {
-        // Navigate to achievements page
-    }
-
-    public void NavToCharacterPage()
-    {
-        // Navigate to character page
-    }
-
-    public void NavToItemShop()
-    {
-        // Navigate to Item Shop
-    }
-
-    public void NavToChapterSelect()
-    {
-        // Navigate to chapter select
-        Application.LoadLevel("GUI_ChapterSelect");
-    }
-
-    public void NextStage()
-    {
-        // Loads the next stage (or screen)
-        Application.LoadLevel(Application.loadedLevel + 1);
-    }
 
     public void ToggleMap(bool enabled)
     {

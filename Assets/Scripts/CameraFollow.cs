@@ -9,7 +9,6 @@ public class CameraFollow : MonoBehaviour
 
     public float initialZoom = 1f;  // Initial zoom level when previewing the destination
     public float gameplayZoom = 3f; // Zoom level for gameplay
-    public float zoomSmooth = 4f;
 
 	public float xMargin = 1f;		// Distance in the x axis the player can move before the camera follows.
 	public float yMargin = 0f;		// Distance in the y axis the player can move before the camera follows.
@@ -32,7 +31,17 @@ public class CameraFollow : MonoBehaviour
 
         // Set default state to 'Introduction', and set the initial zoom level
         camera.orthographicSize = initialZoom;
+        
+        // Set camera state to introduction
         camState = CameraStatus.Introduction;
+        // Set the starting animation
+        iTween.ValueTo(gameObject,
+                   iTween.Hash("from", camera.orthographicSize,
+                               "to", gameplayZoom,
+                               "onupdate", "AnimateZoom",
+                               "oncomplete", "TransitionToTrackPlayer",
+                               "time", 1.5f,
+                               "easetype", iTween.EaseType.easeOutCubic));
     }
 	
 	void Awake ()
@@ -55,18 +64,7 @@ public class CameraFollow : MonoBehaviour
 	
 	void Update ()
 	{
-        if (camState == CameraStatus.Introduction)
-        {
-            // Set the starting animation
-            var camera = transform.GetComponent<Camera>();
-            camera.orthographicSize = Mathf.Lerp(camera.orthographicSize, gameplayZoom, zoomSmooth * Time.deltaTime);
-
-            if ((gameplayZoom - camera.orthographicSize) < 0.01)
-            {
-                camState = CameraStatus.TrackPlayer;
-            }
-        }
-        else if (camState == CameraStatus.TrackPlayer)
+        if (camState == CameraStatus.TrackPlayer)
         {
             FollowPlayer();
 
@@ -111,4 +109,14 @@ public class CameraFollow : MonoBehaviour
             transform.position = new Vector3(targetX, targetY, transform.position.z);
         }
 	}
+
+    void AnimateZoom(float zoom)
+    {
+        camera.orthographicSize = zoom;
+    }
+
+    void TransitionToTrackPlayer()
+    {
+        camState = CameraStatus.TrackPlayer;
+    }
 }

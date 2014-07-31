@@ -12,6 +12,7 @@ public class FailedGUI : MonoBehaviour {
      */
     public GUISkin activeSkin;
     private MainGameController mainController;
+    private NavigationManager navManager;
 
     // Triggers
     public bool show = false;
@@ -63,6 +64,9 @@ public class FailedGUI : MonoBehaviour {
     {
         // Retrieve the main game controller
         mainController = gameObject.GetComponentInChildren<MainGameController>();
+
+        // Retrieve the nav manager
+        navManager = gameObject.GetComponentInChildren<NavigationManager>();
 
         // Set the size of the frame
         containerRect = new Rect(0, 0, Screen.width, Screen.height);
@@ -130,11 +134,11 @@ public class FailedGUI : MonoBehaviour {
 
             if (GUI.Button(retryBtnRect, "", activeSkin.customStyles[3]))
             {
-                mainController.RetryLevel();
+                navManager.RetryLevel();
             }
             if (GUI.Button(homeBtnRect, "", activeSkin.customStyles[4]))
             {
-                mainController.ReturnToTitle();
+                navManager.NavToTitle();
             }
 
             GUI.EndGroup();
