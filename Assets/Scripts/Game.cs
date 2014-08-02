@@ -25,11 +25,15 @@ public class Game : MonoBehaviour {
     public int energyCap;
     public System.DateTime timeSinceEnergy;
 
+    public bool isUnlimitedEnergy;
+    public System.TimeSpan unlimitedEnergySpan;
+    public System.DateTime unlimitedEnergyStart;
+
     public int totalSteps;
     public int totalClimbs;
     public System.TimeSpan playingTime;
-    public int toiletPapers;
-    public int goldenPapers;
+    public int totalToiletPapers;
+    public int totalGoldenPapers;
     public int totalPulls;
     public int totalPushes;
     public int totalPullOuts;
@@ -69,8 +73,8 @@ public class Game : MonoBehaviour {
 
         totalSteps = 0;
         totalClimbs = 0;
-        toiletPapers = 0;
-        goldenPapers = 0;
+        totalToiletPapers = 0;
+        totalGoldenPapers = 0;
         totalPulls = 0;
         totalPushes = 0;
         totalPullOuts = 0;
@@ -85,6 +89,8 @@ public class Game : MonoBehaviour {
         boughtGearID = 0;
         skillsUsed = 0;
         achievementUnlocked = 0;
+
+        isUnlimitedEnergy = false;
     }
 
     public void Save(string path)
