@@ -32,12 +32,8 @@ public class CrapTrapAssets : IStoreAssets
             EQ_HEAD_SET_PIRATE,
             EQ_BODY_SET_EXPLORER,
             EQ_BODY_SET_PIRATE,
-            EQ_HANDS_SET_EXPLORER,
-            EQ_HANDS_SET_PIRATE,
             EQ_LEGS_SET_EXPLORER,
             EQ_LEGS_SET_PIRATE,
-            EQ_FEET_SET_EXPLORER,
-            EQ_FEET_SET_PIRATE,
             CONSUMABLE_CHARCOAL_1,
             CONSUMABLE_CHARCOAL_2,
             CONSUMABLE_CHARCOAL_3,
@@ -77,9 +73,7 @@ public class CrapTrapAssets : IStoreAssets
         return new VirtualCategory[] { 
             EQUIP_HEAD_CATEGORY,
             EQUIP_BODY_CATEGORY,
-            EQUIP_HANDS_CATEGORY,
-            EQUIP_LEGS_CATEGORY,
-            EQUIP_FEET_CATEGORY
+            EQUIP_LEGS_CATEGORY
         };
     }
 
@@ -104,25 +98,11 @@ public class CrapTrapAssets : IStoreAssets
                 EQ_BODY_SET_PIRATE
             };
         }
-        else if (type == ItemType.eq_hands)
-        {
-            return new VirtualGood[] {
-                EQ_HANDS_SET_EXPLORER,
-                EQ_HANDS_SET_PIRATE
-            };
-        }
         else if (type == ItemType.eq_legs)
         {
             return new VirtualGood[] {
                 EQ_LEGS_SET_EXPLORER,
                 EQ_LEGS_SET_PIRATE
-            };
-        }
-        else if (type == ItemType.eq_feet)
-        {
-            return new VirtualGood[] {
-                EQ_FEET_SET_EXPLORER,
-                EQ_FEET_SET_PIRATE
             };
         }
         else if (type == ItemType.item_consumable)
@@ -191,7 +171,7 @@ public class CrapTrapAssets : IStoreAssets
         });
 
     #endregion
-    #region Equipment Body
+    #region Equipment Upper Body
 
     // items
     public const string EQ_BODY_SET_EXPLORER_ID = "eq_body_set_explorer";
@@ -205,23 +185,6 @@ public class CrapTrapAssets : IStoreAssets
         new List<string>(new string[] {
             EQ_BODY_SET_EXPLORER_ID,
             EQ_BODY_SET_PIRATE_ID
-        });
-
-    #endregion
-    #region Equipment Hands
-
-    // items
-    public const string EQ_HANDS_SET_EXPLORER_ID = "eq_hands_set_explorer";
-    public const string EQ_HANDS_SET_PIRATE_ID = "eq_hands_set_pirate";
-
-    // category name
-    public const string EQ_HANDS_CATEGORY_NAME = "eq_hands";
-
-    // list of items (to put into the category)
-    public static List<string> EQ_HANDS_LIST =
-        new List<string>(new string[] {
-            EQ_HANDS_SET_EXPLORER_ID,
-            EQ_HANDS_SET_PIRATE_ID
         });
 
     #endregion
@@ -239,23 +202,6 @@ public class CrapTrapAssets : IStoreAssets
         new List<string>(new string[] {
             EQ_LEGS_SET_EXPLORER_ID,
             EQ_LEGS_SET_PIRATE_ID
-        });
-
-    #endregion
-    #region Equipment Feet
-
-    // items
-    public const string EQ_FEET_SET_EXPLORER_ID = "eq_feet_set_explorer";
-    public const string EQ_FEET_SET_PIRATE_ID = "eq_feet_set_pirate";
-
-    // category name
-    public const string EQ_FEET_CATEGORY_NAME = "eq_feet";
-
-    // list of items (to put into the category)
-    public static List<string> EQ_FEET_LIST =
-        new List<string>(new string[] {
-            EQ_FEET_SET_EXPLORER_ID,
-            EQ_FEET_SET_PIRATE_ID
         });
 
     #endregion
@@ -390,25 +336,6 @@ public class CrapTrapAssets : IStoreAssets
     );
 
     #endregion
-    #region Equipment Hands
-
-    public static EquippableVG EQ_HANDS_SET_EXPLORER = new EquippableVG(
-        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
-        "[Explorer Hands]",                                          // name
-        "[Explorer Description]",                                    // description
-        EQ_HANDS_SET_EXPLORER_ID,                                    // item id
-        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
-    );
-
-    public static EquippableVG EQ_HANDS_SET_PIRATE = new EquippableVG(
-       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
-       "[Pirate Hands]",                                            // name
-       "[Pirate Description]",                                      // description
-       EQ_HANDS_SET_PIRATE_ID,                                      // item id
-       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
-    );
-
-    #endregion
     #region Equipment Legs
 
     public static EquippableVG EQ_LEGS_SET_EXPLORER = new EquippableVG(
@@ -424,25 +351,6 @@ public class CrapTrapAssets : IStoreAssets
        "[Pirate Legs]",                                            // name
        "[Pirate Description]",                                      // description
        EQ_LEGS_SET_PIRATE_ID,                                      // item id
-       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
-    );
-
-    #endregion
-    #region Equipment Feet
-
-    public static EquippableVG EQ_FEET_SET_EXPLORER = new EquippableVG(
-        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
-        "[Explorer Feet]",                                          // name
-        "[Explorer Description]",                                    // description
-        EQ_FEET_SET_EXPLORER_ID,                                    // item id
-        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
-    );
-
-    public static EquippableVG EQ_FEET_SET_PIRATE = new EquippableVG(
-       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
-       "[Pirate Feet]",                                            // name
-       "[Pirate Description]",                                      // description
-       EQ_FEET_SET_PIRATE_ID,                                      // item id
        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
     );
 
@@ -657,22 +565,10 @@ public class CrapTrapAssets : IStoreAssets
         EQ_BODY_LIST                // items in category
     );
 
-    // Equipment hands category
-    public static VirtualCategory EQUIP_HANDS_CATEGORY = new VirtualCategory(
-        EQ_HANDS_CATEGORY_NAME,     // name
-        EQ_HANDS_LIST               // items in category
-    );
-
     // Equipment legs category
     public static VirtualCategory EQUIP_LEGS_CATEGORY = new VirtualCategory(
         EQ_LEGS_CATEGORY_NAME,     // name
         EQ_LEGS_LIST               // items in category
-    );
-
-    // Equipment feet category
-    public static VirtualCategory EQUIP_FEET_CATEGORY = new VirtualCategory(
-        EQ_FEET_CATEGORY_NAME,     // name
-        EQ_FEET_LIST               // items in category
     );
 
     #endregion

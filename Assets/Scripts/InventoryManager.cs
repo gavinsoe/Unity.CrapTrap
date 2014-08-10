@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public enum CurrencyType { Dollar, GTP, NTP };
-public enum ItemType { eq_head, eq_body, eq_hands, eq_legs, eq_feet, item_consumable, item_instant, other };
+public enum ItemType { eq_head, eq_body, eq_legs, item_consumable, item_instant, other };
 
 [Serializable]
 public class Item
@@ -45,17 +45,13 @@ public class InventoryManager : MonoBehaviour
     // Items cache
     public Dictionary<string,Item> equipmentsHead = new Dictionary<string,Item>();
     public Dictionary<string, Item> equipmentsBody = new Dictionary<string, Item>();
-    public Dictionary<string, Item> equipmentsHands = new Dictionary<string, Item>();
     public Dictionary<string, Item> equipmentsLegs = new Dictionary<string, Item>();
-    public Dictionary<string, Item> equipmentsFeet = new Dictionary<string, Item>();
     public Dictionary<string, Item> itemsConsumable = new Dictionary<string, Item>();
 
     // List that stores equipped items (defaults to empty on startup, until initialization funtion runs)
     public Item equippedHead = new Item();
     public Item equippedBody = new Item();
-    public Item equippedHands = new Item();
     public Item equippedLegs = new Item();
-    public Item equippedFeet = new Item();
 
     void Awake()
     {
@@ -109,16 +105,6 @@ public class InventoryManager : MonoBehaviour
             }
         }
         
-        // Check for equipped gear (hands)
-        foreach (Item gear in equipmentsHands.Values)
-        {
-            if (StoreInventory.IsVirtualGoodEquipped(gear.itemId))
-            {
-                equippedHands = gear;
-                break;
-            }
-        }
-
         // Check for equipped gear (legs)
         foreach (Item gear in equipmentsLegs.Values)
         {
@@ -129,15 +115,6 @@ public class InventoryManager : MonoBehaviour
             }
         }
 
-        // Check for equipped gear (feet)
-        foreach (Item gear in equipmentsFeet.Values)
-        {
-            if (StoreInventory.IsVirtualGoodEquipped(gear.itemId))
-            {
-                equippedFeet = gear;
-                break;
-            }
-        }
     }
 
     void InitializeCurrencies()
@@ -167,30 +144,12 @@ public class InventoryManager : MonoBehaviour
         }
 
         #endregion
-        #region Equipment Hands
-
-        goods = CrapTrapAssets.GetSpecificGoods(ItemType.eq_hands);
-        foreach (VirtualGood item in goods)
-        {
-            equipmentsHands.Add(item.ItemId, ParseToItem(item, ItemType.eq_hands));
-        }
-
-        #endregion
         #region Equipment Legs
 
         goods = CrapTrapAssets.GetSpecificGoods(ItemType.eq_legs);
         foreach (VirtualGood item in goods)
         {
             equipmentsLegs.Add(item.ItemId, ParseToItem(item, ItemType.eq_legs));
-        }
-
-        #endregion
-        #region Equipment Feet
-
-        goods = CrapTrapAssets.GetSpecificGoods(ItemType.eq_feet);
-        foreach (VirtualGood item in goods)
-        {
-            equipmentsFeet.Add(item.ItemId, ParseToItem(item, ItemType.eq_feet));
         }
 
         #endregion
@@ -273,17 +232,9 @@ public class InventoryManager : MonoBehaviour
         {
             equippedBody = equipment;
         }
-        else if (equipment.type == ItemType.eq_hands)
-        {
-            equippedHands = equipment;
-        }
         else if (equipment.type == ItemType.eq_legs)
         {
             equippedLegs = equipment;
-        }
-        else if (equipment.type == ItemType.eq_feet)
-        {
-            equippedFeet = equipment;
         }
         else if (equipment.type == ItemType.item_consumable)
         {

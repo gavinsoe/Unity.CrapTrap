@@ -13,21 +13,23 @@ public class ItemShopGUI : MonoBehaviour
      * Custom Styles [1] = Shopkeeper
      * Custom Styles [2] = Back Button
      * Custom Styles [3] = Head Button
-     * Custom Styles [4] = Body Button
-     * Custom Styles [5] = Hands Button
-     * Custom Styles [6] = Legs Button
-     * Custom Styles [7] = Feet Button
-     * Custom Styles [8] = Item Button
-     * Custom Styles [9] = GTP
-     * Custom Styles [10] = NTP
-     * Custom Styles [11] = Item Container
-     * Custom Styles [12] = Arrow Next
-     * Custom Styles [13] = Arrow Prev
-     * Custom Styles [14] = NTP Purchase Button
-     * Custom Styles [15] = GTP Purchase Button
-     * Custom Styles [16] = $ Purchase Button
-     * Custom Styles [17] = Sold out
-     * Custom Styles [17] = Item Highlight
+     * Custom Styles [4] = Upper Body Button
+     * Custom Styles [5] = Lower Body Button
+     * Custom Styles [6] = Item Button
+     * Custom Styles [7] = GTP
+     * Custom Styles [8] = NTP
+     * Custom Styles [9] = Item Container
+     * Custom Styles [10] = Arrow Next
+     * Custom Styles [11] = Arrow Prev
+     * Custom Styles [12] = NTP Purchase Button
+     * Custom Styles [13] = GTP Purchase Button
+     * Custom Styles [14] = $ Purchase Button
+     * Custom Styles [15] = Sold out
+     * Custom Styles [16] = Item Highlight
+     * Custom Styles [17] = Speech Bubble
+     * Custom Styles [18] = Popup box
+     * Custom Styles [19] = Cancel Button
+     * Custom Styles [20] = Shading base
      */
     public GUISkin activeSkin;
     public Texture tempIcon;
@@ -35,8 +37,11 @@ public class ItemShopGUI : MonoBehaviour
     private MainGameController mainController;
     private InventoryManager inventory;
     private ItemType activeWindow; // the active item shop window
-    public int cur_page;
-    public int max_page; //number of pages
+    private int cur_page; // active page number
+    private int max_page; //number of pages
+    private int selected_item = 0; // index of the selected item
+    private bool initialized = false;
+    private bool show_popup = false;
 
     private Item[] slotItems = new Item[9];
     private Item[] transitionItems = new Item[9];
@@ -71,9 +76,9 @@ public class ItemShopGUI : MonoBehaviour
 
     private Rect shopkeeperRect; // shopkeeper Rect
     private Texture shopkeeperTexture; // shopkeeper texture
-    public float shopkeeperScale = 0.72f;
-    public float shopkeeperXOffset = 0.73f;
-    public float shopkeeperYOffset = 0.54f;
+    private float shopkeeperScale = 0.72f;
+    private float shopkeeperXOffset = 0.73f;
+    private float shopkeeperYOffset = 0.54f;
 
     #endregion
     #region navigation
@@ -93,20 +98,10 @@ public class ItemShopGUI : MonoBehaviour
     private Texture2D btnBodyActiveTexture;
     private GUIStyle btnBodyStyle;
 
-    private Rect btnHandsRect;
-    private Texture2D btnHandsInactiveTexture;
-    private Texture2D btnHandsActiveTexture;
-    private GUIStyle btnHandsStyle;
-
-    private Rect btnLegsRect;
+    private Rect btnLegsBodyRect;
     private Texture2D btnLegsInactiveTexture;
     private Texture2D btnLegsActiveTexture;
     private GUIStyle btnLegsStyle;
-
-    private Rect btnFeetRect;
-    private Texture2D btnFeetInactiveTexture;
-    private Texture2D btnFeetActiveTexture;
-    private GUIStyle btnFeetStyle;
 
     private Rect btnItemRect;
     private Texture2D btnItemInactiveTexture;
@@ -116,7 +111,9 @@ public class ItemShopGUI : MonoBehaviour
     #endregion
     #region currency boxes
 
+    [HideInInspector]
     public int ntp = 0; // Keeps track of the number of ntp
+    [HideInInspector]
     public int gtp = 0; // Keeps track of the number of gtp
 
     private Rect currencyNTPRect;
@@ -169,6 +166,10 @@ public class ItemShopGUI : MonoBehaviour
     public float itemIconScale;
     private Rect itemIconRect;
 
+    private Texture highlightTexture;
+    public float highlightScale;
+    private Rect highlightRect;
+
     private GUIStyle ntpPurchaseBtnStyle;
     private GUIStyle gtpPurchaseBtnStyle;
     private GUIStyle dollarPurchaseBtnStyle;
@@ -185,6 +186,52 @@ public class ItemShopGUI : MonoBehaviour
     private Rect arrowPrevRect;
     private float arrowScale = 0.08f;
     
+    #endregion
+    #region Speech Bubble
+
+    private Rect bubbleRect;
+    private Rect bubbleContainerRect;
+    private Rect closedBubbleRect;
+    private Rect openBubbleRect;
+    private Texture bubbleTexture;
+
+    private float bubbleScale = 0.42f;
+    private float bubbleYOffset = 0.21f;
+    private string bubbleText;
+
+    private Rect bubbleLabelRect;
+    private GUIStyle bubbleLabelStyle;
+    private float bubbleLabelXPadding = 0.09f;
+    private float bubbleLabelYPadding = 0.11f;
+    private float bubbleLabelXScale = 0.82f;
+    private float bubbleLabelYScale = 0.7f;
+    private float bubbleLabelFontScale = 0.12f;
+
+    #endregion
+    #region Popup Confirmation
+
+    public Rect popupRect;
+    public Rect popupBgRect;
+    private Rect popupPictureRect;
+    private Rect popupLabelRect;
+    private Rect popupCancelButtonRect;
+    private Rect popupConfirmButtonRect;
+
+    private GUIStyle shadingStyle;
+    private GUIStyle popupBgStyle;
+    private GUIStyle popupCancelStyle;
+    private float popupXScale = 0.9f; // ratio of the popup box, based on the 'shelves' (3x3 boxes)
+    private float popupRatio = 0.4f; // y:x ratio 2:5
+    private float popupPadding = 20f;
+
+    private float popupConfirmBtnScale = 0.25f;
+
+    private float popupCancelBtnScale = 0.28f;
+    private float popupCancelXOffset = 0.7f;
+    private float popupCancelYOffset = 0.27f;
+
+    private GUIStyle popupLabelStyle;
+    public float popupLabelScale;
     #endregion
     #endregion
 
@@ -232,21 +279,13 @@ public class ItemShopGUI : MonoBehaviour
         btnBodyInactiveTexture = activeSkin.customStyles[4].normal.background;
         btnBodyStyle = new GUIStyle(activeSkin.customStyles[4]);
 
-        btnHandsActiveTexture = activeSkin.customStyles[5].onNormal.background;
-        btnHandsInactiveTexture = activeSkin.customStyles[5].normal.background;
-        btnHandsStyle = new GUIStyle(activeSkin.customStyles[5]);
+        btnLegsActiveTexture = activeSkin.customStyles[5].onNormal.background;
+        btnLegsInactiveTexture = activeSkin.customStyles[5].normal.background;
+        btnLegsStyle = new GUIStyle(activeSkin.customStyles[5]);
 
-        btnLegsActiveTexture = activeSkin.customStyles[6].onNormal.background;
-        btnLegsInactiveTexture = activeSkin.customStyles[6].normal.background;
-        btnLegsStyle = new GUIStyle(activeSkin.customStyles[6]);
-
-        btnFeetActiveTexture = activeSkin.customStyles[7].onNormal.background;
-        btnFeetInactiveTexture = activeSkin.customStyles[7].normal.background;
-        btnFeetStyle = new GUIStyle(activeSkin.customStyles[7]);
-
-        btnItemActiveTexture = activeSkin.customStyles[8].onNormal.background;
-        btnItemInactiveTexture = activeSkin.customStyles[8].normal.background;
-        btnItemStyle = new GUIStyle(activeSkin.customStyles[8]);
+        btnItemActiveTexture = activeSkin.customStyles[6].onNormal.background;
+        btnItemInactiveTexture = activeSkin.customStyles[6].normal.background;
+        btnItemStyle = new GUIStyle(activeSkin.customStyles[6]);
 
         float btnHeight = Screen.height / 7;
         Texture backBtnTexture = btnBackStyle.normal.background;
@@ -260,16 +299,14 @@ public class ItemShopGUI : MonoBehaviour
         btnBackRect = new Rect(0, 0, backBtnWidth, btnHeight);
         btnHeadRect = new Rect(0.5f * (navContainerWidth - eqBtnWidth), btnHeight, eqBtnWidth, btnHeight);
         btnBodyRect = new Rect(0.5f * (navContainerWidth - eqBtnWidth), btnHeight * 2, eqBtnWidth, btnHeight);
-        btnHandsRect = new Rect(0.5f * (navContainerWidth - eqBtnWidth), btnHeight * 3, eqBtnWidth, btnHeight);
-        btnLegsRect = new Rect(0.5f * (navContainerWidth - eqBtnWidth), btnHeight * 4, eqBtnWidth, btnHeight);
-        btnFeetRect = new Rect(0.5f * (navContainerWidth - eqBtnWidth), btnHeight * 5, eqBtnWidth, btnHeight);
-        btnItemRect = new Rect(0.5f * (navContainerWidth - eqBtnWidth), btnHeight * 6, eqBtnWidth, btnHeight);
+        btnLegsBodyRect = new Rect(0.5f * (navContainerWidth - eqBtnWidth), btnHeight * 3, eqBtnWidth, btnHeight);
+        btnItemRect = new Rect(0.5f * (navContainerWidth - eqBtnWidth), btnHeight * 4, eqBtnWidth, btnHeight);
 
         #endregion
         #region currency boxes
 
-        NTPStyle = new GUIStyle(activeSkin.customStyles[10]);
-        GTPStyle = new GUIStyle(activeSkin.customStyles[9]);
+        NTPStyle = new GUIStyle(activeSkin.customStyles[8]);
+        GTPStyle = new GUIStyle(activeSkin.customStyles[7]);
         Texture currencyTexture = NTPStyle.normal.background;
         float currencyBoxHeight = Screen.height * currencyBoxScale;
         float currencyBoxWidth = currencyBoxHeight * ((float)currencyTexture.width / (float)currencyTexture.height);
@@ -287,10 +324,11 @@ public class ItemShopGUI : MonoBehaviour
         #endregion
         #region item container
 
-        itemBoxTexture = activeSkin.customStyles[11].normal.background;
-        arrowNextStyle = activeSkin.customStyles[12];
-        arrowPrevStyle = activeSkin.customStyles[13];
-        soldOutTexture = activeSkin.customStyles[17].normal.background;
+        itemBoxTexture = activeSkin.customStyles[9].normal.background;
+        arrowNextStyle = activeSkin.customStyles[10];
+        arrowPrevStyle = activeSkin.customStyles[11];
+        soldOutTexture = activeSkin.customStyles[15].normal.background;
+
         Texture arrowTexture = arrowNextStyle.normal.background;
         float arrowHeight = Screen.height * arrowScale;
         float arrowWidth = arrowHeight * ((float)arrowTexture.width / (float)arrowTexture.height);
@@ -313,10 +351,18 @@ public class ItemShopGUI : MonoBehaviour
         float itemIconDimension = itemBoxHeight * itemIconScale;
         float itemIconOffset = (itemBoxWidth - itemIconDimension) * 0.5f;
 
+        // Calculate item highlight dimension and location
+        highlightTexture = activeSkin.customStyles[16].normal.background;
+        float highlightHeight = itemBoxHeight * highlightScale;
+        float highlightWidth = highlightHeight * ((float)highlightTexture.width / (float)highlightTexture.height);
+        float highlightXOffset = (itemBoxWidth - highlightWidth) * 0.5f;
+        float highlightYOffset = (itemBoxHeight - highlightHeight) * 0.5f;
+        highlightRect = new Rect(highlightXOffset, highlightYOffset, highlightWidth, highlightHeight);
+
         // Calculate button location and dimension
-        ntpPurchaseBtnStyle = activeSkin.customStyles[14];
-        gtpPurchaseBtnStyle = activeSkin.customStyles[15];
-        dollarPurchaseBtnStyle = activeSkin.customStyles[16];
+        ntpPurchaseBtnStyle = activeSkin.customStyles[12];
+        gtpPurchaseBtnStyle = activeSkin.customStyles[13];
+        dollarPurchaseBtnStyle = activeSkin.customStyles[14];
 
         float itemBtnHeight = itemBoxHeight * itemBtnScale;
         float itemBtnWidth = itemBtnHeight * ((float)ntpPurchaseBtnStyle.normal.background.width /
@@ -366,65 +412,85 @@ public class ItemShopGUI : MonoBehaviour
             transitionItems[count] = new Item();
             count++;
         }
+        #endregion
+        #region speech bubble
+
+        // Speech Bubble
+        bubbleTexture = activeSkin.customStyles[17].normal.background;
+        float bubbleHeight = Screen.height * bubbleScale;
+        float bubbleWidth = bubbleHeight * ((float)bubbleTexture.width / (float)bubbleTexture.height);
+        bubbleRect = new Rect(0,0,bubbleWidth,bubbleHeight);
+
+        openBubbleRect = new Rect(Screen.width - bubbleWidth,
+                              Screen.height * bubbleYOffset,
+                              bubbleWidth,
+                              bubbleHeight);
+        closedBubbleRect = new Rect(openBubbleRect.x + (openBubbleRect.width * 0.5f), openBubbleRect.y + openBubbleRect.height, 0, 0);
+        bubbleContainerRect = closedBubbleRect;
+
+        bubbleLabelStyle = new GUIStyle(activeSkin.label);
+        float bblXPadding = bubbleWidth * bubbleLabelXPadding;
+        float bblYPadding = bubbleHeight * bubbleLabelYPadding;
+        float bblWidth = bubbleWidth * bubbleLabelXScale;
+        float bblheight = bubbleHeight * bubbleLabelYScale;
+        bubbleLabelRect = new Rect(bblXPadding, bblYPadding, bblWidth, bblheight);
+        bubbleLabelStyle.fontSize = (int)(bubbleLabelFontScale * bblheight);
 
         #endregion
     }
 
     void Update()
     {
+        // initialise items
+        if (!initialized)
+        {
+            activeWindow = ItemType.eq_head;
+
+            cur_page = 1;
+            TransitionItems(inventory.equipmentsHead.Values.ToList());
+
+            ChangeCategory();
+
+            initialized = true;
+        }
+
         if (activeWindow == ItemType.eq_head)
         {
             btnHeadStyle.normal.background = btnHeadActiveTexture;
             btnBodyStyle.normal.background = btnBodyInactiveTexture;
-            btnHandsStyle.normal.background = btnHandsInactiveTexture;
             btnLegsStyle.normal.background = btnLegsInactiveTexture;
-            btnFeetStyle.normal.background = btnFeetInactiveTexture;
             btnItemStyle.normal.background = btnItemInactiveTexture;
         }
         else if (activeWindow == ItemType.eq_body)
         {
             btnHeadStyle.normal.background = btnHeadInactiveTexture;
             btnBodyStyle.normal.background = btnBodyActiveTexture;
-            btnHandsStyle.normal.background = btnHandsInactiveTexture;
             btnLegsStyle.normal.background = btnLegsInactiveTexture;
-            btnFeetStyle.normal.background = btnFeetInactiveTexture;
-            btnItemStyle.normal.background = btnItemInactiveTexture;
-        }
-        else if (activeWindow == ItemType.eq_hands)
-        {
-            btnHeadStyle.normal.background = btnHeadInactiveTexture;
-            btnBodyStyle.normal.background = btnBodyInactiveTexture;
-            btnHandsStyle.normal.background = btnHandsActiveTexture;
-            btnLegsStyle.normal.background = btnLegsInactiveTexture;
-            btnFeetStyle.normal.background = btnFeetInactiveTexture;
             btnItemStyle.normal.background = btnItemInactiveTexture;
         }
         else if (activeWindow == ItemType.eq_legs)
         {
             btnHeadStyle.normal.background = btnHeadInactiveTexture;
             btnBodyStyle.normal.background = btnBodyInactiveTexture;
-            btnHandsStyle.normal.background = btnHandsInactiveTexture;
             btnLegsStyle.normal.background = btnLegsActiveTexture;
-            btnFeetStyle.normal.background = btnFeetInactiveTexture;
-            btnItemStyle.normal.background = btnItemInactiveTexture;
-        }
-        else if (activeWindow == ItemType.eq_feet)
-        {
-            btnHeadStyle.normal.background = btnHeadInactiveTexture;
-            btnBodyStyle.normal.background = btnBodyInactiveTexture;
-            btnHandsStyle.normal.background = btnHandsInactiveTexture;
-            btnLegsStyle.normal.background = btnLegsInactiveTexture;
-            btnFeetStyle.normal.background = btnFeetActiveTexture;
             btnItemStyle.normal.background = btnItemInactiveTexture;
         }
         else if (activeWindow == ItemType.item_consumable)
         {
             btnHeadStyle.normal.background = btnHeadInactiveTexture;
             btnBodyStyle.normal.background = btnBodyInactiveTexture;
-            btnHandsStyle.normal.background = btnHandsInactiveTexture;
             btnLegsStyle.normal.background = btnLegsInactiveTexture;
-            btnFeetStyle.normal.background = btnFeetInactiveTexture;
             btnItemStyle.normal.background = btnItemActiveTexture;
+        }
+
+        // Update speech bubble
+        if (selected_item != 0)
+        {
+            bubbleText = slotItems[selected_item-1].description;
+        }
+        else
+        {
+            bubbleText = "Skelly (get it?) The souls of the dead will now help you transform that pesky block to wood.";
         }
     }
 
@@ -432,7 +498,53 @@ public class ItemShopGUI : MonoBehaviour
     void OnGUI()
     {
         #region temp
+        
+        #region popup confirmation
 
+        // Shading base
+        shadingStyle = activeSkin.customStyles[20];
+
+        // Container
+        float popupXDimension = itemsContainerRect.width * popupXScale;
+        float popupYDimension = popupXDimension * popupRatio;
+        float popupXOffset = itemsContainerRect.x + (itemsContainerRect.width - popupXDimension) * 0.5f;
+        float popupYOffset = itemsContainerRect.y + (itemsContainerRect.height - popupYDimension) * 0.5f;
+        popupBgStyle = activeSkin.customStyles[18];
+
+        // Preview Pic
+        float popupPicDimension = popupYDimension - 2 * popupPadding;
+        float popupPicXOffset = popupPadding;
+        float popupPicYOffset = popupPadding;
+
+        // Cancel button
+        popupCancelStyle = activeSkin.customStyles[19];
+        float cancelBtnHeight = popupYDimension * popupCancelBtnScale;
+        float cancelBtnWidth = cancelBtnHeight * ((float)popupCancelStyle.normal.background.width /
+                                                  (float)popupCancelStyle.normal.background.height);
+        float cancelBtnXOffset = popupXDimension + popupXOffset - (cancelBtnWidth * popupCancelXOffset);
+        float cancelBtnYOffset = popupYOffset - (cancelBtnHeight * popupCancelYOffset);
+
+        // Confirm Button
+        float confirmBtnHeight = popupYDimension * popupConfirmBtnScale;
+        float confirmBtnWidth = confirmBtnHeight * ((float)ntpPurchaseBtnStyle.normal.background.width /
+                                                    (float)ntpPurchaseBtnStyle.normal.background.height);
+        float confirmBtnXOffset = (popupXDimension - popupPicDimension - confirmBtnWidth - 2 * popupPadding) * 0.5f + popupPicDimension + popupPadding;
+        float confirmBtnYOffset = (popupYDimension - confirmBtnHeight - popupPadding);
+
+        // Label
+        float popupLabelHeight = confirmBtnYOffset;
+        float popupLabelWidth = popupXDimension - popupPicDimension - popupPadding;
+        float popupLabelXOffset = popupPicDimension + popupPadding;
+        float popupLabelYOffset = popupPadding;
+
+        popupRect = new Rect(popupXOffset, popupYOffset, popupXDimension, popupYDimension);
+        popupBgRect = new Rect(0, 0, popupXDimension, popupYDimension);
+        popupPictureRect = new Rect(popupPicXOffset, popupPicYOffset, popupPicDimension, popupPicDimension);
+        popupCancelButtonRect = new Rect(cancelBtnXOffset, cancelBtnYOffset, cancelBtnWidth, cancelBtnHeight);
+        popupConfirmButtonRect = new Rect(confirmBtnXOffset, confirmBtnYOffset, confirmBtnWidth, confirmBtnHeight);
+        popupLabelRect = new Rect(popupLabelXOffset, popupLabelYOffset, popupLabelWidth, popupLabelHeight);
+
+        #endregion
 
         #endregion
 
@@ -442,11 +554,25 @@ public class ItemShopGUI : MonoBehaviour
         GUI.BeginGroup(containerRect);
         {
             GUI.DrawTexture(bgRect, bgTexture, ScaleMode.ScaleAndCrop);
-            GUI.DrawTexture(shopkeeperRect, shopkeeperTexture);
 
             Navigation();
             Currency();
             Items();
+
+            // Popup
+            if (show_popup)
+            {
+                if (selected_item == 0)
+                {
+                    show_popup = false;
+                }
+                else
+                {
+                    PopupConfirmation(slotItems[selected_item - 1]);
+                }
+            }
+
+            Shopkeeper();
         }
         GUI.EndGroup();
     }
@@ -457,11 +583,11 @@ public class ItemShopGUI : MonoBehaviour
     {
         GUI.BeginGroup(navContainerRect);
         {
-            if (GUI.Button(btnBackRect, "", btnBackStyle))
+            if (goodButton(btnBackRect, "", btnBackStyle))
             {
             }
 
-            if (GUI.Button(btnHeadRect, "", btnHeadStyle))
+            if (goodButton(btnHeadRect, "", btnHeadStyle))
             {
                 activeWindow = ItemType.eq_head;
 
@@ -471,7 +597,7 @@ public class ItemShopGUI : MonoBehaviour
                 ChangeCategory();
             }
 
-            if (GUI.Button(btnBodyRect, "", btnBodyStyle))
+            if (goodButton(btnBodyRect, "", btnBodyStyle))
             {
                 activeWindow = ItemType.eq_body;
 
@@ -481,17 +607,7 @@ public class ItemShopGUI : MonoBehaviour
                 ChangeCategory();
             }
 
-            if (GUI.Button(btnHandsRect, "", btnHandsStyle))
-            {
-                activeWindow = ItemType.eq_hands;
-
-                cur_page = 1;
-                TransitionItems(inventory.equipmentsHands.Values.ToList());
-
-                ChangeCategory();
-            }
-
-            if (GUI.Button(btnLegsRect, "", btnLegsStyle))
+            if (goodButton(btnLegsBodyRect, "", btnLegsStyle))
             {
                 activeWindow = ItemType.eq_legs;
 
@@ -501,17 +617,7 @@ public class ItemShopGUI : MonoBehaviour
                 ChangeCategory();
             }
 
-            if (GUI.Button(btnFeetRect, "", btnFeetStyle))
-            {
-                activeWindow = ItemType.eq_feet;
-
-                cur_page = 1;
-                TransitionItems(inventory.equipmentsFeet.Values.ToList());
-
-                ChangeCategory();
-            }
-
-            if (GUI.Button(btnItemRect, "", btnItemStyle))
+            if (goodButton(btnItemRect, "", btnItemStyle))
             {
                 activeWindow = ItemType.item_consumable;
 
@@ -541,12 +647,12 @@ public class ItemShopGUI : MonoBehaviour
                 GUI.DrawTexture(itemBgRect, itemBoxTexture);
                 GUI.BeginGroup(itemInnerContainerRect);
                 {
-                    ItemInner(slotItems[0]);
+                    ItemInner(slotItems[0],1);
                 }
                 GUI.EndGroup();
                 GUI.BeginGroup(itemTransitionContainerRect);
                 {
-                    ItemInner(transitionItems[0]);
+                    ItemInner(transitionItems[0],0);
                 }
                 GUI.EndGroup();
             }
@@ -557,12 +663,12 @@ public class ItemShopGUI : MonoBehaviour
                 GUI.DrawTexture(itemBgRect, itemBoxTexture);
                 GUI.BeginGroup(itemInnerContainerRect);
                 {
-                    ItemInner(slotItems[1]);
+                    ItemInner(slotItems[1],2);
                 }
                 GUI.EndGroup();
                 GUI.BeginGroup(itemTransitionContainerRect);
                 {
-                    ItemInner(transitionItems[1]);
+                    ItemInner(transitionItems[1],0);
                 }
                 GUI.EndGroup();
             }
@@ -573,12 +679,12 @@ public class ItemShopGUI : MonoBehaviour
                 GUI.DrawTexture(itemBgRect, itemBoxTexture);
                 GUI.BeginGroup(itemInnerContainerRect);
                 {
-                    ItemInner(slotItems[2]);
+                    ItemInner(slotItems[2],3);
                 }
                 GUI.EndGroup();
                 GUI.BeginGroup(itemTransitionContainerRect);
                 {
-                    ItemInner(transitionItems[2]);
+                    ItemInner(transitionItems[2],0);
                 }
                 GUI.EndGroup();
             }
@@ -589,12 +695,12 @@ public class ItemShopGUI : MonoBehaviour
                 GUI.DrawTexture(itemBgRect, itemBoxTexture);
                 GUI.BeginGroup(itemInnerContainerRect);
                 {
-                    ItemInner(slotItems[3]);
+                    ItemInner(slotItems[3],4);
                 }
                 GUI.EndGroup();
                 GUI.BeginGroup(itemTransitionContainerRect);
                 {
-                    ItemInner(transitionItems[3]);
+                    ItemInner(transitionItems[3],0);
                 }
                 GUI.EndGroup();
             }
@@ -605,12 +711,12 @@ public class ItemShopGUI : MonoBehaviour
                 GUI.DrawTexture(itemBgRect, itemBoxTexture);
                 GUI.BeginGroup(itemInnerContainerRect);
                 {
-                    ItemInner(slotItems[4]);
+                    ItemInner(slotItems[4],5);
                 }
                 GUI.EndGroup();
                 GUI.BeginGroup(itemTransitionContainerRect);
                 {
-                    ItemInner(transitionItems[4]);
+                    ItemInner(transitionItems[4],0);
                 }
                 GUI.EndGroup();
             }
@@ -621,12 +727,12 @@ public class ItemShopGUI : MonoBehaviour
                 GUI.DrawTexture(itemBgRect, itemBoxTexture);
                 GUI.BeginGroup(itemInnerContainerRect);
                 {
-                    ItemInner(slotItems[5]);
+                    ItemInner(slotItems[5],6);
                 }
                 GUI.EndGroup();
                 GUI.BeginGroup(itemTransitionContainerRect);
                 {
-                    ItemInner(transitionItems[5]);
+                    ItemInner(transitionItems[5],0);
                 }
                 GUI.EndGroup();
             }
@@ -637,12 +743,12 @@ public class ItemShopGUI : MonoBehaviour
                 GUI.DrawTexture(itemBgRect, itemBoxTexture);
                 GUI.BeginGroup(itemInnerContainerRect);
                 {
-                    ItemInner(slotItems[6]);
+                    ItemInner(slotItems[6],7);
                 }
                 GUI.EndGroup();
                 GUI.BeginGroup(itemTransitionContainerRect);
                 {
-                    ItemInner(transitionItems[6]);
+                    ItemInner(transitionItems[6],0);
                 }
                 GUI.EndGroup();
             }
@@ -653,12 +759,12 @@ public class ItemShopGUI : MonoBehaviour
                 GUI.DrawTexture(itemBgRect, itemBoxTexture);
                 GUI.BeginGroup(itemInnerContainerRect);
                 {
-                    ItemInner(slotItems[7]);
+                    ItemInner(slotItems[7],8);
                 }
                 GUI.EndGroup();
                 GUI.BeginGroup(itemTransitionContainerRect);
                 {
-                    ItemInner(transitionItems[7]);
+                    ItemInner(transitionItems[7],0);
                 }
                 GUI.EndGroup();
             }
@@ -669,12 +775,12 @@ public class ItemShopGUI : MonoBehaviour
                 GUI.DrawTexture(itemBgRect, itemBoxTexture);
                 GUI.BeginGroup(itemInnerContainerRect);
                 {
-                    ItemInner(slotItems[8]);
+                    ItemInner(slotItems[8],9);
                 }
                 GUI.EndGroup();
                 GUI.BeginGroup(itemTransitionContainerRect);
                 {
-                    ItemInner(transitionItems[8]);
+                    ItemInner(transitionItems[8],0);
                 }
                 GUI.EndGroup();
             }
@@ -684,7 +790,7 @@ public class ItemShopGUI : MonoBehaviour
 
         if (cur_page > 1)
         {
-            if (GUI.Button(arrowPrevRect, "", arrowPrevStyle))
+            if (goodButton(arrowPrevRect, "", arrowPrevStyle))
             {
                 cur_page--;
                 if (activeWindow == ItemType.eq_head)
@@ -695,17 +801,9 @@ public class ItemShopGUI : MonoBehaviour
                 {
                     TransitionItems(inventory.equipmentsBody.Values.ToList());
                 }
-                else if (activeWindow == ItemType.eq_hands)
-                {
-                    TransitionItems(inventory.equipmentsHands.Values.ToList());
-                }
                 else if (activeWindow == ItemType.eq_legs)
                 {
                     TransitionItems(inventory.equipmentsLegs.Values.ToList());
-                }
-                else if (activeWindow == ItemType.eq_feet)
-                {
-                    TransitionItems(inventory.equipmentsFeet.Values.ToList());
                 }
                 else if (activeWindow == ItemType.item_consumable)
                 {
@@ -717,7 +815,7 @@ public class ItemShopGUI : MonoBehaviour
         }
         if (cur_page < max_page)
         {
-            if (GUI.Button(arrowNextRect, "", arrowNextStyle))
+            if (goodButton(arrowNextRect, "", arrowNextStyle))
             {
                 cur_page++;
                 if (activeWindow == ItemType.eq_head)
@@ -728,17 +826,9 @@ public class ItemShopGUI : MonoBehaviour
                 {
                     TransitionItems(inventory.equipmentsBody.Values.ToList());
                 }
-                else if (activeWindow == ItemType.eq_hands)
-                {
-                    TransitionItems(inventory.equipmentsHands.Values.ToList());
-                }
                 else if (activeWindow == ItemType.eq_legs)
                 {
                     TransitionItems(inventory.equipmentsLegs.Values.ToList());
-                }
-                else if (activeWindow == ItemType.eq_feet)
-                {
-                    TransitionItems(inventory.equipmentsFeet.Values.ToList());
                 }
                 else if (activeWindow == ItemType.item_consumable)
                 {
@@ -750,30 +840,117 @@ public class ItemShopGUI : MonoBehaviour
         }
     }
 
-    void ItemInner(Item item)
+    void ItemInner(Item item, int index)
     {
         if (item.itemId != "empty"){
             GUI.DrawTexture(itemIconRect, tempIcon);
 
+            if (goodButton(itemBgRect, "",activeSkin.button))
+            {
+                if (selected_item == index)
+                {
+                    selected_item = 0;
+                    HideBubble();
+                }
+                else
+                {
+                    selected_item = index;
+                    ShowBubble();
+                }
+            }
+            if (selected_item == index && selected_item != 0 && !show_popup)
+            {
+                GUI.DrawTexture(highlightRect, highlightTexture);
+            }
+
             if (item.currency == CurrencyType.Dollar)
             {
-                GUI.Button(itemBtnRect, item.dollarPrice.ToString(), dollarPurchaseBtnStyle);
+                if (goodButton(itemBtnRect, item.dollarPrice.ToString(), dollarPurchaseBtnStyle))
+                {
+                    selected_item = index;
+                    show_popup = true;
+                    ShowBubble();
+                }
             }
             else if (item.currency == CurrencyType.GTP)
             {
-                GUI.Button(itemBtnRect, item.price.ToString(), gtpPurchaseBtnStyle);
+                if (goodButton(itemBtnRect, item.price.ToString(), gtpPurchaseBtnStyle))
+                {
+                    selected_item = index;
+                    show_popup = true;
+                    ShowBubble();
+                }
             }
             else if (item.currency == CurrencyType.NTP)
             {
-                GUI.Button(itemBtnRect, item.price.ToString(), ntpPurchaseBtnStyle);
+                if (goodButton(itemBtnRect, item.price.ToString(), ntpPurchaseBtnStyle))
+                {
+                    selected_item = index;
+                    show_popup = true;
+                    ShowBubble();
+                }
             }
 
             if (item.type != ItemType.item_consumable &&
                 item.type != ItemType.item_instant &&
-                item.balance == 0)
+                item.balance == 1)
             {
                 GUI.DrawTexture(itemBgRect, soldOutTexture, ScaleMode.ScaleToFit);
             }
+        }
+    }
+
+    void Shopkeeper()
+    {
+        GUI.BeginGroup(bubbleContainerRect);
+        {
+            GUI.DrawTexture(bubbleRect, bubbleTexture);
+            GUI.Label(bubbleLabelRect, bubbleText, bubbleLabelStyle);
+        }
+        GUI.EndGroup();
+
+        GUI.DrawTexture(shopkeeperRect, shopkeeperTexture);
+    }
+
+    void PopupConfirmation(Item item)
+    {
+        GUI.color = new Color(0f, 0f, 0f, 0.8f);
+        GUI.DrawTexture(containerRect, shadingStyle.normal.background);
+        GUI.color = Color.white;
+
+        GUI.BeginGroup(popupRect);
+        {
+            GUI.Box(popupBgRect, "", popupBgStyle);
+            GUI.DrawTexture(popupPictureRect, tempIcon);
+            GUI.Label(popupLabelRect, "Purchase " + item.name + "?", bubbleLabelStyle);
+            if (item.currency == CurrencyType.Dollar)
+            {
+                if (goodButton(popupConfirmButtonRect, item.dollarPrice.ToString(), dollarPurchaseBtnStyle))
+                {
+                    StoreInventory.BuyItem(item.itemId);
+                }
+            }
+            else if (item.currency == CurrencyType.GTP)
+            {
+                if (goodButton(popupConfirmButtonRect, item.price.ToString(), gtpPurchaseBtnStyle))
+                {
+                    StoreInventory.BuyItem(item.itemId);
+                }
+            }
+            else if (item.currency == CurrencyType.NTP)
+            {
+                if (goodButton(popupConfirmButtonRect, item.price.ToString(), ntpPurchaseBtnStyle))
+                {
+                    StoreInventory.BuyItem(item.itemId);
+                }
+            }
+        }
+        GUI.EndGroup();
+        if (goodButton(popupCancelButtonRect, "", popupCancelStyle))
+        {
+            show_popup = false;
+            selected_item = 0;
+            HideBubble();
         }
     }
     #endregion
@@ -783,9 +960,6 @@ public class ItemShopGUI : MonoBehaviour
     {
         int numberOfItems = items.Count;
         max_page = numberOfItems / 9 + 1;
-        Debug.Log("Number of items: " + numberOfItems);
-        Debug.Log("Number of pages: " + max_page);
-
         int offset = 9 * (cur_page - 1);
 
         for (int i = 0; i < transitionItems.Length; i++)
@@ -814,9 +988,16 @@ public class ItemShopGUI : MonoBehaviour
         itemTransitionContainerRect = pos;
     }
 
+    void AnimateBubble(Rect pos)
+    {
+        bubbleContainerRect = pos;
+    }
+
     #endregion
+
     void NextPage()
     {
+        selected_item = 0;
         iTween.ValueTo(gameObject,
                        iTween.Hash("from", itemPosCenter,
                                    "to", itemPosLeft,
@@ -835,6 +1016,7 @@ public class ItemShopGUI : MonoBehaviour
 
     void PrevPage()
     {
+        selected_item = 0;
         iTween.ValueTo(gameObject,
                        iTween.Hash("from", itemPosCenter,
                                    "to", itemPosRight,
@@ -853,7 +1035,7 @@ public class ItemShopGUI : MonoBehaviour
 
     void ChangeCategory()
     {
-
+        selected_item = 0;
         iTween.ValueTo(gameObject,
                        iTween.Hash("from", itemPosCenter,
                                    "to", itemPosTop,
@@ -865,9 +1047,11 @@ public class ItemShopGUI : MonoBehaviour
                        iTween.Hash("from", itemPosBottom,
                                    "to", itemPosCenter,
                                    "onupdate", "AnimateItemTransitionRect",
-                                   "oncomplete","OnAnimationComplete",
+                                   "oncomplete", "OnAnimationComplete",
                                    "easetype", iTween.EaseType.easeOutBack,
                                    "time", 0.5f));
+
+        HideBubble();
     }
 
     void OnAnimationComplete()
@@ -880,4 +1064,67 @@ public class ItemShopGUI : MonoBehaviour
             slotItems[i] = transitionItems[i];
         }
     }
+
+    void ShowBubble()
+    {
+        iTween.ValueTo(gameObject,
+                       iTween.Hash("from", bubbleContainerRect,
+                                   "to", openBubbleRect,
+                                   "onupdate", "AnimateBubble",
+                                   "easetype", iTween.EaseType.easeOutQuart,
+                                   "time", 0.1f));
+    }
+
+    void HideBubble()
+    {
+        iTween.ValueTo(gameObject,
+                       iTween.Hash("from", bubbleContainerRect,
+                                   "to", closedBubbleRect,
+                                   "onupdate", "AnimateBubble",
+                                   "easetype", iTween.EaseType.easeInQuart,
+                                   "time", 0.1f));
+    }
+
+    #region utility
+
+
+    // Default unity button bugs when they have one button stacked above another.
+    // Hence this function
+    bool goodButton(Rect bounds, string caption, GUIStyle btnStyle)
+    {
+        int controlID = GUIUtility.GetControlID(bounds.GetHashCode(), FocusType.Passive);
+
+        bool isMouseOver = bounds.Contains(Event.current.mousePosition);
+        bool isDown = GUIUtility.hotControl == controlID;
+
+        if (GUIUtility.hotControl != 0 && !isDown)
+        {
+            // ignore mouse while some other control has it
+            // (this is the key bit that goodButton appears to be missing)
+            isMouseOver = false;
+        }
+
+        if (Event.current.type == EventType.Repaint)
+        {
+            btnStyle.Draw(bounds, new GUIContent(caption), isMouseOver, isDown, false, false);
+        }
+        switch (Event.current.GetTypeForControl(controlID))
+        {
+            case EventType.mouseDown:
+                if (isMouseOver)
+                {  // (note: isMouseOver will be false when another control is hot)
+                    GUIUtility.hotControl = controlID;
+                }
+                break;
+
+            case EventType.mouseUp:
+                if (GUIUtility.hotControl == controlID) GUIUtility.hotControl = 0;
+                if (isMouseOver && bounds.Contains(Event.current.mousePosition)) return true;
+                break;
+        }
+
+        return false;
+    }
+
+    #endregion
 }
