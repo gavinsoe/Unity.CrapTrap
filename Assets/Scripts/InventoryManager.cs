@@ -119,8 +119,7 @@ public class InventoryManager : MonoBehaviour
 
     void InitializeCurrencies()
     {
-        ntp = StoreInventory.GetItemBalance(CrapTrapAssets.NORMAL_TOILET_PAPER_ID);
-        gtp = StoreInventory.GetItemBalance(CrapTrapAssets.GOLDEN_TOILET_PAPER_ID);
+        UpdateCurrency();
     }
 
     void InitializeShopItems()
@@ -239,6 +238,12 @@ public class InventoryManager : MonoBehaviour
         else if (equipment.type == ItemType.item_consumable)
         {
         }
+    }
+
+    public void UpdateCurrency()
+    {
+        ntp = StoreInventory.GetItemBalance(CrapTrapAssets.NORMAL_TOILET_PAPER_ID);
+        gtp = StoreInventory.GetItemBalance(CrapTrapAssets.GOLDEN_TOILET_PAPER_ID);
     }
 
     #endregion

@@ -928,6 +928,7 @@ public class ItemShopGUI : MonoBehaviour
                 if (goodButton(popupConfirmButtonRect, item.dollarPrice.ToString(), dollarPurchaseBtnStyle))
                 {
                     StoreInventory.BuyItem(item.itemId);
+                    inventory.UpdateCurrency();
                 }
             }
             else if (item.currency == CurrencyType.GTP)
@@ -935,6 +936,7 @@ public class ItemShopGUI : MonoBehaviour
                 if (goodButton(popupConfirmButtonRect, item.price.ToString(), gtpPurchaseBtnStyle))
                 {
                     StoreInventory.BuyItem(item.itemId);
+                    inventory.UpdateCurrency();
                 }
             }
             else if (item.currency == CurrencyType.NTP)
@@ -942,6 +944,7 @@ public class ItemShopGUI : MonoBehaviour
                 if (goodButton(popupConfirmButtonRect, item.price.ToString(), ntpPurchaseBtnStyle))
                 {
                     StoreInventory.BuyItem(item.itemId);
+                    inventory.UpdateCurrency();
                 }
             }
         }

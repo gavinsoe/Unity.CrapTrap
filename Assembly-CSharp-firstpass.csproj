@@ -46,6 +46,11 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Plugins\Chartboost\CBBinding.cs" />
+     <Compile Include="Assets\Plugins\Chartboost\CBJSON.cs" />
+     <Compile Include="Assets\Plugins\Chartboost\CBManager.cs" />
+     <Compile Include="Assets\Plugins\Chartboost\demo\CBEventListener.cs" />
+     <Compile Include="Assets\Plugins\Chartboost\demo\CBUIManager.cs" />
      <Compile Include="Assets\Plugins\Soomla\Core\AndroidImpl\SoomlaAndroid.cs" />
      <Compile Include="Assets\Plugins\Soomla\Core\Config\CoreSettings.cs" />
      <Compile Include="Assets\Plugins\Soomla\Core\Config\ISoomlaSettings.cs" />
@@ -101,10 +106,15 @@
      <Compile Include="Assets\Plugins\Soomla\Store\purchaseTypes\PurchaseType.cs" />
      <Compile Include="Assets\Plugins\Soomla\Store\purchaseTypes\PurchaseWithMarket.cs" />
      <Compile Include="Assets\Plugins\Soomla\Store\purchaseTypes\PurchaseWithVirtualItem.cs" />
-     <None Include="Assets\Extensions\iTween\ReadMe!\ReadMe!.txt" />
+     <Compile Include="Assets\Plugins\iTween\Plugins\iTween.cs" />
+     <Compile Include="Assets\Plugins\iTween\Sample\MoveSample.cs" />
+     <Compile Include="Assets\Plugins\iTween\Sample\RotateSample.cs" />
+     <Compile Include="Assets\Plugins\iTween\Sample\SampleInfo.cs" />
+     <None Include="Assets\Plugins\Android\ChartboostSDK\AndroidManifest.xml" />
+     <None Include="Assets\Plugins\iTween\ReadMe!\ReadMe!.txt" />
      <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
  <Reference Include="App42_Unity3D_SDK_2.6.1">
- <HintPath>D:/Prj/Unity/Toilet Game/Assets/Extensions/App42/App42_Unity3D_SDK_2.6.1.dll</HintPath>
+ <HintPath>D:/Prj/Unity/Toilet Game/Assets/Plugins/App42/App42_Unity3D_SDK_2.6.1.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

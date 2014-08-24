@@ -46,12 +46,14 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Editor\CBAndroidSetupUI.cs" />
      <Compile Include="Assets\Soomla\Editor\SoomlaPostBuild.cs" />
      <Compile Include="Assets\Soomla\Editor\SoomlaSettingsEditor.cs" />
-     <None Include="Assets\Extensions\iTween\ReadMe!\ReadMe!.txt" />
+     <None Include="Assets\Plugins\Android\ChartboostSDK\AndroidManifest.xml" />
+     <None Include="Assets\Plugins\iTween\ReadMe!\ReadMe!.txt" />
      <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
  <Reference Include="App42_Unity3D_SDK_2.6.1">
- <HintPath>D:/Prj/Unity/Toilet Game/Assets/Extensions/App42/App42_Unity3D_SDK_2.6.1.dll</HintPath>
+ <HintPath>D:/Prj/Unity/Toilet Game/Assets/Plugins/App42/App42_Unity3D_SDK_2.6.1.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.Graphs">
  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>

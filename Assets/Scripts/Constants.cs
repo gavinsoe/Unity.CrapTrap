@@ -26,4 +26,11 @@ public class Constants {
     public string logStageRetry = " Retry";
     public string logStageQuit = " Quit";
 
+    // IOS App ID and Signature
+    public string appId_IOS = "";
+    public string appSignature_IOS = "";
+
+    // Android App ID and Signature
+    public string appId_Android = "";
+    public string appSignature_Android = "";
 }
