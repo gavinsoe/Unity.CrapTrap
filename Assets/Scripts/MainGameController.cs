@@ -11,13 +11,6 @@ using com.shephertz.app42.paas.sdk.csharp.log;
 
 public class MainGameController : MonoBehaviour
 {
-    // App42 Stuff
-    ServiceAPI serviceAPI;
-    LogService logService;
-    StorageService storageService;
-    Constants constants = new Constants();
-    LogResponse logCallBack = new LogResponse();
-
     public bool isGameMenu = false;
 
     #region Timer Variables
@@ -106,19 +99,6 @@ public class MainGameController : MonoBehaviour
             ServicePointManager.ServerCertificateValidationCallback = Validator;
         #endif
 
-        // Connect to the app service
-        serviceAPI = new ServiceAPI(constants.apiKey, constants.secretKey);
-
-        // Build the log service
-        logService = serviceAPI.BuildLogService();
-
-        // Build the storage service
-        storageService = serviceAPI.BuildStorageService();
-
-        // Log the event
-        logService.SetEvent(Application.loadedLevelName, "Landed", logCallBack);
-        logService.SetEvent(Application.loadedLevelName, logCallBack);
-
         #endregion
 	}
 
@@ -163,8 +143,6 @@ public class MainGameController : MonoBehaviour
 
     void OnDestroy()
     {
-        // Log result
-        logService.SetEvent(Application.loadedLevelName, "Escaped", logCallBack);
     }
 
     public void setTimerReductionRate(float rate)
@@ -193,19 +171,6 @@ public class MainGameController : MonoBehaviour
         int seconds = (int)(timeElapsed % 60);
         string timeTaken = string.Format("{0:00}:{1:00}", mins, seconds);
         stageCompleteGUI.StageComplete(timeTaken, mainGUI.ntp, ntpMax, mainGUI.gtp, gtpMax, objectives);
-        
-        // Package the result
-        SimpleJSON.JSONClass json = new SimpleJSON.JSONClass();
-        json.Add("Device id", SystemInfo.deviceUniqueIdentifier);
-        json.Add("Stage", Application.loadedLevelName);
-        json.Add("Time", timeTaken);
-        json.Add("NTP", (mainGUI.ntp + @"/" + ntpMax).ToString());
-        json.Add("GTP", (mainGUI.gtp + @"/" + gtpMax).ToString());
-        json.Add("Result", "Complete");
-
-        // Log result
-        storageService.InsertJSONDocument(constants.dbName, constants.collectionStageStats, json, logCallBack);
-        logService.SetEvent(Application.loadedLevelName + constants.logStageComplete, logCallBack);
     }
 
     public void GameOver(bool fell)
@@ -217,45 +182,11 @@ public class MainGameController : MonoBehaviour
         {
             mainGUI.Hide();
             failByFallingGUI.StageFailed();
-        
-            // Package the result
-            int mins = (int)(timeElapsed / 60);
-            int seconds = (int)(timeElapsed % 60);
-            string timeTaken = string.Format("{0:00}:{1:00}", mins, seconds);
-
-            SimpleJSON.JSONClass json = new SimpleJSON.JSONClass();
-            json.Add("Device id", SystemInfo.deviceUniqueIdentifier);
-            json.Add("Stage", Application.loadedLevelName);
-            json.Add("Time", timeTaken);
-            json.Add("NTP", (mainGUI.ntp + @"/" + ntpMax).ToString());
-            json.Add("GTP", (mainGUI.gtp + @"/" + gtpMax).ToString());
-            json.Add("Result", "Fell down");
-
-            // Log result
-            storageService.InsertJSONDocument(constants.dbName, constants.collectionStageStats, json, logCallBack);
-            logService.SetEvent(Application.loadedLevelName + constants.logStageFailed, logCallBack);
         }
         else
         {
             mainGUI.Hide();
             failGUI.Show();
-
-            // Package the result
-            int mins = (int)(timeElapsed / 60);
-            int seconds = (int)(timeElapsed % 60);
-            string timeTaken = string.Format("{0:00}:{1:00}", mins, seconds);
-
-            SimpleJSON.JSONClass json = new SimpleJSON.JSONClass();
-            json.Add("Device id", SystemInfo.deviceUniqueIdentifier);
-            json.Add("Stage", Application.loadedLevelName);
-            json.Add("Time", timeTaken);
-            json.Add("NTP", (mainGUI.ntp + @"/" + ntpMax).ToString());
-            json.Add("GTP", (mainGUI.gtp + @"/" + gtpMax).ToString());
-            json.Add("Result", "Out of time");
-
-            // Log result
-            storageService.InsertJSONDocument(constants.dbName, constants.collectionStageStats, json, logCallBack);
-            logService.SetEvent(Application.loadedLevelName + constants.logStageFailed, logCallBack);
         }
     }
 
@@ -305,7 +236,7 @@ public class MainGameController : MonoBehaviour
                        iTween.Hash("from", zoomLevel,
                                    "to", 3,
                                    "onupdate", "animateZoom",
-                                   "oncomplete", "zoomComplete",
+                                   "oncomplete", "zoomInComplete",
                                    "easetype", iTween.EaseType.linear,
                                    "time", 0.5));
         iTween.ValueTo(gameObject,
@@ -327,7 +258,7 @@ public class MainGameController : MonoBehaviour
                        iTween.Hash("from", zoomLevel,
                                    "to", zoomOutLevel,
                                    "onupdate", "animateZoom",
-                                   "oncomplete", "zoomComplete",
+                                   "oncomplete", "zoomOutComplete",
                                    "easetype", iTween.EaseType.linear,
                                    "time", 0.5));
         iTween.ValueTo(gameObject,
@@ -336,6 +267,9 @@ public class MainGameController : MonoBehaviour
                                    "onupdate", "scaleBackground",
                                    "easetype", iTween.EaseType.linear,
                                    "time", 0.5));
+
+        // Alter culling mask
+        camera.cullingMask = ~(1 << LayerMask.NameToLayer("Character"));
     }
 
 	public void DisableTimeNMove() {
@@ -701,7 +635,13 @@ public class MainGameController : MonoBehaviour
         }
     }
 
-    void zoomComplete()
+    void zoomInComplete()
+    {
+        // Alter culling mask
+        camera.cullingMask = ~(1 << LayerMask.NameToLayer("Minimap"));
+        character.isMoving = false;
+    }
+    void zoomOutComplete()
     {
         character.isMoving = false;
     }

@@ -75,9 +75,17 @@ public class TutorialScreenGUI : MonoBehaviour {
         if (triggerMode == TriggerMode.onStart &&
             mainCamera.camState == CameraFollow.CameraStatus.TrackPlayer && !triggered)
         {
-            mainCamera.paused = true;
             triggered = true;
             showTutorial();
+        }
+    }
+
+    void LateUpdate()
+    {
+        if (triggerMode == TriggerMode.onStart &&
+               mainCamera.camState == CameraFollow.CameraStatus.TrackPlayer && !triggered)
+        {
+            mainCamera.paused = true;
         }
     }
 
