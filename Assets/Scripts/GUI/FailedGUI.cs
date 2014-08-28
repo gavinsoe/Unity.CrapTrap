@@ -108,6 +108,11 @@ public class FailedGUI : MonoBehaviour {
         #endregion
 	}
 
+    void Start()
+    {
+        this.enabled = false;
+    }
+
 	void OnGUI()
     {
         //Set the active skin
@@ -167,6 +172,7 @@ public class FailedGUI : MonoBehaviour {
     // Show the menu
     public void Show()
     {
+        this.enabled = true;
         audio.PlayOneShot(fart, 1f);
         iTween.ValueTo(gameObject,
                           iTween.Hash("from", bgContainerRect,
