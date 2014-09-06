@@ -55,46 +55,46 @@ public class PauseGUI : MonoBehaviour {
     Rect menuRect;
     Rect menuContainerRect;
     Texture menuTexture;
-    private float menuScale = 1.448f;
+    private float menuScale = 1.21f;
     private float menuHeight; // height of the pause menu
     private float menuWidth; // width of the pause menu
-    private float menuXOffset; // Variables used to calculate x offsets for the menu
-    private float menuYOffset; // Variables used to calculate y offsets for the menu
+    private float menuXOffset = 0f; // Variables used to calculate x offsets for the menu
+    private float menuYOffset = 0.09f; // Variables used to calculate y offsets for the menu
 
     #endregion
     #region Pause menu buttons
 
-    private float btnDimensionPercentage = 0.12f;
+    private float btnScale = 0.125f;
     private float btnHeight;
     private float btnWidth;
     /* Button Offsets
-     * -----------------
-     * |       |       |
-     * |   A   |   B   |
-     * |       |       |
-     * -----------------
-     * |       |       |
-     * |   C   |   D   |
-     * |       |       |
-     * -----------------
+     * ---------
+     * |       |
+     * |   A   |
+     * |       |
+     * ---------
+     * |       |
+     * |   B   |
+     * |       |
+     * ---------
+     * |       |
+     * |   C   |
+     * |       |
+     * ---------
      */
 
-    private float A_BtnXOffset = 0.312f; // X offset for the A button
-    private float A_BtnYOffset = 0.251f; // Y offset for the A button
-    private float B_BtnXOffset = 0.525f; // X offset for the B button
-    private float B_BtnYOffset = 0.251f; // Y offset for the B button
-    private float C_BtnXOffset = 0.312f; // X offset for the C button
-    private float C_BtnYOffset = 0.384f; // Y offset for the C button
-    private float D_BtnXOffset = 0.525f; // X offset for the D button
-    private float D_BtnYOffset = 0.384f; // Y offset for the D button
+    private float A_BtnXOffset = 0.298f; // X offset for the A button
+    private float A_BtnYOffset = 0.205f; // Y offset for the A button
+    private float B_BtnXOffset = 0.298f; // X offset for the B button
+    private float B_BtnYOffset = 0.3385f; // Y offset for the B button
+    private float C_BtnXOffset = 0.298f; // X offset for the C button
+    private float C_BtnYOffset = 0.47f; // Y offset for the C button
     private Rect A_BtnRect;
     private Rect B_BtnRect;
     private Rect C_BtnRect;
-    private Rect D_BtnRect;
     private ButtonHandler A_BtnScale;
     private ButtonHandler B_BtnScale;
     private ButtonHandler C_BtnScale;
-    private ButtonHandler D_BtnScale;
 
     #endregion
 
@@ -124,32 +124,38 @@ public class PauseGUI : MonoBehaviour {
         ppButtonDimensions = Screen.height / 8;
         ppButtonPos = new Rect(ppButtonXOffset, ppButtonYOffset, ppButtonDimensions, ppButtonDimensions);
 
+        #region menuContainer
+
         // Initialise menu variables
         menuTexture = activeSkin.customStyles[2].normal.background;
         menuHeight = Screen.height * menuScale;
         menuWidth = menuHeight * ((float)menuTexture.width / (float)menuTexture.height);
 
-        menuXOffset = (Screen.width - menuWidth) * 0.5f;
-        menuYOffset = menuHeight * 0.05f;
-        menuContainerRect = new Rect(menuXOffset, menuYOffset, menuWidth, menuHeight);
+        //menuXOffset = (Screen.width - menuWidth) * 0.5f;
+        //menuYOffset = menuHeight * 0.05f;
+        menuContainerRect = new Rect(menuXOffset * Screen.width, menuYOffset * Screen.height, menuWidth, menuHeight);
         menuRect = new Rect(0, 0, menuWidth, menuHeight);
+
+        #endregion
+
+        #region menu Buttons
 
         // Calculate and scale the buttons on the menu
         // Calculate button dimensions (assumes all buttons have same dimensions)
-        btnHeight = menuRect.height * btnDimensionPercentage;
+        btnHeight = menuRect.height * btnScale;
         btnWidth = btnHeight * ((float)activeSkin.customStyles[3].normal.background.width /
                                 (float)activeSkin.customStyles[3].normal.background.height);
 
         A_BtnRect = new Rect(menuRect.width * A_BtnXOffset, menuRect.height * A_BtnYOffset, btnWidth, btnHeight);
         B_BtnRect = new Rect(menuRect.width * B_BtnXOffset, menuRect.height * B_BtnYOffset, btnWidth, btnHeight);
         C_BtnRect = new Rect(menuRect.width * C_BtnXOffset, menuRect.height * C_BtnYOffset, btnWidth, btnHeight);
-        D_BtnRect = new Rect(menuRect.width * D_BtnXOffset, menuRect.height * D_BtnYOffset, btnWidth, btnHeight);
 
         // Initialise button scalers
         A_BtnScale = new ButtonHandler(A_BtnRect, gameObject, 0.9f, "A_ScaleButton");
         B_BtnScale = new ButtonHandler(B_BtnRect, gameObject, 0.9f, "B_ScaleButton");
         C_BtnScale = new ButtonHandler(C_BtnRect, gameObject, 0.9f, "C_ScaleButton");
-        D_BtnScale = new ButtonHandler(D_BtnRect, gameObject, 0.9f, "D_ScaleButton");
+
+        #endregion
 
         // Scale and position the 'pause' text
         activeSkin.customStyles[7].fontSize = (int)(Screen.height * pauseTxtFontScale);
@@ -226,14 +232,9 @@ public class PauseGUI : MonoBehaviour {
         sound = GUI.Toggle(C_BtnRect, sound, "", activeSkin.customStyles[5]);
         mainController.ToggleSound(!sound);
 
-        // Draw the retry button
-        map = GUI.Toggle(D_BtnRect, map, "", activeSkin.customStyles[6]);
-        mainController.ToggleMap(!map);
-
         A_BtnScale.OnMouseOver(A_BtnRect);
         B_BtnScale.OnMouseOver(B_BtnRect);
         C_BtnScale.OnMouseOver(C_BtnRect);
-        D_BtnScale.OnMouseOver(D_BtnRect);
         GUI.EndGroup();
     }
 
@@ -272,11 +273,5 @@ public class PauseGUI : MonoBehaviour {
     {
         C_BtnRect = size;
 
-    }
-
-    //applies the values from iTween:
-    void D_ScaleButton(Rect size)
-    {
-        D_BtnRect = size;
     }
 }
