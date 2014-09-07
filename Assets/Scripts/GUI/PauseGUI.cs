@@ -37,8 +37,8 @@ public class PauseGUI : MonoBehaviour {
     #region Pause text
 
     private Rect pauseTextRect;
-    private float pauseTxtYOffset = 0.05f;
-    private float pauseTxtFontScale = 0.15f;
+    private float pauseTxtYOffset = 0.34f;
+    private float pauseTxtFontScale = 0.21f;
 
     #endregion
     #region Pause/Play button
@@ -170,12 +170,12 @@ public class PauseGUI : MonoBehaviour {
     {
         if (show)
         {
-            iTween.ValueTo(gameObject, iTween.Hash("from", containerRect, "to", openPosition, "onupdate", "AnimatePauseMenu", "easetype", iTween.EaseType.easeOutQuart));
+            PauseGame();
             show = false;
         }
         else if (hide)
         {
-            iTween.ValueTo(gameObject, iTween.Hash("from", containerRect, "to", closedPosition, "onupdate", "AnimatePauseMenu", "easetype", iTween.EaseType.easeInQuart));
+            ResumeGame();
             hide = false;
         }
 
@@ -247,12 +247,13 @@ public class PauseGUI : MonoBehaviour {
 
     public void PauseGame()
     {
-        show = true;
+        iTween.ValueTo(gameObject, iTween.Hash("from", containerRect, "to", openPosition, "onupdate", "AnimatePauseMenu", "easetype", iTween.EaseType.easeOutQuart));
+        
     }
 
     public void ResumeGame()
     {
-        hide = true;
+        iTween.ValueTo(gameObject, iTween.Hash("from", containerRect, "to", closedPosition, "onupdate", "AnimatePauseMenu", "easetype", iTween.EaseType.easeInQuart));
     }
 
     //applies the values from iTween:
