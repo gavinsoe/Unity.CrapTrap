@@ -131,7 +131,7 @@ public class FailedGUI : MonoBehaviour {
 
             GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, guiAlpha);
             // Draw the header
-            GUI.Label(headerRect, "YOU\nFAILED", activeSkin.customStyles[2]);
+            GUI.Label(headerRect, "CRAP!", activeSkin.customStyles[2]);
 
             #region navigation
 
