@@ -91,8 +91,6 @@ public class Game : MonoBehaviour {
         achievementUnlocked = 0;
 
         isUnlimitedEnergy = false;
-        initializeLevels();
-        initializeStars();
     }
 
     public void Save()
@@ -158,19 +156,12 @@ public class Game : MonoBehaviour {
         lastLogin = System.DateTime.Now;
     }
 
-    public void initializeStars()
+    public void checkLevel(string key)
     {
-        stars = new Dictionary<string, int>()
+        if (!stars.ContainsKey(key))
         {
-            {"C1-1", 0}
-        };
-    }
-
-    public void initializeLevels()
-    {
-        lockedLevels = new Dictionary<string, bool>()
-        {
-            {"C1-1", false}
-        };
+            stars.Add(key, 0);
+            lockedLevels.Add(key, false);
+        }
     }
 }
