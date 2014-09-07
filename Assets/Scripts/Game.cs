@@ -91,10 +91,13 @@ public class Game : MonoBehaviour {
         achievementUnlocked = 0;
 
         isUnlimitedEnergy = false;
+        initializeLevels();
+        initializeStars();
     }
 
-    public void Save(string path)
+    public void Save()
     {
+        string path = "game.data";
         var serializer = new XmlSerializer(typeof(Game));
         using (var stream = new FileStream(path, FileMode.Create))
         {
@@ -102,11 +105,23 @@ public class Game : MonoBehaviour {
         }
     }
 
-    public static Game Load(string path) {
+    public static Game Load() {
+        string path = "game.data";
         var serializer = new XmlSerializer(typeof(Game));
-        using (var stream = new FileStream(path, FileMode.Open))
+        if (File.Exists(path))
         {
-            return serializer.Deserialize(stream) as Game;
+            using (var stream = new FileStream(path, FileMode.Open))
+            {
+                return serializer.Deserialize(stream) as Game;
+            }
+        }
+        else
+        {
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                Game newG = new Game();
+                return newG;
+            }
         }
     }
 
