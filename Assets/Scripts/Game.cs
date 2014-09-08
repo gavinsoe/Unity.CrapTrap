@@ -13,8 +13,8 @@ public class Game : MonoBehaviour {
 
     public bool[] chaptersUnlocked;
 
-    public Dictionary<string, int> stars;
-    public Dictionary<string, bool> lockedLevels;
+    public int[][] stars;
+    public bool[][] levelsUnlocked;
 
     public System.DateTime lastLogin;
     public int consecutiveLogins;
@@ -62,9 +62,7 @@ public class Game : MonoBehaviour {
     public Game()
     {
         achievements = new bool[1][];
-        chaptersUnlocked = new bool[1];
-        stars = new Dictionary<string, int>();
-        lockedLevels = new Dictionary<string, bool>();
+        Initialize();
         energyCap = 10;
         energy = energyCap;
         setLastLogin();
@@ -91,6 +89,29 @@ public class Game : MonoBehaviour {
         achievementUnlocked = 0;
 
         isUnlimitedEnergy = false;
+    }
+
+    public void Initialize()
+    {
+        stars = new int[14][];
+        levelsUnlocked = new bool[14][];
+        chaptersUnlocked = new bool[14];
+        for (int i = 0; i < 14; i++)
+        {
+            stars[i] = new int[10];
+            levelsUnlocked[i] = new bool[10];
+            chaptersUnlocked[i] = false;
+            for (int j = 0; j < 10; j++)
+            {
+                stars[i][j] = 0;
+                levelsUnlocked[i][j] = false;
+                if (j == 0)
+                {
+                    levelsUnlocked[i][j] = true;
+                }
+            }
+        }
+        chaptersUnlocked[0] = true;
     }
 
     public void Save()
@@ -156,6 +177,24 @@ public class Game : MonoBehaviour {
         lastLogin = System.DateTime.Now;
     }
 
+    public void Update(int chapter, int level, int star)
+    {
+        stars[chapter][level] = star;
+        if (level < 9)
+        {
+            levelsUnlocked[chapter][level + 1] = true;
+        }
+        else
+        {
+            if (chapter < 6)
+            {
+                chaptersUnlocked[chapter + 1] = true;
+            }
+            chaptersUnlocked[chapter + 7] = true;
+        }
+    }
+
+    /*
     public void checkLevel(string key)
     {
         if (!stars.ContainsKey(key))
@@ -163,5 +202,5 @@ public class Game : MonoBehaviour {
             stars.Add(key, 0);
             lockedLevels.Add(key, false);
         }
-    }
+    } */
 }
