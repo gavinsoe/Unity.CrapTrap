@@ -12,9 +12,12 @@ public class Game : MonoBehaviour {
     public bool[][] achievements;
 
     public bool[] chaptersUnlocked;
+    public bool[] challengeChaptersUnlocked;
 
     public int[][] stars;
+    public int[][] challengeStars;
     public bool[][] levelsUnlocked;
+    public bool[][] challengeLevelsUnlocked;
 
     public System.DateTime lastLogin;
     public int consecutiveLogins;
@@ -93,21 +96,30 @@ public class Game : MonoBehaviour {
 
     public void Initialize()
     {
-        stars = new int[14][];
-        levelsUnlocked = new bool[14][];
-        chaptersUnlocked = new bool[14];
-        for (int i = 0; i < 14; i++)
+        stars = new int[7][];
+        levelsUnlocked = new bool[7][];
+        chaptersUnlocked = new bool[7];
+        challengeStars = new int[7][];
+        challengeLevelsUnlocked = new bool[7][];
+        challengeChaptersUnlocked = new bool[7];
+        for (int i = 0; i < 7; i++)
         {
             stars[i] = new int[10];
             levelsUnlocked[i] = new bool[10];
             chaptersUnlocked[i] = false;
+            challengeStars[i] = new int[10];
+            challengeLevelsUnlocked[i] = new bool[10];
+            challengeChaptersUnlocked[i] = false;
             for (int j = 0; j < 10; j++)
             {
                 stars[i][j] = 0;
                 levelsUnlocked[i][j] = false;
+                challengeStars[i][j] = 0;
+                challengeLevelsUnlocked[i][j] = false;
                 if (j == 0)
                 {
                     levelsUnlocked[i][j] = true;
+                    challengeLevelsUnlocked[i][j] = true;
                 }
             }
         }
@@ -190,7 +202,7 @@ public class Game : MonoBehaviour {
             {
                 chaptersUnlocked[chapter + 1] = true;
             }
-            chaptersUnlocked[chapter + 7] = true;
+            challengeChaptersUnlocked[chapter] = true;
         }
     }
 
