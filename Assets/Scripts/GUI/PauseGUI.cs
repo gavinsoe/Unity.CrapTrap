@@ -247,13 +247,21 @@ public class PauseGUI : MonoBehaviour {
 
     public void PauseGame()
     {
-        iTween.ValueTo(gameObject, iTween.Hash("from", containerRect, "to", openPosition, "onupdate", "AnimatePauseMenu", "easetype", iTween.EaseType.easeOutQuart));
+        iTween.ValueTo(gameObject, 
+                       iTween.Hash("from", containerRect, 
+                                   "to", openPosition, 
+                                   "onupdate", "AnimatePauseMenu", 
+                                   "easetype", iTween.EaseType.easeOutQuart));
         
     }
 
     public void ResumeGame()
     {
-        iTween.ValueTo(gameObject, iTween.Hash("from", containerRect, "to", closedPosition, "onupdate", "AnimatePauseMenu", "easetype", iTween.EaseType.easeInQuart));
+        iTween.ValueTo(gameObject, 
+                       iTween.Hash("from", containerRect, 
+                                   "to", closedPosition, 
+                                   "onupdate", "AnimatePauseMenu", 
+                                   "easetype", iTween.EaseType.easeInQuart));
     }
 
     //applies the values from iTween:

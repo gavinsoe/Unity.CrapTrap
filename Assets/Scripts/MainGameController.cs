@@ -304,7 +304,7 @@ public class MainGameController : MonoBehaviour
         CheckObjectives();
 
         // Update the game counters;
-        var gameData = Game.Load(Path.Combine(Application.dataPath, "game.xml"));
+        var gameData = Game.Load();
         gameData.totalSteps += moves;
         gameData.totalHangingSteps += hangingMoves;
         gameData.playingTime = gameData.playingTime.Add(new System.TimeSpan(0,0,(int)time));
@@ -316,9 +316,9 @@ public class MainGameController : MonoBehaviour
         gameData.totalToiletPapers += mainGUI.ntp;
         gameData.totalGoldenPapers += mainGUI.gtp;
         gameData.stagesCompleted += 1;
-        gameData.stars[Application.loadedLevelName] = reward;
+        //gameData.stars[Application.loadedLevelName] = reward;
 
-        gameData.Save(Path.Combine(Application.persistentDataPath, "game.xml"));
+        gameData.Save();
     }
 
     public void CheckObjectives()

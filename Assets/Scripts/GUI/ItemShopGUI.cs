@@ -1090,7 +1090,6 @@ public class ItemShopGUI : MonoBehaviour
 
     #region utility
 
-
     // Default unity button bugs when they have one button stacked above another.
     // Hence this function
     bool goodButton(Rect bounds, string caption, GUIStyle btnStyle)

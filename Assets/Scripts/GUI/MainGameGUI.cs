@@ -107,7 +107,10 @@ public class MainGameGUI : MonoBehaviour
 
     void GTPScore(float width, float height)
     {
-        GUI.Label(new Rect(Screen.width - ((currencyEdgeSpacing + currencySpacing) * width), height * 0.1f, width, height), gtp.ToString(), activeSkin.customStyles[0]);
+        GUI.Label(new Rect(Screen.width - ((currencyEdgeSpacing + currencySpacing) * width), 
+                           height * 0.1f, 
+                           width, 
+                           height), gtp.ToString(), activeSkin.customStyles[0]);
     }
 
     void PauseButton()
