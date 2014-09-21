@@ -1,5 +1,17 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
+
+[Serializable]
+public class ChapterBlock
+{
+    public bool locked;
+    public int chapterNum;
+    public Texture lockedTexture;
+    public Texture unlockedTexture;
+    public int completedStages;
+    public string targetScene;
+}
 
 public class ChapterSelectGUI : MonoBehaviour 
 {
@@ -13,14 +25,14 @@ public class ChapterSelectGUI : MonoBehaviour
      * Custom Styles [5] = Sound Button
      * Custom Styles [6] = NTP Box
      * Custom Styles [7] = GTP Box
-     * Custom Styles [8] = Chapter 1 Box
-     * Custom Styles [9] = Chapter 2 Box
-     * Custom Styles [10] = Chapter 3 Box
      */
     public GUISkin activeSkin;
     private MainGameController mainController;
     private NavigationManager navManager;
+    public ChapterBlock[] blocks;
 
+    public bool nextPage = false;
+    public bool prevPage = false;
     #region GUI Related
 
     private Rect containerRect;  // The Rect object that encapsulates the whole page
@@ -87,15 +99,14 @@ public class ChapterSelectGUI : MonoBehaviour
     #region chapters
 
     private Rect chaptersContainerRect;
+    private Rect chaptersTransitionRect;
+    private Rect chaptersPosLeft;
+    private Rect chaptersPosMid;
+    private Rect chaptersPosRight;
 
-    private Rect chapter1Rect;
-    private Texture chapter1Texture;
-    private Rect chapter2Rect;
-    private Texture chapter2Texture;
-    private Texture chapter2LockedTexture;
-    private Rect chapter3Rect;
-    private Texture chapter3Texture;
-    private Texture chapter3LockedTexture;
+    private Rect leftBlockRect;
+    private Rect midBlockRect;
+    private Rect rightBlockRect;
 
     private Rect chapterBgRect;
     private Rect chapterLabelRect;
@@ -106,6 +117,13 @@ public class ChapterSelectGUI : MonoBehaviour
     private float chapterFontScale = 0.09f;
     private float chapterLabelYOffset = 0.425f;
     
+    #endregion
+    #region pages
+
+    public int cur_page;
+    public int nxt_page;
+    public int max_page;
+
     #endregion
     #endregion
 
@@ -192,14 +210,10 @@ public class ChapterSelectGUI : MonoBehaviour
         #region chapters
 
         chapterFontStyle = new GUIStyle(activeSkin.label);
-        chapter1Texture = activeSkin.customStyles[8].onNormal.background;
-        chapter2Texture = activeSkin.customStyles[9].onNormal.background;
-        chapter2LockedTexture = activeSkin.customStyles[9].normal.background;
-        chapter3Texture = activeSkin.customStyles[10].onNormal.background;
-        chapter3LockedTexture = activeSkin.customStyles[10].normal.background;
+        Texture chapterTexture = blocks[0].lockedTexture;
 
         float chapterBoxHeight = Screen.height * chapterBoxScale;
-        float chapterBoxWidth = chapterBoxHeight * ((float)chapter1Texture.width / (float)chapter1Texture.height);
+        float chapterBoxWidth = chapterBoxHeight * ((float)chapterTexture.width / (float)chapterTexture.height);
         float chapterSpacing = chapterBoxWidth * chapterSpacingScale;
         float chaptersContainerWidth = chapterBoxWidth * 3 + chapterSpacing * 2;
 
@@ -207,7 +221,7 @@ public class ChapterSelectGUI : MonoBehaviour
         if (chaptersContainerWidth > Screen.width)
         {
             chapterBoxWidth = Screen.width / (3 + chapterSpacingScale);
-            chapterBoxHeight = chapterBoxWidth * ((float)chapter1Texture.height / (float)chapter1Texture.width);
+            chapterBoxHeight = chapterBoxWidth * ((float)chapterTexture.height / (float)chapterTexture.width);
             chapterSpacing = chapterBoxWidth * chapterSpacingScale;
             chaptersContainerWidth = chapterBoxWidth * 3 + chapterSpacing * 2;
         }
@@ -215,9 +229,16 @@ public class ChapterSelectGUI : MonoBehaviour
         chaptersContainerRect = new Rect((Screen.width - chaptersContainerWidth) * 0.5f,
                                          (Screen.height - chapterBoxHeight) * 0.5f,
                                          chaptersContainerWidth, chapterBoxHeight);
-        chapter1Rect = new Rect(0, 0, chapterBoxWidth, chapterBoxHeight);
-        chapter2Rect = new Rect(chapterBoxWidth + chapterSpacing, 0, chapterBoxWidth, chapterBoxHeight);
-        chapter3Rect = new Rect(2 * (chapterBoxWidth + chapterSpacing), 0, chapterBoxWidth, chapterBoxHeight);
+        chaptersPosMid = chaptersContainerRect;
+        chaptersPosLeft = new Rect(chaptersPosMid.x - Screen.width, chaptersPosMid.y,
+                                   chaptersPosMid.width, chaptersPosMid.height);
+        chaptersPosRight = new Rect(chaptersPosMid.x + Screen.width, chaptersPosMid.y,
+                                   chaptersPosMid.width, chaptersPosMid.height);
+        chaptersTransitionRect = chaptersPosRight;
+
+        leftBlockRect = new Rect(0, 0, chapterBoxWidth, chapterBoxHeight);
+        midBlockRect = new Rect(chapterBoxWidth + chapterSpacing, 0, chapterBoxWidth, chapterBoxHeight);
+        rightBlockRect = new Rect(2 * (chapterBoxWidth + chapterSpacing), 0, chapterBoxWidth, chapterBoxHeight);
         chapterBgRect = new Rect(0, 0, chapterBoxWidth, chapterBoxHeight);
 
         float labelYOffset = chapterBoxHeight * chapterLabelYOffset;
@@ -225,12 +246,33 @@ public class ChapterSelectGUI : MonoBehaviour
         chapterFontStyle.fontSize = (int)(chapterFontScale * chapterBoxHeight);
 
         #endregion
+
+        #region Set number of pages
+
+        max_page = blocks.Length / 3;
+        cur_page = 1;
+        nxt_page = 1;
+
+        #endregion
+    }
+
+    void Update()
+    {
+        if (nextPage)
+        {
+            NextPage();
+            nextPage = false;
+        }
+        if (prevPage)
+        {
+            PrevPage();
+            prevPage = false;
+        }
     }
 
     void OnGUI()
     {
         #region temp
-
 
         #endregion
 
@@ -296,30 +338,125 @@ public class ChapterSelectGUI : MonoBehaviour
     {
         GUI.BeginGroup(chaptersContainerRect);
         {
-            GUI.BeginGroup(chapter1Rect);
+            int blockIndex = 3 * (cur_page - 1);
+            if (blockIndex < max_page * 3)
             {
-                GUI.DrawTexture(chapterBgRect, chapter1Texture);
-                GUI.Label(chapterLabelRect, "Chapter 1\n 3/10", chapterFontStyle);
-                if (GUI.Button(chapterBgRect, ""))
-                {
-                    Application.LoadLevel("GUI_Chapter1StageSelect");
-                }
+                Box(leftBlockRect, blocks[blockIndex]);
             }
-            GUI.EndGroup();
 
-            GUI.BeginGroup(chapter2Rect);
+            blockIndex++;
+            if (blockIndex < max_page * 3)
             {
-                GUI.DrawTexture(chapterBgRect, chapter2LockedTexture);
+                Box(midBlockRect, blocks[blockIndex]);
             }
-            GUI.EndGroup();
 
-            GUI.BeginGroup(chapter3Rect);
+            blockIndex++;
+            if (blockIndex < max_page * 3)
             {
-                GUI.DrawTexture(chapterBgRect, chapter2LockedTexture);
+                Box(rightBlockRect, blocks[blockIndex]);
             }
-            GUI.EndGroup();
         }
         GUI.EndGroup();
+        GUI.BeginGroup(chaptersTransitionRect);
+        {
+            int blockIndex = 3 * (nxt_page - 1);
+            if (blockIndex < max_page * 3)
+            {
+                Box(leftBlockRect, blocks[blockIndex]);
+            }
+
+            blockIndex++;
+            if (blockIndex < max_page * 3)
+            {
+                Box(midBlockRect, blocks[blockIndex]);
+            }
+
+            blockIndex++;
+            if (blockIndex < max_page * 3)
+            {
+                Box(rightBlockRect, blocks[blockIndex]);
+            }
+        }
+        GUI.EndGroup();
+    }
+
+    void Box(Rect container, ChapterBlock leBlock)
+    {
+        GUI.BeginGroup(container);
+        {
+            if (leBlock.locked)
+            {
+                GUI.DrawTexture(chapterBgRect, leBlock.lockedTexture);
+            }
+            else
+            {
+                GUI.DrawTexture(chapterBgRect, leBlock.unlockedTexture);
+                GUI.Label(chapterLabelRect, "Chapter " + leBlock.chapterNum + "\n" +
+                          leBlock.completedStages + "/20", chapterFontStyle);
+                if (GUI.Button(chapterBgRect, ""))
+                {
+                    Application.LoadLevel(leBlock.targetScene);
+                }
+            }
+        }
+        GUI.EndGroup();
+    }
+
+    #endregion
+    #region Animations
+    
+    void NextPage()
+    {
+        nxt_page = cur_page + 1;
+        iTween.ValueTo(gameObject,
+                       iTween.Hash("from", chaptersPosMid,
+                                   "to", chaptersPosLeft,
+                                   "onupdate", "AnimateChaptersRect",
+                                   "easetype", iTween.EaseType.easeOutBack,
+                                   "time", 0.5f));
+
+        iTween.ValueTo(gameObject,
+                       iTween.Hash("from", chaptersPosRight,
+                                   "to", chaptersPosMid,
+                                   "onupdate", "AnimateTransitionRect",
+                                   "oncomplete", "OnTransitionComplete",
+                                   "easetype", iTween.EaseType.easeOutBack,
+                                   "time", 0.5f));
+    }
+
+    void PrevPage()
+    {
+        nxt_page = cur_page - 1;
+        iTween.ValueTo(gameObject,
+                          iTween.Hash("from", chaptersPosMid,
+                                      "to", chaptersPosRight,
+                                      "onupdate", "AnimateChaptersRect",
+                                      "easetype", iTween.EaseType.easeOutBack,
+                                      "time", 0.5f));
+
+        iTween.ValueTo(gameObject,
+                       iTween.Hash("from", chaptersPosLeft,
+                                   "to", chaptersPosMid,
+                                   "onupdate", "AnimateTransitionRect",
+                                   "oncomplete", "OnTransitionComplete",
+                                   "easetype", iTween.EaseType.easeOutBack,
+                                   "time", 0.5f));
+    }
+
+    void OnTransitionComplete()
+    {
+        chaptersContainerRect = chaptersPosMid;
+        chaptersTransitionRect = chaptersPosRight;
+        cur_page = nxt_page;
+    }
+    void AnimateChaptersRect(Rect pos)
+    {
+        chaptersContainerRect = pos;
+    }
+
+    void AnimateTransitionRect(Rect pos)
+    {
+        chaptersTransitionRect = pos;
     }
 
     #endregion
@@ -351,3 +488,4 @@ public class ChapterSelectGUI : MonoBehaviour
 
     #endregion
 }
+
