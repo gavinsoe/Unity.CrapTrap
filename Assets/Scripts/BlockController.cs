@@ -38,7 +38,7 @@ public class BlockController : MonoBehaviour {
 	private float gridSize = 1f;
 	
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         // Retrieve the animator and the collider component
 		//animator = GetCompoent<Animator>();
         SRenderer = GetComponentInChildren<SpriteRenderer>();
