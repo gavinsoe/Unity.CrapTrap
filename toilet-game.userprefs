@@ -1,26 +1,17 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\MainGameController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Game.cs">
     <Files>
       <File FileName="Assets\Scripts\MainGameController.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Objective.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Achievement.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\BlockGenerator.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\StoneTutorialGUI.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\BlockController.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\CharacterController.cs" Line="1" Column="1" />
-      <File FileName="..\protoShit\Assets\ZombieController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\LevelChunkFactory.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\TimerBarController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PauseGUI.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\DestinationController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GameCompletedGUI.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\FailedGUI.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\MainMenuGUI.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\StoneTuteController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\MainGameController.cs" Line="18" Column="2" />
       <File FileName="Assets\Scripts\CameraFollow.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\PCControls.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\AchievementController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Game.cs" Line="31" Column="2" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
