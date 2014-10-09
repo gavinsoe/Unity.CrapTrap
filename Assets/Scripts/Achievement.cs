@@ -25,6 +25,7 @@ public enum Type2
     chaptersUnlocked = 18,
     skillsUsed = 19,
     achievementUnlocked = 20,
+    consecutiveLogins = 21,
 }
 [System.Serializable]
 public class Achievement : System.Object
@@ -33,6 +34,9 @@ public class Achievement : System.Object
     public Type2 type;
     public int counter;
     public string title;
+    public string rewardID;
+    public bool isDone;
+    public string achievementID;
 
     public string ToString()
     {

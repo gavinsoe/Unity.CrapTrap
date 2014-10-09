@@ -9,48 +9,37 @@ using System.IO;
 public class Game : MonoBehaviour {
 
     [XmlArray("Achievements")]
-    public bool[][] achievements;
+    public Achievement[] achievements;
+    public Dictionary<Type2, double> stats;
 
-    public bool[] chaptersUnlocked;
-    public bool[] challengeChaptersUnlocked;
+	// chapter unlock variables -- TRUE means unlocked
+    public bool[] chapterUnlocked;
+    public bool[] challengeChapterUnlocked;
 
+	// stars for each stage
     public int[][] stars;
     public int[][] challengeStars;
+
+	// stage unlock variables -- TRUE means unlocked
     public bool[][] levelsUnlocked;
     public bool[][] challengeLevelsUnlocked;
 
     public System.DateTime lastLogin;
     public int consecutiveLogins;
     public string[] bag;
+	public int bagSlots;
     public bool audio;
 
     public int energy;
     public int energyCap;
-    public System.DateTime timeSinceEnergy;
+    public System.DateTime timeSinceFirstEnergy;
+	public bool energyFull;
 
     public bool isUnlimitedEnergy;
     public System.TimeSpan unlimitedEnergySpan;
     public System.DateTime unlimitedEnergyStart;
 
-    public int totalSteps;
-    public int totalClimbs;
     public System.TimeSpan playingTime;
-    public int totalToiletPapers;
-    public int totalGoldenPapers;
-    public int totalPulls;
-    public int totalPushes;
-    public int totalPullOuts;
-    public int totalHangingSteps;
-    public int totalSlides;
-    public int treasures;
-    public int stagesCompleted;
-    public int itemsUsed;
-    public int itemsBought;
-    public int stagesUnlocked;
-    public int objectivesEarned;
-    public int boughtGearID;
-    public int skillsUsed;
-    public int achievementUnlocked;
 
 	// Use this for initialization
 	void Start () {
@@ -62,54 +51,59 @@ public class Game : MonoBehaviour {
 	
 	}
 
+	// Constructor
     public Game()
     {
-        achievements = new bool[1][];
+        achievements = new Achievement[20];
         Initialize();
         energyCap = 10;
         energy = energyCap;
         setLastLogin();
         audio = true;
-        consecutiveLogins = 0;
 
-        totalSteps = 0;
-        totalClimbs = 0;
-        totalToiletPapers = 0;
-        totalGoldenPapers = 0;
-        totalPulls = 0;
-        totalPushes = 0;
-        totalPullOuts = 0;
-        totalHangingSteps = 0;
-        totalSlides = 0;
-        treasures = 0;
-        stagesCompleted = 0;
-        itemsUsed = 0;
-        itemsBought = 0;
-        stagesUnlocked = 0;
-        objectivesEarned = 0;
-        boughtGearID = 0;
-        skillsUsed = 0;
-        achievementUnlocked = 0;
+        stats[Type2.totalSteps] = 0;
+        stats[Type2.totalClimbs] = 0;
+        stats[Type2.playingTime] = 0;
+        stats[Type2.toiletPapers] = 0;
+        stats[Type2.goldenPapers] = 0;
+        stats[Type2.totalPulls] = 0;
+        stats[Type2.totalPushes] = 0;
+        stats[Type2.totalPullOuts] = 0;
+        stats[Type2.totalHangingSteps] = 0;
+        stats[Type2.totalSlides] = 0;
+        stats[Type2.treasures] = 0;
+        stats[Type2.stagesCompleted] = 0;
+        stats[Type2.itemsUsed] = 0;
+        stats[Type2.itemsBought] = 0;
+        stats[Type2.stagesUnlocked] = 0;
+        stats[Type2.objectivesEarned] = 0;
+        stats[Type2.boughtGearID] = 0;
+        stats[Type2.skillsUsed] = 0;
+        stats[Type2.achievementUnlocked] = 0;
+        stats[Type2.consecutiveLogins] = 0;
+		bagSlots = 2;
 
         isUnlimitedEnergy = false;
+		energyFull = true;
     }
 
+	// Function to initialize object; called when there is no previous saved file
     public void Initialize()
     {
         stars = new int[7][];
         levelsUnlocked = new bool[7][];
-        chaptersUnlocked = new bool[7];
+        chapterUnlocked = new bool[7];
         challengeStars = new int[7][];
         challengeLevelsUnlocked = new bool[7][];
-        challengeChaptersUnlocked = new bool[7];
+        challengeChapterUnlocked = new bool[7];
         for (int i = 0; i < 7; i++)
         {
             stars[i] = new int[10];
             levelsUnlocked[i] = new bool[10];
-            chaptersUnlocked[i] = false;
+            chapterUnlocked[i] = false;
             challengeStars[i] = new int[10];
             challengeLevelsUnlocked[i] = new bool[10];
-            challengeChaptersUnlocked[i] = false;
+            challengeChapterUnlocked[i] = false;
             for (int j = 0; j < 10; j++)
             {
                 stars[i][j] = 0;
@@ -123,9 +117,10 @@ public class Game : MonoBehaviour {
                 }
             }
         }
-        chaptersUnlocked[0] = true;
+        chapterUnlocked[0] = true;
     }
 
+	// function to save all the data
     public void Save()
     {
         string path = "game.data";
@@ -136,6 +131,7 @@ public class Game : MonoBehaviour {
         }
     }
 
+	// function to load the data; if there is no previous saved file then create a new object
     public static Game Load() {
         string path = "game.data";
         var serializer = new XmlSerializer(typeof(Game));
@@ -151,24 +147,39 @@ public class Game : MonoBehaviour {
             using (var stream = new FileStream(path, FileMode.Create))
             {
                 Game newG = new Game();
+				newG.Initialize();
                 return newG;
             }
         }
     }
 
-    public void increaseCap()
+	// function called when doing a stage to decrease energy
+	public void useEnergy() {
+		if (energy > 0) {
+			energy -= 1;
+		}
+		if (energyFull) {
+			setTimeSinceFirstEnergy();
+		}
+		energyFull = false;
+	}
+
+	// function to increase energy cap
+    public void increaseCap(int energyPlus)
     {
-        energyCap += 2;
+		energyCap += energyPlus;
     }
 
-    public void setTimeSinceEnergy()
+	// function called after first energy is used
+    public void setTimeSinceFirstEnergy()
     {
-        timeSinceEnergy = System.DateTime.Now;
+        timeSinceFirstEnergy = System.DateTime.Now;
     }
 
+	// function that checks if energy should be replenished, and returns the energy
     public int checkAndGetEnergy()
     {
-        System.TimeSpan diff = System.DateTime.Now - timeSinceEnergy;
+        System.TimeSpan diff = System.DateTime.Now - timeSinceFirstEnergy;
         if (diff.Days > 0)
         {
             energy = energyCap;
@@ -184,12 +195,14 @@ public class Game : MonoBehaviour {
         return energy;
     }
 
+	// function to set the last time the user uses the application
     public void setLastLogin()
     {
         lastLogin = System.DateTime.Now;
     }
 
-    public void Update(int chapter, int level, int star)
+	// function to update the stars for a stage
+    public void UpdateStats(int chapter, int level, int star)
     {
         stars[chapter][level] = star;
         if (level < 9)
@@ -200,9 +213,25 @@ public class Game : MonoBehaviour {
         {
             if (chapter < 6)
             {
-                chaptersUnlocked[chapter + 1] = true;
+                chapterUnlocked[chapter + 1] = true;
             }
-            challengeChaptersUnlocked[chapter] = true;
+            challengeChapterUnlocked[chapter] = true;
+        }
+    }
+
+    public void UpdateReward()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            if (stats[achievements[i].type] >= achievements[i].counter)
+            {
+                if (achievements[i].isDone == false)
+                {
+                    achievements[i].isDone = true;
+
+                    /* Do update for IOS Game Center/Google Play here */
+                }
+            }
         }
     }
 
