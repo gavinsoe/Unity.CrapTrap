@@ -1,6 +1,19 @@
 fileFormatVersion: 2
 guid: 7124920027059456283a24c32c2c70f5
 TextureImporter:
+  fileIDToRecycleName:
+    21300000: boy-sweat_topleft
+    21300002: boy-sweat_topright
+    21300004: boy-lines
+    21300006: boy-tummy_growl
+    21300008: boy-left_leg
+    21300010: boy-right_leg
+    21300012: boy-parts_9
+    21300014: boy-head
+    21300016: boy-body
+    21300018: boy-left_hand
+    21300020: boy-right_hand
+    21300022: boy_sweat
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -35,6 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 500
   alphaIsTransparency: 1
   textureType: 8
@@ -54,6 +68,7 @@ TextureImporter:
         height: 31
       alignment: 0
       pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: boy-sweat_topright
       rect:
         serializedVersion: 2
@@ -63,6 +78,7 @@ TextureImporter:
         height: 74
       alignment: 0
       pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: boy-lines
       rect:
         serializedVersion: 2
@@ -72,6 +88,7 @@ TextureImporter:
         height: 87
       alignment: 0
       pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: boy-tummy_growl
       rect:
         serializedVersion: 2
@@ -81,6 +98,7 @@ TextureImporter:
         height: 36
       alignment: 0
       pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: boy-left_leg
       rect:
         serializedVersion: 2
@@ -90,6 +108,7 @@ TextureImporter:
         height: 93
       alignment: 9
       pivot: {x: .713062346, y: .87371695}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: boy-right_leg
       rect:
         serializedVersion: 2
@@ -99,6 +118,7 @@ TextureImporter:
         height: 112
       alignment: 9
       pivot: {x: .341917872, y: .890771568}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: boy-parts_9
       rect:
         serializedVersion: 2
@@ -108,6 +128,7 @@ TextureImporter:
         height: 39
       alignment: 0
       pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: boy-head
       rect:
         serializedVersion: 2
@@ -117,6 +138,7 @@ TextureImporter:
         height: 227
       alignment: 9
       pivot: {x: .564910352, y: .0908222124}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: boy-body
       rect:
         serializedVersion: 2
@@ -126,6 +148,7 @@ TextureImporter:
         height: 151
       alignment: 9
       pivot: {x: .720994473, y: .599729538}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: boy-left_hand
       rect:
         serializedVersion: 2
@@ -135,6 +158,7 @@ TextureImporter:
         height: 110
       alignment: 9
       pivot: {x: .755906761, y: .842254341}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: boy-right_hand
       rect:
         serializedVersion: 2
@@ -144,6 +168,7 @@ TextureImporter:
         height: 111
       alignment: 9
       pivot: {x: .726378679, y: .846708298}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: boy_sweat
       rect:
         serializedVersion: 2
@@ -153,5 +178,6 @@ TextureImporter:
         height: 173
       alignment: 0
       pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 
