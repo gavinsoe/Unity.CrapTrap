@@ -5,12 +5,11 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Collections.Generic;
 using System.IO;
-using com.shephertz.app42.paas.sdk.csharp;
-using com.shephertz.app42.paas.sdk.csharp.storage;
-using com.shephertz.app42.paas.sdk.csharp.log;
 
 public class MainGameController : MonoBehaviour
 {
+    public static MainGameController instance;
+
     public bool isGameMenu = false;
 
     #region Timer Variables
@@ -37,15 +36,18 @@ public class MainGameController : MonoBehaviour
     private GameObject[] backgrounds;
 
     #endregion
-    #region CUrrency Variables
-    int ntpMax; // Stores the total number of ntp in a stage
-    int gtpMax; // Stores the total number of gtp in a stage
+    #region Currency Variables
+
+    public int ntp = 0; // Stores the number of ntp collected
+    public int gtp = 0; // Stores the number of gtp collected
+    private int ntpMax; // Stores the total number of ntp in a stage
+    private int gtpMax; // Stores the total number of gtp in a stage
+
     #endregion
 
     public AudioClip loopingClip;
 
     // Components
-    private CharacterController character; // the character controller
     private int moves;
     private int hangingMoves;
     private float time;
@@ -58,31 +60,20 @@ public class MainGameController : MonoBehaviour
     public Objective[] objectives = new Objective[3];
 
     public int reward;
-    private MainGameGUI mainGUI;
-    private PauseGUI pauseGUI;
-    private FailedGUI failGUI;
-    private FailedByFallingGUI failByFallingGUI;
-    private StageCompleteGUI stageCompleteGUI;
-
 
     #if UNITY_EDITOR
         public static bool Validator(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
         { return true; }
     #endif
 
-	void Awake () {
+	void Awake () 
+    {
+        // set the static variable so that other classes can easily use this class
+        instance = this;
+
         // Initialise timer components
         Time.timeScale = 1f;
         timeElapsed = 0;
-
-        // Initialise objectives
-        character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>();
-        mainGUI = gameObject.GetComponentInChildren<MainGameGUI>();
-        pauseGUI = gameObject.GetComponentInChildren<PauseGUI>();
-        stageCompleteGUI = gameObject.GetComponentInChildren<StageCompleteGUI>();
-        failGUI = gameObject.GetComponentInChildren<FailedGUI>();
-
-        failByFallingGUI = GameObject.Find("GUI Fail by Falling").GetComponent<FailedByFallingGUI>();
 
         // Get the total number of ntp and gtp
         ntpMax = GameObject.FindGameObjectsWithTag("ntp").Length;
@@ -152,13 +143,13 @@ public class MainGameController : MonoBehaviour
 
     public void pickupToiletPaper(AudioClip sfxPickup)
     {
-        mainGUI.ntp += 1;
+        ntp += 1;
         audio.PlayOneShot(sfxPickup, 1f);
     }
 
     public void pickupGoldenToiletPaper(AudioClip sfxPickup)
     {
-        mainGUI.gtp += 1;
+        gtp += 1;
         audio.PlayOneShot(sfxPickup, 1f);
     }
 
@@ -170,7 +161,7 @@ public class MainGameController : MonoBehaviour
         int mins = (int)(timeElapsed / 60);
         int seconds = (int)(timeElapsed % 60);
         string timeTaken = string.Format("{0:00}:{1:00}", mins, seconds);
-        stageCompleteGUI.StageComplete(timeTaken, mainGUI.ntp, ntpMax, mainGUI.gtp, gtpMax, objectives);
+        StageCompleteGUI.instance.StageComplete(timeTaken, ntp, ntpMax, gtp, gtpMax, objectives);
     }
 
     public void GameOver(bool fell)
@@ -180,13 +171,13 @@ public class MainGameController : MonoBehaviour
         // pop up the failed menu
         if (fell)
         {
-            mainGUI.Hide();
-            failByFallingGUI.StageFailed();
+            MainGameGUI.instance.Hide();
+            FailedByFallingGUI.instance.StageFailed();
         }
         else
         {
-            mainGUI.Hide();
-            failGUI.Show();
+            MainGameGUI.instance.Hide();
+            FailedGUI.instance.Show();
         }
     }
 
@@ -195,12 +186,12 @@ public class MainGameController : MonoBehaviour
         // Disable time and movement
         DisableTimeNMove();
         // Pop up the pause menu
-        pauseGUI.PauseGame();
+        PauseGUI.instance.PauseGame();
 	}
 
 	public void ResumeGame() {
 		// Hide the pause menu
-        pauseGUI.ResumeGame();
+        PauseGUI.instance.ResumeGame();
         // Disable time and movement
         EnableTimeNMove();
 	}
@@ -228,9 +219,9 @@ public class MainGameController : MonoBehaviour
     public void ZoomIn()
     {
         // Set ismoving flag (to prevent other commands from coming in)
-        character.isMoving = true;
+        CharacterController.instance.isMoving = true;
         //Enable Controls
-        character.enabled = true;
+        CharacterController.instance.enabled = true;
         // Animate the zoom
         iTween.ValueTo(gameObject,
                        iTween.Hash("from", zoomLevel,
@@ -250,9 +241,9 @@ public class MainGameController : MonoBehaviour
     public void ZoomOut()
     {
         // Set ismoving flag (to prevent other commands from coming in)
-        character.isMoving = true;
+        CharacterController.instance.isMoving = true;
         // Disable Controls
-        character.enabled = false;
+        CharacterController.instance.enabled = false;
         // Animate the zoom
         iTween.ValueTo(gameObject,
                        iTween.Hash("from", zoomLevel,
@@ -276,29 +267,28 @@ public class MainGameController : MonoBehaviour
         // Pause the timer
         timerPaused = true;
         // Disable Controls
-        character.enabled = false;
+        CharacterController.instance.enabled = false;
 	}
 
     public void EnableTimeNMove()
     {
         //Enable Controls
-        character.enabled = true;
+        CharacterController.instance.enabled = true;
         // Resume timer
         timerPaused = false;
 	}
 
     public void UpdateStats()
     {
-        CharacterController character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>();
         time += timeElapsed;
         // Get counters from CharacterController
-        moves = character.moves;
-        hangingMoves = character.hangingMoves;
-        climbs = character.climbs;
-        pulls = character.pulls;
-        pushes = character.pushes;
-        slides = character.slides;
-        pullOuts = character.pullOuts;
+        moves = CharacterController.instance.moves;
+        hangingMoves = CharacterController.instance.hangingMoves;
+        climbs = CharacterController.instance.climbs;
+        pulls = CharacterController.instance.pulls;
+        pushes = CharacterController.instance.pushes;
+        slides = CharacterController.instance.slides;
+        pullOuts = CharacterController.instance.pullOuts;
 
         // Check the objectives
         CheckObjectives();
@@ -308,6 +298,16 @@ public class MainGameController : MonoBehaviour
         gameData.stats[Type2.totalSteps] += moves;
         gameData.stats[Type2.totalHangingSteps] += hangingMoves;
         gameData.playingTime = gameData.playingTime.Add(new System.TimeSpan(0,0,(int)time));
+<<<<<<< HEAD
+        gameData.totalClimbs += climbs;
+        gameData.totalPulls += pulls;
+        gameData.totalPushes += pushes;
+        gameData.totalSlides += slides;
+        gameData.totalPullOuts += pullOuts;
+        gameData.totalToiletPapers += ntp;
+        gameData.totalGoldenPapers += gtp;
+        gameData.stagesCompleted += 1;
+=======
         gameData.stats[Type2.totalClimbs] += climbs;
         gameData.stats[Type2.totalPulls] += pulls;
         gameData.stats[Type2.totalPushes] += pushes;
@@ -316,6 +316,7 @@ public class MainGameController : MonoBehaviour
         gameData.stats[Type2.toiletPapers] += mainGUI.ntp;
         gameData.stats[Type2.goldenPapers] += mainGUI.gtp;
         gameData.stats[Type2.stagesCompleted] += 1;
+>>>>>>> dadeabe4c9d00ccea2b4a7544e887a62c4b1b482
         //gameData.stars[Application.loadedLevelName] = reward;
 
         gameData.Save();
@@ -522,21 +523,21 @@ public class MainGameController : MonoBehaviour
             {
                 if (objectives[i].option == Option.lessThan)
                 {
-                    if (mainGUI.ntp < objectives[i].counter)
+                    if (ntp < objectives[i].counter)
                     {
                         objectives[i].completed = true;
                     }
                 }
                 else if (objectives[i].option == Option.greaterThan)
                 {
-                    if (mainGUI.ntp > objectives[i].counter)
+                    if (ntp > objectives[i].counter)
                     {
                         objectives[i].completed = true;
                     }
                 }
                 else
                 {
-                    if (mainGUI.ntp == objectives[i].counter)
+                    if (ntp == objectives[i].counter)
                     {
                         objectives[i].completed = true;
                     }
@@ -546,21 +547,21 @@ public class MainGameController : MonoBehaviour
             {
                 if (objectives[i].option == Option.lessThan)
                 {
-                    if (mainGUI.gtp < objectives[i].counter)
+                    if (gtp < objectives[i].counter)
                     {
                         objectives[i].completed = true;
                     }
                 }
                 else if (objectives[i].option == Option.greaterThan)
                 {
-                    if (mainGUI.gtp > objectives[i].counter)
+                    if (gtp > objectives[i].counter)
                     {
                         objectives[i].completed = true;
                     }
                 }
                 else
                 {
-                    if (mainGUI.gtp == objectives[i].counter)
+                    if (gtp == objectives[i].counter)
                     {
                         objectives[i].completed = true;
                     }
@@ -639,10 +640,10 @@ public class MainGameController : MonoBehaviour
     {
         // Alter culling mask
         camera.cullingMask = ~(1 << LayerMask.NameToLayer("Minimap"));
-        character.isMoving = false;
+        CharacterController.instance.isMoving = false;
     }
     void zoomOutComplete()
     {
-        character.isMoving = false;
+        CharacterController.instance.isMoving = false;
     }
 }
