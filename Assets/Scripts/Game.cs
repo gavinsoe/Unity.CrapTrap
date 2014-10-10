@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml;
-using System.Xml.Serialization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -11,7 +9,7 @@ public class Game : MonoBehaviour {
     public static Game game;
 
     public Achievement[] achievements;
-    public Dictionary<Type2, double> stats;
+    public Dictionary<Stat, double> stats;
 
 	// chapter unlock variables -- TRUE means unlocked
     public bool[] chapterUnlocked;
@@ -75,26 +73,26 @@ public class Game : MonoBehaviour {
         setLastLogin();
         audio = true;
 
-        stats[Type2.totalSteps] = 0;
-        stats[Type2.totalClimbs] = 0;
-        stats[Type2.playingTime] = 0;
-        stats[Type2.toiletPapers] = 0;
-        stats[Type2.goldenPapers] = 0;
-        stats[Type2.totalPulls] = 0;
-        stats[Type2.totalPushes] = 0;
-        stats[Type2.totalPullOuts] = 0;
-        stats[Type2.totalHangingSteps] = 0;
-        stats[Type2.totalSlides] = 0;
-        stats[Type2.treasures] = 0;
-        stats[Type2.stagesCompleted] = 0;
-        stats[Type2.itemsUsed] = 0;
-        stats[Type2.itemsBought] = 0;
-        stats[Type2.stagesUnlocked] = 0;
-        stats[Type2.objectivesEarned] = 0;
-        stats[Type2.boughtGearID] = 0;
-        stats[Type2.skillsUsed] = 0;
-        stats[Type2.achievementUnlocked] = 0;
-        stats[Type2.consecutiveLogins] = 0;
+        stats[Stat.totalSteps] = 0;
+        stats[Stat.totalClimbs] = 0;
+        stats[Stat.playingTime] = 0;
+        stats[Stat.toiletPapers] = 0;
+        stats[Stat.goldenPapers] = 0;
+        stats[Stat.totalPulls] = 0;
+        stats[Stat.totalPushes] = 0;
+        stats[Stat.totalPullOuts] = 0;
+        stats[Stat.totalHangingSteps] = 0;
+        stats[Stat.totalSlides] = 0;
+        stats[Stat.treasures] = 0;
+        stats[Stat.stagesCompleted] = 0;
+        stats[Stat.itemsUsed] = 0;
+        stats[Stat.itemsBought] = 0;
+        stats[Stat.stagesUnlocked] = 0;
+        stats[Stat.objectivesEarned] = 0;
+        stats[Stat.boughtGearID] = 0;
+        stats[Stat.skillsUsed] = 0;
+        stats[Stat.achievementUnlocked] = 0;
+        stats[Stat.consecutiveLogins] = 0;
 		bagSlots = 2;
 
         isUnlimitedEnergy = false;
@@ -142,41 +140,41 @@ public class Game : MonoBehaviour {
 
         GameInfo info = new GameInfo();
         info.achievements = achievements;
-        info.achievementUnlocked = stats[Type2.achievementUnlocked];
+        info.achievementUnlocked = stats[Stat.achievementUnlocked];
         info.audio = audio;
         info.bag = bag;
         info.bagSlots = bagSlots;
-        info.boughtGearID = stats[Type2.boughtGearID];
+        info.boughtGearID = stats[Stat.boughtGearID];
         info.challengeChapterUnlocked = challengeChapterUnlocked;
         info.challengeLevelsUnlocked = challengeLevelsUnlocked;
         info.challengeStars = challengeStars;
         info.chapterUnlocked = chapterUnlocked;
-        info.consecutiveLogins = stats[Type2.consecutiveLogins];
+        info.consecutiveLogins = stats[Stat.consecutiveLogins];
         info.energy = energy;
         info.energyCap = energyCap;
         info.energyFull = energyFull;
-        info.goldenPapers = stats[Type2.goldenPapers];
+        info.goldenPapers = stats[Stat.goldenPapers];
         info.isUnlimitedEnergy = isUnlimitedEnergy;
-        info.itemsBought = stats[Type2.itemsBought];
-        info.itemsUsed = stats[Type2.itemsUsed];
+        info.itemsBought = stats[Stat.itemsBought];
+        info.itemsUsed = stats[Stat.itemsUsed];
         info.lastLogin = lastLogin.ToString();
         info.levelsUnlocked = levelsUnlocked;
-        info.objectivesEarned = stats[Type2.objectivesEarned];
-        info.playingTime = stats[Type2.playingTime];
-        info.skillsUsed = stats[Type2.skillsUsed];
-        info.stagesCompleted = stats[Type2.stagesCompleted];
-        info.stagesUnlocked = stats[Type2.stagesUnlocked];
+        info.objectivesEarned = stats[Stat.objectivesEarned];
+        info.playingTime = stats[Stat.playingTime];
+        info.skillsUsed = stats[Stat.skillsUsed];
+        info.stagesCompleted = stats[Stat.stagesCompleted];
+        info.stagesUnlocked = stats[Stat.stagesUnlocked];
         info.stars = stars;
         info.timeSinceFirstEnergy = timeSinceFirstEnergy.ToString();
-        info.toiletPapers = stats[Type2.toiletPapers];
-        info.totalClimbs = stats[Type2.totalClimbs];
-        info.totalHangingSteps = stats[Type2.totalHangingSteps];
-        info.totalPullOuts = stats[Type2.totalPullOuts];
-        info.totalPulls = stats[Type2.totalPulls];
-        info.totalPushes = stats[Type2.totalPushes];
-        info.totalSlides = stats[Type2.totalSlides];
-        info.totalSteps = stats[Type2.totalSteps];
-        info.treasures = stats[Type2.treasures];
+        info.toiletPapers = stats[Stat.toiletPapers];
+        info.totalClimbs = stats[Stat.totalClimbs];
+        info.totalHangingSteps = stats[Stat.totalHangingSteps];
+        info.totalPullOuts = stats[Stat.totalPullOuts];
+        info.totalPulls = stats[Stat.totalPulls];
+        info.totalPushes = stats[Stat.totalPushes];
+        info.totalSlides = stats[Stat.totalSlides];
+        info.totalSteps = stats[Stat.totalSteps];
+        info.treasures = stats[Stat.treasures];
 
         bf.Serialize(file, info);
         file.Close();
@@ -194,41 +192,41 @@ public class Game : MonoBehaviour {
             file.Close();
 
             achievements = info.achievements;
-            stats[Type2.achievementUnlocked] = info.achievementUnlocked;
+            stats[Stat.achievementUnlocked] = info.achievementUnlocked;
             audio = info.audio;
             bag = info.bag;
             bagSlots = info.bagSlots;
-            stats[Type2.boughtGearID] = info.boughtGearID;
+            stats[Stat.boughtGearID] = info.boughtGearID;
             challengeChapterUnlocked = info.challengeChapterUnlocked;
             challengeLevelsUnlocked = info.challengeLevelsUnlocked;
             challengeStars = info.challengeStars;
             chapterUnlocked = info.chapterUnlocked;
-            stats[Type2.consecutiveLogins] = info.consecutiveLogins;
+            stats[Stat.consecutiveLogins] = info.consecutiveLogins;
             energy = info.energy;
             energyCap = info.energyCap;
             energyFull = info.energyFull;
-            stats[Type2.goldenPapers] = info.goldenPapers;
+            stats[Stat.goldenPapers] = info.goldenPapers;
             isUnlimitedEnergy = info.isUnlimitedEnergy;
-            stats[Type2.itemsBought] = info.itemsBought;
-            stats[Type2.itemsUsed] = info.itemsUsed;
+            stats[Stat.itemsBought] = info.itemsBought;
+            stats[Stat.itemsUsed] = info.itemsUsed;
             lastLogin = System.DateTime.Parse(info.lastLogin);
             levelsUnlocked = info.levelsUnlocked;
-            stats[Type2.objectivesEarned] = info.objectivesEarned;
-            stats[Type2.playingTime] = info.playingTime;
-            stats[Type2.skillsUsed] = info.skillsUsed;
-            stats[Type2.stagesCompleted] = info.stagesCompleted;
-            stats[Type2.stagesUnlocked] = info.stagesUnlocked;
+            stats[Stat.objectivesEarned] = info.objectivesEarned;
+            stats[Stat.playingTime] = info.playingTime;
+            stats[Stat.skillsUsed] = info.skillsUsed;
+            stats[Stat.stagesCompleted] = info.stagesCompleted;
+            stats[Stat.stagesUnlocked] = info.stagesUnlocked;
             stars = info.stars;
             timeSinceFirstEnergy = System.DateTime.Parse(info.timeSinceFirstEnergy);
-            stats[Type2.toiletPapers] = info.toiletPapers;
-            stats[Type2.totalClimbs] = info.totalClimbs;
-            stats[Type2.totalHangingSteps] = info.totalHangingSteps;
-            stats[Type2.totalPullOuts] = info.totalPullOuts;
-            stats[Type2.totalPulls] = info.totalPulls;
-            stats[Type2.totalPushes] = info.totalPushes;
-            stats[Type2.totalSlides] = info.totalSlides;
-            stats[Type2.totalSteps] = info.totalSteps;
-            stats[Type2.treasures] = info.treasures;
+            stats[Stat.toiletPapers] = info.toiletPapers;
+            stats[Stat.totalClimbs] = info.totalClimbs;
+            stats[Stat.totalHangingSteps] = info.totalHangingSteps;
+            stats[Stat.totalPullOuts] = info.totalPullOuts;
+            stats[Stat.totalPulls] = info.totalPulls;
+            stats[Stat.totalPushes] = info.totalPushes;
+            stats[Stat.totalSlides] = info.totalSlides;
+            stats[Stat.totalSteps] = info.totalSteps;
+            stats[Stat.treasures] = info.treasures;
 
             energy = checkAndGetEnergy();
             checkUnlimitedEnergy();
@@ -313,7 +311,7 @@ public class Game : MonoBehaviour {
     {
         for (int i = 0; i < 10; i++)
         {
-            if (stats[achievements[i].type] >= achievements[i].counter)
+            if (stats[achievements[i].stat] >= achievements[i].counter)
             {
                 if (achievements[i].isDone == false)
                 {

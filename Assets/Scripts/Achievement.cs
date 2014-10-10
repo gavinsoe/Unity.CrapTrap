@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Xml;
-using System.Xml.Serialization;
 
-public enum Type2
+public enum Stat
 {
     totalSteps = 1,
     totalClimbs = 2,
@@ -31,7 +29,7 @@ public enum Type2
 public class Achievement : System.Object
 {
 
-    public Type2 type;
+    public Stat stat;
     public int counter;
     public string title;
     public string rewardID;
@@ -42,82 +40,82 @@ public class Achievement : System.Object
     {
         string stringified = "";
 
-        if (type == Type2.totalSteps)
+        if (stat == Stat.totalSteps)
         {
             stringified = "Has moved a total of " + counter + " times";
         }
-        else if (type == Type2.totalClimbs)
+        else if (stat == Stat.totalClimbs)
         {
             stringified = "Has climbed a total of " + counter + " times";
         }
-        else if (type == Type2.playingTime)
+        else if (stat == Stat.playingTime)
         {
             int mins = (int)(counter / 60);
             int seconds = (int)(counter % 60);
             string time = string.Format("{0:00}:{1:00}", mins, seconds);
             stringified = "Has played for " + time;
         }
-        else if (type == Type2.toiletPapers)
+        else if (stat == Stat.toiletPapers)
         {
             stringified = "Has collected a total of " + counter + " toilet papers";
         }
-        else if (type == Type2.goldenPapers)
+        else if (stat == Stat.goldenPapers)
         {
             stringified = "Has collected a total of " + counter + " golden toilet papers";
         }
-        else if (type == Type2.totalPulls)
+        else if (stat == Stat.totalPulls)
         {
             stringified = "Has pulled a total of " + counter + " times";
         }
-        else if (type == Type2.totalPushes)
+        else if (stat == Stat.totalPushes)
         {
             stringified = "Has pushed a total of " + counter + " times";
         }
-        else if (type == Type2.totalPullOuts)
+        else if (stat == Stat.totalPullOuts)
         {
             stringified = "Has pulled out a total of " + counter + " times";
         }
-        else if (type == Type2.totalHangingSteps)
+        else if (stat == Stat.totalHangingSteps)
         {
             stringified = "Has moved a total of " + counter + " times while hanging";
         }
-        else if (type == Type2.totalSlides)
+        else if (stat == Stat.totalSlides)
         {
             stringified = "Has slide a total of " + counter + " times";
         }
-        else if (type == Type2.treasures)
+        else if (stat == Stat.treasures)
         {
             stringified = "Has collected a total of " + counter + " treasures";
         }
-        else if (type == Type2.stagesCompleted)
+        else if (stat == Stat.stagesCompleted)
         {
             stringified = "Has completed " + counter + " stages";
         }
-        else if (type == Type2.itemsUsed)
+        else if (stat == Stat.itemsUsed)
         {
             stringified = "Has used " + counter + " items";
         }
-        else if (type == Type2.itemsBought)
+        else if (stat == Stat.itemsBought)
         {
             stringified = "Has bought " + counter + " items";
         }
-        else if (type == Type2.stagesUnlocked)
+        else if (stat == Stat.stagesUnlocked)
         {
             stringified = "Has unlocked " + counter + " stages";
         }
-        else if (type == Type2.objectivesEarned)
+        else if (stat == Stat.objectivesEarned)
         {
             stringified = "Has finished " + counter + " objectives";
         }
-        else if (type == Type2.chaptersUnlocked)
+        else if (stat == Stat.chaptersUnlocked)
         {
             stringified = "Has unlocked " + counter + " chapters";
         }
-        else if (type == Type2.skillsUsed)
+        else if (stat == Stat.skillsUsed)
         {
             stringified = "Has used " + counter + " skills";
         }
-        else if (type == Type2.achievementUnlocked)
+        else if (stat == Stat.achievementUnlocked)
         {
             stringified = "Has done the " + title + " achievement";
         }
