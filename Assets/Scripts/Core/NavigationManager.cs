@@ -2,11 +2,21 @@
 using System.Collections;
 
 public class NavigationManager : MonoBehaviour {
+    public static NavigationManager instance;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
+    void Awake()
+    {
+        // Make sure there is only 1 instance of this class.
+        if (instance == null)
+        {
+            DontDestroyOnLoad(gameObject);
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject);
+        }
+    }
 
     public void RetryLevel()
     {

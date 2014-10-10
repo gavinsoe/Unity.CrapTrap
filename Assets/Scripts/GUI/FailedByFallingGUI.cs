@@ -3,7 +3,7 @@ using System.Collections;
 
 public class FailedByFallingGUI : MonoBehaviour
 {
-
+    public static FailedByFallingGUI instance;
     /* GUI Skin
      * Custom Styles [0] = Background
      * Custom Styles [1] = Splattered Poop
@@ -12,8 +12,6 @@ public class FailedByFallingGUI : MonoBehaviour
      * Custom Styles [4] = Home Button
      */
     public GUISkin activeSkin;
-    private MainGameController mainController;
-    private NavigationManager navManager;
     private GameObject backgroundObject;
 
     // Triggers
@@ -47,15 +45,15 @@ public class FailedByFallingGUI : MonoBehaviour
     #endregion
     #endregion
 
+    void Awake()
+    {
+        // set the static variable so that other classes can easily use this class
+        instance = this;
+    }
+
     // Use this for initialization
     void Start()
     {
-        // Retrieve the main game controller
-        mainController = Camera.main.GetComponentInChildren<MainGameController>();
-
-        // Retrieve the nav manager
-        navManager = gameObject.GetComponentInChildren<NavigationManager>();
-
         // Set the container position
         containerRect = new Rect(0, 0, Screen.width, Screen.height);
 
@@ -115,11 +113,11 @@ public class FailedByFallingGUI : MonoBehaviour
 
         if (GUI.Button(retryBtnRect, "", activeSkin.customStyles[3]))
         {
-            navManager.RetryLevel();
+            NavigationManager.instance.RetryLevel();
         }
         if (GUI.Button(homeBtnRect, "", activeSkin.customStyles[4]))
         {
-            navManager.NavToTitle();
+            NavigationManager.instance.NavToTitle();
         }
 
         GUI.EndGroup();
@@ -134,6 +132,7 @@ public class FailedByFallingGUI : MonoBehaviour
 
     public void StageFailed()
     {
+        this.enabled = true;
         show = true;
     }
 }

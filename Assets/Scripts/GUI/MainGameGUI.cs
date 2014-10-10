@@ -3,6 +3,8 @@ using System.Collections;
 
 public class MainGameGUI : MonoBehaviour
 {
+    public static MainGameGUI instance;
+
     /* GUI Skin
      * Custom Styles [0] = GTP Currency Box
      * Custom Styles [1] = NTP Currency Box
@@ -18,8 +20,6 @@ public class MainGameGUI : MonoBehaviour
     private float borderTargetAlpha; // Target transparency for the border
 
     #region Currency boxes variables
-    public int ntp = 0; // Keeps track of the number of ntp
-    public int gtp = 0; // Keeps track of the number of gtp
 
     private float currencyFontScale = 0.031f; // Variable used to scale font for different window sizes
     private float currencyXOffset = -0.135f; // Variable used to control the x offset of the text in the box
@@ -29,6 +29,7 @@ public class MainGameGUI : MonoBehaviour
 
     private float currencyBoxHeight; // The calculated height of the currency box
     private float currencyBoxWidth; // The calculated width of the currency box
+
     #endregion
 
     #region Timer border variables
@@ -44,6 +45,12 @@ public class MainGameGUI : MonoBehaviour
     public float ppButtonTextureDimensions;  // The height and width of the play/pause button
     public float ppButtonDimensions;  // The height and width of the play/pause button
     #endregion
+
+    void Awake()
+    {
+        // set the static variable so that other classes can easily use this class
+        instance = this;
+    }
 
     void Start()
     {
@@ -102,15 +109,18 @@ public class MainGameGUI : MonoBehaviour
 
     void NTPScore(float width, float height)
     {
-        GUI.Label(new Rect(Screen.width - (currencySpacing * width), height * 0.1f, width, height), ntp.ToString(), activeSkin.customStyles[1]);
+        GUI.Label(new Rect(Screen.width - (currencySpacing * width), 
+                           height * 0.1f, width, height), 
+                           MainGameController.instance.ntp.ToString(), 
+                           activeSkin.customStyles[1]);
     }
 
     void GTPScore(float width, float height)
     {
         GUI.Label(new Rect(Screen.width - ((currencyEdgeSpacing + currencySpacing) * width), 
-                           height * 0.1f, 
-                           width, 
-                           height), gtp.ToString(), activeSkin.customStyles[0]);
+                           height * 0.1f, width, height), 
+                           MainGameController.instance.gtp.ToString(), 
+                           activeSkin.customStyles[0]);
     }
 
     void PauseButton()

@@ -38,6 +38,8 @@ public class ShopItem
 
 public class InventoryManager : MonoBehaviour
 {
+    public static InventoryManager instance;
+    
     // currencies
     public int ntp;
     public int gtp;
@@ -53,14 +55,26 @@ public class InventoryManager : MonoBehaviour
     public Item equippedBody = new Item();
     public Item equippedLegs = new Item();
 
+    // Variables that store items inside the bag (number of bag slots retrieved from database)
+    public Item[] equippedConsumables;
+   
     void Awake()
     {
-        // Don't destroy the cript when changing scenese
-        DontDestroyOnLoad(gameObject);
+        // Make sure there is only 1 instance of this class.
+        if (instance == null)
+        {
+            DontDestroyOnLoad(gameObject);
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject);
+        }
     }
 
 	// Use this for initialization
-	void Start () {
+	void Start () 
+    {
         // Initialise the shop
         SoomlaStore.Initialize(new CrapTrapAssets());
         // Initialise currency balance
@@ -69,18 +83,28 @@ public class InventoryManager : MonoBehaviour
         InitializeShopItems();
         // Check for equipped items
         InitializeEquippedGear();
+        // Initialize Bag
+        InitializeBag();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	    
 	}
-
+    
     #region Initialization
-
-    void InitializeInventory()
+    void InitializeBag()
     {
-        // TODO :: Need to implement
+        // Initialise number of bag slots
+        equippedConsumables = new Item[Game.instance.bagSlots];
+
+        for (int i = 0; i < Game.instance.bagSlots; i++)
+        {
+            if (Game.instance.bag[i] != null)
+            {
+                equippedConsumables[i] = itemsConsumable[Game.instance.bag[i]];
+            }
+        }
     }
 
     void InitializeEquippedGear()
@@ -238,6 +262,106 @@ public class InventoryManager : MonoBehaviour
         else if (equipment.type == ItemType.item_consumable)
         {
         }
+    }
+
+    void ConsumeItem(int itemSlot)
+    {
+        var selectedItem = equippedConsumables[itemSlot];
+
+        #region Charcoal
+
+        // Charcoal rank 1
+        if (selectedItem.itemId == CrapTrapAssets.CONSUMABLE_CHARCOAL_1_ID)
+        {
+            // Extend timer by 20 seconds
+            MainGameController.instance.timeElapsed = MainGameController.instance.timeElapsed - 20;
+
+            // Make sure it doesn't go negative
+            if (MainGameController.instance.timeElapsed < 0) MainGameController.instance.timeElapsed = 0;
+        }
+
+        // Charcoal rank 2
+        if (selectedItem.itemId == CrapTrapAssets.CONSUMABLE_CHARCOAL_2_ID)
+        {
+            // Extend timer by 50 seconds
+            MainGameController.instance.timeElapsed = MainGameController.instance.timeElapsed - 50;
+
+            // make sure it doesn't go negative
+            if (MainGameController.instance.timeElapsed < 0) MainGameController.instance.timeElapsed = 0;
+        }
+
+        // Charcoal rank 3
+        if (selectedItem.itemId == CrapTrapAssets.CONSUMABLE_CHARCOAL_3_ID)
+        {
+            // Extend timer by 90 seconds
+            MainGameController.instance.timeElapsed = MainGameController.instance.timeElapsed - 90;
+
+            // make sure it doesn't go negative
+            if (MainGameController.instance.timeElapsed < 0) MainGameController.instance.timeElapsed = 0;
+        }
+
+        #endregion
+        #region diapers
+
+        // Diapers rank 1
+        if (selectedItem.itemId == CrapTrapAssets.CONSUMABLE_DIAPERS_1_ID)
+        {
+            // Revives player and extends the timer by 10% of stage time (or minimum of 20 seconds)
+            var timeExtension = MainGameController.instance.maxTime * 0.1f;
+
+            if (timeExtension < 20)
+            {
+                // Extend timer by 20 seconds
+                MainGameController.instance.timeElapsed = MainGameController.instance.timeElapsed - 20;
+            }
+            else
+            {
+                // Extend timer by 10% of total stage time
+                MainGameController.instance.timeElapsed = MainGameController.instance.timeElapsed - timeExtension;
+            }
+        }
+
+        // Diapers rank 2
+        if (selectedItem.itemId == CrapTrapAssets.CONSUMABLE_DIAPERS_2_ID)
+        {
+            // Revives player and extends the timer by 30% of stage time (or minimum of 50 seconds)
+            var timeExtension = MainGameController.instance.maxTime * 0.3f;
+
+            if (timeExtension < 50)
+            {
+                // Extend timer by 20 seconds
+                MainGameController.instance.timeElapsed = MainGameController.instance.timeElapsed - 50;
+            }
+            else
+            {
+                // Extend timer by 30% of total stage time
+                MainGameController.instance.timeElapsed = MainGameController.instance.timeElapsed - timeExtension;
+            }
+        }
+
+        // Diapers rank 2
+        if (selectedItem.itemId == CrapTrapAssets.CONSUMABLE_DIAPERS_3_ID)
+        {
+            // Revives player and extends the timer by 50% of stage time (or minimum of 90 seconds)
+            var timeExtension = MainGameController.instance.maxTime * 0.5f;
+
+            if (timeExtension < 90)
+            {
+                // Extend timer by 20 seconds
+                MainGameController.instance.timeElapsed = MainGameController.instance.timeElapsed - 90;
+            }
+            else
+            {
+                // Extend timer by 50% of total stage time
+                MainGameController.instance.timeElapsed = MainGameController.instance.timeElapsed - timeExtension;
+            }
+        }
+
+        #endregion
+
+        // update total number of items in inventory
+        selectedItem.balance--;
+        itemsConsumable[selectedItem.itemId].balance--;
     }
 
     public void UpdateCurrency()

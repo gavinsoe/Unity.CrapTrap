@@ -2,7 +2,9 @@
 using System;
 using System.Collections;
 
-public class StageCompleteGUI : MonoBehaviour {
+public class StageCompleteGUI : MonoBehaviour 
+{
+    public static StageCompleteGUI instance;
 
     /* GUI Skin
      * Custom Styles [0] = Background
@@ -20,8 +22,6 @@ public class StageCompleteGUI : MonoBehaviour {
      * Custom Styles [12] = Star Shine
      */
     public GUISkin activeSkin;
-    private MainGameController mainController;
-    private NavigationManager navManager;
     public int screen = 0;
 
     #region GUI related
@@ -214,15 +214,15 @@ public class StageCompleteGUI : MonoBehaviour {
 
     #endregion
 
+    void Awake()
+    {
+        // set the static variable so that other classes can easily use this class
+        instance = this;
+    }
+
     // Use this for initialization
     void Start()
     {
-        // Retrieve the main game controller
-        mainController = gameObject.GetComponentInChildren<MainGameController>();
-
-        // Retrieve the nav manager
-        navManager = gameObject.GetComponentInChildren<NavigationManager>();
-
         // Set the page open/closed positions
         openPosition = new Rect(0, 0, Screen.width, Screen.height);
         closedPosition = new Rect(0, Screen.height, Screen.width, Screen.height);
@@ -516,15 +516,15 @@ public class StageCompleteGUI : MonoBehaviour {
         {
             if (GUI.Button(retryBtnRect, "", activeSkin.customStyles[7]))
             {
-                navManager.RetryLevel();
+                NavigationManager.instance.RetryLevel();
             }
             if (GUI.Button(homeBtnRect, "", activeSkin.customStyles[8]))
             {
-                navManager.NavToTitle();
+                NavigationManager.instance.NavToTitle();
             }
             if (GUI.Button(nextBtnRect, "", activeSkin.customStyles[9]))
             {
-                navManager.NextStage();
+                NavigationManager.instance.NextStage();
             }
         }
         GUI.EndGroup();

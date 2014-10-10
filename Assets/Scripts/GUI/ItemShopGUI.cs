@@ -34,7 +34,6 @@ public class ItemShopGUI : MonoBehaviour
     public GUISkin activeSkin;
     public Texture tempIcon;
 
-    private MainGameController mainController;
     private InventoryManager inventory;
     private ItemType activeWindow; // the active item shop window
     private int cur_page; // active page number
@@ -240,9 +239,6 @@ public class ItemShopGUI : MonoBehaviour
     {
         // Initialize soomla store
         SoomlaStore.Initialize(new CrapTrapAssets());
-
-        // Retrieve the main game controller
-        mainController = gameObject.GetComponentInChildren<MainGameController>();
 
         // Inventory
         // TODO:: need to change

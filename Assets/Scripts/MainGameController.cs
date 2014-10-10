@@ -294,32 +294,24 @@ public class MainGameController : MonoBehaviour
         CheckObjectives();
 
         // Update the game counters;
-        var gameData = Game.Load();
-        gameData.stats[Type2.totalSteps] += moves;
-        gameData.stats[Type2.totalHangingSteps] += hangingMoves;
-        gameData.playingTime = gameData.playingTime.Add(new System.TimeSpan(0,0,(int)time));
-<<<<<<< HEAD
-        gameData.totalClimbs += climbs;
-        gameData.totalPulls += pulls;
-        gameData.totalPushes += pushes;
-        gameData.totalSlides += slides;
-        gameData.totalPullOuts += pullOuts;
-        gameData.totalToiletPapers += ntp;
-        gameData.totalGoldenPapers += gtp;
-        gameData.stagesCompleted += 1;
-=======
-        gameData.stats[Type2.totalClimbs] += climbs;
-        gameData.stats[Type2.totalPulls] += pulls;
-        gameData.stats[Type2.totalPushes] += pushes;
-        gameData.stats[Type2.totalSlides] += slides;
-        gameData.stats[Type2.totalPullOuts] += pullOuts;
-        gameData.stats[Type2.toiletPapers] += mainGUI.ntp;
-        gameData.stats[Type2.goldenPapers] += mainGUI.gtp;
-        gameData.stats[Type2.stagesCompleted] += 1;
->>>>>>> dadeabe4c9d00ccea2b4a7544e887a62c4b1b482
+        
+        Game.instance.stats[Stat.totalSteps] += moves;
+        Game.instance.stats[Stat.totalHangingSteps] += hangingMoves;
+        Game.instance.playingTime = Game.instance.playingTime.Add(new System.TimeSpan(0, 0, (int)time));
+
+        Game.instance.stats[Stat.totalClimbs] += climbs;
+        Game.instance.stats[Stat.totalPulls] += pulls;
+        Game.instance.stats[Stat.totalPushes] += pushes;
+        Game.instance.stats[Stat.totalSlides] += slides;
+        Game.instance.stats[Stat.totalPullOuts] += pullOuts;
+        Game.instance.stats[Stat.toiletPapers] += ntp;
+        Game.instance.stats[Stat.goldenPapers] += gtp;
+        Game.instance.stats[Stat.stagesCompleted] += 1;
         //gameData.stars[Application.loadedLevelName] = reward;
 
-        gameData.Save();
+        // Save progress
+        Game.instance.Save();
+        
     }
 
     public void CheckObjectives()

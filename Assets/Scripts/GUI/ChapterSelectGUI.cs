@@ -28,7 +28,6 @@ public class ChapterSelectGUI : MonoBehaviour
      */
     public GUISkin activeSkin;
     private MainGameController mainController;
-    private NavigationManager navManager;
     public ChapterBlock[] blocks;
 
     public bool nextPage = false;
@@ -132,9 +131,6 @@ public class ChapterSelectGUI : MonoBehaviour
     {
         // Retrieve the main game controller
         mainController = gameObject.GetComponentInChildren<MainGameController>();
-
-        // Retrieve the nav manager
-        navManager = gameObject.GetComponentInChildren<NavigationManager>();
 
         // Set the container rect
         containerRect = new Rect(0, 0, Screen.width, Screen.height);
@@ -302,19 +298,19 @@ public class ChapterSelectGUI : MonoBehaviour
         {
             if (GUI.Button(achievementsBtnRect, "", achievementsBtnStyle))
             {
-                navManager.NavToAchievements();
+                NavigationManager.instance.NavToAchievements();
             }
             achievementsHandler.OnMouseOver(achievementsBtnRect);
 
             if (GUI.Button(characterBtnRect, "", characterBtnStyle))
             {
-                navManager.NavToCharacterPage();
+                NavigationManager.instance.NavToCharacterPage();
             }
             characterHandler.OnMouseOver(characterBtnRect);
 
             if (GUI.Button(itemShopBtnRect, "", itemShopBtnStyle))
             {
-                navManager.NavToItemShop();
+                NavigationManager.instance.NavToItemShop();
             }
             itemShopHandler.OnMouseOver(itemShopBtnRect);
         } 

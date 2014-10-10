@@ -6,7 +6,6 @@ public class TitleScreenGUI : MonoBehaviour {
 
     // GUI Skin
     public GUISkin activeSkin;
-    private MainGameController mainController;
 
     // Triggers
     private bool sound = false;
@@ -64,9 +63,6 @@ public class TitleScreenGUI : MonoBehaviour {
 
     void Start()
     {
-        // Retrieve the main game controller
-        mainController = gameObject.GetComponentInChildren<MainGameController>();
-
         #region GUI
 
         bgRect = new Rect(0, 0, Screen.width, Screen.height);
@@ -188,7 +184,7 @@ public class TitleScreenGUI : MonoBehaviour {
 
         // sound button
         sound = GUI.Toggle(btnSoundRect, sound, "", activeSkin.customStyles[2]);
-        mainController.ToggleSound(!sound);
+        MainGameController.instance.ToggleSound(!sound);
 
         // start button
         if (GUI.Button(btnStartRect, "", activeSkin.customStyles[4]))

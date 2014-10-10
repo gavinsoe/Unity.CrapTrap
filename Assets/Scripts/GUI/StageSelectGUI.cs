@@ -29,7 +29,6 @@ public class StageSelectGUI : MonoBehaviour {
      */
     public GUISkin activeSkin;
     private MainGameController mainController;
-    private NavigationManager navManager;
 
     #region Variables
 
@@ -269,9 +268,6 @@ public class StageSelectGUI : MonoBehaviour {
     {
         // Retrieve the main game controller
         mainController = gameObject.GetComponentInChildren<MainGameController>();
-
-        // Retrieve the nav manager
-        navManager = gameObject.GetComponentInChildren<NavigationManager>();
         
         // Set the container rect
         containerRect = new Rect(0, 0, Screen.width, Screen.height);
@@ -665,7 +661,7 @@ public class StageSelectGUI : MonoBehaviour {
         // Back button
         if (GUI.Button(backBtnRect, "", backBtnStyle))
         {
-            navManager.NavToChapterSelect();
+            NavigationManager.instance.NavToChapterSelect();
         }
         backBtnHandler.OnMouseOver(backBtnRect);
 

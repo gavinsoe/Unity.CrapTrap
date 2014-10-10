@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-public class Game : MonoBehaviour {
-
-    public static Game game;
+public class Game : MonoBehaviour 
+{
+    public static Game instance;
 
     public Achievement[] achievements;
-    public Dictionary<Stat, double> stats;
+    public Dictionary<Stat, double> stats = new Dictionary<Stat,double>();
 
 	// chapter unlock variables -- TRUE means unlocked
     public bool[] chapterUnlocked;
@@ -40,29 +40,20 @@ public class Game : MonoBehaviour {
 
     public System.TimeSpan playingTime;
 
-	// Use this for initialization
-	void Start () {
-	    
-	}
-
     void Awake()
     {
-        if (game == null)
+        // Make sure there is only 1 instance of this class.
+        if (instance == null)
         {
             DontDestroyOnLoad(gameObject);
-            game = this;
+            instance = this;
         }
-        else if (game != this)
+        else if (instance != this)
         {
             Destroy(gameObject);
         }
     }
 	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
 	// Constructor
     public Game()
     {

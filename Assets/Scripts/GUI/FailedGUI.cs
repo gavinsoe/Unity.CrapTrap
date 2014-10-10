@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FailedGUI : MonoBehaviour {
+public class FailedGUI : MonoBehaviour 
+{
+    public static FailedGUI instance;
     
     /* GUI Skin
      * Custom Styles [0] = Background
@@ -11,8 +13,6 @@ public class FailedGUI : MonoBehaviour {
      * Custom Styles [4] = Home Button
      */
     public GUISkin activeSkin;
-    private MainGameController mainController;
-    private NavigationManager navManager;
 
     // Triggers
     public bool show = false;
@@ -59,15 +59,15 @@ public class FailedGUI : MonoBehaviour {
     // audio clips
     public AudioClip fart;
 
-    // Use this for initialization
     void Awake()
     {
-        // Retrieve the main game controller
-        mainController = gameObject.GetComponentInChildren<MainGameController>();
+        // set the static variable so that other classes can easily use this class
+        instance = this;
+    }
 
-        // Retrieve the nav manager
-        navManager = gameObject.GetComponentInChildren<NavigationManager>();
-
+    // Initialise GUI Elements
+    void Start()
+    {
         // Set the size of the frame
         containerRect = new Rect(0, 0, Screen.width, Screen.height);
 
@@ -106,12 +106,10 @@ public class FailedGUI : MonoBehaviour {
         homeBtnRect = new Rect(navButtonWidth + navButtonSpacing, 0, navButtonWidth, navButtonHeight);
 
         #endregion
-	}
 
-    void Start()
-    {
+        // Default ibject to disabled
         this.enabled = false;
-    }
+	}
 
 	void OnGUI()
     {
@@ -139,11 +137,11 @@ public class FailedGUI : MonoBehaviour {
 
             if (GUI.Button(retryBtnRect, "", activeSkin.customStyles[3]))
             {
-                navManager.RetryLevel();
+                NavigationManager.instance.RetryLevel();
             }
             if (GUI.Button(homeBtnRect, "", activeSkin.customStyles[4]))
             {
-                navManager.NavToTitle();
+                NavigationManager.instance.NavToTitle();
             }
 
             GUI.EndGroup();

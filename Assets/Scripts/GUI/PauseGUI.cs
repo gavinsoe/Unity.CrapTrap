@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PauseGUI : MonoBehaviour {
+public class PauseGUI : MonoBehaviour 
+{
+    public static PauseGUI instance;
+
     /* GUI Skin
      * Custom Styles [0] = Pause Menu Background
      * Custom Styles [1] = Resume Button
@@ -13,8 +16,6 @@ public class PauseGUI : MonoBehaviour {
      * Custom Styles [7] = Label
      */
     public GUISkin activeSkin;
-    private MainGameController mainController;
-    private NavigationManager navManager;
 
     // Triggers
     public bool show = false;
@@ -100,14 +101,14 @@ public class PauseGUI : MonoBehaviour {
 
     #endregion
 
+    void Awake()
+    {
+        // set the static variable so that other classes can easily use this class
+        instance = this;
+    }
+
     void Start()
     {
-        // Retrieve the main game controller
-        mainController = gameObject.GetComponentInChildren<MainGameController>();
-
-        // Retrieve the nav manager
-        navManager = gameObject.GetComponentInChildren<NavigationManager>();
-
         // Set the pause menu open/closed positions
         openPosition = new Rect(0, 0, Screen.width, Screen.height);
         closedPosition = new Rect(0, Screen.height, Screen.width, Screen.height);
@@ -206,7 +207,7 @@ public class PauseGUI : MonoBehaviour {
         //GUI.DrawTexture(ppButtonTexturePos, ppButtonStyle.normal.background);
         if (GUI.Button(ppButtonPos, "", ppButtonStyle))
         {
-            mainController.ResumeGame();
+            MainGameController.instance.ResumeGame();
         }
     }
 
@@ -219,18 +220,18 @@ public class PauseGUI : MonoBehaviour {
         // Draw the retry button
         if (GUI.Button(A_BtnRect, "", activeSkin.customStyles[4]))
         {
-            navManager.RetryLevel();
+            NavigationManager.instance.RetryLevel();
         }
 
         // Draw the home button
         if (GUI.Button(B_BtnRect, "", activeSkin.customStyles[3]))
         {
-            navManager.NavToTitle();
+            NavigationManager.instance.NavToTitle();
         }
 
         // Draw the sound button
         sound = GUI.Toggle(C_BtnRect, sound, "", activeSkin.customStyles[5]);
-        mainController.ToggleSound(!sound);
+        MainGameController.instance.ToggleSound(!sound);
 
         A_BtnScale.OnMouseOver(A_BtnRect);
         B_BtnScale.OnMouseOver(B_BtnRect);

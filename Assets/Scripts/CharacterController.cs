@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CharacterController : MonoBehaviour {
+public class CharacterController : MonoBehaviour 
+{
+    public static CharacterController instance;
 
     // Environment variables
     public float moveSpeed = 5f;
@@ -29,7 +31,6 @@ public class CharacterController : MonoBehaviour {
     public int slides;
     public int pullOuts;
 
-    private MainGameController game;
     private Animator animator;
 
     // audio clips
@@ -38,8 +39,12 @@ public class CharacterController : MonoBehaviour {
 
     void Awake()
     {
-        game = Camera.main.GetComponent<MainGameController>();
+        // set the static variable so that other classes can easily use this class
+        instance = this;
+
+        // Retrieve the animator
         animator = gameObject.GetComponent<Animator>();
+
         moves = hangingMoves = climbs = pulls = pushes = slides = pullOuts = 0;
     }
 
@@ -48,16 +53,16 @@ public class CharacterController : MonoBehaviour {
         if (reachedDestination && !isMoving)
         {
             // End game
-            game.StageComplete();
+            MainGameController.instance.StageComplete();
         }
         if (isBurning && !wasBurning)
         {
-            game.setTimerReductionRate(1.25f);
+            MainGameController.instance.setTimerReductionRate(1.25f);
             wasBurning = true;
         }
         if (!isBurning && wasBurning)
         {
-            game.setTimerReductionRate(1f);
+            MainGameController.instance.setTimerReductionRate(1f);
             wasBurning = false;
         }
         // Check if character is falling
