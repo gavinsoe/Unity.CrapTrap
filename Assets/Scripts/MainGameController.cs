@@ -161,6 +161,7 @@ public class MainGameController : MonoBehaviour
         int mins = (int)(timeElapsed / 60);
         int seconds = (int)(timeElapsed % 60);
         string timeTaken = string.Format("{0:00}:{1:00}", mins, seconds);
+        UpdateStats();
         StageCompleteGUI.instance.StageComplete(timeTaken, ntp, ntpMax, gtp, gtpMax, objectives);
     }
 
