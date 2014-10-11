@@ -5,9 +5,18 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Collections.Generic;
 using System.IO;
+using com.shephertz.app42.paas.sdk.csharp;
+using com.shephertz.app42.paas.sdk.csharp.storage;
+using com.shephertz.app42.paas.sdk.csharp.log;
 
 public class MainGameController : MonoBehaviour
 {
+    // App42 Stuff
+    ServiceAPI serviceAPI;
+    StorageService storageService;
+    Constants constants = new Constants();
+    LogResponse logCallBack = new LogResponse();
+
     public static MainGameController instance;
 
     public bool isGameMenu = false;
@@ -48,14 +57,14 @@ public class MainGameController : MonoBehaviour
     public AudioClip loopingClip;
 
     // Components
-    private int moves;
-    private int hangingMoves;
-    private float time;
-    private int climbs;
-    private int pulls;
-    private int pushes;
-    private int slides;
-    private int pullOuts;
+    public int moves;
+    public int hangingMoves;
+    public float time;
+    public int climbs;
+    public int pulls;
+    public int pushes;
+    public int slides;
+    public int pullOuts;
 
     public Objective[] objectives = new Objective[3];
 
@@ -84,11 +93,21 @@ public class MainGameController : MonoBehaviour
         bgZoomInScale = backgrounds[0].transform.localScale;
         bgZoomOutScale = bgZoomInScale * bgScaling;
         curBgScale = bgZoomInScale;
+
+        // Alter culling mask ot hide map indicator
+        camera.cullingMask = ~(1 << LayerMask.NameToLayer("Minimap"));
+
         #region App42
 
         #if UNITY_EDITOR
             ServicePointManager.ServerCertificateValidationCallback = Validator;
         #endif
+
+            // Connect to the app service
+            serviceAPI = new ServiceAPI(constants.apiKey, constants.secretKey);
+
+            // Build the storage service
+            storageService = serviceAPI.BuildStorageService();
 
         #endregion
 	}
@@ -163,6 +182,25 @@ public class MainGameController : MonoBehaviour
         string timeTaken = string.Format("{0:00}:{1:00}", mins, seconds);
         UpdateStats();
         StageCompleteGUI.instance.StageComplete(timeTaken, ntp, ntpMax, gtp, gtpMax, objectives);
+
+        #region App42 Result Tracking
+
+        // Package the result
+        SimpleJSON.JSONClass json = new SimpleJSON.JSONClass();
+        json.Add("Device id", SystemInfo.deviceUniqueIdentifier);
+        json.Add("Stage", Application.loadedLevelName);
+        json.Add("Time", timeTaken);
+        json.Add("NTP", (ntp + @"/" + ntpMax).ToString());
+        json.Add("GTP", (gtp + @"/" + gtpMax).ToString());
+        json.Add("Objective_1", objectives[0].ResultStat());
+        json.Add("Objective_2", objectives[1].ResultStat());
+        json.Add("Objective_3", objectives[2].ResultStat());
+        json.Add("Result", "Complete");
+
+        // Log result
+        storageService.InsertJSONDocument(constants.dbName, constants.collectionStageStats, json, logCallBack);
+
+        #endregion
     }
 
     public void GameOver(bool fell)
@@ -174,11 +212,57 @@ public class MainGameController : MonoBehaviour
         {
             MainGameGUI.instance.Hide();
             FailedByFallingGUI.instance.StageFailed();
+
+            #region App42 Result Tracking
+
+            // Package the result
+            int mins = (int)(timeElapsed / 60);
+            int seconds = (int)(timeElapsed % 60);
+            string timeTaken = string.Format("{0:00}:{1:00}", mins, seconds);
+
+            SimpleJSON.JSONClass json = new SimpleJSON.JSONClass();
+            json.Add("Device id", SystemInfo.deviceUniqueIdentifier);
+            json.Add("Stage", Application.loadedLevelName);
+            json.Add("Time", timeTaken);
+            json.Add("NTP", (ntp + @"/" + ntpMax).ToString());
+            json.Add("GTP", (gtp + @"/" + gtpMax).ToString());
+            json.Add("Objective_1", objectives[0].ResultStat());
+            json.Add("Objective_2", objectives[1].ResultStat());
+            json.Add("Objective_3", objectives[2].ResultStat());
+            json.Add("Result", "Fell Down");
+
+            // Log result
+            storageService.InsertJSONDocument(constants.dbName, constants.collectionStageStats, json, logCallBack);
+
+            #endregion
         }
         else
         {
             MainGameGUI.instance.Hide();
             FailedGUI.instance.Show();
+
+            #region App42 Result Tracking
+
+            // Package the result
+            int mins = (int)(timeElapsed / 60);
+            int seconds = (int)(timeElapsed % 60);
+            string timeTaken = string.Format("{0:00}:{1:00}", mins, seconds);
+
+            SimpleJSON.JSONClass json = new SimpleJSON.JSONClass();
+            json.Add("Device id", SystemInfo.deviceUniqueIdentifier);
+            json.Add("Stage", Application.loadedLevelName);
+            json.Add("Time", timeTaken);
+            json.Add("NTP", (ntp + @"/" + ntpMax).ToString());
+            json.Add("GTP", (gtp + @"/" + gtpMax).ToString());
+            json.Add("Objective_1", objectives[0].ResultStat());
+            json.Add("Objective_2", objectives[1].ResultStat());
+            json.Add("Objective_3", objectives[2].ResultStat());
+            json.Add("Result", "Out of time");
+
+            // Log result
+            storageService.InsertJSONDocument(constants.dbName, constants.collectionStageStats, json, logCallBack);
+            
+            #endregion
         }
     }
 

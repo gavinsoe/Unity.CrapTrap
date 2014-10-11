@@ -472,7 +472,7 @@ public class StageCompleteGUI : MonoBehaviour
                 }
                 GUI.EndGroup();
                 // The objective text
-                GUI.Label(objective3Rect, objective1, objectiveLabelStyle);
+                GUI.Label(objective3Rect, objective3, objectiveLabelStyle);
             }
             GUI.EndGroup();
 

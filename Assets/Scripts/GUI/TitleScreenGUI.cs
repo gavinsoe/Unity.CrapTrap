@@ -189,6 +189,7 @@ public class TitleScreenGUI : MonoBehaviour {
         // start button
         if (GUI.Button(btnStartRect, "", activeSkin.customStyles[4]))
         {
+            NavigationManager.instance.NavToChapterSelect();
             // do something
         }
 

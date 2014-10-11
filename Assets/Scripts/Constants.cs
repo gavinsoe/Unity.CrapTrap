@@ -3,11 +3,11 @@ using System.Collections;
 
 public class Constants {
     // App42
-    public string apiKey = "ea64f1c53a17e32313f7145f3adc28f10df79706f7fc004a1cd2c3754a855c8d";
-    public string secretKey = "4a7d6066fc132c000ecaaa5b08c377e43075d858e9832fe71c9fae9f8fcf1795";
+    public string apiKey = "13a8d1c04a563ab7a0bd7754a94fd9bb52424941af56825a9503c37ab1a07b43";
+    public string secretKey = "183c6d27697ae750895610fb1569d580b52f44b0d4e06b10735232ae46a6e8d0";
 
     // App42 main database
-    public string dbName = "craptrap";
+    public string dbName = "CRAPTRAP";
     public string collectionReviews = "Reviews";
     public string collectionStageStats = "Stage Stats";
 

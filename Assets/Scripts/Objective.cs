@@ -228,4 +228,20 @@ public class Objective : System.Object
 
         return stringified;
     }
+
+    /// <summary>
+    /// This is used to track results in App42
+    /// </summary>
+    /// <returns></returns>
+    public string ResultStat()
+    {
+        if (completed)
+        {
+            return "[Completed] " + this.ToString();
+        }
+        else
+        {
+            return "[Failed] " + this.ToString();
+        }
+    }
 }
