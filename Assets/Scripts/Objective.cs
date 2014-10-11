@@ -44,15 +44,30 @@ public class Objective : System.Object
         {
             if (option == Option.lessThan)
             {
-                stringified = "Finish stage in less than " + counter + " moves";
+                stringified = "Complete stage in less than " + counter + " moves";
             }
             else if (option == Option.greaterThan)
             {
-                stringified = "Finish stage using more than " + counter + " moves";
+                stringified = "Complete stage using more than " + counter + " moves";
             }
             else if (option == Option.equal)
             {
-                stringified = "Finish stage in " + counter + " moves";
+                stringified = "Complete stage in " + counter + " moves";
+            }
+        }
+        else if (type == Type.climbs)
+        {
+            if (option == Option.lessThan)
+            {
+                stringified = "Complete stage in less than " + counter + " climbs";
+            }
+            else if (option == Option.equal)
+            {
+                stringified = "Complete stage in " + counter + " climbs";
+            }
+            else if (option == Option.greaterThan)
+            {
+                stringified = "Complete stage using more than " + counter + " climbs";
             }
         }
         else if (type == Type.time)
@@ -63,14 +78,149 @@ public class Objective : System.Object
 
             if (option == Option.lessThan)
             {
-                stringified = "Finish stage within " + time;
+                stringified = "Complete stage within " + time;
+            }
+        }
+        else if (type == Type.withoutClimb)
+        {
+            stringified = "Complete stage without climbing";
+        }
+        else if (type == Type.toiletPapers)
+        {
+            if (option == Option.lessThan)
+            {
+                stringified = "Collect no more than " + counter + " toilet papers";
+            }
+            else if (option == Option.equal)
+            {
+                stringified = "Collect " + counter + " toilet papers";
+            }
+            else if (option == Option.greaterThan)
+            {
+                stringified = "Collect more than " + counter + " toilet papers";
+            }
+        }
+        else if (type == Type.goldenPapers)
+        {
+            if (option == Option.lessThan)
+            {
+                stringified = "Collect no more than " + counter + " golden toilet papers";
+            }
+            else if (option == Option.equal)
+            {
+                stringified = "Collect " + counter + " golden toilet papers";
+            }
+            else if (option == Option.greaterThan)
+            {
+                stringified = "Collect more than " + counter + " golden toilet papers";
+            }
+        }
+        else if (type == Type.pulls)
+        {
+            if (option == Option.lessThan)
+            {
+                stringified = "Complete stage using less than " + counter + " pulls";
+            }
+            else if (option == Option.equal)
+            {
+                stringified = "Complete stage using " + counter + " pulls";
+            }
+            else if (option == Option.greaterThan)
+            {
+                stringified = "Complete stage using more than " + counter + " pulls";
+            }
+        }
+        else if (type == Type.pushes)
+        {
+            if (option == Option.lessThan)
+            {
+                stringified = "Complete stage using less than " + counter + " pushes";
+            }
+            else if (option == Option.equal)
+            {
+                stringified = "Complete stage using " + counter + " pushes";
+            }
+            else if (option == Option.greaterThan)
+            {
+                stringified = "Complete stage using more than " + counter + " pushes";
+            }
+        }
+        else if (type == Type.pullOuts)
+        {
+            if (option == Option.lessThan)
+            {
+                stringified = "Complete stage by pulling out less than " + counter + " blocks";
+            }
+            else if (option == Option.equal)
+            {
+                stringified = "Complete stage by pulling out " + counter + " blocks";
+            }
+            else if (option == Option.greaterThan)
+            {
+                stringified = "Complete stage by pulling out more than " + counter + " blocks";
+            }
+        }
+        else if (type == Type.hangingSteps)
+        {
+            if (option == Option.lessThan)
+            {
+                stringified = "Complete stage in less than " + counter + " shimmies";
+            }
+            else if (option == Option.equal)
+            {
+                stringified = "Complete stage in " + counter + " shimmies";
+            }
+            else if (option == Option.greaterThan)
+            {
+                stringified = "Complete stage using more than " + counter + " shimmies";
+            }
+        }
+        else if (type == Type.slides)
+        {
+            if (option == Option.lessThan)
+            {
+                stringified = "Slide less than " + counter + " times";
+            }
+            else if (option == Option.equal)
+            {
+                stringified = "Slide " + counter + " times";
+            }
+            else if (option == Option.greaterThan)
+            {
+                stringified = "Slide more than " + counter + " times";
             }
         }
         else if (type == Type.noHanging)
         {
-            stringified = "Finish stage withough hanging";
+            stringified = "Complete stage without hanging";
         }
-
+        else if (type == Type.noPulling)
+        {
+            stringified = "Complete stage without pulling";
+        }
+        else if (type == Type.noPushing)
+        {
+            stringified = "Complete stage without pushing";
+        }
+        else if (type == Type.treasures)
+        {
+            if (option == Option.lessThan)
+            {
+                stringified = "Collect no more than " + counter + " treasures";
+            }
+            else if (option == Option.equal)
+            {
+                stringified = "Collect " + counter + " treasures";
+            }
+            else if (option == Option.greaterThan)
+            {
+                stringified = "Collect more than " + counter + " treasures";
+            }
+        }
+        else if (type == Type.noPullOuts)
+        {
+            stringified = "Complete stage without pulling out blocks";
+        }
         else
         {
             stringified = "<objective unknown>";
@@ -78,5 +228,4 @@ public class Objective : System.Object
 
         return stringified;
     }
-
 }
