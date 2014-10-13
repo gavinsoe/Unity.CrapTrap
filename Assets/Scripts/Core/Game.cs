@@ -24,7 +24,7 @@ public class Game : MonoBehaviour
     public bool[][] challengeLevelsUnlocked;
 
     // number of stages completed in a chapter
-    public int[][] stagesCompletedPerChapter;
+    public int[] stagesCompletedPerChapter;
 
     public System.DateTime lastLogin;
     public int consecutiveLogins;
@@ -105,11 +105,11 @@ public class Game : MonoBehaviour
         challengeStars = new int[7][];
         challengeLevelsUnlocked = new bool[7][];
         challengeChapterUnlocked = new bool[7];
-        stagesCompletedPerChapter = new int[7][];
+        stagesCompletedPerChapter = new int[7];
         for (int i = 0; i < 7; i++)
         {
             stars[i] = new int[10];
-            stagesCompletedPerChapter[i] = new int[10];
+            stagesCompletedPerChapter[i] = 0;
             levelsUnlocked[i] = new bool[10];
             chapterUnlocked[i] = false;
             challengeStars[i] = new int[10];
@@ -118,7 +118,7 @@ public class Game : MonoBehaviour
             for (int j = 0; j < 10; j++)
             {
                 stars[i][j] = 0;
-                stagesCompletedPerChapter[i][j] = 0;
+                stagesCompletedPerChapter[i] = 0;
                 levelsUnlocked[i][j] = false;
                 challengeStars[i][j] = 0;
                 challengeLevelsUnlocked[i][j] = false;
@@ -294,7 +294,14 @@ public class Game : MonoBehaviour
 	// function to update the stars for a stage
     public void UpdateStats(int chapter, int level, int star)
     {
-        stagesCompletedPerChapter[chapter][level] += 1;
+        if (chapter > 6)
+        {
+            stagesCompletedPerChapter[chapter - 7] += 1;
+        }
+        else
+        {
+            stagesCompletedPerChapter[chapter] += 1;
+        }
         if (stars[chapter][level] < star)
         {
             stars[chapter][level] = star;
@@ -380,7 +387,7 @@ class GameInfo
     public bool[][] challengeLevelsUnlocked;
 
     // number of stages completed in a chapter
-    public int[][] stagesCompletedPerChapter;
+    public int[] stagesCompletedPerChapter;
 
     public string lastLogin;
     public string[] bag;
