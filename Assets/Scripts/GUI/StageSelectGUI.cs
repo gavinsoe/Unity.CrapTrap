@@ -825,7 +825,7 @@ public class StageSelectGUI : MonoBehaviour {
                 {
                     NavigationManager.instance.chapter = chapterNumber;
                 }
-                NavigationManager.instance.stage = System.Convert.ToInt32(btnLabel);
+                NavigationManager.instance.stage = System.Convert.ToInt32(btnLabel) - 1;
                 Application.LoadLevel(stageName);
             }
             handler.OnMouseOver(btnPos);
