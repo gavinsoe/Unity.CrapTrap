@@ -242,7 +242,7 @@ public class ChapterSelectGUI : MonoBehaviour
 
         foreach (var block in blocks)
         {
-            // TODO: Implement
+            block.completedStages = Game.instance.stagesCompletedPerChapter[block.chapterNum - 1];
         }
 
         #endregion
