@@ -557,11 +557,11 @@ public class StageSelectGUI : MonoBehaviour {
         bool unlocked = false;
         if (isChallengeStage)
         {
-            unlocked = Game.instance.challengeLevelsUnlocked[chapterNumber][stage_num];
+            unlocked = Game.instance.challengeLevelsUnlocked[chapterNumber-1][stage_num];
         }
         else
         {
-            unlocked = Game.instance.levelsUnlocked[chapterNumber][stage_num];
+            unlocked = Game.instance.levelsUnlocked[chapterNumber-1][stage_num];
         }
 
         if (unlocked)
@@ -569,11 +569,11 @@ public class StageSelectGUI : MonoBehaviour {
             var stars = 0;
             if (isChallengeStage)
             {
-                stars = Game.instance.challengeStars[chapterNumber][stage_num];
+                stars = Game.instance.challengeStars[chapterNumber-1][stage_num];
             }
             else
             {
-                stars = Game.instance.stars[chapterNumber][stage_num];
+                stars = Game.instance.stars[chapterNumber-1][stage_num];
             }
 
             if (stars == 0)
@@ -819,11 +819,11 @@ public class StageSelectGUI : MonoBehaviour {
             {
                 if (isChallenge)
                 {
-                    NavigationManager.instance.chapter = chapterNumber + 7;
+                    NavigationManager.instance.chapter = chapterNumber - 1 + 7;
                 }
                 else
                 {
-                    NavigationManager.instance.chapter = chapterNumber;
+                    NavigationManager.instance.chapter = chapterNumber - 1;
                 }
                 NavigationManager.instance.stage = System.Convert.ToInt32(btnLabel) - 1;
                 Application.LoadLevel(stageName);
