@@ -27,7 +27,6 @@ public class ChapterSelectGUI : MonoBehaviour
      * Custom Styles [7] = GTP Box
      */
     public GUISkin activeSkin;
-    private MainGameController mainController;
     public ChapterBlock[] blocks;
 
     public bool nextPage = false;
@@ -68,7 +67,6 @@ public class ChapterSelectGUI : MonoBehaviour
     private ButtonHandler itemShopHandler;
 
     // Sound Buttons
-    private bool sound = false;
     private Rect soundBtnRect;
     private GUIStyle soundBtnStyle;
     private ButtonHandler soundBtnHandler;
@@ -129,9 +127,6 @@ public class ChapterSelectGUI : MonoBehaviour
     // Use this for initialization
 	void Start ()
     {
-        // Retrieve the main game controller
-        mainController = gameObject.GetComponentInChildren<MainGameController>();
-
         // Set the container rect
         containerRect = new Rect(0, 0, Screen.width, Screen.height);
 
@@ -317,8 +312,8 @@ public class ChapterSelectGUI : MonoBehaviour
         GUI.EndGroup();
 
         // Sound Button
-        sound = GUI.Toggle(soundBtnRect, sound, "", soundBtnStyle);
-        //mainController.ToggleSound(!sound);
+        Game.instance.audio = GUI.Toggle(soundBtnRect, Game.instance.audio, "", soundBtnStyle);
+        MainGameController.instance.ToggleSound(!Game.instance.audio);
         soundBtnHandler.OnMouseOver(soundBtnRect);
     }
 

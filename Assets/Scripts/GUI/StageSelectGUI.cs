@@ -281,9 +281,6 @@ public class StageSelectGUI : MonoBehaviour {
         innerNormalRect = innerPosMiddleRect;
         innerChallengeRect = innerPosLeftRect;
 
-        // Load game states
-        var gameData = new Game();
-
         #region background
 
         // Background
@@ -388,28 +385,28 @@ public class StageSelectGUI : MonoBehaviour {
         challengeStageBtn_3Star  = new GUIStyle(activeSkin.customStyles[18]);
         
         // Get the normal button states
-        stage1State = getButtonState(gameData, 0, false);
-        stage2State = getButtonState(gameData, 1, false);
-        stage3State = getButtonState(gameData, 2, false);
-        stage4State = getButtonState(gameData, 3, false);
-        stage5State = getButtonState(gameData, 4, false);
-        stage6State = getButtonState(gameData, 5, false);
-        stage7State = getButtonState(gameData, 6, false);
-        stage8State = getButtonState(gameData, 7, false);
-        stage9State = getButtonState(gameData, 8, false);
-        stage10State = getButtonState(gameData, 9, false);
+        stage1State = getButtonState(0, false);
+        stage2State = getButtonState(1, false);
+        stage3State = getButtonState(2, false);
+        stage4State = getButtonState(3, false);
+        stage5State = getButtonState(4, false);
+        stage6State = getButtonState(5, false);
+        stage7State = getButtonState(6, false);
+        stage8State = getButtonState(7, false);
+        stage9State = getButtonState(8, false);
+        stage10State = getButtonState(9, false);
         
         // Get the challenge button states
-        challengeStage1State = getButtonState(gameData, 0, true);
-        challengeStage2State = getButtonState(gameData, 1, true);
-        challengeStage3State = getButtonState(gameData, 2, true);
-        challengeStage4State = getButtonState(gameData, 3, true);
-        challengeStage5State = getButtonState(gameData, 4, true);
-        challengeStage6State = getButtonState(gameData, 5, true);
-        challengeStage7State = getButtonState(gameData, 6, true);
-        challengeStage8State = getButtonState(gameData, 7, true);
-        challengeStage9State = getButtonState(gameData, 8, true);
-        challengeStage10State = getButtonState(gameData, 9, true);
+        challengeStage1State = getButtonState(0, true);
+        challengeStage2State = getButtonState(1, true);
+        challengeStage3State = getButtonState(2, true);
+        challengeStage4State = getButtonState(3, true);
+        challengeStage5State = getButtonState(4, true);
+        challengeStage6State = getButtonState(5, true);
+        challengeStage7State = getButtonState(6, true);
+        challengeStage8State = getButtonState(7, true);
+        challengeStage9State = getButtonState(8, true);
+        challengeStage10State = getButtonState(9, true);
 
         // Set the normal button styles
         stage1Style = getButtonStyle(stage1State, false);
@@ -555,16 +552,16 @@ public class StageSelectGUI : MonoBehaviour {
         #endregion
     }
 
-    StageBtnState getButtonState(Game data, int stage_num, bool isChallengeStage)
+    StageBtnState getButtonState(int stage_num, bool isChallengeStage)
     {
         bool unlocked = false;
         if (isChallengeStage)
         {
-            unlocked = data.challengeLevelsUnlocked[chapterNumber][stage_num];
+            unlocked = Game.instance.challengeLevelsUnlocked[chapterNumber][stage_num];
         }
         else
         {
-            unlocked = data.levelsUnlocked[chapterNumber][stage_num];
+            unlocked = Game.instance.levelsUnlocked[chapterNumber][stage_num];
         }
 
         if (unlocked)
@@ -572,11 +569,11 @@ public class StageSelectGUI : MonoBehaviour {
             var stars = 0;
             if (isChallengeStage)
             {
-                stars = data.challengeStars[chapterNumber][stage_num];
+                stars = Game.instance.challengeStars[chapterNumber][stage_num];
             }
             else
             {
-                stars = data.stars[chapterNumber][stage_num];
+                stars = Game.instance.stars[chapterNumber][stage_num];
             }
 
             if (stars == 0)
@@ -666,7 +663,8 @@ public class StageSelectGUI : MonoBehaviour {
         backBtnHandler.OnMouseOver(backBtnRect);
 
         // Sound Button
-        sound = GUI.Toggle(soundBtnRect, sound, "", soundBtnStyle);
+        Game.instance.audio = GUI.Toggle(soundBtnRect, Game.instance.audio, "", soundBtnStyle);
+        MainGameController.instance.ToggleSound(!Game.instance.audio);
         soundBtnHandler.OnMouseOver(soundBtnRect);
 
         // Challenge Button 

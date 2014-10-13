@@ -7,9 +7,6 @@ public class TitleScreenGUI : MonoBehaviour {
     // GUI Skin
     public GUISkin activeSkin;
 
-    // Triggers
-    private bool sound = false;
-
     // Page variables
     public Rect bgRect;
     public Texture bgTexture;
@@ -183,8 +180,8 @@ public class TitleScreenGUI : MonoBehaviour {
         }
 
         // sound button
-        sound = GUI.Toggle(btnSoundRect, sound, "", activeSkin.customStyles[2]);
-        MainGameController.instance.ToggleSound(!sound);
+        Game.instance.audio = GUI.Toggle(btnSoundRect, Game.instance.audio, "", activeSkin.customStyles[2]);
+        MainGameController.instance.ToggleSound(!Game.instance.audio);
 
         // start button
         if (GUI.Button(btnStartRect, "", activeSkin.customStyles[4]))

@@ -230,8 +230,8 @@ public class PauseGUI : MonoBehaviour
         }
 
         // Draw the sound button
-        sound = GUI.Toggle(C_BtnRect, sound, "", activeSkin.customStyles[5]);
-        MainGameController.instance.ToggleSound(!sound);
+        Game.instance.audio = GUI.Toggle(C_BtnRect, Game.instance.audio, "", activeSkin.customStyles[5]);
+        MainGameController.instance.ToggleSound(!Game.instance.audio);
 
         A_BtnScale.OnMouseOver(A_BtnRect);
         B_BtnScale.OnMouseOver(B_BtnRect);
