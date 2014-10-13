@@ -23,6 +23,9 @@ public class Game : MonoBehaviour
     public bool[][] levelsUnlocked;
     public bool[][] challengeLevelsUnlocked;
 
+    // number of stages completed in a chapter
+    public int[][] stagesCompletedPerChapter;
+
     public System.DateTime lastLogin;
     public int consecutiveLogins;
     public string[] bag;
@@ -102,9 +105,11 @@ public class Game : MonoBehaviour
         challengeStars = new int[7][];
         challengeLevelsUnlocked = new bool[7][];
         challengeChapterUnlocked = new bool[7];
+        stagesCompletedPerChapter = new int[7][];
         for (int i = 0; i < 7; i++)
         {
             stars[i] = new int[10];
+            stagesCompletedPerChapter[i] = new int[10];
             levelsUnlocked[i] = new bool[10];
             chapterUnlocked[i] = false;
             challengeStars[i] = new int[10];
@@ -113,6 +118,7 @@ public class Game : MonoBehaviour
             for (int j = 0; j < 10; j++)
             {
                 stars[i][j] = 0;
+                stagesCompletedPerChapter[i][j] = 0;
                 levelsUnlocked[i][j] = false;
                 challengeStars[i][j] = 0;
                 challengeLevelsUnlocked[i][j] = false;
@@ -169,6 +175,7 @@ public class Game : MonoBehaviour
         info.totalSlides = stats[Stat.totalSlides];
         info.totalSteps = stats[Stat.totalSteps];
         info.treasures = stats[Stat.treasures];
+        info.stagesCompletedPerChapter = stagesCompletedPerChapter;
 
         bf.Serialize(file, info);
         file.Close();
@@ -221,6 +228,7 @@ public class Game : MonoBehaviour
             stats[Stat.totalSlides] = info.totalSlides;
             stats[Stat.totalSteps] = info.totalSteps;
             stats[Stat.treasures] = info.treasures;
+            stagesCompletedPerChapter = info.stagesCompletedPerChapter;
 
             energy = checkAndGetEnergy();
             checkUnlimitedEnergy();
@@ -286,7 +294,11 @@ public class Game : MonoBehaviour
 	// function to update the stars for a stage
     public void UpdateStats(int chapter, int level, int star)
     {
-        stars[chapter][level] = star;
+        stagesCompletedPerChapter[chapter][level] += 1;
+        if (stars[chapter][level] < star)
+        {
+            stars[chapter][level] = star;
+        }
         if (level < 9)
         {
             levelsUnlocked[chapter][level + 1] = true;
@@ -366,6 +378,9 @@ class GameInfo
     // stage unlock variables -- TRUE means unlocked
     public bool[][] levelsUnlocked;
     public bool[][] challengeLevelsUnlocked;
+
+    // number of stages completed in a chapter
+    public int[][] stagesCompletedPerChapter;
 
     public string lastLogin;
     public string[] bag;
