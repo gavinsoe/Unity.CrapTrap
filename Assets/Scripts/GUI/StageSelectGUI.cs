@@ -664,7 +664,7 @@ public class StageSelectGUI : MonoBehaviour {
 
         // Sound Button
         Game.instance.audio = GUI.Toggle(soundBtnRect, Game.instance.audio, "", soundBtnStyle);
-        MainGameController.instance.ToggleSound(!Game.instance.audio);
+        MainGameController.instance.ToggleSound(Game.instance.audio);
         soundBtnHandler.OnMouseOver(soundBtnRect);
 
         // Challenge Button 

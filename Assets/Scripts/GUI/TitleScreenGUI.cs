@@ -181,7 +181,7 @@ public class TitleScreenGUI : MonoBehaviour {
 
         // sound button
         Game.instance.audio = GUI.Toggle(btnSoundRect, Game.instance.audio, "", activeSkin.customStyles[2]);
-        MainGameController.instance.ToggleSound(!Game.instance.audio);
+        MainGameController.instance.ToggleSound(Game.instance.audio);
 
         // start button
         if (GUI.Button(btnStartRect, "", activeSkin.customStyles[4]))

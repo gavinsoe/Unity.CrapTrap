@@ -238,6 +238,15 @@ public class ChapterSelectGUI : MonoBehaviour
 
         #endregion
 
+        #region Initialise block data
+
+        foreach (var block in blocks)
+        {
+            // TODO: Implement
+        }
+
+        #endregion
+
         #region Set number of pages
 
         max_page = blocks.Length / 3;
@@ -245,6 +254,8 @@ public class ChapterSelectGUI : MonoBehaviour
         nxt_page = 1;
 
         #endregion
+
+        
     }
 
     void Update()
@@ -313,7 +324,7 @@ public class ChapterSelectGUI : MonoBehaviour
 
         // Sound Button
         Game.instance.audio = GUI.Toggle(soundBtnRect, Game.instance.audio, "", soundBtnStyle);
-        MainGameController.instance.ToggleSound(!Game.instance.audio);
+        MainGameController.instance.ToggleSound(Game.instance.audio);
         soundBtnHandler.OnMouseOver(soundBtnRect);
     }
 
