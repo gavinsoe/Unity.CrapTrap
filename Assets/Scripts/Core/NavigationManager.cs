@@ -3,6 +3,8 @@ using System.Collections;
 
 public class NavigationManager : MonoBehaviour {
     public static NavigationManager instance;
+    public int stage;
+    public int chapter;
 
     void Awake()
     {

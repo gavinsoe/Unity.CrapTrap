@@ -392,6 +392,7 @@ public class MainGameController : MonoBehaviour
         Game.instance.stats[Stat.toiletPapers] += ntp;
         Game.instance.stats[Stat.goldenPapers] += gtp;
         Game.instance.stats[Stat.stagesCompleted] += 1;
+        Game.instance.UpdateStats(NavigationManager.instance.chapter, NavigationManager.instance.stage, reward);
         //gameData.stars[Application.loadedLevelName] = reward;
 
         // Save progress

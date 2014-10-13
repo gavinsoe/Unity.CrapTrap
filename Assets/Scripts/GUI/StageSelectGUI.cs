@@ -819,6 +819,15 @@ public class StageSelectGUI : MonoBehaviour {
         {
             if (GUI.Button(btnPos, btnLabel, btnStyle))
             {
+                if (isChallenge)
+                {
+                    NavigationManager.instance.chapter = chapterNumber + 7;
+                }
+                else
+                {
+                    NavigationManager.instance.chapter = chapterNumber;
+                }
+                NavigationManager.instance.stage = System.Convert.ToInt32(btnLabel);
                 Application.LoadLevel(stageName);
             }
             handler.OnMouseOver(btnPos);

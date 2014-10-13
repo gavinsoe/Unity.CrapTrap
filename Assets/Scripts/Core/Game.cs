@@ -42,6 +42,9 @@ public class Game : MonoBehaviour
 
     void Awake()
     {
+        // Forces a different code path in the BinaryFormatter that doesn't rely on run-time code generation (which would break on iOS).
+        System.Environment.SetEnvironmentVariable("MONO_REFLECTION_SERIALIZER", "yes");
+
         // Make sure there is only 1 instance of this class.
         if (instance == null)
         {
@@ -294,7 +297,8 @@ public class Game : MonoBehaviour
             {
                 chapterUnlocked[chapter + 1] = true;
             }
-            challengeChapterUnlocked[chapter] = true;
+            else if(chapter < 7)
+                challengeChapterUnlocked[chapter] = true;
         }
     }
 
