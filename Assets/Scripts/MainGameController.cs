@@ -457,14 +457,14 @@ public class MainGameController : MonoBehaviour
             {
                 if (objectives[i].option == Option.lessThan)
                 {
-                    if (time < objectives[i].counter)
+                    if (time < objectives[i].counter + 1)
                     {
                         objectives[i].completed = true;
                     }
                 }
                 else if (objectives[i].option == Option.greaterThan)
                 {
-                    if (time > objectives[i].counter)
+                    if (time >= objectives[i].counter)
                     {
                         objectives[i].completed = true;
                     }
