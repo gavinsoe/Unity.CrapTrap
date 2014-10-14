@@ -53,6 +53,7 @@ public class Game : MonoBehaviour
         {
             DontDestroyOnLoad(gameObject);
             instance = this;
+            instance.Load();
         }
         else if (instance != this)
         {

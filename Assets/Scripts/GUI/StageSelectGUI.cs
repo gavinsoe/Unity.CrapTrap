@@ -471,7 +471,8 @@ public class StageSelectGUI : MonoBehaviour {
         soundBtnHandler = new ButtonHandler(soundBtnRect, gameObject, 0.9f, "ScaleSoundButton");
 
         // Challenge button
-        if (challengeStage1State == StageBtnState.Locked)
+        //if (challengeStage1State == StageBtnState.Locked)
+        if(!Game.instance.challengeChapterUnlocked[chapterNumber-1])
         {
             challengeBtnStyle = activeSkin.customStyles[10];
         }
@@ -668,7 +669,8 @@ public class StageSelectGUI : MonoBehaviour {
         soundBtnHandler.OnMouseOver(soundBtnRect);
 
         // Challenge Button 
-        if (challengeStage1State == StageBtnState.Locked)
+        //if (challengeStage1State == StageBtnState.Locked)
+        if(!Game.instance.challengeChapterUnlocked[chapterNumber-1])
         {
             GUI.Button(challengeBtnRect, "", challengeBtnStyle);
         }
