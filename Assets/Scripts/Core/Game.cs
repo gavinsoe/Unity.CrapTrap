@@ -24,7 +24,7 @@ public class Game : MonoBehaviour
     public bool[][] challengeLevelsUnlocked;
 
     // number of stages completed in a chapter
-    public int[] stagesCompletedPerChapter;
+    public bool[][] stagesCompletedPerChapter;
 
     public System.DateTime lastLogin;
     public int consecutiveLogins;
@@ -47,6 +47,8 @@ public class Game : MonoBehaviour
     {
         // Forces a different code path in the BinaryFormatter that doesn't rely on run-time code generation (which would break on iOS).
         System.Environment.SetEnvironmentVariable("MONO_REFLECTION_SERIALIZER", "yes");
+
+        Debug.Log(Application.persistentDataPath);
 
         // Make sure there is only 1 instance of this class.
         if (instance == null)
@@ -106,11 +108,11 @@ public class Game : MonoBehaviour
         challengeStars = new int[7][];
         challengeLevelsUnlocked = new bool[7][];
         challengeChapterUnlocked = new bool[7];
-        stagesCompletedPerChapter = new int[7];
+        stagesCompletedPerChapter = new bool[7][];
         for (int i = 0; i < 7; i++)
         {
             stars[i] = new int[10];
-            stagesCompletedPerChapter[i] = 0;
+            stagesCompletedPerChapter[i] = new bool[20];
             levelsUnlocked[i] = new bool[10];
             chapterUnlocked[i] = false;
             challengeStars[i] = new int[10];
@@ -119,7 +121,8 @@ public class Game : MonoBehaviour
             for (int j = 0; j < 10; j++)
             {
                 stars[i][j] = 0;
-                stagesCompletedPerChapter[i] = 0;
+                stagesCompletedPerChapter[i][j] = false;
+                stagesCompletedPerChapter[i][j + 10] = false;
                 levelsUnlocked[i][j] = false;
                 challengeStars[i][j] = 0;
                 challengeLevelsUnlocked[i][j] = false;
@@ -297,11 +300,11 @@ public class Game : MonoBehaviour
     {
         if (chapter > 6)
         {
-            stagesCompletedPerChapter[chapter - 7] += 1;
+            stagesCompletedPerChapter[chapter][level] = true;
         }
         else
         {
-            stagesCompletedPerChapter[chapter] += 1;
+            stagesCompletedPerChapter[chapter][level + 10] = true;
         }
         if (stars[chapter][level] < star)
         {
@@ -320,6 +323,17 @@ public class Game : MonoBehaviour
             else if(chapter < 7)
                 challengeChapterUnlocked[chapter] = true;
         }
+    }
+
+    public int getStagesCompleted(int chapter)
+    {
+        int count = 0;
+        for (int i = 0; i < 20; i++)
+        {
+            if (stagesCompletedPerChapter[chapter][i] == true)
+                count += 1;
+        }
+        return count;
     }
 
     public void UpdateReward()
@@ -388,7 +402,7 @@ class GameInfo
     public bool[][] challengeLevelsUnlocked;
 
     // number of stages completed in a chapter
-    public int[] stagesCompletedPerChapter;
+    public bool[][] stagesCompletedPerChapter;
 
     public string lastLogin;
     public string[] bag;
