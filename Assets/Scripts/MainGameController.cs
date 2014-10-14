@@ -303,6 +303,8 @@ public class MainGameController : MonoBehaviour
 
     public void ZoomIn()
     {
+        // Do not zoom when game is paused
+        if (timerPaused) return;
         // Set ismoving flag (to prevent other commands from coming in)
         CharacterController.instance.isMoving = true;
         //Enable Controls
@@ -325,6 +327,8 @@ public class MainGameController : MonoBehaviour
 
     public void ZoomOut()
     {
+        // Do not zoom when game is paused
+        if (timerPaused) return;
         // Set ismoving flag (to prevent other commands from coming in)
         CharacterController.instance.isMoving = true;
         // Disable Controls
