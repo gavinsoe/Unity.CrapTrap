@@ -566,57 +566,42 @@ public class StageSelectGUI : MonoBehaviour {
             unlocked = Game.instance.levelsUnlocked[chapterNumber-1][stage_num];
         }
 
-        Debug.Log("!!!State " + stage_num + " " + isChallengeStage + " " + unlocked);
-
         if (unlocked)
         {
             var stars = 0;
             if (isChallengeStage)
             {
-                Debug.Log("!!!State isChallenge");
                 stars = Game.instance.challengeStars[chapterNumber-1][stage_num];
             }
             else
             {
-                Debug.Log("!!!State not Challenge");
                 stars = Game.instance.stars[chapterNumber-1][stage_num];
             }
 
             if (stars == 0)
             {
-                Debug.Log("!!!State 0 star");
-                Debug.Log("");
                 return StageBtnState.Star_0;
             }
             else if (stars == 1)
             {
-                Debug.Log("!!!State 1 star");
-                Debug.Log("");
                 return StageBtnState.Star_1;
             }
             else if (stars == 2)
             {
-                Debug.Log("!!!State 2 star");
-                Debug.Log("");
                 return StageBtnState.Star_2;
             }
             else if (stars == 3)
             {
-                Debug.Log("!!!State 3 star");
-                Debug.Log("");
                 return StageBtnState.Star_3;
             }
         }
 
-        Debug.Log("");
         // default to locked
         return StageBtnState.Locked;
     }
 
     GUIStyle getButtonStyle(StageBtnState state, bool isChallengeStage)
     {
-        Debug.Log("!!!Style " + state + " " + isChallengeStage);
-        Debug.Log("");
         if (state == StageBtnState.Star_0)
         {
             if (isChallengeStage) return challengeStageBtn_0Star;
