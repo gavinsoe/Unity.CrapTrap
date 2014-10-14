@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.IO;
 
 public class StageSelectGUI : MonoBehaviour {
 
@@ -421,16 +422,16 @@ public class StageSelectGUI : MonoBehaviour {
         stage10Style = getButtonStyle(stage10State, false);
 
         // Set the challenge button styles
-        challengeStage1Style = getButtonStyle(stage1State, true);
-        challengeStage2Style = getButtonStyle(stage2State, true);
-        challengeStage3Style = getButtonStyle(stage3State, true);
-        challengeStage4Style = getButtonStyle(stage4State, true);
-        challengeStage5Style = getButtonStyle(stage5State, true);
-        challengeStage6Style = getButtonStyle(stage6State, true);
-        challengeStage7Style = getButtonStyle(stage7State, true);
-        challengeStage8Style = getButtonStyle(stage8State, true);
-        challengeStage9Style = getButtonStyle(stage9State, true);
-        challengeStage10Style = getButtonStyle(stage10State, true);
+        challengeStage1Style = getButtonStyle(challengeStage1State, true);
+        challengeStage2Style = getButtonStyle(challengeStage2State, true);
+        challengeStage3Style = getButtonStyle(challengeStage3State, true);
+        challengeStage4Style = getButtonStyle(challengeStage4State, true);
+        challengeStage5Style = getButtonStyle(challengeStage5State, true);
+        challengeStage6Style = getButtonStyle(challengeStage6State, true);
+        challengeStage7Style = getButtonStyle(challengeStage7State, true);
+        challengeStage8Style = getButtonStyle(challengeStage8State, true);
+        challengeStage9Style = getButtonStyle(challengeStage9State, true);
+        challengeStage10Style = getButtonStyle(challengeStage10State, true);
 
         // Set the button handlers
         stage1Handler = new ButtonHandler(stage1Rect, gameObject, 0.9f, "ScaleStage1Button");
@@ -565,42 +566,57 @@ public class StageSelectGUI : MonoBehaviour {
             unlocked = Game.instance.levelsUnlocked[chapterNumber-1][stage_num];
         }
 
+        Debug.Log("!!!State " + stage_num + " " + isChallengeStage + " " + unlocked);
+
         if (unlocked)
         {
             var stars = 0;
             if (isChallengeStage)
             {
+                Debug.Log("!!!State isChallenge");
                 stars = Game.instance.challengeStars[chapterNumber-1][stage_num];
             }
             else
             {
+                Debug.Log("!!!State not Challenge");
                 stars = Game.instance.stars[chapterNumber-1][stage_num];
             }
 
             if (stars == 0)
             {
+                Debug.Log("!!!State 0 star");
+                Debug.Log("");
                 return StageBtnState.Star_0;
             }
             else if (stars == 1)
             {
+                Debug.Log("!!!State 1 star");
+                Debug.Log("");
                 return StageBtnState.Star_1;
             }
             else if (stars == 2)
             {
+                Debug.Log("!!!State 2 star");
+                Debug.Log("");
                 return StageBtnState.Star_2;
             }
             else if (stars == 3)
             {
+                Debug.Log("!!!State 3 star");
+                Debug.Log("");
                 return StageBtnState.Star_3;
             }
         }
 
+        Debug.Log("");
         // default to locked
         return StageBtnState.Locked;
     }
 
     GUIStyle getButtonStyle(StageBtnState state, bool isChallengeStage)
     {
+        Debug.Log("!!!Style " + state + " " + isChallengeStage);
+        Debug.Log("");
         if (state == StageBtnState.Star_0)
         {
             if (isChallengeStage) return challengeStageBtn_0Star;
