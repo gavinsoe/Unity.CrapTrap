@@ -56,6 +56,15 @@ public class NavigationManager : MonoBehaviour {
     public void NextStage()
     {
         // Loads the next stage (or screen)
+        if (stage == 19)
+        {
+            stage = 1;
+            chapter += 1;
+        }
+        else
+        {
+            stage += 1;
+        }
         Application.LoadLevel(Application.loadedLevel + 1);
     }
 }

@@ -213,6 +213,7 @@ public class MainGameController : MonoBehaviour
             MainGameGUI.instance.Hide();
             FailedByFallingGUI.instance.StageFailed();
 
+            /*
             #region App42 Result Tracking
 
             // Package the result
@@ -235,12 +236,14 @@ public class MainGameController : MonoBehaviour
             storageService.InsertJSONDocument(constants.dbName, constants.collectionStageStats, json, logCallBack);
 
             #endregion
+             * */
         }
         else
         {
             MainGameGUI.instance.Hide();
             FailedGUI.instance.Show();
 
+            /*
             #region App42 Result Tracking
 
             // Package the result
@@ -263,6 +266,7 @@ public class MainGameController : MonoBehaviour
             storageService.InsertJSONDocument(constants.dbName, constants.collectionStageStats, json, logCallBack);
             
             #endregion
+             * */
         }
     }
 
