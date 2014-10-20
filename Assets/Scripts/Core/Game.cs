@@ -298,7 +298,7 @@ public class Game : MonoBehaviour
 	// function to update the stars for a stage
     public void UpdateStats(int chapter, int level, int star)
     {
-        if (chapter > 6)
+        if (chapter < 7)
         {
             stagesCompletedPerChapter[chapter][level] = true;
         }
@@ -320,7 +320,7 @@ public class Game : MonoBehaviour
             {
                 chapterUnlocked[chapter + 1] = true;
             }
-            else if(chapter < 7)
+            if(chapter < 7)
                 challengeChapterUnlocked[chapter] = true;
         }
     }
