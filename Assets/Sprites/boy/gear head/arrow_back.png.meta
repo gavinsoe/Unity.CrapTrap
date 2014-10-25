@@ -1,8 +1,9 @@
 fileFormatVersion: 2
-guid: 46bc36d6227a0489ab718f6662ffb5b0
+guid: 6066b540127444b7fbcb64809289b627
 TextureImporter:
   fileIDToRecycleName:
-    21300000: gear_tribal_pants_backview
+    21300000: arrow_back
+    21300002: arrow_back_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -44,15 +45,15 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: gear_tribal_pants_backview
+    - name: arrow_back_0
       rect:
         serializedVersion: 2
-        x: 9
-        y: 33
-        width: 96
-        height: 54
+        x: 47
+        y: 252
+        width: 405
+        height: 406
       alignment: 9
-      pivot: {x: .5, y: .800000012}
+      pivot: {x: .538004518, y: .0107619204}
       border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 
