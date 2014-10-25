@@ -26,17 +26,21 @@ public class Game : MonoBehaviour
     // number of stages completed in a chapter
     public bool[][] stagesCompletedPerChapter;
 
+    // Login variables
     public System.DateTime lastLogin;
     public int consecutiveLogins;
+
+    // Bag variables
     public string[] bag;
 	public int bagSlots;
+
     public bool audio;
 
+    // Energy Variables
     public int energy;
     public int energyCap;
     public System.DateTime timeSinceFirstEnergy;
 	public bool energyFull;
-
     public bool isUnlimitedEnergy;
     public System.TimeSpan unlimitedEnergySpan;
     public System.DateTime unlimitedEnergyStart;
@@ -102,6 +106,7 @@ public class Game : MonoBehaviour
 	// Function to initialize object; called when there is no previous saved file
     public void Initialize()
     {
+        // Construct arrays
         stars = new int[7][];
         levelsUnlocked = new bool[7][];
         chapterUnlocked = new bool[7];
@@ -109,7 +114,7 @@ public class Game : MonoBehaviour
         challengeLevelsUnlocked = new bool[7][];
         challengeChapterUnlocked = new bool[7];
         stagesCompletedPerChapter = new bool[7][];
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < 7; i++) // Construc sub-arrays
         {
             stars[i] = new int[10];
             stagesCompletedPerChapter[i] = new bool[20];
@@ -118,7 +123,7 @@ public class Game : MonoBehaviour
             challengeStars[i] = new int[10];
             challengeLevelsUnlocked[i] = new bool[10];
             challengeChapterUnlocked[i] = false;
-            for (int j = 0; j < 10; j++)
+            for (int j = 0; j < 10; j++) //  Initialize sub-arrays
             {
                 stars[i][j] = 0;
                 stagesCompletedPerChapter[i][j] = false;
@@ -281,6 +286,7 @@ public class Game : MonoBehaviour
         return energy;
     }
 
+    // Function to check whether unlimited energy is active
     public void checkUnlimitedEnergy()
     {
         if(System.DateTime.Now.CompareTo(unlimitedEnergyStart.Add(unlimitedEnergySpan)) > 0) 
@@ -298,33 +304,42 @@ public class Game : MonoBehaviour
 	// function to update the stars for a stage
     public void UpdateStats(int chapter, int level, int star)
     {
-        if (chapter < 7)
+        // Update completed stages
+        if (chapter < 7) // If normal stage
         {
             stagesCompletedPerChapter[chapter][level] = true;
         }
-        else
+        else // If challenge stage
         {
             stagesCompletedPerChapter[chapter][level + 10] = true;
         }
+
+        // Update Stars if the current number of stars is more than previous number of stars
         if (stars[chapter][level] < star)
         {
             stars[chapter][level] = star;
         }
+
+        // If stage is not the last normal stage in the chapter then open the next stage
         if (level < 9)
         {
             levelsUnlocked[chapter][level + 1] = true;
         }
-        else
+        else // If it is the last normal stage
         {
-            if (chapter < 6)
+            // Open next chapter if not currently in the last chapter
+            if (chapter < 6) 
             {
                 chapterUnlocked[chapter + 1] = true;
             }
+            
+            // Open the challenge stages
             if(chapter < 7)
                 challengeChapterUnlocked[chapter] = true;
         }
     }
 
+    // Function to get how many stages have been completed in the chapter specified
     public int getStagesCompleted(int chapter)
     {
         int count = 0;
@@ -336,6 +351,7 @@ public class Game : MonoBehaviour
         return count;
     }
 
+    // Function to check for achievements and their rewards
     public void UpdateReward()
     {
         for (int i = 0; i < 10; i++)
@@ -363,6 +379,7 @@ public class Game : MonoBehaviour
     } */
 }
 
+// Class to save the data into a Binary Formatter
 [System.Serializable]
 class GameInfo
 {
