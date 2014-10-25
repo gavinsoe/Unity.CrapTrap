@@ -50,8 +50,10 @@ public class MainGameController : MonoBehaviour
 
     public int ntp = 0; // Stores the number of ntp collected
     public int gtp = 0; // Stores the number of gtp collected
+    private List<Capsule> capsules = new List<Capsule>(); // stores collected capsules
     private int ntpMax; // Stores the total number of ntp in a stage
     private int gtpMax; // Stores the total number of gtp in a stage
+    private int capsuleMax; // Stores the total number of capsules in a stage
 
     #endregion
 
@@ -96,6 +98,7 @@ public class MainGameController : MonoBehaviour
         // Get the total number of ntp and gtp
         ntpMax = GameObject.FindGameObjectsWithTag("ntp").Length;
         gtpMax = GameObject.FindGameObjectsWithTag("gtp").Length;
+        capsuleMax = GameObject.FindGameObjectsWithTag("capsule").Length;
 
         // Retrieve all backgrounds
         backgrounds = GameObject.FindGameObjectsWithTag("Background");
@@ -271,6 +274,12 @@ public class MainGameController : MonoBehaviour
     public void pickupGoldenToiletPaper(AudioClip sfxPickup)
     {
         gtp += 1;
+        audio.PlayOneShot(sfxPickup, 1f);
+    }
+
+    public void pickupCapsule(AudioClip sfxPickup, Capsule capsule)
+    {
+        capsules.Add(capsule);
         audio.PlayOneShot(sfxPickup, 1f);
     }
 
