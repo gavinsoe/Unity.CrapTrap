@@ -1,15 +1,13 @@
 fileFormatVersion: 2
-guid: 0eaef5366e365254bbb9b34d5b2c782a
+guid: 426fdf4af246043ab9c5251e84df4408
 TextureImporter:
   fileIDToRecycleName:
-    21300000: normal_box_V4_1
-    21300002: normal_box_V4_2
-    21300004: normal_box_V4_3
-    21300006: unhangable_box_V4_1
-    21300008: crumbling_box_V4_1
-    21300010: ice_box_V4_1
-    21300012: fire_box_V4_1
-    21300014: explosive_box_V4_1
+    21300000: boxes_sprites_snow_covered_nogradient
+    21300002: boxes_sprites_snow_covered_nogradient_0
+    21300004: boxes_sprites_snow_covered_nogradient_1
+    21300006: boxes_sprites_snow_covered_nogradient_2
+    21300008: boxes_sprites_snow_covered_nogradient_3
+    21300010: boxes_sprites_snow_covered_nogradient_4
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -48,14 +46,10 @@ TextureImporter:
   spritePixelsToUnits: 400
   alphaIsTransparency: 1
   textureType: 8
-  buildTargetSettings:
-  - buildTarget: iPhone
-    maxTextureSize: 1024
-    textureFormat: -2
-    compressionQuality: 50
+  buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: normal_box_V4_1
+    - name: boxes_sprites_snow_covered_nogradient_0
       rect:
         serializedVersion: 2
         x: 98
@@ -65,27 +59,27 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: normal_box_V4_2
+    - name: boxes_sprites_snow_covered_nogradient_1
       rect:
         serializedVersion: 2
         x: 596
-        y: 610
-        width: 400
-        height: 400
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: normal_box_V4_3
-      rect:
-        serializedVersion: 2
-        x: 1091
         y: 608
         width: 400
         height: 400
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: unhangable_box_V4_1
+    - name: boxes_sprites_snow_covered_nogradient_2
+      rect:
+        serializedVersion: 2
+        x: 1092
+        y: 608
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: boxes_sprites_snow_covered_nogradient_3
       rect:
         serializedVersion: 2
         x: 1590
@@ -95,40 +89,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: crumbling_box_V4_1
+    - name: boxes_sprites_snow_covered_nogradient_4
       rect:
         serializedVersion: 2
         x: 98
-        y: 111
-        width: 400
-        height: 400
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: ice_box_V4_1
-      rect:
-        serializedVersion: 2
-        x: 596
-        y: 111
-        width: 400
-        height: 400
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: fire_box_V4_1
-      rect:
-        serializedVersion: 2
-        x: 1091
-        y: 111
-        width: 400
-        height: 400
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: explosive_box_V4_1
-      rect:
-        serializedVersion: 2
-        x: 1590
         y: 111
         width: 400
         height: 400
