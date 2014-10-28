@@ -32,7 +32,6 @@ public class MainGameController : MonoBehaviour
     #endregion
     #region Map Variables
 
-    public bool mapEnabled = true;
     public Camera mainCamera;
     public float zoomLevel = 3;
     public float zoomOutLevel;
@@ -90,6 +89,13 @@ public class MainGameController : MonoBehaviour
         // set the static variable so that other classes can easily use this class
         instance = this;
 
+        // If game menu, disable right after initialisation
+        if (isGameMenu)
+        {
+            this.enabled = false;
+            return;
+        }
+
         // Initialise timer components
         Time.timeScale = 1f;
         timeElapsed = 0;
@@ -121,7 +127,7 @@ public class MainGameController : MonoBehaviour
             // Build the storage service
             storageService = serviceAPI.BuildStorageService();
 
-        #endregion
+        #endregion   
 	}
 
 	// Update is called once per frame
@@ -241,8 +247,6 @@ public class MainGameController : MonoBehaviour
                 timeRightNow = timeElapsed;
             }
         }
-
-        
 
         if (zoomIn)
         {
@@ -395,14 +399,6 @@ public class MainGameController : MonoBehaviour
         // Disable time and movement
         EnableTimeNMove();
 	}
-
-    public void ToggleMap(bool enabled)
-    {
-        if (mapEnabled != enabled)
-        {
-            mapEnabled = enabled;
-        }
-    }
 
     public void ToggleSound(bool enabled)
     {

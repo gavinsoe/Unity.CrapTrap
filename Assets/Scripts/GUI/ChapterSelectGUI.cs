@@ -77,9 +77,6 @@ public class ChapterSelectGUI : MonoBehaviour
     #endregion
     #region currency boxes
 
-    public int ntp = 0; // Keeps track of the number of ntp
-    public int gtp = 0; // Keeps track of the number of gtp
-
     private Rect currencyNTPRect;
     private Rect currencyGTPRect;
     private GUIStyle NTPStyle;
@@ -331,9 +328,9 @@ public class ChapterSelectGUI : MonoBehaviour
     void Currency()
     {
         // NTP
-        GUI.Label(currencyNTPRect, ntp.ToString(), NTPStyle);
+        GUI.Label(currencyNTPRect, InventoryManager.instance.ntp.ToString(), NTPStyle);
         // GTP
-        GUI.Label(currencyGTPRect, gtp.ToString(), GTPStyle);
+        GUI.Label(currencyGTPRect, InventoryManager.instance.gtp.ToString(), GTPStyle);
     }
 
     void Chapters()
