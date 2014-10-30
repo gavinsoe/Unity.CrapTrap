@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using GooglePlayGames;
+using UnityEngine.SocialPlatforms;
 
 public class Game : MonoBehaviour 
 {
     public static Game instance;
 
-    public Achievement[] achievements;
+    public CTAchievement[] achievements;
     public Dictionary<Stat, double> stats = new Dictionary<Stat,double>();
 
 	// chapter unlock variables -- TRUE means unlocked
@@ -60,6 +62,18 @@ public class Game : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             instance = this;
             instance.Load();
+
+            // debugging for google services
+            PlayGamesPlatform.DebugLogEnabled = true;
+
+            // Activate the Google Play Games platform
+            PlayGamesPlatform.Activate();
+
+            // authenticate user
+            Social.localUser.Authenticate((bool success) =>
+            {
+                // handle success or failure
+            });
         }
         else if (instance != this)
         {
@@ -70,7 +84,7 @@ public class Game : MonoBehaviour
 	// Constructor
     public Game()
     {
-        achievements = new Achievement[20];
+        achievements = new CTAchievement[20];
         Initialize();
         energyCap = 10;
         energy = energyCap;
@@ -404,7 +418,7 @@ class GameInfo
     public double achievementUnlocked = 0;
     public double consecutiveLogins = 0;
 
-    public Achievement[] achievements;
+    public CTAchievement[] achievements;
 
     // chapter unlock variables -- TRUE means unlocked
     public bool[] chapterUnlocked;

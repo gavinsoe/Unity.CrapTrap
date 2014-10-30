@@ -3,15 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 
 [System.Serializable]
-public class Achievements
+public class CTAchievements
 {
-    public Achievement[] rows;
+    public CTAchievement[] rows;
 };
 
 public class AchievementController : MonoBehaviour {
 
     // Achievement Variables
-    public Achievements[] achievements = new Achievements[5];
+    public CTAchievements[] achievements = new CTAchievements[5];
     public string[] titles;
     public Texture[] rewards;
     public string[] rewardAmount;

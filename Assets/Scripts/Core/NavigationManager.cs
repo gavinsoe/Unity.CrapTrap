@@ -5,6 +5,7 @@ public class NavigationManager : MonoBehaviour {
     public static NavigationManager instance;
     public int stage;
     public int chapter;
+    public string[] leaderboardIDs;
 
     void Awake()
     {
@@ -58,7 +59,7 @@ public class NavigationManager : MonoBehaviour {
         // Loads the next stage (or screen)
         if (stage == 19)
         {
-            stage = 1;
+            stage = 0;
             chapter += 1;
         }
         else
@@ -66,5 +67,10 @@ public class NavigationManager : MonoBehaviour {
             stage += 1;
         }
         Application.LoadLevel(Application.loadedLevel + 1);
+    }
+
+    public string getLeaderboardID()
+    {
+        return leaderboardIDs[chapter * 10 + stage];
     }
 }
