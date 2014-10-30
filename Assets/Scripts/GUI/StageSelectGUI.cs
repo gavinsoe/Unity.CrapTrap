@@ -31,6 +31,15 @@ public class StageSelectGUI : MonoBehaviour {
     public GUISkin activeSkin;
     private MainGameController mainController;
 
+    #region Touch Controls
+    
+    private int maxTouches = 1;	// up to 5 (iOS only supports 5 apparently)
+    private float minDragDistance = 50f; // Swipe distance before touch is regarded as 'touch and drag'
+    
+    private Vector2[] touchStartPosition;
+
+    #endregion
+
     #region Variables
 
     public int chapterNumber;
@@ -224,10 +233,11 @@ public class StageSelectGUI : MonoBehaviour {
 
     #region story carousel
 
-    private int cur_page;
-    private int nxt_page;
-    private int max_page;
-    private Rect storyContainerRect;
+    public bool inTransition = false;
+    public int cur_page;
+    public int nxt_page;
+    public int max_page;
+    public Rect storyContainerRect;
 
     private Rect storyInnerActiveRect;
     private Rect storyInnerTempRect;
@@ -235,11 +245,11 @@ public class StageSelectGUI : MonoBehaviour {
     private Rect storyPosMid;
     private Rect storyPosRight;
 
-    private float storyContainerXOffset = 0.12f;
-    private float storyContainerYOffset = 0.17f;
-    private float storyContainerWidth = 0.38f;
-    private float storyContainerHeight = 0.245f;
-    public float storyContainerFontScale = 0.033f;
+    private float storyContainerXOffset = 0.1f;
+    private float storyContainerYOffset = 0.14f;
+    private float storyContainerWidth = 0.32f;
+    private float storyContainerHeight = 0.28f;
+    private float storyContainerFontScale = 0.033f;
 
     private Rect arrowNextRect;
     private Rect arrowPrevRect;
@@ -249,7 +259,7 @@ public class StageSelectGUI : MonoBehaviour {
 
     private Rect storyNavRect;
     private GUIStyle storyNavStyle;
-    private float storyNavScale = 0.07f;
+    private float storyNavScale = 0.08f;
     private float storyNavSpacing = 0.55f;
 
     private string[] storyNavStrings;
@@ -269,7 +279,15 @@ public class StageSelectGUI : MonoBehaviour {
     {
         // Retrieve the main game controller
         mainController = gameObject.GetComponentInChildren<MainGameController>();
-        
+
+        #region Touch Controls
+
+        // inititialise the arrays used for manipulating the touch controls
+        touchStartPosition = new Vector2[maxTouches];
+
+        #endregion
+        #region GUI
+
         // Set the container rect
         containerRect = new Rect(0, 0, Screen.width, Screen.height);
         
@@ -307,6 +325,7 @@ public class StageSelectGUI : MonoBehaviour {
         // normal header
         contentHeaderStyle = new GUIStyle(activeSkin.label);
         contentHeaderStyle.fontSize = (int)(contentContainerHeight * contentHeaderScale);
+        contentHeaderStyle.alignment = TextAnchor.MiddleCenter;
         float headerWidth = contentContainerWidth;
         float headerHeight = contentHeaderStyle.fontSize * 2;
         float headerXOffset = 0;
@@ -317,6 +336,7 @@ public class StageSelectGUI : MonoBehaviour {
         challengeHeaderStyle = new GUIStyle(activeSkin.label);
         challengeHeaderStyle.fontSize = (int)(contentContainerHeight * contentHeaderScale);
         challengeHeaderStyle.normal.textColor = Color.white;
+        challengeHeaderStyle.alignment = TextAnchor.MiddleCenter;
         float cHeaderWidth = contentContainerWidth;
         float cHeaderHeight = challengeHeaderStyle.fontSize * 2;
         float cHeaderXOffset = 0;
@@ -327,6 +347,7 @@ public class StageSelectGUI : MonoBehaviour {
         challengeLabelStyle = new GUIStyle(activeSkin.label);
         challengeLabelStyle.fontSize = (int)(contentContainerHeight * challengeLabelScale);
         challengeLabelStyle.normal.textColor = Color.red;
+        challengeLabelStyle.alignment = TextAnchor.MiddleCenter;
         float cLabelWidth = contentContainerWidth;
         float cLabelHeight = challengeLabelStyle.CalcHeight(new GUIContent("N\nN"), cLabelWidth);
         float cLabelXOffset = 0;
@@ -552,6 +573,8 @@ public class StageSelectGUI : MonoBehaviour {
 
 
         #endregion
+
+        #endregion
     }
 
     StageBtnState getButtonState(int stage_num, bool isChallengeStage)
@@ -632,9 +655,36 @@ public class StageSelectGUI : MonoBehaviour {
 	// Update is called once per frame
     void Update()
     {
-        activeSkin.label.fontSize = (int)(Screen.height * storyContainerFontScale);
-    }
+        foreach (Touch touch in Input.touches)
+        {
+            if (touch.phase == TouchPhase.Began)
+            {
+                touchStartPosition[touch.fingerId] = touch.position;
+            }
+            else if (touch.phase == TouchPhase.Moved)
+            {
+                var deltaPosition = touch.position - touchStartPosition[touch.fingerId];
 
+                if (Mathf.Abs(deltaPosition.x) > Mathf.Abs(deltaPosition.y))
+                {
+                    if (deltaPosition.x < -minDragDistance && 
+                        cur_page < max_page && !inTransition)
+                    {
+                        inTransition = true;
+                        nxt_page = cur_page + 1;
+                        NextPage();
+                    }
+                    else if (deltaPosition.x > minDragDistance &&
+                             cur_page > 1 && !inTransition)
+                    {
+                        inTransition = true;
+                        nxt_page = cur_page - 1;
+                        PrevPage();
+                    }
+                }
+            }
+        }
+    }
 	void OnGUI ()
     {
         // Set the active skin
@@ -779,16 +829,24 @@ public class StageSelectGUI : MonoBehaviour {
         {
             if (GUI.Button(arrowPrevRect, "", arrowPrevStyle))
             {
-                nxt_page = cur_page - 1;
-                PrevPage();
+                if (!inTransition)
+                {
+                    inTransition = true;
+                    nxt_page = cur_page - 1;
+                    PrevPage();
+                }
             }
         }
         if (cur_page < max_page)
         {
             if (GUI.Button(arrowNextRect, "", arrowNextStyle))
             {
-                nxt_page = cur_page + 1;
-                NextPage();
+                if (!inTransition)
+                {
+                    inTransition = true;
+                    nxt_page = cur_page + 1;
+                    NextPage();
+                }
             }
         }
         GUI.color = Color.white;
@@ -912,6 +970,7 @@ public class StageSelectGUI : MonoBehaviour {
         cur_page = nxt_page;
         storyInnerActiveRect = storyPosMid;
         storyInnerTempRect = storyPosLeft;
+        inTransition = false;
     }
 
     #region Animators

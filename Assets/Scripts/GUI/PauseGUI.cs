@@ -226,7 +226,7 @@ public class PauseGUI : MonoBehaviour
         // Draw the home button
         if (GUI.Button(B_BtnRect, "", activeSkin.customStyles[3]))
         {
-            NavigationManager.instance.NavToTitle();
+            NavigationManager.instance.NavToChapterSelect();
         }
 
         // Draw the sound button
