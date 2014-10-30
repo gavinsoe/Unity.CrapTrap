@@ -26,7 +26,7 @@ public enum Stat
     consecutiveLogins = 21,
 }
 [System.Serializable]
-public class Achievement : System.Object
+public class CTAchievement : System.Object
 {
 
     public Stat stat;

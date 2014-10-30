@@ -8,6 +8,8 @@ using System.IO;
 using com.shephertz.app42.paas.sdk.csharp;
 using com.shephertz.app42.paas.sdk.csharp.storage;
 using com.shephertz.app42.paas.sdk.csharp.log;
+using GooglePlayGames;
+using UnityEngine.SocialPlatforms;
 
 public class MainGameController : MonoBehaviour
 {
@@ -297,6 +299,14 @@ public class MainGameController : MonoBehaviour
         string timeTaken = string.Format("{0:00}:{1:00}", mins, seconds);
         UpdateStats();
         StageCompleteGUI.instance.StageComplete(timeTaken, ntp, ntpMax, gtp, gtpMax, objectives);
+
+        /*
+        // post score to Leaderboard ID
+        Social.ReportScore(System.Convert.ToInt64(timeElapsed), NavigationManager.instance.getLeaderboardID(), (bool success) =>
+        {
+            // handle success or failure
+        });
+         */
 
         #region App42 Result Tracking
 
