@@ -28,6 +28,9 @@ public class LootController : MonoBehaviour {
             {
                 MainGameController.instance.pickupCapsule(sfxPickup, capsule);
             }
+
+            // Destroy this thing
+            Destroy(gameObject);
         }
     }
 }

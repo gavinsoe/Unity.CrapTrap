@@ -23,15 +23,18 @@ public class EquipmentRenderer : MonoBehaviour {
 
         EquipmentSprite eq = null;
 	    
-        if (slot == EquipmentSlot.Head)
+        if (slot == EquipmentSlot.Head &&
+            eqSprites.Exists(x => x.itemID == InventoryManager.instance.equippedHead.itemId))
         {
             eq = eqSprites.Where(x => x.itemID == InventoryManager.instance.equippedHead.itemId).First();
         }
-        else if (slot == EquipmentSlot.Body)
+        else if (slot == EquipmentSlot.Body &&
+                 eqSprites.Exists(x => x.itemID == InventoryManager.instance.equippedBody.itemId))
         {
             eq = eqSprites.Where(x => x.itemID == InventoryManager.instance.equippedBody.itemId).First();
         }
-        else if (slot == EquipmentSlot.Legs)
+        else if (slot == EquipmentSlot.Legs &&
+                 eqSprites.Exists(x => x.itemID == InventoryManager.instance.equippedLegs.itemId))
         {
             eq = eqSprites.Where(x => x.itemID == InventoryManager.instance.equippedLegs.itemId).First();
         }
