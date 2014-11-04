@@ -34,7 +34,6 @@ public class ItemShopGUI : MonoBehaviour
     public GUISkin activeSkin;
     public Texture tempIcon;
 
-    private InventoryManager inventory;
     private ItemType activeWindow; // the active item shop window
     private int cur_page; // active page number
     private int max_page; //number of pages
@@ -110,11 +109,6 @@ public class ItemShopGUI : MonoBehaviour
     #endregion
     #region currency boxes
 
-    [HideInInspector]
-    public int ntp = 0; // Keeps track of the number of ntp
-    [HideInInspector]
-    public int gtp = 0; // Keeps track of the number of gtp
-
     private Rect currencyNTPRect;
     private Rect currencyGTPRect;
     private GUIStyle NTPStyle;
@@ -162,12 +156,11 @@ public class ItemShopGUI : MonoBehaviour
     private Rect itemPosTop;
     private Rect itemPosBottom;
 
-    public float itemIconScale;
+    private float itemIconScale = 0.5f;
     private Rect itemIconRect;
+    private float itemIconYOffset = -0.1f;
 
     private Texture highlightTexture;
-    public float highlightScale;
-    private Rect highlightRect;
 
     private GUIStyle ntpPurchaseBtnStyle;
     private GUIStyle gtpPurchaseBtnStyle;
@@ -209,8 +202,8 @@ public class ItemShopGUI : MonoBehaviour
     #endregion
     #region Popup Confirmation
 
-    public Rect popupRect;
-    public Rect popupBgRect;
+    private Rect popupRect;
+    private Rect popupBgRect;
     private Rect popupPictureRect;
     private Rect popupLabelRect;
     private Rect popupCancelButtonRect;
@@ -230,7 +223,7 @@ public class ItemShopGUI : MonoBehaviour
     private float popupCancelYOffset = 0.27f;
 
     private GUIStyle popupLabelStyle;
-    public float popupLabelScale;
+    private float popupLabelScale;
     #endregion
     #endregion
 
@@ -239,10 +232,6 @@ public class ItemShopGUI : MonoBehaviour
     {
         // Initialize soomla store
         SoomlaStore.Initialize(new CrapTrapAssets());
-
-        // Inventory
-        // TODO:: need to change
-        inventory = gameObject.GetComponent<InventoryManager>();
 
         // Set the container rect
         containerRect = new Rect(0, 0, Screen.width, Screen.height);
@@ -344,16 +333,12 @@ public class ItemShopGUI : MonoBehaviour
         }
 
         // Calculate item Icon dimensions and offset
-        float itemIconDimension = itemBoxHeight * itemIconScale;
-        float itemIconOffset = (itemBoxWidth - itemIconDimension) * 0.5f;
+        float IconDimension = itemBoxHeight * itemIconScale;
+        float IconXOffset = (itemBoxWidth - IconDimension) * 0.5f;
+        float IconYOffset = (itemBoxHeight - IconDimension) * 0.5f + itemBoxHeight * itemIconYOffset;
 
-        // Calculate item highlight dimension and location
+        // Get the texture for the highlighted item
         highlightTexture = activeSkin.customStyles[16].normal.background;
-        float highlightHeight = itemBoxHeight * highlightScale;
-        float highlightWidth = highlightHeight * ((float)highlightTexture.width / (float)highlightTexture.height);
-        float highlightXOffset = (itemBoxWidth - highlightWidth) * 0.5f;
-        float highlightYOffset = (itemBoxHeight - highlightHeight) * 0.5f;
-        highlightRect = new Rect(highlightXOffset, highlightYOffset, highlightWidth, highlightHeight);
 
         // Calculate button location and dimension
         ntpPurchaseBtnStyle = activeSkin.customStyles[12];
@@ -379,7 +364,7 @@ public class ItemShopGUI : MonoBehaviour
         // Initialise the containers
         itemsContainerRect = new Rect(navContainerRect.width + arrowWidth, 0.5f * (Screen.height - itemsContainerHeight), itemsContainerWidth, itemsContainerHeight);
         itemBgRect = new Rect(0, 0, itemBoxWidth, itemBoxHeight);
-        itemIconRect = new Rect(itemIconOffset, 0, itemIconDimension, itemIconDimension);
+        itemIconRect = new Rect(IconXOffset, IconYOffset, IconDimension, IconDimension);
         item1Rect = new Rect(0, 0, itemBoxWidth, itemBoxHeight);
         item2Rect = new Rect(itemBoxWidth, 0, itemBoxWidth, itemBoxHeight);
         item3Rect = new Rect(2 * itemBoxWidth, 0, itemBoxWidth, itemBoxHeight);
@@ -443,7 +428,7 @@ public class ItemShopGUI : MonoBehaviour
             activeWindow = ItemType.eq_head;
 
             cur_page = 1;
-            TransitionItems(inventory.equipmentsHead.Values.ToList());
+            TransitionItems(InventoryManager.instance.equipmentsHead.Values.ToList());
 
             ChangeCategory();
 
@@ -588,7 +573,7 @@ public class ItemShopGUI : MonoBehaviour
                 activeWindow = ItemType.eq_head;
 
                 cur_page = 1;
-                TransitionItems(inventory.equipmentsHead.Values.ToList());
+                TransitionItems(InventoryManager.instance.equipmentsHead.Values.ToList());
                 
                 ChangeCategory();
             }
@@ -598,7 +583,7 @@ public class ItemShopGUI : MonoBehaviour
                 activeWindow = ItemType.eq_body;
 
                 cur_page = 1;
-                TransitionItems(inventory.equipmentsBody.Values.ToList());
+                TransitionItems(InventoryManager.instance.equipmentsBody.Values.ToList());
 
                 ChangeCategory();
             }
@@ -608,7 +593,7 @@ public class ItemShopGUI : MonoBehaviour
                 activeWindow = ItemType.eq_legs;
 
                 cur_page = 1;
-                TransitionItems(inventory.equipmentsLegs.Values.ToList());
+                TransitionItems(InventoryManager.instance.equipmentsLegs.Values.ToList());
 
                 ChangeCategory();
             }
@@ -618,7 +603,7 @@ public class ItemShopGUI : MonoBehaviour
                 activeWindow = ItemType.item_consumable;
 
                 cur_page = 1;
-                TransitionItems(inventory.itemsConsumable.Values.ToList());
+                TransitionItems(InventoryManager.instance.itemsConsumable.Values.ToList());
 
                 ChangeCategory();
             }
@@ -629,9 +614,9 @@ public class ItemShopGUI : MonoBehaviour
     void Currency()
     {
         // NTP
-        GUI.Label(currencyNTPRect, ntp.ToString(), NTPStyle);
+        GUI.Label(currencyNTPRect, InventoryManager.instance.ntp.ToString(), NTPStyle);
         // GTP
-        GUI.Label(currencyGTPRect, gtp.ToString(), GTPStyle);
+        GUI.Label(currencyGTPRect, InventoryManager.instance.gtp.ToString(), GTPStyle);
     }
 
     void Items()
@@ -791,19 +776,19 @@ public class ItemShopGUI : MonoBehaviour
                 cur_page--;
                 if (activeWindow == ItemType.eq_head)
                 {
-                    TransitionItems(inventory.equipmentsHead.Values.ToList());
+                    TransitionItems(InventoryManager.instance.equipmentsHead.Values.ToList());
                 }
                 else if (activeWindow == ItemType.eq_body)
                 {
-                    TransitionItems(inventory.equipmentsBody.Values.ToList());
+                    TransitionItems(InventoryManager.instance.equipmentsBody.Values.ToList());
                 }
                 else if (activeWindow == ItemType.eq_legs)
                 {
-                    TransitionItems(inventory.equipmentsLegs.Values.ToList());
+                    TransitionItems(InventoryManager.instance.equipmentsLegs.Values.ToList());
                 }
                 else if (activeWindow == ItemType.item_consumable)
                 {
-                    TransitionItems(inventory.itemsConsumable.Values.ToList());
+                    TransitionItems(InventoryManager.instance.itemsConsumable.Values.ToList());
                 }
 
                 PrevPage();
@@ -816,19 +801,19 @@ public class ItemShopGUI : MonoBehaviour
                 cur_page++;
                 if (activeWindow == ItemType.eq_head)
                 {
-                    TransitionItems(inventory.equipmentsHead.Values.ToList());
+                    TransitionItems(InventoryManager.instance.equipmentsHead.Values.ToList());
                 }
                 else if (activeWindow == ItemType.eq_body)
                 {
-                    TransitionItems(inventory.equipmentsBody.Values.ToList());
+                    TransitionItems(InventoryManager.instance.equipmentsBody.Values.ToList());
                 }
                 else if (activeWindow == ItemType.eq_legs)
                 {
-                    TransitionItems(inventory.equipmentsLegs.Values.ToList());
+                    TransitionItems(InventoryManager.instance.equipmentsLegs.Values.ToList());
                 }
                 else if (activeWindow == ItemType.item_consumable)
                 {
-                    TransitionItems(inventory.itemsConsumable.Values.ToList());
+                    TransitionItems(InventoryManager.instance.itemsConsumable.Values.ToList());
                 }
 
                 NextPage();
@@ -839,7 +824,15 @@ public class ItemShopGUI : MonoBehaviour
     void ItemInner(Item item, int index)
     {
         if (item.itemId != "empty"){
-            GUI.DrawTexture(itemIconRect, tempIcon);
+            if (item.icon != null)
+            {
+                GUI.DrawTexture(itemIconRect, item.icon);
+            }
+            else
+            {
+                GUI.DrawTexture(itemIconRect, tempIcon);
+            }
+            
 
             if (goodButton(itemBgRect, "",activeSkin.button))
             {
@@ -856,7 +849,7 @@ public class ItemShopGUI : MonoBehaviour
             }
             if (selected_item == index && selected_item != 0 && !show_popup)
             {
-                GUI.DrawTexture(highlightRect, highlightTexture);
+                GUI.DrawTexture(itemIconRect, highlightTexture);
             }
 
             if (item.currency == CurrencyType.Dollar)
@@ -917,14 +910,21 @@ public class ItemShopGUI : MonoBehaviour
         GUI.BeginGroup(popupRect);
         {
             GUI.Box(popupBgRect, "", popupBgStyle);
-            GUI.DrawTexture(popupPictureRect, tempIcon);
+            if (item.icon != null)
+            {
+                GUI.DrawTexture(popupPictureRect, item.icon);
+            }
+            else
+            {
+                GUI.DrawTexture(popupPictureRect, tempIcon);
+            }
             GUI.Label(popupLabelRect, "Purchase " + item.name + "?", bubbleLabelStyle);
             if (item.currency == CurrencyType.Dollar)
             {
                 if (goodButton(popupConfirmButtonRect, item.dollarPrice.ToString(), dollarPurchaseBtnStyle))
                 {
                     StoreInventory.BuyItem(item.itemId);
-                    inventory.UpdateCurrency();
+                    InventoryManager.instance.UpdateCurrency();
                 }
             }
             else if (item.currency == CurrencyType.GTP)
@@ -932,7 +932,7 @@ public class ItemShopGUI : MonoBehaviour
                 if (goodButton(popupConfirmButtonRect, item.price.ToString(), gtpPurchaseBtnStyle))
                 {
                     StoreInventory.BuyItem(item.itemId);
-                    inventory.UpdateCurrency();
+                    InventoryManager.instance.UpdateCurrency();
                 }
             }
             else if (item.currency == CurrencyType.NTP)
@@ -940,7 +940,7 @@ public class ItemShopGUI : MonoBehaviour
                 if (goodButton(popupConfirmButtonRect, item.price.ToString(), ntpPurchaseBtnStyle))
                 {
                     StoreInventory.BuyItem(item.itemId);
-                    inventory.UpdateCurrency();
+                    InventoryManager.instance.UpdateCurrency();
                 }
             }
         }
@@ -958,7 +958,7 @@ public class ItemShopGUI : MonoBehaviour
     void TransitionItems(List<Item> items)
     {
         int numberOfItems = items.Count;
-        max_page = numberOfItems / 9 + 1;
+        max_page = (numberOfItems - 1) / 9 + 1;
         int offset = 9 * (cur_page - 1);
 
         for (int i = 0; i < transitionItems.Length; i++)

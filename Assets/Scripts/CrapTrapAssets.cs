@@ -30,6 +30,16 @@ public class CrapTrapAssets : IStoreAssets
         return new VirtualGood[] {
             EQ_HEAD_SET_EXPLORER,
             EQ_HEAD_SET_PIRATE,
+            EQ_HEAD_SET_TRIBAL,
+            EQ_HEAD_APPLE_ARROW,
+            EQ_HEAD_BEANIE,
+            EQ_HEAD_CAP,
+            EQ_HEAD_HELMET_BLUE,
+            EQ_HEAD_HELMET_WHITE,
+            EQ_HEAD_NEKOMIMI,
+            EQ_HEAD_PAPERBAG,
+            EQ_HEAD_SHARK,
+            EQ_HEAD_SPECS_BLUE,
             EQ_BODY_SET_EXPLORER,
             EQ_BODY_SET_PIRATE,
             EQ_LEGS_SET_EXPLORER,
@@ -88,7 +98,17 @@ public class CrapTrapAssets : IStoreAssets
         {
             return new VirtualGood[] {
                 EQ_HEAD_SET_EXPLORER,
-                EQ_HEAD_SET_PIRATE
+                EQ_HEAD_SET_PIRATE,
+                EQ_HEAD_SET_TRIBAL,
+                EQ_HEAD_APPLE_ARROW,
+                EQ_HEAD_BEANIE,
+                EQ_HEAD_CAP,
+                EQ_HEAD_HELMET_BLUE,
+                EQ_HEAD_HELMET_WHITE,
+                EQ_HEAD_NEKOMIMI,
+                EQ_HEAD_PAPERBAG,
+                EQ_HEAD_SHARK,
+                EQ_HEAD_SPECS_BLUE
             };
         }
         else if (type == ItemType.eq_body)
@@ -159,7 +179,17 @@ public class CrapTrapAssets : IStoreAssets
     // items
     public const string EQ_HEAD_SET_EXPLORER_ID = "eq_head_set_explorer";
     public const string EQ_HEAD_SET_PIRATE_ID = "eq_head_set_pirate";
-
+    public const string EQ_HEAD_SET_TRIBAL_ID = "eq_head_set_tribal";
+    public const string EQ_HEAD_APPLE_ARROW_ID = "eq_head_apple_arrow";
+    public const string EQ_HEAD_BEANIE_ID = "eq_head_beanie";
+    public const string EQ_HEAD_CAP_ID = "eq_head_cap";
+    public const string EQ_HEAD_HELMET_BLUE_ID = "eq_head_helmet_blue";
+    public const string EQ_HEAD_HELMET_WHITE_ID = "eq_head_helmet_white";
+    public const string EQ_HEAD_NEKOMIMI_ID = "eq_head_nekomimi";
+    public const string EQ_HEAD_PAPERBAG_ID = "eq_head_paperbag";
+    public const string EQ_HEAD_SHARK_ID = "eq_head_shark";
+    public const string EQ_HEAD_SPECS_BLUE_ID = "eq_head_specs_blue";
+    
     // category name
     public const string EQ_HEAD_CATEGORY_NAME = "eq_head";
 
@@ -313,6 +343,86 @@ public class CrapTrapAssets : IStoreAssets
        "[Pirate Head]",                                             // name
        "[Pirate Description]",                                      // description
        EQ_HEAD_SET_PIRATE_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );
+
+    public static EquippableVG EQ_HEAD_SET_TRIBAL = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Tribal Head]",                                             // name
+       "[Tribal Description]",                                      // description
+       EQ_HEAD_SET_TRIBAL_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );
+
+    public static EquippableVG EQ_HEAD_APPLE_ARROW = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Apple Arrow Head]",                                             // name
+       "[Apple Arrow Description]",                                      // description
+       EQ_HEAD_APPLE_ARROW_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );
+    
+    public static EquippableVG EQ_HEAD_BEANIE = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Beanie]",                                             // name
+       "[Beanie Description]",                                      // description
+       EQ_HEAD_BEANIE_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );
+
+    public static EquippableVG EQ_HEAD_CAP = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Cap]",                                             // name
+       "[Cap Description]",                                      // description
+       EQ_HEAD_CAP_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );
+
+    public static EquippableVG EQ_HEAD_HELMET_BLUE = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Helmet (Blue)]",                                             // name
+       "[Helmet (Blue) Description]",                                      // description
+       EQ_HEAD_HELMET_BLUE_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );
+    
+    public static EquippableVG EQ_HEAD_HELMET_WHITE = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Helmet (White)]",                                             // name
+       "[Helmet (White) Description]",                                      // description
+       EQ_HEAD_HELMET_WHITE_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );
+
+    public static EquippableVG EQ_HEAD_NEKOMIMI = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Nekomimi]",                                             // name
+       "[Nekomimi Description]",                                      // description
+       EQ_HEAD_NEKOMIMI_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );
+
+    public static EquippableVG EQ_HEAD_PAPERBAG = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Paperbag]",                                             // name
+       "[Paperbag Description]",                                      // description
+       EQ_HEAD_PAPERBAG_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );
+
+    public static EquippableVG EQ_HEAD_SHARK = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Shark]",                                             // name
+       "[Shark Description]",                                      // description
+       EQ_HEAD_SHARK_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );
+
+    public static EquippableVG EQ_HEAD_SPECS_BLUE = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Blue Specs]",                                             // name
+       "[Blue Specs Description]",                                      // description
+       EQ_HEAD_SPECS_BLUE_ID,                                       // item id
        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
     );
 
