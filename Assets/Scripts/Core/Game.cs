@@ -12,6 +12,7 @@ public class Game : MonoBehaviour
 
     public CTAchievement[] achievements;
     public Dictionary<Stat, double> stats = new Dictionary<Stat,double>();
+    public int numOfAchievements;
 
 	// chapter unlock variables -- TRUE means unlocked
     public bool[] chapterUnlocked;
@@ -80,12 +81,11 @@ public class Game : MonoBehaviour
             Destroy(gameObject);
         }
     }
-	
-	// Constructor
-    public Game()
+
+	// Function to initialize object; called when there is no previous saved file
+    public void Initialize()
     {
-        achievements = new CTAchievement[20];
-        Initialize();
+        achievements = new CTAchievement[numOfAchievements];
         energyCap = 10;
         energy = energyCap;
         setLastLogin();
@@ -111,15 +111,11 @@ public class Game : MonoBehaviour
         stats[Stat.skillsUsed] = 0;
         stats[Stat.achievementUnlocked] = 0;
         stats[Stat.consecutiveLogins] = 0;
-		bagSlots = 2;
+        bagSlots = 2;
 
         isUnlimitedEnergy = false;
-		energyFull = true;
-    }
+        energyFull = true;
 
-	// Function to initialize object; called when there is no previous saved file
-    public void Initialize()
-    {
         // Construct arrays
         stars = new int[7][];
         levelsUnlocked = new bool[7][];
@@ -253,8 +249,14 @@ public class Game : MonoBehaviour
             stats[Stat.treasures] = info.treasures;
             stagesCompletedPerChapter = info.stagesCompletedPerChapter;
 
+            setLastLogin();
+
             energy = checkAndGetEnergy();
             checkUnlimitedEnergy();
+        }
+        else
+        {
+            Initialize();
         }
     }
 
