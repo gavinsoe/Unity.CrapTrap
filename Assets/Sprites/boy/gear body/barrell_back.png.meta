@@ -1,8 +1,8 @@
 fileFormatVersion: 2
-guid: 025ba0c95ce9a47c29f9f463b0eb9e3d
+guid: 0a1fed975215745b2a5f17a446d13407
 TextureImporter:
   fileIDToRecycleName:
-    21300000: labcoat_0
+    21300000: barrell_back_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -44,15 +44,15 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: labcoat_0
+    - name: barrell_back_0
       rect:
         serializedVersion: 2
-        x: 33
-        y: 36
-        width: 82
+        x: 20
+        y: 37
+        width: 110
         height: 105
       alignment: 9
-      pivot: {x: .895901918, y: .752342522}
+      pivot: {x: .494849205, y: .822772086}
       border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 
