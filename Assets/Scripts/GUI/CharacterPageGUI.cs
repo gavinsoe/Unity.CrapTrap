@@ -1,42 +1,44 @@
 ﻿using Soomla;
 using Soomla.Store;
 using UnityEngine;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public class ItemShopGUI : MonoBehaviour
+public class CharacterPageGUI : MonoBehaviour 
 {
     /* GUI Skin
      * Custom Styles [0] = Background
-     * Custom Styles [1] = Shopkeeper
-     * Custom Styles [2] = Back Button
-     * Custom Styles [3] = Head Button
-     * Custom Styles [4] = Upper Body Button
-     * Custom Styles [5] = Lower Body Button
-     * Custom Styles [6] = Item Button
-     * Custom Styles [7] = GTP
-     * Custom Styles [8] = NTP
-     * Custom Styles [9] = Item Container
-     * Custom Styles [10] = Arrow Next
-     * Custom Styles [11] = Arrow Prev
-     * Custom Styles [12] = NTP Purchase Button
-     * Custom Styles [13] = GTP Purchase Button
-     * Custom Styles [14] = $ Purchase Button
-     * Custom Styles [15] = Sold out
-     * Custom Styles [16] = Item Highlight
-     * Custom Styles [17] = Speech Bubble
-     * Custom Styles [18] = Popup box
-     * Custom Styles [19] = Cancel Button
-     * Custom Styles [20] = Shading base
+     * Custom Styles [1] = Back Button
+     * Custom Styles [2] = Head Button
+     * Custom Styles [3] = Upper Body Button
+     * Custom Styles [4] = Lower Body Button
+     * Custom Styles [5] = Item Button
+     * Custom Styles [6] = GTP
+     * Custom Styles [7] = NTP
+     * Custom Styles [8] = Item Frame
+     * Custom Styles [9] = Arrow Next
+     * Custom Styles [10] = Arrow Prev
+     * Custom Styles [11] = Backpack
+     * Custom Styles [12] = Equipment Triangle
+     * Custom Styles [13] = Item Slot Empty
+     * Custom Styles [14] = Item Slot Filled
+     * Custom Styles [15] = Gear Slot Empty
+     * Custom Styles [16] = Gear Slot Head
+     * Custom Styles [17] = Gear Slot Body
+     * Custom Styles [18] = Gear Slot Legs
+     * Custom Styles [19] = Popup Box
+     * Custom Styles [20] = Cancel Button
+     * Custom Styles [21] = Shading Base
+     * Custom Styles [22] = Popup Button
      */
+
     public GUISkin activeSkin;
     public Texture tempIcon;
 
-    private ItemType activeWindow; // the active item shop window
+    private ItemType activeWindow; // the active equipment window
     private int cur_page; // active page number
-    private int max_page; //number of pages
+    private int max_page; // number of pages
     private int selected_item = 0; // index of the selected item
     private bool initialized = false;
     private bool show_popup = false;
@@ -71,12 +73,6 @@ public class ItemShopGUI : MonoBehaviour
 
     private Rect bgRect; // background Rect
     private Texture bgTexture; // The background texture
-
-    private Rect shopkeeperRect; // shopkeeper Rect
-    private Texture shopkeeperTexture; // shopkeeper texture
-    private float shopkeeperScale = 0.72f;
-    private float shopkeeperXOffset = 0.73f;
-    private float shopkeeperYOffset = 0.54f;
 
     #endregion
     #region navigation
@@ -122,21 +118,25 @@ public class ItemShopGUI : MonoBehaviour
     private float currencyEdgeSpacing = 0.95f; // Space between the currency box and the edge of the screen.
 
     #endregion
+    #region Item Frame
+
+    private Rect itemShelfRect;
+    private Rect itemShelfBgRect;
+    private Texture itemShelfTexture;
+
+    private float itemShelfXOffset = 0.15f;
+    private float itemShelfScale = 0.98f;
+    private float itemBoxScale = 0.217f;
+    private float colOffset1 = 0.045f;
+    private float colOffset2 = 0.361f;
+    private float colOffset3 = 0.677f;
+    private float rowOffset1 = 0.032f;
+    private float rowOffset2 = 0.270f;
+    private float rowOffset3 = 0.513f;
+
+    #endregion
     #region Items
 
-    /* ╔═══╗ ╔═══╗ ╔═══╗
-     * ║ 1 ║ ║ 2 ║ ║ 3 ║
-     * ╚═══╝ ╚═══╝ ╚═══╝
-     * ╔═══╗ ╔═══╗ ╔═══╗
-     * ║ 4 ║ ║ 5 ║ ║ 6 ║
-     * ╚═══╝ ╚═══╝ ╚═══╝
-     * ╔═══╗ ╔═══╗ ╔═══╗
-     * ║ 7 ║ ║ 8 ║ ║ 9 ║
-     * ╚═══╝ ╚═══╝ ╚═══╝
-     */
-    private Texture itemBoxTexture;
-    private Texture soldOutTexture;
-    private Rect itemsContainerRect;
     private Rect item1Rect;
     private Rect item2Rect;
     private Rect item3Rect;
@@ -146,7 +146,6 @@ public class ItemShopGUI : MonoBehaviour
     private Rect item7Rect;
     private Rect item8Rect;
     private Rect item9Rect;
-    private Rect itemBgRect;
 
     private Rect itemInnerContainerRect;
     private Rect itemTransitionContainerRect;
@@ -156,82 +155,112 @@ public class ItemShopGUI : MonoBehaviour
     private Rect itemPosTop;
     private Rect itemPosBottom;
 
-    private float itemIconScale = 0.5f;
+    private float itemIconScale = 1;
     private Rect itemIconRect;
-    private float itemIconYOffset = -0.1f;
 
-    private Texture highlightTexture;
+    public float itemSlotInnerScale = 0.7f;
+    private Rect itemSlotInnerRect;
 
-    private GUIStyle ntpPurchaseBtnStyle;
-    private GUIStyle gtpPurchaseBtnStyle;
-    private GUIStyle dollarPurchaseBtnStyle;
-    private float itemBtnScale = 0.22f;
-    private float itemBtnYOffset = 0.68f;
-    private float itemBtnLabelXOffset = 0.13f;
-    private float itemBtnLabelYOffset = -0.02f;
-    private float itemBtnLabelScale = 0.4f;
-    private Rect itemBtnRect;
+    #endregion
+    #region Arrows
 
     private GUIStyle arrowNextStyle;
     private Rect arrowNextRect;
     private GUIStyle arrowPrevStyle;
     private Rect arrowPrevRect;
     private float arrowScale = 0.08f;
-    
-    #endregion
-    #region Speech Bubble
-
-    private Rect bubbleRect;
-    private Rect bubbleContainerRect;
-    private Rect closedBubbleRect;
-    private Rect openBubbleRect;
-    private Texture bubbleTexture;
-
-    private float bubbleScale = 0.42f;
-    private float bubbleYOffset = 0.21f;
-    private string bubbleText;
-
-    private Rect bubbleLabelRect;
-    private GUIStyle bubbleLabelStyle;
-    private float bubbleLabelXPadding = 0.09f;
-    private float bubbleLabelYPadding = 0.11f;
-    private float bubbleLabelXScale = 0.82f;
-    private float bubbleLabelYScale = 0.7f;
-    private float bubbleLabelFontScale = 0.12f;
 
     #endregion
-    #region Popup Confirmation
+    #region Equipped Consumables
 
-    private Rect popupRect;
-    private Rect popupBgRect;
-    private Rect popupPictureRect;
-    private Rect popupLabelRect;
-    private Rect popupCancelButtonRect;
-    private Rect popupConfirmButtonRect;
+    private Texture backpackTexture;
+    private Rect backpackRect;
+    private float backpackScale = 0.17f;
+    private float backpackXOffset = 0.07f;
+    private float backpackYOffset = 0.775f;
+
+    private float consumablesXOffset = 0.3f;
+    private float consumablesYOffset = 0.78f;
+    private float consumablesScale = 0.16f;
+    private Texture itemEmptyTexture;
+    private Texture itemFilledTexture;
+    private Rect consumable1Rect;
+    private Rect consumable2Rect;
+    private Rect consumable3Rect;
+
+    private float consumableIconScale = 1f;
+    private Rect consumableIconRect;
+
+    public float consumableInnerScale = 0.7f;
+    private Rect consumableInnerRect;
+
+    #endregion
+    #region Equipment Triangle
+
+    private Rect eqTriangleContainerRect;
+    public float triangleYOffset;
+    private Texture triangleTexture;
+    private Rect triangleRect;
+
+    private float eqSlotScale = 0.28f;
+    private Texture gearEmptyTexture;
+    private Texture gearHeadTexture;
+    private Texture gearBodyTexture;
+    private Texture gearLegsTexture;
+
+    private float eqSlotHeadXOffset = 0.5f;
+    private float eqSlotHeadYOffset = 0.16f;
+    private Rect eqSlotHeadRect;
+
+    private float eqSlotBodyXOffset = 0.12f;
+    private float eqSlotBodyYOffset = 0.86f;
+    private Rect eqSlotBodyRect;
+
+    private float eqSlotLegsXOffset = 0.88f;
+    private float eqSlotLegsYOffset = 0.86f;
+    private Rect eqSlotLegsRect;
+
+    public float eqSlotIconScale = 1f;
+    private Rect eqSlotIconRect;
+
+    public float eqSlotInnerScale = 0.7f;
+    private Rect eqSlotInnerRect;
+
+    private Rect triangleContainer;
+
+    #endregion
+    #region
+
+    public Rect popupRect;
+    public Rect popupBgRect;
+    public Rect popupPictureRect;
+    public Rect popupLabelRect;
+    public Rect popupCancelButtonRect;
+    public Rect popupConfirmButtonRect;
 
     private GUIStyle shadingStyle;
     private GUIStyle popupBgStyle;
     private GUIStyle popupCancelStyle;
-    private float popupXScale = 0.9f; // ratio of the popup box, based on the 'shelves' (3x3 boxes)
-    private float popupRatio = 0.4f; // y:x ratio 2:5
-    private float popupPadding = 20f;
+    public float popupXScale = 0.9f; // ratio of the popup box, based on the 'shelves' (3x3 boxes)
+    public float popupRatio = 0.4f; // y:x ratio 2:5
+    public float popupPadding = 20f;
 
-    private float popupConfirmBtnScale = 0.25f;
+    public float popupConfirmBtnScale = 0.25f;
 
-    private float popupCancelBtnScale = 0.28f;
-    private float popupCancelXOffset = 0.7f;
-    private float popupCancelYOffset = 0.27f;
+    public float popupCancelBtnScale = 0.28f;
+    public float popupCancelXOffset = 0.7f;
+    public float popupCancelYOffset = 0.27f;
 
     private GUIStyle popupLabelStyle;
+    private GUIStyle popupBtnStyle;
     private float popupLabelScale;
+
     #endregion
+
     #endregion
 
     // Use this for initialization
-    void Start() 
-    {
-        // Initialize soomla store
-        SoomlaStore.Initialize(new CrapTrapAssets());
+	void Start () {
 
         // Set the container rect
         containerRect = new Rect(0, 0, Screen.width, Screen.height);
@@ -242,35 +271,26 @@ public class ItemShopGUI : MonoBehaviour
         bgRect = new Rect(0, 0, Screen.width, Screen.height);
         bgTexture = activeSkin.customStyles[0].normal.background;
 
-        // Fox Lady
-        shopkeeperTexture = activeSkin.customStyles[1].normal.background;
-        float shopkeeperHeight = Screen.height * shopkeeperScale;
-        float shopkeeperWidth = shopkeeperHeight * ((float)shopkeeperTexture.width / (float)shopkeeperTexture.height);
-        shopkeeperRect = new Rect(Screen.width - shopkeeperWidth,
-                                    Screen.height * shopkeeperYOffset,
-                                    shopkeeperWidth,
-                                    shopkeeperHeight);
-
         #endregion
         #region navigation
 
-        btnBackStyle = activeSkin.customStyles[2];
+        btnBackStyle = activeSkin.customStyles[1];
 
-        btnHeadActiveTexture = activeSkin.customStyles[3].onNormal.background;
-        btnHeadInactiveTexture = activeSkin.customStyles[3].normal.background;
-        btnHeadStyle = new GUIStyle(activeSkin.customStyles[3]);
+        btnHeadActiveTexture = activeSkin.customStyles[2].onNormal.background;
+        btnHeadInactiveTexture = activeSkin.customStyles[2].normal.background;
+        btnHeadStyle = new GUIStyle(activeSkin.customStyles[2]);
 
-        btnBodyActiveTexture = activeSkin.customStyles[4].onNormal.background;
-        btnBodyInactiveTexture = activeSkin.customStyles[4].normal.background;
-        btnBodyStyle = new GUIStyle(activeSkin.customStyles[4]);
+        btnBodyActiveTexture = activeSkin.customStyles[3].onNormal.background;
+        btnBodyInactiveTexture = activeSkin.customStyles[3].normal.background;
+        btnBodyStyle = new GUIStyle(activeSkin.customStyles[3]);
 
-        btnLegsActiveTexture = activeSkin.customStyles[5].onNormal.background;
-        btnLegsInactiveTexture = activeSkin.customStyles[5].normal.background;
-        btnLegsStyle = new GUIStyle(activeSkin.customStyles[5]);
+        btnLegsActiveTexture = activeSkin.customStyles[4].onNormal.background;
+        btnLegsInactiveTexture = activeSkin.customStyles[4].normal.background;
+        btnLegsStyle = new GUIStyle(activeSkin.customStyles[4]);
 
-        btnItemActiveTexture = activeSkin.customStyles[6].onNormal.background;
-        btnItemInactiveTexture = activeSkin.customStyles[6].normal.background;
-        btnItemStyle = new GUIStyle(activeSkin.customStyles[6]);
+        btnItemActiveTexture = activeSkin.customStyles[5].onNormal.background;
+        btnItemInactiveTexture = activeSkin.customStyles[5].normal.background;
+        btnItemStyle = new GUIStyle(activeSkin.customStyles[5]);
 
         float btnHeight = Screen.height / 7;
         Texture backBtnTexture = btnBackStyle.normal.background;
@@ -290,8 +310,8 @@ public class ItemShopGUI : MonoBehaviour
         #endregion
         #region currency boxes
 
-        NTPStyle = new GUIStyle(activeSkin.customStyles[8]);
-        GTPStyle = new GUIStyle(activeSkin.customStyles[7]);
+        NTPStyle = new GUIStyle(activeSkin.customStyles[7]);
+        GTPStyle = new GUIStyle(activeSkin.customStyles[6]);
         Texture currencyTexture = NTPStyle.normal.background;
         float currencyBoxHeight = Screen.height * currencyBoxScale;
         float currencyBoxWidth = currencyBoxHeight * ((float)currencyTexture.width / (float)currencyTexture.height);
@@ -307,83 +327,69 @@ public class ItemShopGUI : MonoBehaviour
         currencyGTPRect = new Rect(Screen.width - ((currencyEdgeSpacing + currencySpacing) * currencyBoxWidth), currencyBoxHeight * 0.1f, currencyBoxWidth, currencyBoxHeight);
 
         #endregion
-        #region item container
+        #region Item Shelf
 
-        itemBoxTexture = activeSkin.customStyles[9].normal.background;
-        arrowNextStyle = activeSkin.customStyles[10];
-        arrowPrevStyle = activeSkin.customStyles[11];
-        soldOutTexture = activeSkin.customStyles[15].normal.background;
+        itemShelfTexture = activeSkin.customStyles[8].normal.background;
+        float shelfHeight = Screen.height * itemShelfScale;
+        float shelfWidth = Screen.height * ((float)itemShelfTexture.width / (float)itemShelfTexture.height);
+        float shelfXOffset = Screen.width * itemShelfXOffset;
+        float shelfYOffset = (Screen.height - shelfHeight) / 2;
+
+        itemShelfRect = new Rect(shelfXOffset, shelfYOffset, shelfWidth, shelfHeight);
+        itemShelfBgRect = new Rect(0, 0, shelfWidth, shelfHeight);
+
+        #endregion
+        #region Items
+
+        // Calculate item dimensions and offsets
+        float col1 = shelfWidth * colOffset1;
+        float col2 = shelfWidth * colOffset2;
+        float col3 = shelfWidth * colOffset3;
+        float row1 = shelfHeight * rowOffset1;
+        float row2 = shelfHeight * rowOffset2;
+        float row3 = shelfHeight * rowOffset3;
+        float itemBoxDimension = shelfHeight * itemBoxScale;
+
+        // Calculate item Icon dimension and offset
+        float itemIconDimension = itemBoxDimension * itemIconScale;
+        float itemIconOffset = (itemBoxDimension - itemIconDimension) * 0.5f;
+
+        // Positioning
+        itemIconRect = new Rect(itemIconOffset, itemIconOffset, itemIconDimension, itemIconDimension);
+        item1Rect = new Rect(col1, row1, itemBoxDimension, itemBoxDimension);
+        item2Rect = new Rect(col2, row1, itemBoxDimension, itemBoxDimension);
+        item3Rect = new Rect(col3, row1, itemBoxDimension, itemBoxDimension);
+        item4Rect = new Rect(col1, row2, itemBoxDimension, itemBoxDimension);
+        item5Rect = new Rect(col2, row2, itemBoxDimension, itemBoxDimension);
+        item6Rect = new Rect(col3, row2, itemBoxDimension, itemBoxDimension);
+        item7Rect = new Rect(col1, row3, itemBoxDimension, itemBoxDimension);
+        item8Rect = new Rect(col2, row3, itemBoxDimension, itemBoxDimension);
+        item9Rect = new Rect(col3, row3, itemBoxDimension, itemBoxDimension);
+
+        itemPosCenter = new Rect(0, 0, itemBoxDimension, itemBoxDimension);
+        itemPosLeft = new Rect(-itemBoxDimension, 0, itemBoxDimension, itemBoxDimension);
+        itemPosRight = new Rect(itemBoxDimension, 0, itemBoxDimension, itemBoxDimension);
+        itemPosTop = new Rect(0, -itemBoxDimension, itemBoxDimension, itemBoxDimension);
+        itemPosBottom = new Rect(0, itemBoxDimension, itemBoxDimension, itemBoxDimension);
+        itemInnerContainerRect = itemPosCenter;
+        itemTransitionContainerRect = itemPosLeft;
+
+        #endregion
+        #region Arrow Nav
+
+        arrowNextStyle = activeSkin.customStyles[9];
+        arrowPrevStyle = activeSkin.customStyles[10];
 
         Texture arrowTexture = arrowNextStyle.normal.background;
         float arrowHeight = Screen.height * arrowScale;
         float arrowWidth = arrowHeight * ((float)arrowTexture.width / (float)arrowTexture.height);
+        float arrowPrevXOffset = itemShelfRect.x - arrowWidth;
+        float arrowNextXOffset = itemShelfRect.x + itemShelfRect.width;
+        float arrowYOffset = itemShelfRect.y + row2 + 0.5f * (itemBoxDimension - arrowHeight);
+        arrowNextRect = new Rect(arrowNextXOffset, arrowYOffset, arrowWidth, arrowHeight);
+        arrowPrevRect = new Rect(arrowPrevXOffset, arrowYOffset, arrowWidth, arrowHeight);
 
-        float itemsContainerWidth = currencyGTPRect.x - navContainerRect.width - 2 * arrowWidth;
-        float itemBoxWidth = itemsContainerWidth / 3;
-        float itemBoxHeight = itemBoxWidth * ((float)itemBoxTexture.height / (float)itemBoxTexture.width);
-        float itemsContainerHeight = itemBoxHeight * 3;
-
-        // Make sure it doesn't exceed screen height
-        if (Screen.height < itemsContainerHeight)
-        {
-            itemsContainerHeight = Screen.height;
-            itemBoxHeight = itemsContainerHeight / 3;
-            itemBoxWidth = itemBoxHeight * ((float)itemBoxTexture.width / (float)itemBoxTexture.height);
-            itemsContainerWidth = itemBoxWidth * 3;
-        }
-
-        // Calculate item Icon dimensions and offset
-        float IconDimension = itemBoxHeight * itemIconScale;
-        float IconXOffset = (itemBoxWidth - IconDimension) * 0.5f;
-        float IconYOffset = (itemBoxHeight - IconDimension) * 0.5f + itemBoxHeight * itemIconYOffset;
-
-        // Get the texture for the highlighted item
-        highlightTexture = activeSkin.customStyles[16].normal.background;
-
-        // Calculate button location and dimension
-        ntpPurchaseBtnStyle = activeSkin.customStyles[12];
-        gtpPurchaseBtnStyle = activeSkin.customStyles[13];
-        dollarPurchaseBtnStyle = activeSkin.customStyles[14];
-
-        float itemBtnHeight = itemBoxHeight * itemBtnScale;
-        float itemBtnWidth = itemBtnHeight * ((float)ntpPurchaseBtnStyle.normal.background.width /
-                                              (float)ntpPurchaseBtnStyle.normal.background.height);
-        float btnXOffset = (itemBoxWidth - itemBtnWidth) * 0.5f;
-        float btnYOffset = itemBoxHeight * itemBtnYOffset;
-        itemBtnRect = new Rect(btnXOffset, btnYOffset, itemBtnWidth, itemBtnHeight);
-
-        int btnLabelFontSize = (int)(itemBtnHeight * itemBtnLabelScale);
-        Vector2 btnLabelOffset = new Vector2(itemBtnWidth * itemBtnLabelXOffset, itemBtnHeight * itemBtnLabelYOffset);
-        ntpPurchaseBtnStyle.contentOffset = btnLabelOffset;
-        ntpPurchaseBtnStyle.fontSize = btnLabelFontSize;
-        gtpPurchaseBtnStyle.contentOffset = btnLabelOffset;
-        gtpPurchaseBtnStyle.fontSize = btnLabelFontSize;
-        dollarPurchaseBtnStyle.contentOffset = btnLabelOffset;
-        dollarPurchaseBtnStyle.fontSize = btnLabelFontSize;
-
-        // Initialise the containers
-        itemsContainerRect = new Rect(navContainerRect.width + arrowWidth, 0.5f * (Screen.height - itemsContainerHeight), itemsContainerWidth, itemsContainerHeight);
-        itemBgRect = new Rect(0, 0, itemBoxWidth, itemBoxHeight);
-        itemIconRect = new Rect(IconXOffset, IconYOffset, IconDimension, IconDimension);
-        item1Rect = new Rect(0, 0, itemBoxWidth, itemBoxHeight);
-        item2Rect = new Rect(itemBoxWidth, 0, itemBoxWidth, itemBoxHeight);
-        item3Rect = new Rect(2 * itemBoxWidth, 0, itemBoxWidth, itemBoxHeight);
-        item4Rect = new Rect(0, itemBoxHeight, itemBoxWidth, itemBoxHeight);
-        item5Rect = new Rect(itemBoxWidth, itemBoxHeight, itemBoxWidth, itemBoxHeight);
-        item6Rect = new Rect(2 * itemBoxWidth, itemBoxHeight, itemBoxWidth, itemBoxHeight);
-        item7Rect = new Rect(0, 2 * itemBoxHeight, itemBoxWidth, itemBoxHeight);
-        item8Rect = new Rect(itemBoxWidth, 2 * itemBoxHeight, itemBoxWidth, itemBoxHeight);
-        item9Rect = new Rect(2 * itemBoxWidth, 2 * itemBoxHeight, itemBoxWidth, itemBoxHeight);
-        arrowNextRect = new Rect(itemsContainerRect.x + itemsContainerRect.width, 0.5f * (Screen.height - arrowHeight), arrowWidth, arrowHeight);
-        arrowPrevRect = new Rect(itemsContainerRect.x - arrowWidth, 0.5f * (Screen.height - arrowHeight), arrowWidth, arrowHeight);
-
-        itemPosCenter = itemBgRect;
-        itemPosLeft = new Rect(-itemBgRect.width, 0, itemBgRect.width, itemBgRect.height);
-        itemPosRight = new Rect(itemBgRect.width, 0, itemBgRect.width, itemBgRect.height);
-        itemPosTop = new Rect(0, -itemBgRect.height, itemBgRect.width, itemBgRect.height);
-        itemPosBottom = new Rect(0, itemBgRect.height, itemBgRect.width, itemBgRect.height);
-        itemInnerContainerRect = itemPosCenter;
-        itemTransitionContainerRect = itemPosLeft;
+        #endregion
 
         // Initialise empty item objects
         int count = 0;
@@ -393,42 +399,117 @@ public class ItemShopGUI : MonoBehaviour
             transitionItems[count] = new Item();
             count++;
         }
+    }
+	
+	// Update is called once per frame
+	void Update ()
+    {
+        #region Backpack
+
+        backpackTexture = activeSkin.customStyles[11].normal.background;
+        float bpkHeight = itemShelfRect.height * backpackScale;
+        float bpkWidth = bpkHeight * ((float)backpackTexture.width / (float)backpackTexture.height);
+        float bpkXOffset = itemShelfRect.width * backpackXOffset;
+        float bpkYOffset = itemShelfRect.height * backpackYOffset;
+
+        backpackRect = new Rect(bpkXOffset, bpkYOffset, bpkWidth, bpkHeight);
+
         #endregion
-        #region speech bubble
+        #region Consumable Items
 
-        // Speech Bubble
-        bubbleTexture = activeSkin.customStyles[17].normal.background;
-        float bubbleHeight = Screen.height * bubbleScale;
-        float bubbleWidth = bubbleHeight * ((float)bubbleTexture.width / (float)bubbleTexture.height);
-        bubbleRect = new Rect(0,0,bubbleWidth,bubbleHeight);
+        itemEmptyTexture = activeSkin.customStyles[13].normal.background;
+        itemFilledTexture = activeSkin.customStyles[14].normal.background;
 
-        openBubbleRect = new Rect(Screen.width - bubbleWidth,
-                              Screen.height * bubbleYOffset,
-                              bubbleWidth,
-                              bubbleHeight);
-        closedBubbleRect = new Rect(openBubbleRect.x + (openBubbleRect.width * 0.5f), openBubbleRect.y + openBubbleRect.height, 0, 0);
-        bubbleContainerRect = closedBubbleRect;
+        float conHeight = itemShelfRect.height * consumablesScale;
+        float conWidth = conHeight * ((float)itemEmptyTexture.width / (float)itemEmptyTexture.height);
+        float conXOffset = itemShelfRect.width * consumablesXOffset;
+        float conYOffset = itemShelfRect.height * consumablesYOffset;
 
-        bubbleLabelStyle = new GUIStyle(activeSkin.label);
-        float bblXPadding = bubbleWidth * bubbleLabelXPadding;
-        float bblYPadding = bubbleHeight * bubbleLabelYPadding;
-        float bblWidth = bubbleWidth * bubbleLabelXScale;
-        float bblheight = bubbleHeight * bubbleLabelYScale;
-        bubbleLabelRect = new Rect(bblXPadding, bblYPadding, bblWidth, bblheight);
-        bubbleLabelStyle.fontSize = (int)(bubbleLabelFontScale * bblheight);
+        consumable1Rect = new Rect(conXOffset,conYOffset,conWidth,conHeight);
+        consumable2Rect = new Rect(conXOffset + conWidth, conYOffset, conWidth, conHeight);
+        consumable3Rect = new Rect(conXOffset + 2 * conWidth, conYOffset, conWidth, conHeight);
+        
+        // Calculate item Icon dimension and offset
+        float conIconHeight = conHeight * consumableIconScale;
+        float conIconWidth = conIconHeight * (conWidth / conHeight);
+        float conIconXOffset = (conWidth - conIconWidth) * 0.5f;
+        float conIconYOffset = (conHeight - conIconHeight) * 0.5f;
 
+        // calculate the equipment icon size
+        float conInnerHeight = conIconHeight * eqSlotInnerScale;
+        float conInnerWidth = conInnerHeight;
+        float conInnerXOffset = (conIconHeight - conInnerHeight) * 0.5f;
+        float conInnerYOffset = (conIconWidth - conInnerWidth) * 0.5f;
+
+        consumableIconRect = new Rect(conIconXOffset, conIconYOffset, conIconWidth, conIconHeight);
+        consumableInnerRect = new Rect(conInnerXOffset, conInnerYOffset, conInnerWidth, conInnerHeight);
+
+        #endregion
+        #region Equipment Triangle
+
+        gearEmptyTexture = activeSkin.customStyles[15].normal.background;
+        gearHeadTexture = activeSkin.customStyles[16].normal.background;
+        gearBodyTexture = activeSkin.customStyles[17].normal.background;
+        gearLegsTexture = activeSkin.customStyles[18].normal.background;
+
+        float tContainerHeight = Screen.height;
+        float tContainerWidth = Screen.width - arrowNextRect.x;
+        float tContainerXOffset = arrowNextRect.x;
+        float tContainerYOffset = 0f;
+
+        triangleTexture = activeSkin.customStyles[12].normal.background;
+        float tWidth = tContainerWidth;
+        float tHeight = tWidth * ((float)triangleTexture.height / (float)triangleTexture.width);
+        float tXOffset = 0;
+        float tYOffset = 0.5f * (tContainerHeight - tHeight) + (tContainerHeight * triangleYOffset);
+
+        float eqSlotHeight = tHeight * eqSlotScale;
+        float eqSlotWidth = eqSlotHeight * ((float)gearEmptyTexture.width / (float)gearEmptyTexture.height);
+
+        float eqHeadXOffset = tXOffset + (tWidth * eqSlotHeadXOffset) - (eqSlotWidth * 0.5f);
+        float eqHeadYOffset = tYOffset + (tHeight * eqSlotHeadYOffset) - (eqSlotHeight * 0.5f);
+
+        float eqBodyXOffset = tXOffset + (tWidth * eqSlotBodyXOffset) - (eqSlotWidth * 0.5f);
+        float eqBodyYOffset = tYOffset + (tHeight * eqSlotBodyYOffset) - (eqSlotHeight * 0.5f);
+
+        float eqLegsXOffset = tXOffset + (tWidth * eqSlotLegsXOffset) - (eqSlotWidth * 0.5f);
+        float eqLegsYOffset = tYOffset + (tHeight * eqSlotLegsYOffset) - (eqSlotHeight * 0.5f);
+
+        // calculate the container icon size
+        float eqSlotIconHeight = eqSlotHeight * eqSlotIconScale;
+        float eqSlotIconWidth = eqSlotWidth * eqSlotIconScale;
+        float eqSlotIconYOffset = (eqSlotHeight - eqSlotIconHeight) * 0.5f;
+        float eqSlotIconXOffset = (eqSlotWidth - eqSlotIconWidth) * 0.5f;
+
+        // calculate the equipment icon size
+        float eqSlotInnerHeight = eqSlotIconHeight * eqSlotInnerScale;
+        float eqSlotInnerWidth = eqSlotInnerHeight;
+        float eqslotInnerXOffset = (eqSlotIconHeight - eqSlotInnerHeight) * 0.5f;
+        float eqSlotInnerYOffset = (eqSlotIconWidth - eqSlotInnerWidth) * 0.5f;
+
+        //float eqSlotIconHeight = eqSlotHeight * eqSlotInnerIconScale;
+
+        eqTriangleContainerRect = new Rect(tContainerXOffset, tContainerYOffset, tContainerWidth, tContainerHeight);
+        triangleRect = new Rect(tXOffset, tYOffset, tWidth, tHeight);
+        eqSlotHeadRect = new Rect(eqHeadXOffset, eqHeadYOffset, eqSlotWidth, eqSlotHeight);
+        eqSlotBodyRect = new Rect(eqBodyXOffset, eqBodyYOffset, eqSlotWidth, eqSlotHeight);
+        eqSlotLegsRect = new Rect(eqLegsXOffset, eqLegsYOffset, eqSlotWidth, eqSlotHeight);
+        eqSlotIconRect = new Rect(eqSlotIconXOffset, eqSlotIconYOffset, eqSlotIconWidth, eqSlotIconHeight);
+        eqSlotInnerRect = new Rect(eqslotInnerXOffset, eqSlotInnerYOffset, eqSlotInnerWidth, eqSlotInnerHeight);
+        
+        
         #endregion
         #region popup confirmation
 
         // Shading base
-        shadingStyle = activeSkin.customStyles[20];
+        shadingStyle = activeSkin.customStyles[21];
 
         // Container
-        float popupXDimension = itemsContainerRect.width * popupXScale;
+        float popupXDimension = itemShelfRect.width * popupXScale;
         float popupYDimension = popupXDimension * popupRatio;
-        float popupXOffset = itemsContainerRect.x + (itemsContainerRect.width - popupXDimension) * 0.5f;
-        float popupYOffset = itemsContainerRect.y + (itemsContainerRect.height - popupYDimension) * 0.5f;
-        popupBgStyle = activeSkin.customStyles[18];
+        float popupXOffset = itemShelfRect.x + (itemShelfRect.width - popupXDimension) * 0.5f;
+        float popupYOffset = itemShelfRect.y + (itemShelfRect.height - popupYDimension) * 0.5f;
+        popupBgStyle = activeSkin.customStyles[19];
 
         // Preview Pic
         float popupPicDimension = popupYDimension - 2 * popupPadding;
@@ -436,7 +517,7 @@ public class ItemShopGUI : MonoBehaviour
         float popupPicYOffset = popupPadding;
 
         // Cancel button
-        popupCancelStyle = activeSkin.customStyles[19];
+        popupCancelStyle = activeSkin.customStyles[20];
         float cancelBtnHeight = popupYDimension * popupCancelBtnScale;
         float cancelBtnWidth = cancelBtnHeight * ((float)popupCancelStyle.normal.background.width /
                                                   (float)popupCancelStyle.normal.background.height);
@@ -444,9 +525,10 @@ public class ItemShopGUI : MonoBehaviour
         float cancelBtnYOffset = popupYOffset - (cancelBtnHeight * popupCancelYOffset);
 
         // Confirm Button
+        popupBtnStyle = activeSkin.customStyles[22];
         float confirmBtnHeight = popupYDimension * popupConfirmBtnScale;
-        float confirmBtnWidth = confirmBtnHeight * ((float)ntpPurchaseBtnStyle.normal.background.width /
-                                                    (float)ntpPurchaseBtnStyle.normal.background.height);
+        float confirmBtnWidth = confirmBtnHeight * ((float)popupBtnStyle.normal.background.width /
+                                                    (float)popupBtnStyle.normal.background.height);
         float confirmBtnXOffset = (popupXDimension - popupPicDimension - confirmBtnWidth - 2 * popupPadding) * 0.5f + popupPicDimension + popupPadding;
         float confirmBtnYOffset = (popupYDimension - confirmBtnHeight - popupPadding);
 
@@ -467,17 +549,15 @@ public class ItemShopGUI : MonoBehaviour
         popupLabelRect = new Rect(popupLabelXOffset, popupLabelYOffset, popupLabelWidth, popupLabelHeight);
 
         #endregion
-    }
 
-    void Update()
-    {
-        // initialise items
+        // Initialise Items
         if (!initialized)
         {
             activeWindow = ItemType.eq_head;
 
             cur_page = 1;
-            TransitionItems(InventoryManager.instance.equipmentsHead.Values.ToList());
+
+            TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_head));
 
             ChangeCategory();
 
@@ -513,35 +593,21 @@ public class ItemShopGUI : MonoBehaviour
             btnItemStyle.normal.background = btnItemActiveTexture;
         }
 
-        // Update speech bubble
-        if (selected_item != 0)
-        {
-            bubbleText = slotItems[selected_item-1].description;
-        }
-        else
-        {
-            bubbleText = "Skelly (get it?) The souls of the dead will now help you transform that pesky block to wood.";
-        }
     }
 
-    // Drawing the GUI
+    // Draw the GUI
     void OnGUI()
     {
-        #region temp
-        
-
-        #endregion
-
         // Set the active skin
         GUI.skin = activeSkin;
         // The container
         GUI.BeginGroup(containerRect);
         {
             GUI.DrawTexture(bgRect, bgTexture, ScaleMode.ScaleAndCrop);
-
             Navigation();
             Currency();
-            Items();
+            ItemShelf();
+            EquipmentTriangle();
 
             // Popup
             if (show_popup)
@@ -555,14 +621,12 @@ public class ItemShopGUI : MonoBehaviour
                     PopupConfirmation(slotItems[selected_item - 1]);
                 }
             }
-
-            Shopkeeper();
         }
         GUI.EndGroup();
     }
 
     #region GUI Parts
-
+    
     void Navigation()
     {
         GUI.BeginGroup(navContainerRect);
@@ -576,7 +640,7 @@ public class ItemShopGUI : MonoBehaviour
                 activeWindow = ItemType.eq_head;
 
                 cur_page = 1;
-                TransitionItems(InventoryManager.instance.equipmentsHead.Values.ToList());
+                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_head));
                 
                 ChangeCategory();
             }
@@ -586,7 +650,7 @@ public class ItemShopGUI : MonoBehaviour
                 activeWindow = ItemType.eq_body;
 
                 cur_page = 1;
-                TransitionItems(InventoryManager.instance.equipmentsBody.Values.ToList());
+                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_body));
 
                 ChangeCategory();
             }
@@ -596,7 +660,7 @@ public class ItemShopGUI : MonoBehaviour
                 activeWindow = ItemType.eq_legs;
 
                 cur_page = 1;
-                TransitionItems(InventoryManager.instance.equipmentsLegs.Values.ToList());
+                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_legs));
 
                 ChangeCategory();
             }
@@ -606,8 +670,8 @@ public class ItemShopGUI : MonoBehaviour
                 activeWindow = ItemType.item_consumable;
 
                 cur_page = 1;
-                TransitionItems(InventoryManager.instance.itemsConsumable.Values.ToList());
-
+                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.item_consumable));
+                
                 ChangeCategory();
             }
         }
@@ -622,21 +686,22 @@ public class ItemShopGUI : MonoBehaviour
         GUI.Label(currencyGTPRect, InventoryManager.instance.gtp.ToString(), GTPStyle);
     }
 
-    void Items()
+    void ItemShelf()
     {
-        GUI.BeginGroup(itemsContainerRect);
+        GUI.BeginGroup(itemShelfRect);
         {
+            GUI.DrawTexture(itemShelfBgRect, itemShelfTexture);
+
             GUI.BeginGroup(item1Rect);
             {
-                GUI.DrawTexture(itemBgRect, itemBoxTexture);
                 GUI.BeginGroup(itemInnerContainerRect);
                 {
-                    ItemInner(slotItems[0],1);
+                    ItemInner(slotItems[0], 1);
                 }
                 GUI.EndGroup();
                 GUI.BeginGroup(itemTransitionContainerRect);
                 {
-                    ItemInner(transitionItems[0],0);
+                    ItemInner(transitionItems[0], 0);
                 }
                 GUI.EndGroup();
             }
@@ -644,15 +709,14 @@ public class ItemShopGUI : MonoBehaviour
 
             GUI.BeginGroup(item2Rect);
             {
-                GUI.DrawTexture(itemBgRect, itemBoxTexture);
                 GUI.BeginGroup(itemInnerContainerRect);
                 {
-                    ItemInner(slotItems[1],2);
+                    ItemInner(slotItems[1], 2);
                 }
                 GUI.EndGroup();
                 GUI.BeginGroup(itemTransitionContainerRect);
                 {
-                    ItemInner(transitionItems[1],0);
+                    ItemInner(transitionItems[1], 0);
                 }
                 GUI.EndGroup();
             }
@@ -660,15 +724,14 @@ public class ItemShopGUI : MonoBehaviour
 
             GUI.BeginGroup(item3Rect);
             {
-                GUI.DrawTexture(itemBgRect, itemBoxTexture);
                 GUI.BeginGroup(itemInnerContainerRect);
                 {
-                    ItemInner(slotItems[2],3);
+                    ItemInner(slotItems[2], 3);
                 }
                 GUI.EndGroup();
                 GUI.BeginGroup(itemTransitionContainerRect);
                 {
-                    ItemInner(transitionItems[2],0);
+                    ItemInner(transitionItems[2], 0);
                 }
                 GUI.EndGroup();
             }
@@ -676,15 +739,14 @@ public class ItemShopGUI : MonoBehaviour
 
             GUI.BeginGroup(item4Rect);
             {
-                GUI.DrawTexture(itemBgRect, itemBoxTexture);
                 GUI.BeginGroup(itemInnerContainerRect);
                 {
-                    ItemInner(slotItems[3],4);
+                    ItemInner(slotItems[3], 4);
                 }
                 GUI.EndGroup();
                 GUI.BeginGroup(itemTransitionContainerRect);
                 {
-                    ItemInner(transitionItems[3],0);
+                    ItemInner(transitionItems[3], 0);
                 }
                 GUI.EndGroup();
             }
@@ -692,15 +754,14 @@ public class ItemShopGUI : MonoBehaviour
 
             GUI.BeginGroup(item5Rect);
             {
-                GUI.DrawTexture(itemBgRect, itemBoxTexture);
                 GUI.BeginGroup(itemInnerContainerRect);
                 {
-                    ItemInner(slotItems[4],5);
+                    ItemInner(slotItems[4], 5);
                 }
                 GUI.EndGroup();
                 GUI.BeginGroup(itemTransitionContainerRect);
                 {
-                    ItemInner(transitionItems[4],0);
+                    ItemInner(transitionItems[4], 0);
                 }
                 GUI.EndGroup();
             }
@@ -708,15 +769,14 @@ public class ItemShopGUI : MonoBehaviour
 
             GUI.BeginGroup(item6Rect);
             {
-                GUI.DrawTexture(itemBgRect, itemBoxTexture);
                 GUI.BeginGroup(itemInnerContainerRect);
                 {
-                    ItemInner(slotItems[5],6);
+                    ItemInner(slotItems[5], 6);
                 }
                 GUI.EndGroup();
                 GUI.BeginGroup(itemTransitionContainerRect);
                 {
-                    ItemInner(transitionItems[5],0);
+                    ItemInner(transitionItems[5], 0);
                 }
                 GUI.EndGroup();
             }
@@ -724,15 +784,14 @@ public class ItemShopGUI : MonoBehaviour
 
             GUI.BeginGroup(item7Rect);
             {
-                GUI.DrawTexture(itemBgRect, itemBoxTexture);
                 GUI.BeginGroup(itemInnerContainerRect);
                 {
-                    ItemInner(slotItems[6],7);
+                    ItemInner(slotItems[6], 7);
                 }
                 GUI.EndGroup();
                 GUI.BeginGroup(itemTransitionContainerRect);
                 {
-                    ItemInner(transitionItems[6],0);
+                    ItemInner(transitionItems[6], 0);
                 }
                 GUI.EndGroup();
             }
@@ -740,15 +799,14 @@ public class ItemShopGUI : MonoBehaviour
 
             GUI.BeginGroup(item8Rect);
             {
-                GUI.DrawTexture(itemBgRect, itemBoxTexture);
                 GUI.BeginGroup(itemInnerContainerRect);
                 {
-                    ItemInner(slotItems[7],8);
+                    ItemInner(slotItems[7], 8);
                 }
                 GUI.EndGroup();
                 GUI.BeginGroup(itemTransitionContainerRect);
                 {
-                    ItemInner(transitionItems[7],0);
+                    ItemInner(transitionItems[7], 0);
                 }
                 GUI.EndGroup();
             }
@@ -756,22 +814,25 @@ public class ItemShopGUI : MonoBehaviour
 
             GUI.BeginGroup(item9Rect);
             {
-                GUI.DrawTexture(itemBgRect, itemBoxTexture);
                 GUI.BeginGroup(itemInnerContainerRect);
                 {
-                    ItemInner(slotItems[8],9);
+                    ItemInner(slotItems[8], 9);
                 }
                 GUI.EndGroup();
                 GUI.BeginGroup(itemTransitionContainerRect);
                 {
-                    ItemInner(transitionItems[8],0);
+                    ItemInner(transitionItems[8], 0);
                 }
                 GUI.EndGroup();
             }
             GUI.EndGroup();
+
+            EquippedConsumables();
         }
         GUI.EndGroup();
 
+        #region navigation arrows
+        
         if (cur_page > 1)
         {
             if (goodButton(arrowPrevRect, "", arrowPrevStyle))
@@ -779,19 +840,19 @@ public class ItemShopGUI : MonoBehaviour
                 cur_page--;
                 if (activeWindow == ItemType.eq_head)
                 {
-                    TransitionItems(InventoryManager.instance.equipmentsHead.Values.ToList());
+                    TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_head));
                 }
                 else if (activeWindow == ItemType.eq_body)
                 {
-                    TransitionItems(InventoryManager.instance.equipmentsBody.Values.ToList());
+                    TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_body));
                 }
                 else if (activeWindow == ItemType.eq_legs)
                 {
-                    TransitionItems(InventoryManager.instance.equipmentsLegs.Values.ToList());
+                    TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_legs));
                 }
                 else if (activeWindow == ItemType.item_consumable)
                 {
-                    TransitionItems(InventoryManager.instance.itemsConsumable.Values.ToList());
+                    TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.item_consumable));
                 }
 
                 PrevPage();
@@ -804,29 +865,34 @@ public class ItemShopGUI : MonoBehaviour
                 cur_page++;
                 if (activeWindow == ItemType.eq_head)
                 {
-                    TransitionItems(InventoryManager.instance.equipmentsHead.Values.ToList());
+                    TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_head));
                 }
                 else if (activeWindow == ItemType.eq_body)
                 {
-                    TransitionItems(InventoryManager.instance.equipmentsBody.Values.ToList());
+                    TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_body));
                 }
                 else if (activeWindow == ItemType.eq_legs)
                 {
-                    TransitionItems(InventoryManager.instance.equipmentsLegs.Values.ToList());
+                    TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_legs));
                 }
                 else if (activeWindow == ItemType.item_consumable)
                 {
-                    TransitionItems(InventoryManager.instance.itemsConsumable.Values.ToList());
+                    TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.item_consumable));
                 }
 
                 NextPage();
             }
         }
+        
+        #endregion
+
+
     }
 
     void ItemInner(Item item, int index)
     {
-        if (item.itemId != "empty"){
+        if (item.itemId != "empty")
+        {
             if (item.icon != null)
             {
                 GUI.DrawTexture(itemIconRect, item.icon);
@@ -835,72 +901,136 @@ public class ItemShopGUI : MonoBehaviour
             {
                 GUI.DrawTexture(itemIconRect, tempIcon);
             }
-            
-            if (goodButton(itemBgRect, "",activeSkin.button) && !show_popup)
-            {
-                if (selected_item == index)
-                {
-                    selected_item = 0;
-                    HideBubble();
-                }
-                else
-                {
-                    selected_item = index;
-                    ShowBubble();
-                }
-            }
-            if (selected_item == index && selected_item != 0 && !show_popup)
-            {
-                GUI.DrawTexture(itemIconRect, highlightTexture);
-            }
 
-            if (item.currency == CurrencyType.Dollar)
+            if (goodButton(itemPosCenter, "", activeSkin.button) && !show_popup)
             {
-                if (goodButton(itemBtnRect, item.dollarPrice.ToString(), dollarPurchaseBtnStyle) && !show_popup)
-                {
-                    selected_item = index;
-                    show_popup = true;
-                    ShowBubble();
-                }
-            }
-            else if (item.currency == CurrencyType.GTP)
-            {
-                if (goodButton(itemBtnRect, item.price.ToString(), gtpPurchaseBtnStyle) && !show_popup)
-                {
-                    selected_item = index;
-                    show_popup = true;
-                    ShowBubble();
-                }
-            }
-            else if (item.currency == CurrencyType.NTP)
-            {
-                if (goodButton(itemBtnRect, item.price.ToString(), ntpPurchaseBtnStyle) && !show_popup)
-                {
-                    selected_item = index;
-                    show_popup = true;
-                    ShowBubble();
-                }
-            }
-
-            if (item.type != ItemType.item_consumable &&
-                item.type != ItemType.item_instant &&
-                item.balance == 1)
-            {
-                GUI.DrawTexture(itemBgRect, soldOutTexture, ScaleMode.ScaleToFit);
+                selected_item = index;
+                show_popup = true;
+                //InventoryManager.instance.EquipItem(item);
             }
         }
     }
 
-    void Shopkeeper()
+    void EquippedConsumables()
     {
-        GUI.BeginGroup(bubbleContainerRect);
+        GUI.DrawTexture(backpackRect, backpackTexture);
+        
+        GUI.BeginGroup(consumable1Rect);
         {
-            GUI.DrawTexture(bubbleRect, bubbleTexture);
-            GUI.Label(bubbleLabelRect, bubbleText, bubbleLabelStyle);
+            if (InventoryManager.instance.equippedConsumables[0].itemId != "empty")
+            {
+                GUI.DrawTexture(consumableIconRect, itemFilledTexture);
+                GUI.DrawTexture(consumableInnerRect, InventoryManager.instance.equippedConsumables[0].icon);
+                if(goodButton(consumableIconRect,"",activeSkin.button))
+                {
+                    InventoryManager.instance.UnequipItem(0);
+                }
+            }
+            else
+            {
+                GUI.DrawTexture(consumableIconRect, itemEmptyTexture);
+            }
         }
         GUI.EndGroup();
 
-        GUI.DrawTexture(shopkeeperRect, shopkeeperTexture);
+        GUI.BeginGroup(consumable2Rect);
+        {
+            if (InventoryManager.instance.equippedConsumables[1].itemId != "empty")
+            {
+                GUI.DrawTexture(consumableIconRect, itemFilledTexture);
+                GUI.DrawTexture(consumableInnerRect, InventoryManager.instance.equippedConsumables[1].icon);
+                if (goodButton(consumableIconRect, "", activeSkin.button))
+                {
+                    InventoryManager.instance.UnequipItem(1);
+                }
+            }
+            else
+            {
+                GUI.DrawTexture(consumableIconRect, itemEmptyTexture);
+            }
+        }
+        GUI.EndGroup();
+
+        GUI.BeginGroup(consumable3Rect);
+        {
+            if (InventoryManager.instance.equippedConsumables[2].itemId != "empty")
+            {
+                GUI.DrawTexture(consumableIconRect, itemFilledTexture);
+                GUI.DrawTexture(consumableInnerRect, InventoryManager.instance.equippedConsumables[2].icon);
+                if (goodButton(consumableIconRect, "", activeSkin.button))
+                {
+                    InventoryManager.instance.UnequipItem(2);
+                }
+            }
+            else
+            {
+                GUI.DrawTexture(consumableIconRect, itemEmptyTexture);
+            }
+        }
+        GUI.EndGroup();
+    }
+
+    void EquipmentTriangle()
+    {
+        GUI.BeginGroup(eqTriangleContainerRect);
+        {
+            GUI.DrawTexture(triangleRect, triangleTexture);
+            
+            GUI.BeginGroup(eqSlotHeadRect);
+            {
+                if (InventoryManager.instance.equippedHead.itemId != "empty")
+                {
+                    GUI.DrawTexture(eqSlotIconRect, gearHeadTexture);
+                    GUI.DrawTexture(eqSlotInnerRect, InventoryManager.instance.equippedHead.icon);
+                    if (goodButton(eqSlotIconRect, "", activeSkin.button))
+                    {
+                        InventoryManager.instance.UnequipHead();
+                    }
+                }
+                else
+                {
+                    GUI.DrawTexture(eqSlotIconRect, gearEmptyTexture);
+                }
+            }
+            GUI.EndGroup();
+
+            GUI.BeginGroup(eqSlotBodyRect);
+            {
+                if (InventoryManager.instance.equippedBody.itemId != "empty")
+                {
+                    GUI.DrawTexture(eqSlotIconRect, gearBodyTexture);
+                    GUI.DrawTexture(eqSlotInnerRect, InventoryManager.instance.equippedBody.icon);
+                    if (goodButton(eqSlotIconRect, "", activeSkin.button))
+                    {
+                        InventoryManager.instance.UnequipBody();
+                    }
+                }
+                else
+                {
+                    GUI.DrawTexture(eqSlotIconRect, gearEmptyTexture);
+                }
+            }
+            GUI.EndGroup();
+
+            GUI.BeginGroup(eqSlotLegsRect);
+            {
+                if (InventoryManager.instance.equippedLegs.itemId != "empty")
+                {
+                    GUI.DrawTexture(eqSlotIconRect, gearLegsTexture);
+                    GUI.DrawTexture(eqSlotInnerRect, InventoryManager.instance.equippedLegs.icon);
+                    if (goodButton(eqSlotIconRect, "", activeSkin.button))
+                    {
+                        InventoryManager.instance.UnequipLegs();
+                    }
+                }
+                else
+                {
+                    GUI.DrawTexture(eqSlotIconRect, gearEmptyTexture);
+                }
+            }
+            GUI.EndGroup();
+        }
+        GUI.EndGroup();
     }
 
     void PopupConfirmation(Item item)
@@ -911,7 +1041,6 @@ public class ItemShopGUI : MonoBehaviour
 
         GUI.BeginGroup(popupRect);
         {
-            if (goodButton(popupBgRect, "", activeSkin.button));
             GUI.Box(popupBgRect, "", popupBgStyle);
             if (item.icon != null)
             {
@@ -921,79 +1050,20 @@ public class ItemShopGUI : MonoBehaviour
             {
                 GUI.DrawTexture(popupPictureRect, tempIcon);
             }
-            GUI.Label(popupLabelRect, "Purchase " + item.name + "?", popupLabelStyle);
-            if (item.currency == CurrencyType.Dollar)
+
+            GUI.Label(popupLabelRect, "Equip " + item.name + "?", popupLabelStyle);
+            if (goodButton(popupConfirmButtonRect, "Equip", popupBtnStyle))
             {
-                if (goodButton(popupConfirmButtonRect, item.dollarPrice.ToString(), dollarPurchaseBtnStyle))
-                {
-                    StoreInventory.BuyItem(item.itemId);
-                    InventoryManager.instance.UpdateCurrency();
-                }
-            }
-            else if (item.currency == CurrencyType.GTP)
-            {
-                if (goodButton(popupConfirmButtonRect, item.price.ToString(), gtpPurchaseBtnStyle))
-                {
-                    StoreInventory.BuyItem(item.itemId);
-                    InventoryManager.instance.UpdateCurrency();
-                }
-            }
-            else if (item.currency == CurrencyType.NTP)
-            {
-                if (goodButton(popupConfirmButtonRect, item.price.ToString(), ntpPurchaseBtnStyle))
-                {
-                    StoreInventory.BuyItem(item.itemId);
-                    InventoryManager.instance.UpdateCurrency();
-                }
+                InventoryManager.instance.EquipItem(item);
             }
         }
         GUI.EndGroup();
+
         if (goodButton(popupCancelButtonRect, "", popupCancelStyle))
         {
             show_popup = false;
             selected_item = 0;
-            HideBubble();
         }
-    }
-    
-    #endregion
-    #region Item data
-
-    void TransitionItems(List<Item> items)
-    {
-        int numberOfItems = items.Count;
-        max_page = (numberOfItems - 1) / 9 + 1;
-        int offset = 9 * (cur_page - 1);
-
-        for (int i = 0; i < transitionItems.Length; i++)
-        {
-            if ((i + offset) < numberOfItems)
-            {
-                transitionItems[i] = items.ElementAt(i + offset);
-            }
-            else
-            {
-                transitionItems[i] = new Item();
-            }
-        }
-    }
-
-    #endregion
-    #region Animations
-
-    void AnimateItemInnerRect(Rect pos)
-    {
-        itemInnerContainerRect = pos;
-    }
-
-    void AnimateItemTransitionRect(Rect pos)
-    {
-        itemTransitionContainerRect = pos;
-    }
-
-    void AnimateBubble(Rect pos)
-    {
-        bubbleContainerRect = pos;
     }
 
     #endregion
@@ -1036,6 +1106,25 @@ public class ItemShopGUI : MonoBehaviour
                                    "time", 0.5f));
     }
 
+    void TransitionItems(List<Item> items)
+    {
+        int numberOfItems = items.Count;
+        max_page = (numberOfItems + 1) / 9 + 1;
+        int offset = 9 * (cur_page - 1);
+
+        for (int i = 0; i < transitionItems.Length; i++)
+        {
+            if ((i + offset) < numberOfItems)
+            {
+                transitionItems[i] = items.ElementAt(i + offset);
+            }
+            else
+            {
+                transitionItems[i] = new Item();
+            }
+        }
+    }
+
     void ChangeCategory()
     {
         selected_item = 0;
@@ -1053,8 +1142,6 @@ public class ItemShopGUI : MonoBehaviour
                                    "oncomplete", "OnAnimationComplete",
                                    "easetype", iTween.EaseType.easeOutBack,
                                    "time", 0.5f));
-
-        HideBubble();
     }
 
     void OnAnimationComplete()
@@ -1068,25 +1155,19 @@ public class ItemShopGUI : MonoBehaviour
         }
     }
 
-    void ShowBubble()
+    #region Animations
+
+    void AnimateItemInnerRect(Rect pos)
     {
-        iTween.ValueTo(gameObject,
-                       iTween.Hash("from", bubbleContainerRect,
-                                   "to", openBubbleRect,
-                                   "onupdate", "AnimateBubble",
-                                   "easetype", iTween.EaseType.easeOutQuart,
-                                   "time", 0.1f));
+        itemInnerContainerRect = pos;
     }
 
-    void HideBubble()
+    void AnimateItemTransitionRect(Rect pos)
     {
-        iTween.ValueTo(gameObject,
-                       iTween.Hash("from", bubbleContainerRect,
-                                   "to", closedBubbleRect,
-                                   "onupdate", "AnimateBubble",
-                                   "easetype", iTween.EaseType.easeInQuart,
-                                   "time", 0.1f));
+        itemTransitionContainerRect = pos;
     }
+
+    #endregion
 
     #region utility
 
@@ -1127,6 +1208,7 @@ public class ItemShopGUI : MonoBehaviour
 
         return false;
     }
+
 
     #endregion
 }

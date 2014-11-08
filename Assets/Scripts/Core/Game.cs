@@ -111,7 +111,8 @@ public class Game : MonoBehaviour
         stats[Stat.skillsUsed] = 0;
         stats[Stat.achievementUnlocked] = 0;
         stats[Stat.consecutiveLogins] = 0;
-        bagSlots = 2;
+        bagSlots = 3;
+        bag = new string[bagSlots];
 
         isUnlimitedEnergy = false;
         energyFull = true;
@@ -205,6 +206,7 @@ public class Game : MonoBehaviour
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file;
         GameInfo info;
+
         if(File.Exists((Application.persistentDataPath + "/gameInfo.dat"))) 
         {
             file = File.Open(Application.persistentDataPath + "/gameInfo.dat", FileMode.Open);

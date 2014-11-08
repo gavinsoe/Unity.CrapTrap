@@ -4,12 +4,13 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public enum CurrencyType { Dollar, GTP, NTP };
 public enum ItemType { eq_head, eq_body, eq_legs, item_consumable, item_instant, other };
 
 [Serializable]
-public class Item
+public class Item : IComparable<Item>
 {
     public string itemId; // item ID
     public Texture2D icon; // icon of the item
@@ -24,6 +25,11 @@ public class Item
     public Item()
     {
         itemId = "empty";
+    }
+
+    public int CompareTo(Item that)
+    {
+        return this.itemId.CompareTo(that.itemId);
     }
 }
 
@@ -93,16 +99,18 @@ public class InventoryManager : MonoBehaviour
 	}
     
     #region Initialization
+
     void InitializeBag()
     {
-        // Initialise number of bag slots
-        equippedConsumables = new Item[Game.instance.bagSlots];
-
         for (int i = 0; i < Game.instance.bagSlots; i++)
         {
-            if (Game.instance.bag[i] != null)
+            if (!String.IsNullOrEmpty(Game.instance.bag[i]))
             {
                 equippedConsumables[i] = itemsConsumable[Game.instance.bag[i]];
+            }
+            else
+            {
+                equippedConsumables[i] = new Item();
             }
         }
     }
@@ -239,32 +247,43 @@ public class InventoryManager : MonoBehaviour
     }
 
     #endregion
-    #region Methods
+    #region Public Methods
 
-    void EquipItem(Item equipment)
+    public void EquipItem(Item item)
     {
         // Tell soomla that we are equipping the specified item
-        StoreInventory.EquipVirtualGood(equipment.itemId);
+        StoreInventory.EquipVirtualGood(item.itemId);
         
         // Update the cache
-        if (equipment.type == ItemType.eq_head)
+        if (item.type == ItemType.eq_head)
         {
-            equippedHead = equipment;
+            equippedHead = item;
+            StoreInventory.EquipVirtualGood(item.itemId);
         }
-        else if (equipment.type == ItemType.eq_body)
+        else if (item.type == ItemType.eq_body)
         {
-            equippedBody = equipment;
+            equippedBody = item;
+            StoreInventory.EquipVirtualGood(item.itemId);
         }
-        else if (equipment.type == ItemType.eq_legs)
+        else if (item.type == ItemType.eq_legs)
         {
-            equippedLegs = equipment;
+            equippedLegs = item;
+            StoreInventory.EquipVirtualGood(item.itemId);
         }
-        else if (equipment.type == ItemType.item_consumable)
+        else if (item.type == ItemType.item_consumable)
         {
+            for (int i = 0; i < Game.instance.bagSlots; i++)
+            {
+                if (equippedConsumables[i].itemId == "empty")
+                {
+                    equippedConsumables[i] = item;
+                    break;
+                }
+            }
         }
     }
 
-    void ConsumeItem(int itemSlot)
+    public void ConsumeItem(int itemSlot)
     {
         var selectedItem = equippedConsumables[itemSlot];
 
@@ -301,7 +320,7 @@ public class InventoryManager : MonoBehaviour
         }
 
         #endregion
-        #region diapers
+        #region Diapers
 
         // Diapers rank 1
         if (selectedItem.itemId == CrapTrapAssets.CONSUMABLE_DIAPERS_1_ID)
@@ -364,10 +383,62 @@ public class InventoryManager : MonoBehaviour
         itemsConsumable[selectedItem.itemId].balance--;
     }
 
+    public void UnequipItem(int itemSlot)
+    {
+        equippedConsumables[itemSlot] = new Item();
+    }
+
+    public void UnequipHead()
+    {
+        equippedHead = new Item();
+    }
+
+    public void UnequipBody()
+    {
+        equippedBody = new Item();
+    }
+
+    public void UnequipLegs()
+    {
+        equippedLegs = new Item();
+    }
+
     public void UpdateCurrency()
     {
         ntp = StoreInventory.GetItemBalance(CrapTrapAssets.NORMAL_TOILET_PAPER_ID);
         gtp = StoreInventory.GetItemBalance(CrapTrapAssets.GOLDEN_TOILET_PAPER_ID);
+    }
+
+    public List<Item> GetOwnedEquipment(ItemType type)
+    {
+        if (type == ItemType.eq_head)
+        {
+            return (from h in equipmentsHead.Values
+                    //where h.balance > 0
+                    select h).ToList();
+                    
+        }
+        else if (type == ItemType.eq_body)
+        {
+            return (from h in equipmentsBody.Values
+                    //where h.balance > 0
+                    select h).ToList();
+        }
+        else if (type == ItemType.eq_legs)
+        {
+            return (from h in equipmentsLegs.Values
+                    //where h.balance > 0
+                    select h).ToList();
+        }
+        else if (type == ItemType.item_consumable)
+        {
+            return (from h in itemsConsumable.Values
+                    //where h.balance > 0
+                    select h).ToList();
+        }
+
+        // Should ideally not end up here, but if it does, return empty list
+        return new List<Item>();
     }
 
     #endregion
