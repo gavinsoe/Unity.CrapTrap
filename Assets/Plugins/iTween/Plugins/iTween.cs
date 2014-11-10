@@ -7059,7 +7059,16 @@ public class iTween : MonoBehaviour{
 			}else{
 				target=gameObject;	
 			}
-			
+
+            // Additional code to allow multiple arguments on update
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            if (tweenArguments[callbackType] is Action<object>)
+            {
+                ((Action<object>)tweenArguments[callbackType]).Invoke((object)tweenArguments[callbackType + "params"]);
+            }
+            else
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 			//throw an error if a string wasn't passed for callback:
 			if (tweenArguments[callbackType].GetType() == typeof(System.String)) {
 				target.SendMessage((string)tweenArguments[callbackType],(object)tweenArguments[callbackType+"params"],SendMessageOptions.DontRequireReceiver);
