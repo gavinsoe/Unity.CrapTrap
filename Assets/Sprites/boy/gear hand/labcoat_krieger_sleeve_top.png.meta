@@ -1,7 +1,8 @@
 fileFormatVersion: 2
 guid: 435f661ab688f421ca0ad0e8d63e5ed5
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: labcoat_krieger_sleeve_top_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -25,9 +26,9 @@ TextureImporter:
   maxTextureSize: 1024
   textureSettings:
     filterMode: -1
-    aniso: -1
+    aniso: 1
     mipBias: -1
-    wrapMode: -1
+    wrapMode: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -42,6 +43,16 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: labcoat_krieger_sleeve_top_0
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 36
+        width: 31
+        height: 77
+      alignment: 9
+      pivot: {x: .44211185, y: .878715098}
+      border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 

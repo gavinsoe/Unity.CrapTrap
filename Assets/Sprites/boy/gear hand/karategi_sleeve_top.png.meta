@@ -1,7 +1,8 @@
 fileFormatVersion: 2
 guid: 183c4f64ba83c4c4d85fe3cfe31df146
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: karategi_sleeve_top_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -25,9 +26,9 @@ TextureImporter:
   maxTextureSize: 1024
   textureSettings:
     filterMode: -1
-    aniso: -1
+    aniso: 1
     mipBias: -1
-    wrapMode: -1
+    wrapMode: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -42,6 +43,16 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: karategi_sleeve_top_0
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 88
+        width: 29
+        height: 25
+      alignment: 9
+      pivot: {x: .476795077, y: .733288586}
+      border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 
