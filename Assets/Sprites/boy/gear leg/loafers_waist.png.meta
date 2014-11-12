@@ -1,7 +1,8 @@
 fileFormatVersion: 2
 guid: 71b6b5a558233423fa5aea27b393065e
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: loafers_waist_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -25,9 +26,9 @@ TextureImporter:
   maxTextureSize: 1024
   textureSettings:
     filterMode: -1
-    aniso: -1
+    aniso: 1
     mipBias: -1
-    wrapMode: -1
+    wrapMode: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -42,6 +43,16 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: loafers_waist_0
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 55
+        width: 69
+        height: 38
+      alignment: 4
+      pivot: {x: 0, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 

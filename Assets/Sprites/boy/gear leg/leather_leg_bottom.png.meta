@@ -1,7 +1,8 @@
 fileFormatVersion: 2
 guid: 4c5a3c64fab974727b790a0e977aa12a
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: leather_leg_bottom_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -25,9 +26,9 @@ TextureImporter:
   maxTextureSize: 1024
   textureSettings:
     filterMode: -1
-    aniso: -1
+    aniso: 1
     mipBias: -1
-    wrapMode: -1
+    wrapMode: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -37,11 +38,21 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: .5, y: .5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 500
+  spritePixelsToUnits: 480
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: leather_leg_bottom_0
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 70
+        width: 26
+        height: 32
+      alignment: 9
+      pivot: {x: .499652267, y: .844043732}
+      border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 

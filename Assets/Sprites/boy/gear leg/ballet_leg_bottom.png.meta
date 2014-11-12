@@ -1,7 +1,8 @@
 fileFormatVersion: 2
 guid: d538a043183554937a469ac7c6bc85cb
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: ballet_leg_bottom_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -25,9 +26,9 @@ TextureImporter:
   maxTextureSize: 1024
   textureSettings:
     filterMode: -1
-    aniso: -1
+    aniso: 1
     mipBias: -1
-    wrapMode: -1
+    wrapMode: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -42,6 +43,16 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: ballet_leg_bottom_0
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 30
+        width: 55
+        height: 72
+      alignment: 9
+      pivot: {x: .401298314, y: .946855128}
+      border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 

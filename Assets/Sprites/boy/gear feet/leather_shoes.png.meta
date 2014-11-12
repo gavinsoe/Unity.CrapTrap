@@ -38,7 +38,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: .5, y: .5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 500
+  spritePixelsToUnits: 470
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings: []
@@ -52,7 +52,7 @@ TextureImporter:
         width: 47
         height: 47
       alignment: 9
-      pivot: {x: .310951144, y: .507197261}
+      pivot: {x: .315723836, y: .49287951}
       border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 

@@ -1,7 +1,8 @@
 fileFormatVersion: 2
 guid: b9adac33210b84373bc0f6a8416c3c55
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: hermes_waist_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -25,9 +26,9 @@ TextureImporter:
   maxTextureSize: 1024
   textureSettings:
     filterMode: -1
-    aniso: -1
+    aniso: 1
     mipBias: -1
-    wrapMode: -1
+    wrapMode: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -42,6 +43,16 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: hermes_waist_0
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 37
+        width: 95
+        height: 61
+      alignment: 9
+      pivot: {x: .183596596, y: .654446959}
+      border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 

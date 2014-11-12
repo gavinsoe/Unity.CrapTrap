@@ -1,7 +1,8 @@
 fileFormatVersion: 2
 guid: 4f596ecf815b9403ca1277485022b175
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: sneakers_waist_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -25,9 +26,9 @@ TextureImporter:
   maxTextureSize: 1024
   textureSettings:
     filterMode: -1
-    aniso: -1
+    aniso: 1
     mipBias: -1
-    wrapMode: -1
+    wrapMode: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -42,6 +43,16 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: sneakers_waist_0
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 52
+        width: 73
+        height: 42
+      alignment: 4
+      pivot: {x: 0, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 
