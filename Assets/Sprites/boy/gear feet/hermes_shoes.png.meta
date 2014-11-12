@@ -1,7 +1,8 @@
 fileFormatVersion: 2
 guid: c21ec16d03fda4b3fb18c7d5563576ab
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: hermes_shoes_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -25,9 +26,9 @@ TextureImporter:
   maxTextureSize: 1024
   textureSettings:
     filterMode: -1
-    aniso: -1
+    aniso: 1
     mipBias: -1
-    wrapMode: -1
+    wrapMode: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -42,6 +43,16 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: hermes_shoes_0
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 48
+        width: 68
+        height: 50
+      alignment: 9
+      pivot: {x: .515474439, y: .435333699}
+      border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 

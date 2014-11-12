@@ -1,7 +1,8 @@
 fileFormatVersion: 2
 guid: ecbc0866feefb470ba4579bfb1c35c27
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: loafers_shoes_back_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -25,9 +26,9 @@ TextureImporter:
   maxTextureSize: 1024
   textureSettings:
     filterMode: -1
-    aniso: -1
+    aniso: 1
     mipBias: -1
-    wrapMode: -1
+    wrapMode: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -42,6 +43,16 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: loafers_shoes_back_0
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 48
+        width: 47
+        height: 28
+      alignment: 9
+      pivot: {x: .781588137, y: .828462899}
+      border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 
