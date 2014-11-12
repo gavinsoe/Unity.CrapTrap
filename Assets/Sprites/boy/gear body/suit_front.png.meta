@@ -1,8 +1,8 @@
 fileFormatVersion: 2
-guid: 06e4504419aa44cb2bf01c3845e6ca7c
+guid: 3c4271b1a031f4611b3e527b932b7d59
 TextureImporter:
   fileIDToRecycleName:
-    21300000: suit_0
+    21300000: suit_front_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -44,15 +44,15 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: suit_0
+    - name: suit_front_0
       rect:
         serializedVersion: 2
-        x: 33
-        y: 36
-        width: 82
-        height: 105
+        x: 34
+        y: 38
+        width: 81
+        height: 104
       alignment: 9
-      pivot: {x: .895901918, y: .752342522}
+      pivot: {x: .88493526, y: .729565859}
       border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 
