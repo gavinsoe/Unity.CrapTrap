@@ -1,8 +1,8 @@
 fileFormatVersion: 2
-guid: c3ddfdc73bd944450bf5ff26b8d34176
+guid: 9306af7807ea54e7f9ecf8bc90ebd257
 TextureImporter:
   fileIDToRecycleName:
-    21300000: army_shoes_back_0
+    21300000: ballet_waist_back_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -44,15 +44,15 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: army_shoes_back_0
+    - name: ballet_waist_back_0
       rect:
         serializedVersion: 2
-        x: 32
-        y: 48
-        width: 48
-        height: 35
+        x: 20
+        y: 51
+        width: 120
+        height: 40
       alignment: 9
-      pivot: {x: .738045394, y: .649999976}
+      pivot: {x: .5, y: .800000012}
       border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 

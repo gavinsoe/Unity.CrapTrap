@@ -1,8 +1,8 @@
 fileFormatVersion: 2
-guid: c3ddfdc73bd944450bf5ff26b8d34176
+guid: d6dd51206570449abaf118865b12c5e6
 TextureImporter:
   fileIDToRecycleName:
-    21300000: army_shoes_back_0
+    21300000: cowboy_leg_bottom_left_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -38,21 +38,21 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: .5, y: .5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 500
+  spritePixelsToUnits: 480
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: army_shoes_back_0
+    - name: cowboy_leg_bottom_left_0
       rect:
         serializedVersion: 2
-        x: 32
-        y: 48
-        width: 48
-        height: 35
+        x: 40
+        y: 62
+        width: 27
+        height: 40
       alignment: 9
-      pivot: {x: .738045394, y: .649999976}
+      pivot: {x: .483384013, y: .811215758}
       border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 

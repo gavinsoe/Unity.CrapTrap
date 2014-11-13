@@ -1,8 +1,8 @@
 fileFormatVersion: 2
-guid: c3ddfdc73bd944450bf5ff26b8d34176
+guid: b80797c5b2b33450e8908e1c6a152a2d
 TextureImporter:
   fileIDToRecycleName:
-    21300000: army_shoes_back_0
+    21300000: suit_leg_bottom_left_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -44,15 +44,15 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: army_shoes_back_0
+    - name: suit_leg_bottom_left_0
       rect:
         serializedVersion: 2
-        x: 32
-        y: 48
-        width: 48
-        height: 35
+        x: 22
+        y: 31
+        width: 44
+        height: 71
       alignment: 9
-      pivot: {x: .738045394, y: .649999976}
+      pivot: {x: .703923464, y: .899999976}
       border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 

@@ -1,8 +1,8 @@
 fileFormatVersion: 2
-guid: c3ddfdc73bd944450bf5ff26b8d34176
+guid: 126c3792139a6454ca11fb81a5fc9fd0
 TextureImporter:
   fileIDToRecycleName:
-    21300000: army_shoes_back_0
+    21300000: cowboy_waist_back_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -44,15 +44,15 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: army_shoes_back_0
+    - name: cowboy_waist_back_0
       rect:
         serializedVersion: 2
-        x: 32
-        y: 48
-        width: 48
-        height: 35
+        x: 43
+        y: 55
+        width: 71
+        height: 33
       alignment: 9
-      pivot: {x: .738045394, y: .649999976}
+      pivot: {x: .5, y: .800000012}
       border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 
