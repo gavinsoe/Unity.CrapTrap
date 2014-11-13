@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: d238fbce2a27f4f75a2c490d31ac48fc
+guid: 921d6415d5f084ba7a7b7803556fffab
 TextureImporter:
   fileIDToRecycleName:
     21300000: ballet_waist_0
@@ -48,11 +48,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 17
-        y: 50
+        y: 47
         width: 117
-        height: 47
+        height: 50
       alignment: 9
-      pivot: {x: .233505115, y: .562044859}
+      pivot: {x: .21816729, y: .580753922}
       border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 

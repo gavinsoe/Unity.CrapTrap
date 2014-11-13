@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b9adac33210b84373bc0f6a8416c3c55
+guid: 24990c76a2618472a964d11e2fcabe47
 TextureImporter:
   fileIDToRecycleName:
     21300000: hermes_waist_0
@@ -52,7 +52,7 @@ TextureImporter:
         width: 95
         height: 61
       alignment: 9
-      pivot: {x: .183596596, y: .654446959}
+      pivot: {x: .185957864, y: .621351302}
       border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 
