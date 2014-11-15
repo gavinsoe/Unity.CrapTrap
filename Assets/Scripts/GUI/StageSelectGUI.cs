@@ -29,7 +29,6 @@ public class StageSelectGUI : MonoBehaviour {
      * Custom Styles [21] = Story Toolbar
      */
     public GUISkin activeSkin;
-    private MainGameController mainController;
 
     #region Touch Controls
     
@@ -277,9 +276,6 @@ public class StageSelectGUI : MonoBehaviour {
     // Use this for initialization
 	void Start () 
     {
-        // Retrieve the main game controller
-        mainController = gameObject.GetComponentInChildren<MainGameController>();
-
         #region Touch Controls
 
         // inititialise the arrays used for manipulating the touch controls

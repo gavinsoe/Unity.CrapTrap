@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class Loot : System.Object
 {
     public string itemID;
+    public ItemType itemType;
     public float percentageChance;
     public int quantity;
 

@@ -51,7 +51,7 @@ public class MainGameController : MonoBehaviour
 
     public int ntp = 0; // Stores the number of ntp collected
     public int gtp = 0; // Stores the number of gtp collected
-    private List<Capsule> capsules = new List<Capsule>(); // stores collected capsules
+    public List<Capsule> capsules = new List<Capsule>(); // stores collected capsules
     private int ntpMax; // Stores the total number of ntp in a stage
     private int gtpMax; // Stores the total number of gtp in a stage
     private int capsuleMax; // Stores the total number of capsules in a stage
@@ -298,7 +298,12 @@ public class MainGameController : MonoBehaviour
         int seconds = (int)(timeElapsed % 60);
         string timeTaken = string.Format("{0:00}:{1:00}", mins, seconds);
         UpdateStats();
-        StageCompleteGUI.instance.StageComplete(timeTaken, ntp, ntpMax, gtp, gtpMax, objectives);
+        
+        // Update NTP
+        InventoryManager.instance.AddNTP(ntp);
+        
+        // Pop up the stage complete screen.
+        StageCompleteGUI.instance.StageComplete(timeTaken, ntp, ntpMax, capsuleMax, capsules, objectives);
 
         /*
         // post score to Leaderboard ID
@@ -308,24 +313,6 @@ public class MainGameController : MonoBehaviour
         });
          */
 
-        #region App42 Result Tracking
-
-        // Package the result
-        SimpleJSON.JSONClass json = new SimpleJSON.JSONClass();
-        json.Add("Device id", SystemInfo.deviceUniqueIdentifier);
-        json.Add("Stage", Application.loadedLevelName);
-        json.Add("Time", timeTaken);
-        json.Add("NTP", (ntp + @"/" + ntpMax).ToString());
-        json.Add("GTP", (gtp + @"/" + gtpMax).ToString());
-        json.Add("Objective_1", objectives[0].ResultStat());
-        json.Add("Objective_2", objectives[1].ResultStat());
-        json.Add("Objective_3", objectives[2].ResultStat());
-        json.Add("Result", "Complete");
-
-        // Log result
-        storageService.InsertJSONDocument(constants.dbName, constants.collectionStageStats, json, logCallBack);
-
-        #endregion
     }
 
     public void GameOver(bool fell)
