@@ -45,12 +45,6 @@ public class PrologueController : MonoBehaviour {
 
         public Rect targetRect(Texture sprite)
         {
-            //Initialise
-            float posHeight = Screen.height * targetScale;
-            float posWidth = posHeight * ((float)sprite.width / (float)sprite.height);
-            float posXOffset = Screen.width * targetXOffset;
-            float posYOffset = Screen.height * targetYOffset;
-
             return CalculatePosition(sprite, targetScale, targetXOffset, targetYOffset, hook, scaleMode);
         }
     }
@@ -74,11 +68,6 @@ public class PrologueController : MonoBehaviour {
         // Initialise rect objects
         foreach (Frame frame in frames)
         {
-            float posHeight = Screen.height * frame.startScale;
-            float posWidth = posHeight * ((float)frame.sprite.width / (float)frame.sprite.height);
-            float posXOffset = Screen.width * frame.startXOffset;
-            float posYOffset = Screen.height * frame.startYOffset;
-
             frame.position = CalculatePosition(frame.sprite, frame.startScale, frame.startXOffset, frame.startYOffset, frame.hook, frame.scaleMode);
         }
 	}

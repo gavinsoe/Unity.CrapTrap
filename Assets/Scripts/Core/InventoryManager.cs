@@ -48,10 +48,13 @@ public class InventoryManager : MonoBehaviour
     
     // currencies
     public int ntp;
+    private Texture ntpTexture;
     public int gtp;
+    private Texture gtpTexture;
 
     // Items cache
-    public Dictionary<string,Item> equipmentsHead = new Dictionary<string,Item>();
+    public Dictionary<string, Item> allItems = new Dictionary<string, Item>();
+    public Dictionary<string, Item> equipmentsHead = new Dictionary<string,Item>();
     public Dictionary<string, Item> equipmentsBody = new Dictionary<string, Item>();
     public Dictionary<string, Item> equipmentsLegs = new Dictionary<string, Item>();
     public Dictionary<string, Item> itemsConsumable = new Dictionary<string, Item>();
@@ -63,7 +66,7 @@ public class InventoryManager : MonoBehaviour
 
     // Variables that store items inside the bag (number of bag slots retrieved from database)
     public Item[] equippedConsumables;
-   
+
     void Awake()
     {
         // Make sure there is only 1 instance of this class.
@@ -163,6 +166,7 @@ public class InventoryManager : MonoBehaviour
         foreach (VirtualGood item in goods)
         {
             equipmentsHead.Add(item.ItemId,ParseToItem(item,ItemType.eq_head));
+            allItems.Add(item.ItemId, ParseToItem(item, ItemType.eq_head));
         }
 
         #endregion
@@ -172,6 +176,7 @@ public class InventoryManager : MonoBehaviour
         foreach (VirtualGood item in goods)
         {
             equipmentsBody.Add(item.ItemId, ParseToItem(item,ItemType.eq_body));
+            allItems.Add(item.ItemId, ParseToItem(item, ItemType.eq_body));
         }
 
         #endregion
@@ -181,6 +186,7 @@ public class InventoryManager : MonoBehaviour
         foreach (VirtualGood item in goods)
         {
             equipmentsLegs.Add(item.ItemId, ParseToItem(item, ItemType.eq_legs));
+            allItems.Add(item.ItemId, ParseToItem(item, ItemType.eq_legs));
         }
 
         #endregion
@@ -190,6 +196,7 @@ public class InventoryManager : MonoBehaviour
         foreach (VirtualGood item in goods)
         {
             itemsConsumable.Add(item.ItemId, ParseToItem(item, ItemType.item_consumable));
+            allItems.Add(item.ItemId, ParseToItem(item, ItemType.item_consumable));
         }
 
         #endregion
@@ -199,6 +206,7 @@ public class InventoryManager : MonoBehaviour
         foreach (VirtualGood item in goods)
         {
             itemsConsumable.Add(item.ItemId, ParseToItem(item, ItemType.item_instant));
+            allItems.Add(item.ItemId, ParseToItem(item, ItemType.item_instant));
         }
 
         #endregion
@@ -390,16 +398,19 @@ public class InventoryManager : MonoBehaviour
 
     public void UnequipHead()
     {
+        StoreInventory.UnEquipVirtualGood(equippedHead.itemId);
         equippedHead = new Item();
     }
 
     public void UnequipBody()
     {
+        StoreInventory.UnEquipVirtualGood(equippedBody.itemId);
         equippedBody = new Item();
     }
 
     public void UnequipLegs()
     {
+        StoreInventory.UnEquipVirtualGood(equippedLegs.itemId);
         equippedLegs = new Item();
     }
 
@@ -439,6 +450,51 @@ public class InventoryManager : MonoBehaviour
 
         // Should ideally not end up here, but if it does, return empty list
         return new List<Item>();
+    }
+
+    public Texture lootItem(Loot loot)
+    {
+        StoreInventory.GiveItem(loot.itemID, loot.quantity);
+
+        if (loot.itemID == CrapTrapAssets.NORMAL_TOILET_PAPER_ID)
+        {
+            ntp = ntp + loot.quantity;
+            StoreInventory.GiveItem(CrapTrapAssets.NORMAL_TOILET_PAPER_ID, loot.quantity);
+            return ntpTexture;
+        }
+        else if (loot.itemID == CrapTrapAssets.GOLDEN_TOILET_PAPER_ID)
+        {
+            gtp = gtp + loot.quantity;
+            StoreInventory.GiveItem(CrapTrapAssets.GOLDEN_TOILET_PAPER_ID, loot.quantity);
+            return gtpTexture;
+        }
+        else if (loot.itemType == ItemType.eq_head)
+        {
+            equipmentsHead[loot.itemID].balance = equipmentsHead[loot.itemID].balance + loot.quantity;
+            return equipmentsHead[loot.itemID].icon;
+        }
+        else if (loot.itemType == ItemType.eq_body)
+        {
+            equipmentsBody[loot.itemID].balance = equipmentsBody[loot.itemID].balance + loot.quantity;
+            return equipmentsBody[loot.itemID].icon;
+        }
+        else if (loot.itemType == ItemType.eq_legs)
+        {
+            equipmentsLegs[loot.itemID].balance = equipmentsLegs[loot.itemID].balance + loot.quantity;
+            return equipmentsLegs[loot.itemID].icon;
+        }
+        else
+        {
+            itemsConsumable[loot.itemID].balance = itemsConsumable[loot.itemID].balance + loot.quantity;
+            return itemsConsumable[loot.itemID].icon;
+        }
+
+    }
+
+    public void AddNTP(int amount)
+    {
+        ntp = ntp + amount;
+        StoreInventory.GiveItem(CrapTrapAssets.NORMAL_TOILET_PAPER_ID, amount);
     }
 
     #endregion

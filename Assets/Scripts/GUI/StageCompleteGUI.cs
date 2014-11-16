@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 public class StageCompleteGUI : MonoBehaviour 
 {
@@ -20,9 +21,18 @@ public class StageCompleteGUI : MonoBehaviour
      * Custom Styles [10] = Feedback Button
      * Custom Styles [11] = Star
      * Custom Styles [12] = Star Shine
+     * Custom Styles [13] = Tick Box
+     * Custom Styles [14] = Tick
+     * Custom Styles [15] = Arrow Next
+     * Custom Styles [16] = Transparent Button
+     * Custom Styles [17] = Capsule Closed
+     * Custom Styles [18] = Capsule Top
+     * Custom Styles [19] = Capsule Bot
+     * Custom Styles [20] = Capsule Shine
      */
     public GUISkin activeSkin;
-    public int screen = 0;
+    private int screen = 0;
+    private bool allowTransition;
 
     #region GUI related
 
@@ -94,6 +104,14 @@ public class StageCompleteGUI : MonoBehaviour
     private float contentContainerWidth = 0.665f;
     private float contentContainerHeight = 0.45f;
 
+    private Rect innerContentContainerRect;
+    private Rect innerContentTransitionRect;
+    private Rect innerContainerPosLeft;
+    private Rect innerContainerPosMid;
+    private Rect innerContainerPosRight;
+
+    private int transitionTo; // Screen to transition to
+
     #region header
 
     private Rect headerRect;
@@ -109,7 +127,6 @@ public class StageCompleteGUI : MonoBehaviour
     private float tickboxScale = 0.18f;
 
     private Rect objectivesRect;
-    private Rect objectivesOuterRect;
     private float objectivesXOffset = 0.09f;
     private float objectivesYOffset = 0.23f;
     private float objectivesVerticalSpacing;
@@ -144,6 +161,44 @@ public class StageCompleteGUI : MonoBehaviour
     private float arrowYOffset = 0.39f;
 
     #endregion
+    #region Treasure
+
+    private int capsulesMax;
+    private int capsulesCollected;
+    private Texture loot1 = null;
+    private Texture loot2 = null;
+    private Texture loot3 = null;
+    private Rect treasureRect;
+
+    private Rect A_treasureItemContainerRect;
+    private Rect B_treasureItemContainerRect;
+    private Rect C_treasureItemContainerRect;
+    private Rect D_treasureItemContainerRect;
+    private Rect E_treasureItemContainerRect;
+
+    private Rect capsuleTopRect;
+    private Rect capsuleBotRect;
+    private Rect capsuleEmptyRect;
+    private Texture capsuleTopTexture;
+    private Texture capsuleBotTexture;
+    private Texture capsuleEmptyTexture;
+
+    private Rect capsuleTopOpenRect;
+    private Rect capsuleBotOpenRect;
+    private float openOffset = 0.2f;
+    private Rect capsuleItemRect;
+    private float capsuleItemScale = 0.8f;
+    private Rect capsuleShineRect;
+    private Texture capsuleShineTexture;
+    private Rect capsuleShineOpenRect;
+    private float capsuleShineAlpha;
+    private float shineScale = 1.2f;
+
+    private float treasuresXOffset = 0f;
+    private float treasuresYOffset = 0f;
+    private float capsuleSpacing = 0.05f;
+
+    #endregion
     #region Stats
 
     // Vars
@@ -165,7 +220,6 @@ public class StageCompleteGUI : MonoBehaviour
      */
 
     private Rect statsRect; //  Stats container
-    private Rect statsOuterRect;
     private float statsXOffset = 0.3f;
     private float statsYOffset = 0.27f;
     
@@ -289,14 +343,21 @@ public class StageCompleteGUI : MonoBehaviour
         headerRect = new Rect(0, contentContainerRect.height * headerYOffset, contentContainerRect.width, activeSkin.customStyles[2].fontSize);
 
         #region objectives
+
         tickboxTexture = activeSkin.customStyles[13].normal.background;
         tickTexture = activeSkin.customStyles[14].normal.background;
 
         float tickboxHeight = contentContainerRect.height * tickboxScale;
         float tickboxWidth = tickboxHeight * ((float)tickboxTexture.width / (float)tickboxTexture.height);
 
+        // Initialise inner container Rects
+        innerContainerPosLeft = new Rect(-contentContainerRect.width, 0, contentContainerRect.width, contentContainerRect.height);
+        innerContainerPosMid = new Rect(0, 0, contentContainerRect.width, contentContainerRect.height);
+        innerContainerPosRight = new Rect(contentContainerRect.width, 0, contentContainerRect.width, contentContainerRect.height);
+        innerContentContainerRect = innerContainerPosMid;
+        innerContentTransitionRect = innerContainerPosRight;
+
         // Initialise the objectives rect
-        objectivesOuterRect = new Rect(0, 0, contentContainerRect.width, contentContainerRect.height);
         objectivesRect = new Rect(contentContainerRect.width * objectivesXOffset, 
                                   contentContainerRect.height * objectivesYOffset, 
                                   contentContainerRect.width * (1 - objectivesXOffset * 2), 
@@ -326,11 +387,53 @@ public class StageCompleteGUI : MonoBehaviour
         float arrowHeight = contentContainerRect.height * arrowScale;
         float arrowWidth = arrowHeight * ((float)arrowNextTexture.width / (float)arrowNextTexture.height);
         arrowNextRect = new Rect(contentContainerRect.width * arrowXOffset, contentContainerRect.height * arrowYOffset, arrowWidth, arrowHeight);
+
+        #endregion
+        #region treasures
+
+        capsuleEmptyTexture = activeSkin.customStyles[17].normal.background;
+        capsuleTopTexture = activeSkin.customStyles[18].normal.background;
+        capsuleBotTexture = activeSkin.customStyles[19].normal.background;
+
+        // Initialise the treasure rect
+        treasureRect = new Rect(0, 0, contentContainerRect.width, contentContainerRect.height);
+        treasureRect = new Rect(contentContainerRect.width * treasuresXOffset,
+                                contentContainerRect.height * treasuresYOffset,
+                                contentContainerRect.width * (1 - treasuresXOffset * 2),
+                                contentContainerRect.height * (1 - treasuresYOffset));
+
+        float spacing = treasureRect.width * capsuleSpacing;
+        float capsuleWidth = (treasureRect.width - (spacing * 4)) / 3;
+        float capsuleHeight = capsuleWidth * ((float)capsuleEmptyTexture.height / (float)capsuleEmptyTexture.width);
+
+        capsuleEmptyRect = new Rect(0, 0.5f * (treasureRect.height - capsuleHeight), capsuleWidth, capsuleHeight);
+        capsuleTopRect = capsuleEmptyRect;
+        capsuleBotRect = capsuleEmptyRect;
+        capsuleTopOpenRect = new Rect(0, capsuleEmptyRect.y - (treasureRect.height * openOffset), capsuleWidth, capsuleHeight);
+        capsuleBotOpenRect = new Rect(0, capsuleEmptyRect.y + (treasureRect.height * openOffset), capsuleWidth, capsuleHeight);
+
+        float capsuleItemDimension = Mathf.Min(capsuleWidth,capsuleHeight) * capsuleItemScale;
+        float capsuleItemXOffset = (capsuleHeight - capsuleItemDimension) * 0.5f;
+        float capsuleItemYOffset = (capsuleWidth - capsuleItemDimension) * 0.5f;
+        capsuleItemRect = new Rect(capsuleItemXOffset, capsuleEmptyRect.y + capsuleItemYOffset, capsuleItemDimension, capsuleItemDimension);
+
+        capsuleShineTexture = activeSkin.customStyles[20].normal.background;
+        float capsuleShineWidth = capsuleEmptyRect.width * shineScale;
+        float capsuleShineHeight = capsuleShineWidth * ((float)capsuleShineTexture.height / (float)capsuleShineTexture.width);
+        capsuleShineRect = new Rect(capsuleShineWidth * 0.5f, capsuleItemRect.y, 0, 0);
+        capsuleShineAlpha = 0;
+        capsuleShineOpenRect = new Rect(0, capsuleBotOpenRect.y, capsuleShineWidth, capsuleShineHeight);
+
+        A_treasureItemContainerRect = new Rect(spacing, 0, capsuleWidth, treasureRect.height);
+        B_treasureItemContainerRect = new Rect(0.5f * (treasureRect.width - spacing) - capsuleWidth, 0, capsuleWidth, treasureRect.height);
+        C_treasureItemContainerRect = new Rect(capsuleWidth + 2 * spacing, 0, capsuleWidth, treasureRect.height);
+        D_treasureItemContainerRect = new Rect(0.5f * (treasureRect.width + spacing), 0, capsuleWidth, treasureRect.height);
+        E_treasureItemContainerRect = new Rect(2 * capsuleWidth + 3 * spacing, 0, capsuleWidth, treasureRect.height);
+
         #endregion
         #region Stats
 
         // Initialise the stats rect
-        statsOuterRect = new Rect(contentContainerRect.width, 0, contentContainerRect.width, contentContainerRect.height);
         statsRect = new Rect(contentContainerRect.width * statsXOffset, 
                              contentContainerRect.height * statsYOffset, 
                              contentContainerRect.width * (1 - statsXOffset * 2), 
@@ -382,6 +485,10 @@ public class StageCompleteGUI : MonoBehaviour
         #endregion
 
 	}
+
+    void Update()
+    {
+    }
 	
 	void OnGUI()
     {
@@ -414,94 +521,161 @@ public class StageCompleteGUI : MonoBehaviour
 
             GUI.BeginGroup(contentContainerRect);
             {
-                Objectives();
-                Stats();
+                GUI.BeginGroup(innerContentContainerRect);
+                {
+                    if (screen == 1)
+                    {
+                        Objectives();
+                    }
+                    else if (screen == 2)
+                    {
+                        Treasures();
+                    }
+                    else if (screen == 3)
+                    {
+                        Stats();
+                    }
+                    if (allowTransition)
+                    {
+                        // Next arrow
+                        var original_color = GUI.color;
+                        GUI.color = (new Color(0.843f, 0.29f, 0.094f));
+                        GUI.DrawTexture(arrowNextRect, arrowNextTexture);
+                        GUI.color = original_color;
+                    }
+                }
+                GUI.EndGroup();
+                GUI.BeginGroup(innerContentTransitionRect);
+                {
+                    if (transitionTo == 2)
+                    {
+                        Treasures();
+                    }
+                    else if (transitionTo == 3)
+                    {
+                        Stats();
+                    }
+                }
+                GUI.EndGroup();
             }
             GUI.EndGroup();
 
-            if (screen == 2)
+            if (screen == 3)
             {
                 Navigation();
             }
         }
         GUI.EndGroup();
 
-        if (screen == 1)
+        if (allowTransition)
         {
             if (GUI.Button(new Rect(0, 0, Screen.width, Screen.height), "", activeSkin.customStyles[16]))
             {
-                TransitionToSummary();
-                screen = 2;
+                TransitionToNext();
             }
         }
     }
 
     void Objectives()
     {
-        GUI.BeginGroup(objectivesOuterRect);
+        GUI.Label(headerRect, "Objectives", activeSkin.customStyles[2]);
+
+        GUI.BeginGroup(objectivesRect);
         {
-            GUI.Label(headerRect, "Objectives", activeSkin.customStyles[2]);
-
-            GUI.BeginGroup(objectivesRect);
+            // Draw the first tickbox
+            GUI.DrawTexture(tickbox1Rect, tickboxTexture);
+            GUI.BeginGroup(tick1ContainerRect);
             {
-                // Draw the first tickbox
-                GUI.DrawTexture(tickbox1Rect, tickboxTexture);
-                GUI.BeginGroup(tick1ContainerRect);
-                {
-                    GUI.DrawTexture(tickRect, tickTexture);
-                }
-                GUI.EndGroup();
-                // The objective text
-                GUI.Label(objective1Rect, objective1, objectiveLabelStyle);
-
-                // Draw the second tickbox
-                GUI.DrawTexture(tickbox2Rect, tickboxTexture);
-                GUI.BeginGroup(tick2ContainerRect);
-                {
-                    GUI.DrawTexture(tickRect, tickTexture);
-                }
-                GUI.EndGroup();
-                // The objective text
-                GUI.Label(objective2Rect, objective2, objectiveLabelStyle);
-
-                // Draw the third tickbox
-                GUI.DrawTexture(tickbox3Rect, tickboxTexture);
-                GUI.BeginGroup(tick3ContainerRect);
-                {
-                    GUI.DrawTexture(tickRect, tickTexture);
-                }
-                GUI.EndGroup();
-                // The objective text
-                GUI.Label(objective3Rect, objective3, objectiveLabelStyle);
+                GUI.DrawTexture(tickRect, tickTexture);
             }
             GUI.EndGroup();
+            // The objective text
+            GUI.Label(objective1Rect, objective1, objectiveLabelStyle);
 
-            // Next arrow
-            var original_color = GUI.color;
-            GUI.color = (new Color(0.843f, 0.29f, 0.094f));
-            GUI.DrawTexture(arrowNextRect, arrowNextTexture);
-            GUI.color = original_color;
+            // Draw the second tickbox
+            GUI.DrawTexture(tickbox2Rect, tickboxTexture);
+            GUI.BeginGroup(tick2ContainerRect);
+            {
+                GUI.DrawTexture(tickRect, tickTexture);
+            }
+            GUI.EndGroup();
+            // The objective text
+            GUI.Label(objective2Rect, objective2, objectiveLabelStyle);
+
+            // Draw the third tickbox
+            GUI.DrawTexture(tickbox3Rect, tickboxTexture);
+            GUI.BeginGroup(tick3ContainerRect);
+            {
+                GUI.DrawTexture(tickRect, tickTexture);
+            }
+            GUI.EndGroup();
+            // The objective text
+            GUI.Label(objective3Rect, objective3, objectiveLabelStyle);
+        }
+        GUI.EndGroup();
+    }
+
+    void Treasures()
+    {
+        GUI.BeginGroup(treasureRect);
+        {
+            if (capsulesMax == 1)
+            {
+                Capsule(C_treasureItemContainerRect, loot1);
+            }
+            else if (capsulesMax == 2)
+            {
+                Capsule(B_treasureItemContainerRect, loot1);
+                Capsule(D_treasureItemContainerRect, loot2);
+            }
+            else if (capsulesMax == 3)
+            {
+                Capsule(A_treasureItemContainerRect, loot1);
+                Capsule(C_treasureItemContainerRect, loot2);
+                Capsule(E_treasureItemContainerRect, loot3);
+            }
+        }
+        GUI.EndGroup();
+    }
+
+    void Capsule(Rect container, Texture item)
+    {
+        GUI.BeginGroup(container);
+        {
+            if (item != null)
+            {
+                GUI.DrawTexture(capsuleItemRect, item);
+
+                // Shine
+                var color = GUI.color;
+                GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, capsuleShineAlpha);
+                GUI.DrawTexture(capsuleShineRect, capsuleShineTexture);
+                GUI.color = color;
+
+                GUI.DrawTexture(capsuleTopRect, capsuleTopTexture);
+                GUI.DrawTexture(capsuleBotRect, capsuleBotTexture);
+            }
+            else
+            {
+                GUI.DrawTexture(capsuleEmptyRect, capsuleEmptyTexture);
+            }
         }
         GUI.EndGroup();
     }
 
     void Stats()
     {
-        GUI.BeginGroup(statsOuterRect);
+        GUI.Label(headerRect, "Summary", activeSkin.customStyles[2]);
+
+        GUI.BeginGroup(statsRect);
         {
-            GUI.Label(headerRect, "Summary", activeSkin.customStyles[2]);
+            GUI.DrawTexture(A_iconRect, A_iconTexture);
+            GUI.DrawTexture(B_iconRect, B_iconTexture);
+            GUI.DrawTexture(C_iconRect, C_iconTexture);
 
-            GUI.BeginGroup(statsRect);
-            {
-                GUI.DrawTexture(A_iconRect, A_iconTexture);
-                GUI.DrawTexture(B_iconRect, B_iconTexture);
-                GUI.DrawTexture(C_iconRect, C_iconTexture);
-
-                GUI.Label(A_statLabelRect, time, activeSkin.customStyles[6]);
-                GUI.Label(B_statLabelRect, ntpCollected + "/" + ntpAvailable, activeSkin.customStyles[6]);
-                GUI.Label(C_statLabelRect, gtpCollected + "/" + gtpAvailable, activeSkin.customStyles[6]);
-            }
-            GUI.EndGroup();
+            GUI.Label(A_statLabelRect, time, activeSkin.customStyles[6]);
+            GUI.Label(B_statLabelRect, ntpCollected + "/" + ntpAvailable, activeSkin.customStyles[6]);
+            GUI.Label(C_statLabelRect, capsulesCollected + "/" + capsulesMax, activeSkin.customStyles[6]);
         }
         GUI.EndGroup();
     }
@@ -616,21 +790,48 @@ public class StageCompleteGUI : MonoBehaviour
     {
         tick3ContainerRect = size;
     }
-    void AnimateObjective(Rect size)
+    void AnimateCapsuleTop(Rect size)
     {
-        objectivesOuterRect = size;
+        capsuleTopRect = size;
     }
-    void AnimateStats(Rect size)
+    void AnimateCapsuleBot(Rect size)
     {
-        statsOuterRect = size;
+        capsuleBotRect = size;
+    }
+    void AnimateCapsuleShine(Rect size)
+    {
+        capsuleShineRect = size;
+    }
+    void AnimateCapsuleShineAlpha(float alpha)
+    {
+        capsuleShineAlpha = alpha;
+    }
+    void AnimateInnerRect(Rect size)
+    {
+        innerContentContainerRect = size;
+    }
+    void AnimateTransitionRect(Rect size)
+    {
+        innerContentTransitionRect = size;
+    }
+    void OnTransitionComplete()
+    {
+        innerContentContainerRect = innerContainerPosMid;
+        innerContentTransitionRect = innerContainerPosRight;
+
+        screen = transitionTo;
+        if (screen == 2)
+        {
+            OpenCapsules();
+        }
     }
     void AnimateNavAlpha(float alpha)
     {
         navAlpha = alpha;
     }
 
-    public void StageComplete(string _time, int _ntpCollected, int _ntpAvailable, 
-                              int _gtpCollected, int _gtpAvailable, Objective[] objs)
+    public void StageComplete(string _time, int _ntpCollected, int _ntpAvailable,
+                              int _capAvailable, List<Capsule> capsules, Objective[] objs)
     {
         // Objectives
         objectives = objs;
@@ -647,8 +848,27 @@ public class StageCompleteGUI : MonoBehaviour
         time = _time;
         ntpCollected = _ntpCollected;
         ntpAvailable = _ntpAvailable;
-        gtpCollected = _gtpCollected;
-        gtpAvailable = _gtpAvailable;
+        capsulesCollected = capsules.Count;
+        capsulesMax = _capAvailable;
+
+        if (capsulesCollected >= 1)
+        {
+            // Update Inventory
+            loot1 = InventoryManager.instance.lootItem(capsules[0].obtainLoot());
+        }
+        if (capsulesCollected >= 2)
+        {
+            // Update Inventory
+            loot2 = InventoryManager.instance.lootItem(capsules[1].obtainLoot());
+        }
+        if (capsulesCollected >= 3)
+        {
+            // Update Inventory
+            loot3 = InventoryManager.instance.lootItem(capsules[2].obtainLoot());
+        }
+
+        allowTransition = false;
+        screen = 1;
 
         // Animate
         iTween.ValueTo(gameObject,
@@ -716,7 +936,7 @@ public class StageCompleteGUI : MonoBehaviour
         }
         else
         {
-            AllowTransitionToSummary();
+            allowTransition = true;
         }
     }
     void ShowStar2()
@@ -777,7 +997,7 @@ public class StageCompleteGUI : MonoBehaviour
         }
         else
         {
-            AllowTransitionToSummary();
+            allowTransition = true;
         }
     }
     void ShowStar3()
@@ -789,7 +1009,7 @@ public class StageCompleteGUI : MonoBehaviour
                                 iTween.Hash("from", star3Rect,
                                             "to", star3ShowRect,
                                             "onupdate", "AnimateStar3",
-                                            "oncomplete", "AllowTransitionToSummary",
+                                            "oncomplete", "AllowTransition",
                                             "easetype", iTween.EaseType.easeOutQuart,
                                             "time", 0.5));
             iTween.ValueTo(gameObject,
@@ -814,33 +1034,79 @@ public class StageCompleteGUI : MonoBehaviour
         }
         else
         {
-            AllowTransitionToSummary();
+            allowTransition = true;
         }
     }
-    void AllowTransitionToSummary()
+    void OpenCapsules()
     {
-        screen = 1;
+        iTween.ValueTo(gameObject,
+                       iTween.Hash("from", capsuleTopRect,
+                                   "to", capsuleTopOpenRect,
+                                   "onupdate", "AnimateCapsuleTop",
+                                   "easetype", iTween.EaseType.easeOutQuart,
+                                   "time", 0.5));
+        iTween.ValueTo(gameObject,
+                       iTween.Hash("from", capsuleBotRect,
+                                   "to", capsuleBotOpenRect,
+                                   "onupdate", "AnimateCapsuleBot",
+                                   "easetype", iTween.EaseType.easeOutQuart,
+                                   "time", 0.5));
+        
+        iTween.ValueTo(gameObject,
+                       iTween.Hash("from", capsuleShineRect,
+                                   "to", capsuleShineOpenRect,
+                                   "onupdate", "AnimateCapsuleShine",
+                                   "easetype", iTween.EaseType.easeOutQuart,
+                                   "time", 0.5f));
+        iTween.ValueTo(gameObject,
+                       iTween.Hash("from", capsuleShineAlpha,
+                                   "to", 1,
+                                   "onupdate", "AnimateCapsuleShineAlpha",
+                                   "easetype", iTween.EaseType.easeOutQuart,
+                                   "time", 0.5f));
+         
     }
-    void TransitionToSummary()
+
+    void AllowTransition()
     {
+        allowTransition = true;
+    }
+
+    void TransitionToNext()
+    {
+        if (screen == 1 && capsulesMax == 0)
+        {
+            transitionTo = 3;
+        }
+        else
+        {
+            transitionTo = screen + 1;
+        }
+
+        if (transitionTo == 3)
+        {
+            allowTransition = false;
+
+            iTween.ValueTo(gameObject,
+                                iTween.Hash("from", 0,
+                                            "to", 1,
+                                            "onupdate", "AnimateNavAlpha",
+                                            "easetype", iTween.EaseType.easeOutQuart,
+                                            "time", 0.5));
+        }
+
         // Animate the transition
         iTween.ValueTo(gameObject,
-                            iTween.Hash("from", statsOuterRect,
-                                        "to", new Rect(0,0,statsOuterRect.width,statsOuterRect.height),
-                                        "onupdate", "AnimateStats",
+                            iTween.Hash("from", innerContentContainerRect,
+                                        "to", innerContainerPosLeft,
+                                        "onupdate", "AnimateInnerRect",
                                         "easetype", iTween.EaseType.easeOutQuart,
                                         "time", 0.5));
         iTween.ValueTo(gameObject,
-                            iTween.Hash("from", objectivesOuterRect,
-                                        "to", new Rect(-objectivesOuterRect.width, 0, objectivesOuterRect.width, objectivesOuterRect.height),
-                                        "onupdate", "AnimateObjective",
-                                        "easetype", iTween.EaseType.easeOutQuart,
-                                        "time", 0.5));
-        // Show the nav area
-        iTween.ValueTo(gameObject,
-                            iTween.Hash("from", 0,
-                                        "to", 1,
-                                        "onupdate", "AnimateNavAlpha",
+                            iTween.Hash("from", innerContentTransitionRect,
+                                        "to", innerContainerPosMid,
+                                        "onupdate", "AnimateTransitionRect",
+                                        "oncomplete", "OnTransitionComplete",
                                         "easetype", iTween.EaseType.easeOutQuart,
                                         "time", 0.5));
     }

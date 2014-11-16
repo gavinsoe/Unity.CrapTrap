@@ -19,11 +19,6 @@ public class ItemController : MonoBehaviour {
         game = Camera.main.GetComponent<MainGameController>();
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
     void OnTriggerEnter2D(Collider2D col)
     {
         //if (Debug.isDebugBuild) Debug.Log("Collide!! " + col.gameObject.tag);

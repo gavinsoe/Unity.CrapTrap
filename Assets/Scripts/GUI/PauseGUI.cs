@@ -20,8 +20,6 @@ public class PauseGUI : MonoBehaviour
     // Triggers
     public bool show = false;
     public bool hide = false;
-    private bool sound = false;
-    private bool map = false;
 
     #region GUI related
 
