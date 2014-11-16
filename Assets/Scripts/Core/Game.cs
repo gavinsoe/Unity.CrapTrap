@@ -341,7 +341,17 @@ public class Game : MonoBehaviour
         // If stage is not the last normal stage in the chapter then open the next stage
         if (level < 9)
         {
-            levelsUnlocked[chapter][level + 1] = true;
+            if (chapter > 6)
+            {
+                if (star == 3)
+                {
+                    levelsUnlocked[chapter][level + 1] = true;
+                }
+            }
+            else
+            {
+                levelsUnlocked[chapter][level + 1] = true;
+            }
         }
         else // If it is the last normal stage
         {
