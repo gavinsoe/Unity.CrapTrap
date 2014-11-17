@@ -1,8 +1,8 @@
 fileFormatVersion: 2
-guid: 9ebfe699b2ab34e9397fabf5866bee1f
+guid: 2d697b6b0852b4a008d9cd5430892e1a
 TextureImporter:
   fileIDToRecycleName:
-    21300000: pants_waist_backview_0
+    21300000: pirate_arm_top_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -41,22 +41,18 @@ TextureImporter:
   spritePixelsToUnits: 500
   alphaIsTransparency: 1
   textureType: 8
-  buildTargetSettings:
-  - buildTarget: iPhone
-    maxTextureSize: 1024
-    textureFormat: -3
-    compressionQuality: 50
+  buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: pants_waist_backview_0
+    - name: pirate_arm_top_0
       rect:
         serializedVersion: 2
-        x: 21
-        y: 56
-        width: 69
-        height: 31
+        x: 38
+        y: 36
+        width: 33
+        height: 79
       alignment: 9
-      pivot: {x: .493498147, y: .771056116}
+      pivot: {x: .479607791, y: .883324742}
       border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 
