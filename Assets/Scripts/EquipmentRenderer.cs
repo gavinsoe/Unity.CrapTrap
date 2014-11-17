@@ -12,6 +12,7 @@ public class EquipmentRenderer : MonoBehaviour {
     {
         public string itemID;
         public Sprite sprite;
+        public int orderInLayer;
     }
 
     public EquipmentSlot slot;
@@ -19,7 +20,7 @@ public class EquipmentRenderer : MonoBehaviour {
     public List<EquipmentSprite> eqSprites = new List<EquipmentSprite>();
 
 	// Use this for initialization
-	void Start () {
+	void Update () {
 
         EquipmentSprite eq = null;
 	    
@@ -43,8 +44,9 @@ public class EquipmentRenderer : MonoBehaviour {
         if (eq != null)
         {
             GetComponent<SpriteRenderer>().sprite = eq.sprite;
+            GetComponent<SpriteRenderer>().sortingOrder = eq.orderInLayer;
         }
-        else if (defaultSprite != null)
+        else
         {
             GetComponent<SpriteRenderer>().sprite = defaultSprite;
         }
