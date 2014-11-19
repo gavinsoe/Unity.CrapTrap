@@ -115,14 +115,38 @@ public class CrapTrapAssets : IStoreAssets
         {
             return new VirtualGood[] { 
                 EQ_BODY_SET_EXPLORER,
-                EQ_BODY_SET_PIRATE
+                EQ_BODY_SET_PIRATE,
+                EQ_BODY_SET_TRIBAL,
+                EQ_BODY_BARREL,
+                EQ_BODY_BOWTIE,
+                EQ_BODY_BOXING_GLOVES,
+                EQ_BODY_CHESTHAIR,     
+                EQ_BODY_HOODIE,
+                EQ_BODY_KARATEGI,
+                EQ_BODY_LABCOAT_KRIEGER,
+                EQ_BODY_LABCOAT_NORMAL,
+                EQ_BODY_NAKED,
+                EQ_BODY_SHIRT_PINK,
+                EQ_BODY_SHIRT_RED,
+                EQ_BODY_SHIRT_YELLOW,
+                EQ_BODY_SUIT,
+                EQ_BODY_TATTOO
             };
         }
         else if (type == ItemType.eq_legs)
         {
             return new VirtualGood[] {
                 EQ_LEGS_SET_EXPLORER,
-                EQ_LEGS_SET_PIRATE
+                EQ_LEGS_SET_PIRATE,
+                EQ_LEGS_SET_TRIBAL,
+                EQ_LEGS_ARMY,
+                EQ_LEGS_BALLET,
+                EQ_LEGS_COWBOY,
+                EQ_LEGS_HERMES,
+                EQ_LEGS_LEATHER,
+                EQ_LEGS_LOAFERS,
+                EQ_LEGS_SNEAKERS,
+                EQ_LEGS_SUIT
             };
         }
         else if (type == ItemType.item_consumable)
@@ -197,7 +221,17 @@ public class CrapTrapAssets : IStoreAssets
     public static List<string> EQ_HEAD_LIST = 
         new List<string>(new string[] {
             EQ_HEAD_SET_EXPLORER_ID,
-            EQ_HEAD_SET_PIRATE_ID
+            EQ_HEAD_SET_PIRATE_ID,
+            EQ_HEAD_SET_TRIBAL_ID,
+            EQ_HEAD_APPLE_ARROW_ID,
+            EQ_HEAD_BEANIE_ID,
+            EQ_HEAD_CAP_ID,
+            EQ_HEAD_HELMET_BLUE_ID,
+            EQ_HEAD_HELMET_WHITE_ID,
+            EQ_HEAD_NEKOMIMI_ID,
+            EQ_HEAD_PAPERBAG_ID,
+            EQ_HEAD_SHARK_ID,
+            EQ_HEAD_SPECS_BLUE_ID
         });
 
     #endregion
@@ -206,6 +240,21 @@ public class CrapTrapAssets : IStoreAssets
     // items
     public const string EQ_BODY_SET_EXPLORER_ID = "eq_body_set_explorer";
     public const string EQ_BODY_SET_PIRATE_ID = "eq_body_set_pirate";
+    public const string EQ_BODY_SET_TRIBAL_ID = "eq_body_set_tribal";
+    public const string EQ_BODY_BARREL_ID = "eq_body_barrel";
+    public const string EQ_BODY_BOWTIE_ID = "eq_body_bowtie";
+    public const string EQ_BODY_BOXING_GLOVES_ID = "eq_body_boxing_gloves";
+    public const string EQ_BODY_CHESTHAIR_ID = "eq_body_chesthair";
+    public const string EQ_BODY_HOODIE_ID = "eq_body_hoodie";
+    public const string EQ_BODY_KARATEGI_ID = "eq_body_karategi";
+    public const string EQ_BODY_LABCOAT_KRIEGER_ID = "eq_body_labcoat_krieger";
+    public const string EQ_BODY_LABCOAT_NORMAL_ID = "eq_body_labcoat_normal";
+    public const string EQ_BODY_NAKED_ID = "eq_body_naked";
+    public const string EQ_BODY_SHIRT_PINK_ID = "eq_body_shirt_pink";
+    public const string EQ_BODY_SHIRT_RED_ID = "eq_body_shirt_red";
+    public const string EQ_BODY_SHIRT_YELLOW_ID = "eq_body_shirt_yellow";
+    public const string EQ_BODY_SUIT_ID = "eq_body_suit";
+    public const string EQ_BODY_TATTOO_ID = "eq_body_tattoo";
 
     // category name
     public const string EQ_BODY_CATEGORY_NAME = "eq_body";
@@ -214,7 +263,22 @@ public class CrapTrapAssets : IStoreAssets
     public static List<string> EQ_BODY_LIST =
         new List<string>(new string[] {
             EQ_BODY_SET_EXPLORER_ID,
-            EQ_BODY_SET_PIRATE_ID
+            EQ_BODY_SET_PIRATE_ID,
+            EQ_BODY_SET_TRIBAL_ID,
+            EQ_BODY_BARREL_ID,
+            EQ_BODY_BOWTIE_ID,
+            EQ_BODY_BOXING_GLOVES_ID,
+            EQ_BODY_CHESTHAIR_ID,     
+            EQ_BODY_HOODIE_ID,
+            EQ_BODY_KARATEGI_ID,
+            EQ_BODY_LABCOAT_KRIEGER_ID,
+            EQ_BODY_LABCOAT_NORMAL_ID,
+            EQ_BODY_NAKED_ID,
+            EQ_BODY_SHIRT_PINK_ID,
+            EQ_BODY_SHIRT_RED_ID,
+            EQ_BODY_SHIRT_YELLOW_ID,
+            EQ_BODY_SUIT_ID,
+            EQ_BODY_TATTOO_ID
         });
 
     #endregion
@@ -223,6 +287,15 @@ public class CrapTrapAssets : IStoreAssets
     // items
     public const string EQ_LEGS_SET_EXPLORER_ID = "eq_legs_set_explorer";
     public const string EQ_LEGS_SET_PIRATE_ID = "eq_legs_set_pirate";
+    public const string EQ_LEGS_SET_TRIBAL_ID = "eq_legs_set_tribal";
+    public const string EQ_LEGS_ARMY_ID = "eq_legs_army";
+    public const string EQ_LEGS_BALLET_ID = "eq_legs_ballet";
+    public const string EQ_LEGS_COWBOY_ID = "eq_legs_cowboy";
+    public const string EQ_LEGS_HERMES_ID = "eq_legs_hermes";
+    public const string EQ_LEGS_LEATHER_ID = "eq_legs_leather";
+    public const string EQ_LEGS_LOAFERS_ID = "eq_legs_loafers";
+    public const string EQ_LEGS_SNEAKERS_ID = "eq_legs_sneakers";
+    public const string EQ_LEGS_SUIT_ID = "eq_legs_suit";
 
     // category name
     public const string EQ_LEGS_CATEGORY_NAME = "eq_legs";
@@ -231,7 +304,16 @@ public class CrapTrapAssets : IStoreAssets
     public static List<string> EQ_LEGS_LIST =
         new List<string>(new string[] {
             EQ_LEGS_SET_EXPLORER_ID,
-            EQ_LEGS_SET_PIRATE_ID
+            EQ_LEGS_SET_PIRATE_ID,
+            EQ_LEGS_SET_TRIBAL_ID,
+            EQ_LEGS_ARMY_ID,
+            EQ_LEGS_BALLET_ID,
+            EQ_LEGS_COWBOY_ID,
+            EQ_LEGS_HERMES_ID,
+            EQ_LEGS_LEATHER_ID,
+            EQ_LEGS_LOAFERS_ID,
+            EQ_LEGS_SNEAKERS_ID,
+            EQ_LEGS_SUIT_ID
         });
 
     #endregion
@@ -444,6 +526,127 @@ public class CrapTrapAssets : IStoreAssets
        EQ_BODY_SET_PIRATE_ID,                                       // item id
        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
     );
+    
+    public static EquippableVG EQ_BODY_SET_TRIBAL = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Tribal Body]",                                             // name
+       "[Tribal Description]",                                      // description
+       EQ_BODY_SET_TRIBAL_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );
+    
+    public static EquippableVG EQ_BODY_BARREL = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Barrel Body]",                                             // name
+       "[Barrel Description]",                                      // description
+       EQ_BODY_BARREL_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );
+    
+    public static EquippableVG EQ_BODY_BOWTIE = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Bowtie Body]",                                             // name
+       "[Bowtie Description]",                                      // description
+       EQ_BODY_BOWTIE_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );
+
+    public static EquippableVG EQ_BODY_BOXING_GLOVES = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Boxing Gloves Body]",                                             // name
+       "[Boxing Gloves Description]",                                      // description
+       EQ_BODY_BOXING_GLOVES_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );
+    
+    public static EquippableVG EQ_BODY_CHESTHAIR = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Chesthair Body]",                                             // name
+       "[Chesthair Description]",                                      // description
+       EQ_BODY_CHESTHAIR_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );
+           
+    public static EquippableVG EQ_BODY_HOODIE = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Hoodie Body]",                                             // name
+       "[Hoodie Description]",                                      // description
+       EQ_BODY_HOODIE_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );     
+        
+    public static EquippableVG EQ_BODY_KARATEGI = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Karategi Body]",                                             // name
+       "[Karategi Description]",                                      // description
+       EQ_BODY_KARATEGI_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );              
+        
+    public static EquippableVG EQ_BODY_LABCOAT_KRIEGER = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Labcoat Krieger Body]",                                             // name
+       "[Labcoat Krieger Description]",                                      // description
+       EQ_BODY_LABCOAT_KRIEGER_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    ); 
+      
+    public static EquippableVG EQ_BODY_LABCOAT_NORMAL = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Labcoat Normal Body]",                                             // name
+       "[Labcoat Normal Description]",                                      // description
+       EQ_BODY_LABCOAT_NORMAL_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    ); 
+    
+    public static EquippableVG EQ_BODY_NAKED = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Naked Body]",                                             // name
+       "[Naked Description]",                                      // description
+       EQ_BODY_NAKED_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    ); 
+    
+    public static EquippableVG EQ_BODY_SHIRT_PINK = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Pink Shirt Body]",                                             // name
+       "[Pink Shirt Description]",                                      // description
+       EQ_BODY_SHIRT_PINK_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    ); 
+    
+    public static EquippableVG EQ_BODY_SHIRT_RED = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Red Shirt Body]",                                             // name
+       "[Red Shirt Description]",                                      // description
+       EQ_BODY_SHIRT_RED_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    ); 
+
+    public static EquippableVG EQ_BODY_SHIRT_YELLOW = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Yellow Shirt Body]",                                             // name
+       "[Yellow Shirt Description]",                                      // description
+       EQ_BODY_SHIRT_YELLOW_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    ); 
+    
+    public static EquippableVG EQ_BODY_SUIT = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Suit Body]",                                             // name
+       "[Suit Description]",                                      // description
+       EQ_BODY_SUIT_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );
+
+    public static EquippableVG EQ_BODY_TATTOO = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "[Tattoo Body]",                                             // name
+       "[Tattoo Description]",                                      // description
+       EQ_BODY_TATTOO_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );         
+    
 
     #endregion
     #region Equipment Legs
@@ -463,6 +666,79 @@ public class CrapTrapAssets : IStoreAssets
        EQ_LEGS_SET_PIRATE_ID,                                      // item id
        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
     );
+    
+    public static EquippableVG EQ_LEGS_SET_TRIBAL = new EquippableVG(
+        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+        "[Tribal Legs]",                                          // name
+        "[Tribal Description]",                                    // description
+        EQ_LEGS_SET_TRIBAL_ID,                                    // item id
+        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );
+    
+    public static EquippableVG EQ_LEGS_ARMY = new EquippableVG(
+        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+        "[Army Legs]",                                          // name
+        "[Army Description]",                                    // description
+        EQ_LEGS_ARMY_ID,                                    // item id
+        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );
+    
+    public static EquippableVG EQ_LEGS_BALLET = new EquippableVG(
+        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+        "[Ballet Legs]",                                          // name
+        "[Ballet Description]",                                    // description
+        EQ_LEGS_BALLET_ID,                                    // item id
+        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );  
+    
+    public static EquippableVG EQ_LEGS_COWBOY = new EquippableVG(
+        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+        "[Cowboy Legs]",                                          // name
+        "[Cowboy Description]",                                    // description
+        EQ_LEGS_COWBOY_ID,                                    // item id
+        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );  
+    
+    public static EquippableVG EQ_LEGS_HERMES = new EquippableVG(
+        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+        "[Hermes Legs]",                                          // name
+        "[Hermes Description]",                                    // description
+        EQ_LEGS_HERMES_ID,                                    // item id
+        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );  
+    
+    public static EquippableVG EQ_LEGS_LEATHER = new EquippableVG(
+        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+        "[Leather Legs]",                                          // name
+        "[Leather Description]",                                    // description
+        EQ_LEGS_LEATHER_ID,                                    // item id
+        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );  
+    
+    public static EquippableVG EQ_LEGS_LOAFERS = new EquippableVG(
+        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+        "[Loafers Legs]",                                          // name
+        "[Loafers Description]",                                    // description
+        EQ_LEGS_LOAFERS_ID,                                    // item id
+        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );  
+           
+    public static EquippableVG EQ_LEGS_SNEAKERS = new EquippableVG(
+        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+        "[Sneakers Legs]",                                          // name
+        "[Sneakers Description]",                                    // description
+        EQ_LEGS_SNEAKERS_ID,                                    // item id
+        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );       
+    
+    public static EquippableVG EQ_LEGS_SUIT = new EquippableVG(
+        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+        "[Suit Legs]",                                          // name
+        "[Suit Description]",                                    // description
+        EQ_LEGS_SUIT_ID,                                    // item id
+        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );      
+                
 
     #endregion
     #region Consumables
