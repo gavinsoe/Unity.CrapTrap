@@ -108,6 +108,7 @@ public class BlockController : MonoBehaviour {
     {
 		// Change the color of the block
         SRenderer.color = new Color(1, 1, 1);
+        SRenderer.sortingOrder = 2;
 		// Set the z-depth
 		transform.position = new Vector3(transform.position.x, transform.position.y, 0);
 	}
@@ -117,6 +118,7 @@ public class BlockController : MonoBehaviour {
     {
         // Change the color of the block
         SRenderer.color = new Color(0.5f, 0.5f, 0.5f);
+        SRenderer.sortingOrder = 0;
 		// Set the z-depth
 		transform.position = new Vector3(transform.position.x, transform.position.y, 1);
 	}
