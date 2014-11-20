@@ -556,6 +556,7 @@ public class CharacterController : MonoBehaviour
                 box.transform.gameObject.GetComponent<BlockController>().Pull();
                 endPosition.y -= gridSize / 2;
                 isHanging = true;
+                animator.SetBool("isHanging", true);
 
                 // move to hanging on the block below
                 while (t < 1f)
