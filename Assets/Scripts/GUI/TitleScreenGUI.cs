@@ -4,12 +4,24 @@ using System.Collections;
 
 public class TitleScreenGUI : MonoBehaviour {
 
+    // Transparency
+    private float guiAlpha = 1;
+
+    // Prologue
+    private PrologueController prologue;
+
+    // Splash Screen
+    public Texture SplashTexture;
+    private bool splashActive = true;
+    private Rect splashRect;
+    private float splashDuration = 2;
+    
     // GUI Skin
     public GUISkin activeSkin;
 
     // Page variables
-    public Rect bgRect;
-    public Texture bgTexture;
+    private Rect bgRect;
+    private Texture bgTexture;
     private float screenPaddingPercentage = 0.01f; // percentage of screen size;
 
     // The game logo
@@ -58,12 +70,20 @@ public class TitleScreenGUI : MonoBehaviour {
     private float loadingFontScale = 0.04f;
     private string loading = "[loading]";
 
+    void Awake()
+    {
+        prologue = GetComponent<PrologueController>();
+    }
+
     void Start()
     {
         #region GUI
 
         bgRect = new Rect(0, 0, Screen.width, Screen.height);
         bgTexture = activeSkin.customStyles[1].normal.background;
+
+        // Splash Rect
+        splashRect = new Rect(0, 0, Screen.width, Screen.height);
 
         // Calculate screen padding
         float screenPadding = Screen.height * screenPaddingPercentage;
@@ -142,15 +162,29 @@ public class TitleScreenGUI : MonoBehaviour {
         #endregion
     }
 
+    void Update()
+    {
+        splashDuration -= Time.deltaTime;
+        if (splashDuration < 0)
+        {
+            GetComponent<PrologueController>().enabled = true;
+        }
+    }
+
     void OnGUI()
     {
-        #region temp
-
-       
-        #endregion
-
+        GUI.depth = 0;
         GUI.skin = activeSkin;
-        TitleScreen();
+        GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, guiAlpha);
+        
+        if (splashActive)
+        {
+            GUI.DrawTexture(splashRect, SplashTexture,ScaleMode.ScaleAndCrop);
+        }
+        else
+        {
+            TitleScreen();
+        }
     }
 
     private void TitleScreen()
@@ -207,6 +241,28 @@ public class TitleScreenGUI : MonoBehaviour {
         btnFacebookScale.OnMouseOver(btnFacebookRect);
     }
 
+    public void Show()
+    {
+        iTween.ValueTo(gameObject,
+            iTween.Hash("from", guiAlpha,
+                        "to", 1,
+                        "onupdate", "AnimateTransparency",
+                        "easetype", iTween.EaseType.linear,
+                        "time", 0.5f));
+        this.enabled = true;
+    }
+
+    public void Hide()
+    {
+        iTween.ValueTo(gameObject,
+            iTween.Hash("from", guiAlpha,
+                        "to", 0,
+                        "onupdate", "AnimateTransparency",
+                        "oncomplete", "HideSplash",
+                        "easetype", iTween.EaseType.linear,
+                        "time", 0.5f));
+    }
+
     // applies values from iTween
     void Credits_ScaleButton(Rect size)
     {
@@ -242,5 +298,15 @@ public class TitleScreenGUI : MonoBehaviour {
         btnFacebookRect = size;
     }
 
+    void AnimateTransparency(float alpha)
+    {
+        guiAlpha = alpha;
+    }
+
+    void HideSplash()
+    {
+        splashActive = false;
+        this.enabled = false;
+    }
 }
 

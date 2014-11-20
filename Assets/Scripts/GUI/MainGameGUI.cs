@@ -6,11 +6,13 @@ public class MainGameGUI : MonoBehaviour
     public static MainGameGUI instance;
 
     /* GUI Skin
-     * Custom Styles [0] = GTP Currency Box
+     * Custom Styles [0] = Capsule Box
      * Custom Styles [1] = NTP Currency Box
      * Custom Styles [2] = Minimap Canvas
      * Custom Styles [3] = Timer Border
      * Custom Styles [4] = Pause Button
+     * Custom Styles [5] = Item Slot Empty
+     * Custom Styles [6] = Item Slot
      */
     public GUISkin activeSkin;
     private MainGameController mainController;
@@ -31,21 +33,41 @@ public class MainGameGUI : MonoBehaviour
     private float currencyBoxWidth; // The calculated width of the currency box
 
     #endregion
-
     #region Timer border variables
+
     private Rect timerBorder; // Timer border (around edges of screen
     public float timerPulseRate; // The rate at which the timer border pulses
-    #endregion
 
+    #endregion
     #region Pause/Play button variables
+    
     public Texture pauseButton;
     private Rect ppButtonPos; // The location of the Play/Pause Button
     public float ppButtonXOffset = 15f;
     public float ppButtonYOffset = 15f;
     public float ppButtonTextureDimensions;  // The height and width of the play/pause button
     public float ppButtonDimensions;  // The height and width of the play/pause button
-    #endregion
 
+    #endregion
+    #region Consumables
+
+    private float consumablesYOffset = 0.8f;
+    private float consumablesScale = 0.17f;
+
+    private Texture itemEmptyTexture;
+    private Texture itemFilledTexture;
+    private Rect consumable1Rect;
+    private Rect consumable2Rect;
+    private Rect consumable3Rect;
+
+    private float consumableIconScale = 0.85f;
+    private Rect consumableIconRect;
+    private Rect consumableButtonRect;
+
+    private float consumableInnerScale = 0.7f;
+    private Rect consumableInnerRect;
+
+    #endregion
     void Awake()
     {
         // set the static variable so that other classes can easily use this class
@@ -82,6 +104,41 @@ public class MainGameGUI : MonoBehaviour
         onStartPulse();
     }
 
+    void Update()
+    {
+        #region Consumable Items
+
+        itemEmptyTexture = activeSkin.customStyles[5].normal.background;
+        itemFilledTexture = activeSkin.customStyles[6].normal.background;
+
+        float conHeight = Screen.height * consumablesScale;
+        float conWidth = conHeight * ((float)itemEmptyTexture.width / (float)itemEmptyTexture.height);
+        float conXOffset = (Screen.width - 3 * conWidth) * 0.5f;
+        float conYOffset = Screen.height * consumablesYOffset;
+
+        consumable1Rect = new Rect(conXOffset, conYOffset, conWidth, conHeight);
+        consumable2Rect = new Rect(conXOffset + conWidth, conYOffset, conWidth, conHeight);
+        consumable3Rect = new Rect(conXOffset + 2 * conWidth, conYOffset, conWidth, conHeight);
+
+        // Calculate item Icon dimension and offset
+        float conIconHeight = conHeight * consumableIconScale;
+        float conIconWidth = conIconHeight * (conWidth / conHeight);
+        float conIconXOffset = (conWidth - conIconWidth) * 0.5f;
+        float conIconYOffset = (conHeight - conIconHeight) * 0.5f;
+
+        // calculate the equipment icon size
+        float conInnerHeight = conIconHeight * consumableInnerScale;
+        float conInnerWidth = conInnerHeight;
+        float conInnerXOffset = (conIconHeight - conInnerHeight) * 0.5f;
+        float conInnerYOffset = (conIconWidth - conInnerWidth) * 0.5f;
+
+        consumableButtonRect = new Rect(0, 0, conWidth, conHeight);
+        consumableIconRect = new Rect(conIconXOffset, conIconYOffset, conIconWidth, conIconHeight);
+        consumableInnerRect = new Rect(conInnerXOffset, conInnerYOffset, conInnerWidth, conInnerHeight);
+
+        #endregion
+    }
+
     // Draw the GUI
     void OnGUI()
     {
@@ -94,6 +151,9 @@ public class MainGameGUI : MonoBehaviour
         
         // Draw the Pause Button
         PauseButton();
+
+        // Consumables
+        ConsumableItems();
 
         // Draw the timer border
         TimerPulseBorder(timerPulseRate);
@@ -119,7 +179,7 @@ public class MainGameGUI : MonoBehaviour
     {
         GUI.Label(new Rect(Screen.width - ((currencyEdgeSpacing + currencySpacing) * width), 
                            height * 0.1f, width, height), 
-                           MainGameController.instance.gtp.ToString(), 
+                           MainGameController.instance.capsules.Count.ToString(), 
                            activeSkin.customStyles[0]);
     }
 
@@ -130,6 +190,67 @@ public class MainGameGUI : MonoBehaviour
             mainController.PauseGame();
         }
     }
+
+    void ConsumableItems()
+    {
+        GUI.BeginGroup(consumable1Rect);
+        {
+            if (InventoryManager.instance.equippedConsumables[0].itemId != "empty")
+            {
+                GUI.DrawTexture(consumableIconRect, itemFilledTexture);
+                GUI.DrawTexture(consumableInnerRect, InventoryManager.instance.equippedConsumables[0].icon);
+                if (GUI.Button(consumableButtonRect, "", activeSkin.button) && 
+                    !MainGameController.instance.timerPaused)
+                {
+                    InventoryManager.instance.ConsumeItem(0);
+                }
+            }
+            else
+            {
+                GUI.DrawTexture(consumableIconRect, itemEmptyTexture);
+            }
+        }
+        GUI.EndGroup();
+
+        GUI.BeginGroup(consumable2Rect);
+        {
+            if (InventoryManager.instance.equippedConsumables[1].itemId != "empty")
+            {
+                GUI.DrawTexture(consumableIconRect, itemFilledTexture);
+                GUI.DrawTexture(consumableInnerRect, InventoryManager.instance.equippedConsumables[1].icon);
+                if (GUI.Button(consumableIconRect, "", activeSkin.button) &&
+                    !MainGameController.instance.timerPaused)
+                {
+                    InventoryManager.instance.ConsumeItem(1);
+                }
+            }
+            else
+            {
+                GUI.DrawTexture(consumableIconRect, itemEmptyTexture);
+            }
+        }
+        GUI.EndGroup();
+
+        GUI.BeginGroup(consumable3Rect);
+        {
+            if (InventoryManager.instance.equippedConsumables[2].itemId != "empty")
+            {
+                GUI.DrawTexture(consumableIconRect, itemFilledTexture);
+                GUI.DrawTexture(consumableInnerRect, InventoryManager.instance.equippedConsumables[2].icon);
+                if (GUI.Button(consumableIconRect, "", activeSkin.button) &&
+                    !MainGameController.instance.timerPaused)
+                {
+                    InventoryManager.instance.ConsumeItem(2);
+                }
+            }
+            else
+            {
+                GUI.DrawTexture(consumableIconRect, itemEmptyTexture);
+            }
+        }
+        GUI.EndGroup();
+    }
+
     #endregion
 
     #region border pulse animation

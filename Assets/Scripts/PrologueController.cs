@@ -61,7 +61,14 @@ public class PrologueController : MonoBehaviour {
     #endregion
 
     // Use this for initialization
-	void Start () {
+	void Start () 
+    {
+        // Enable Audio
+        GetComponent<AudioSource>().enabled = true;
+
+        // Hide Title Screen
+        GetComponent<TitleScreenGUI>().Hide();
+
 	    // Initialise Time
         timeElapsed = 0;
 
@@ -73,7 +80,8 @@ public class PrologueController : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update () 
+    {
         timeElapsed += Time.deltaTime;
         //for (int i = 0; i < frames.Length; i++)
         foreach (Frame frame in frames)
@@ -106,8 +114,10 @@ public class PrologueController : MonoBehaviour {
             }
         }
     }
+   
     void OnGUI()
     {
+        GUI.depth = 1;
         foreach (Frame frame in frames)
         {
             if (frame.startTime < timeElapsed && timeElapsed < frame.endTime)
@@ -115,6 +125,11 @@ public class PrologueController : MonoBehaviour {
                 GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, frame.transparency);
                 GUI.DrawTexture(frame.position, frame.sprite);
             }
+        }
+
+        if (GUI.Button(new Rect(0, 0, Screen.width, Screen.height), ""))
+        {
+            GetComponent<TitleScreenGUI>().Show();
         }
     }
 
@@ -202,4 +217,5 @@ public class PrologueController : MonoBehaviour {
 
         return new Rect(posXOffset, posYOffset, posWidth, posHeight);
     }
+
 }

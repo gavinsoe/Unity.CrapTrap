@@ -390,20 +390,6 @@ public class CharacterPageGUI : MonoBehaviour
         arrowPrevRect = new Rect(arrowPrevXOffset, arrowYOffset, arrowWidth, arrowHeight);
 
         #endregion
-
-        // Initialise empty item objects
-        int count = 0;
-        while (count < 9)
-        {
-            slotItems[count] = new Item();
-            transitionItems[count] = new Item();
-            count++;
-        }
-    }
-	
-	// Update is called once per frame
-	void Update ()
-    {
         #region Backpack
 
         backpackTexture = activeSkin.customStyles[11].normal.background;
@@ -425,10 +411,10 @@ public class CharacterPageGUI : MonoBehaviour
         float conXOffset = itemShelfRect.width * consumablesXOffset;
         float conYOffset = itemShelfRect.height * consumablesYOffset;
 
-        consumable1Rect = new Rect(conXOffset,conYOffset,conWidth,conHeight);
+        consumable1Rect = new Rect(conXOffset, conYOffset, conWidth, conHeight);
         consumable2Rect = new Rect(conXOffset + conWidth, conYOffset, conWidth, conHeight);
         consumable3Rect = new Rect(conXOffset + 2 * conWidth, conYOffset, conWidth, conHeight);
-        
+
         // Calculate item Icon dimension and offset
         float conIconHeight = conHeight * consumableIconScale;
         float conIconWidth = conIconHeight * (conWidth / conHeight);
@@ -436,7 +422,7 @@ public class CharacterPageGUI : MonoBehaviour
         float conIconYOffset = (conHeight - conIconHeight) * 0.5f;
 
         // calculate the equipment icon size
-        float conInnerHeight = conIconHeight * eqSlotInnerScale;
+        float conInnerHeight = conIconHeight * consumableInnerScale;
         float conInnerWidth = conInnerHeight;
         float conInnerXOffset = (conIconHeight - conInnerHeight) * 0.5f;
         float conInnerYOffset = (conIconWidth - conInnerWidth) * 0.5f;
@@ -496,8 +482,8 @@ public class CharacterPageGUI : MonoBehaviour
         eqSlotLegsRect = new Rect(eqLegsXOffset, eqLegsYOffset, eqSlotWidth, eqSlotHeight);
         eqSlotIconRect = new Rect(eqSlotIconXOffset, eqSlotIconYOffset, eqSlotIconWidth, eqSlotIconHeight);
         eqSlotInnerRect = new Rect(eqslotInnerXOffset, eqSlotInnerYOffset, eqSlotInnerWidth, eqSlotInnerHeight);
-        
-        
+
+
         #endregion
         #region popup confirmation
 
@@ -550,6 +536,19 @@ public class CharacterPageGUI : MonoBehaviour
 
         #endregion
 
+        // Initialise empty item objects
+        int count = 0;
+        while (count < 9)
+        {
+            slotItems[count] = new Item();
+            transitionItems[count] = new Item();
+            count++;
+        }
+    }
+	
+	// Update is called once per frame
+	void Update ()
+    {
         // Initialise Items
         if (!initialized)
         {
