@@ -29,6 +29,7 @@ public class StageSelectGUI : MonoBehaviour {
      * Custom Styles [21] = Story Toolbar
      */
     public GUISkin activeSkin;
+    public Texture storyThumbnail;
 
     #region Touch Controls
     
@@ -232,11 +233,11 @@ public class StageSelectGUI : MonoBehaviour {
 
     #region story carousel
 
-    public bool inTransition = false;
-    public int cur_page;
-    public int nxt_page;
-    public int max_page;
-    public Rect storyContainerRect;
+    private bool inTransition = false;
+    private int cur_page;
+    private int nxt_page;
+    private int max_page;
+    private Rect storyContainerRect;
 
     private Rect storyInnerActiveRect;
     private Rect storyInnerTempRect;
@@ -244,11 +245,11 @@ public class StageSelectGUI : MonoBehaviour {
     private Rect storyPosMid;
     private Rect storyPosRight;
 
-    private float storyContainerXOffset = 0.1f;
-    private float storyContainerYOffset = 0.14f;
-    private float storyContainerWidth = 0.32f;
-    private float storyContainerHeight = 0.28f;
-    private float storyContainerFontScale = 0.033f;
+    private float storyContainerXOffset = 0.135f;
+    private float storyContainerYOffset = 0.24f;
+    private float storyContainerWidth = 0.52f;
+    private float storyContainerHeight = 0.31f;
+    private float storyContainerFontScale = 0.036f;
 
     private Rect arrowNextRect;
     private Rect arrowPrevRect;
@@ -266,6 +267,11 @@ public class StageSelectGUI : MonoBehaviour {
     #endregion
 
     #region thumbnail
+
+    private Rect thumbnailRect;
+    public float thumbnailXOffset;
+    public float thumbnailYOffset;
+    public float thumbnailScale;
 
     #endregion
 
@@ -521,15 +527,15 @@ public class StageSelectGUI : MonoBehaviour {
         #endregion
 
         #region story
-
+        
         cur_page = 1;
         nxt_page = 1;
         max_page = story.Length;
 
-        float storyHeight = Screen.height * storyContainerHeight;
-        float storyWidth = Screen.width * storyContainerWidth;
-        float storyXOffset = Screen.width * storyContainerXOffset;
-        float storyYOffset = Screen.width * storyContainerYOffset;
+        float storyHeight = contentContainerRect.height * storyContainerHeight;
+        float storyWidth = contentContainerRect.width * storyContainerWidth;
+        float storyXOffset = contentContainerRect.width * storyContainerXOffset;
+        float storyYOffset = contentContainerRect.height * storyContainerYOffset;
 
         storyContainerRect = new Rect(storyXOffset, storyYOffset, storyWidth, storyHeight);
         storyPosMid = new Rect(0, 0, storyWidth, storyHeight);
@@ -538,7 +544,7 @@ public class StageSelectGUI : MonoBehaviour {
         storyInnerActiveRect = storyPosMid;
         storyInnerTempRect = storyPosRight;
 
-        activeSkin.label.fontSize = (int)(Screen.height * storyContainerFontScale);
+        activeSkin.label.fontSize = (int)(contentContainerRect.height * storyContainerFontScale);
         
         arrowPrevStyle = activeSkin.customStyles[19];
         arrowNextStyle = activeSkin.customStyles[20];
@@ -569,7 +575,16 @@ public class StageSelectGUI : MonoBehaviour {
 
 
         #endregion
+        #region thumbnail
 
+        float thumbWidth = contentContainerRect.width * thumbnailScale;
+        float thumbHeight = thumbWidth * ((float)storyThumbnail.height / (float)storyThumbnail.width);
+        float thumbXOffset = contentContainerRect.width * thumbnailXOffset;
+        float thumbYOffset = contentContainerRect.height * thumbnailYOffset;
+
+        thumbnailRect = new Rect(thumbXOffset, thumbYOffset, thumbWidth, thumbHeight);
+
+        #endregion
         #endregion
     }
 
@@ -651,6 +666,17 @@ public class StageSelectGUI : MonoBehaviour {
 	// Update is called once per frame
     void Update()
     {
+        #region thumbnail
+
+        float thumbHeight = contentContainerRect.height * thumbnailScale;
+        float thumbWidth = thumbHeight * ((float)storyThumbnail.width / (float)storyThumbnail.height);
+        float thumbXOffset = contentContainerRect.width * thumbnailXOffset;
+        float thumbYOffset = contentContainerRect.height * thumbnailYOffset;
+
+        thumbnailRect = new Rect(thumbXOffset, thumbYOffset, thumbWidth, thumbHeight);
+
+        #endregion
+
         foreach (Touch touch in Input.touches)
         {
             if (touch.phase == TouchPhase.Began)
@@ -813,6 +839,7 @@ public class StageSelectGUI : MonoBehaviour {
     }
     void StoryFrame()
     {
+        GUI.DrawTexture(thumbnailRect, storyThumbnail);
         GUI.BeginGroup(storyContainerRect);
         {
             GUI.Label(storyInnerActiveRect, story[cur_page - 1]);
