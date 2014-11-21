@@ -569,6 +569,7 @@ public class ItemShopGUI : MonoBehaviour
         {
             if (goodButton(btnBackRect, "", btnBackStyle) && !show_popup)
             {
+                NavigationManager.instance.NavToChapterSelect();
             }
 
             if (goodButton(btnHeadRect, "", btnHeadStyle) && !show_popup)
