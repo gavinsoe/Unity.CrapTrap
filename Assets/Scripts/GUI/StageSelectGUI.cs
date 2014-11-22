@@ -707,7 +707,8 @@ public class StageSelectGUI : MonoBehaviour {
             }
         }
     }
-	void OnGUI ()
+	
+    void OnGUI ()
     {
         // Sets the GUI depth
         GUI.depth = 10;

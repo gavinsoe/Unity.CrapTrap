@@ -38,6 +38,7 @@ public class ItemShopGUI : MonoBehaviour
     private int cur_page; // active page number
     private int max_page; //number of pages
     private int selected_item = 0; // index of the selected item
+    private bool inTransition = false; // whether the page is transitioning
     private bool initialized = false;
     private bool show_popup = false;
 
@@ -226,10 +227,25 @@ public class ItemShopGUI : MonoBehaviour
     private float popupLabelScale;
     #endregion
     #endregion
+    #region Touch Controls
+
+    private int maxTouches = 1;	// up to 5 (iOS only supports 5 apparently)
+    private float minDragDistance = 50f; // Swipe distance before touch is regarded as 'touch and drag'
+
+    private Vector2[] touchStartPosition;
+
+    #endregion
 
     // Use this for initialization
-    void Start() 
+    void Start()
     {
+        #region Touch Controls
+
+        // inititialise the arrays used for manipulating the touch controls
+        touchStartPosition = new Vector2[maxTouches];
+
+        #endregion
+
         // Initialize soomla store
         SoomlaStore.Initialize(new CrapTrapAssets());
 
@@ -471,6 +487,156 @@ public class ItemShopGUI : MonoBehaviour
 
     void Update()
     {
+        #region Touch Controls
+
+        // Enable touch controls when popup is not up
+        if (!show_popup)
+        {
+            foreach (Touch touch in Input.touches)
+            {
+                if (touch.phase == TouchPhase.Began)
+                {
+                    touchStartPosition[touch.fingerId] = touch.position;
+                }
+                else if (touch.phase == TouchPhase.Moved)
+                {
+                    var deltaPosition = touch.position - touchStartPosition[touch.fingerId];
+
+                    // Horizontal Movement
+                    if (Mathf.Abs(deltaPosition.x) > Mathf.Abs(deltaPosition.y))
+                    {
+                        if (deltaPosition.x < -minDragDistance &&
+                            cur_page < max_page && !inTransition)
+                        {
+                            cur_page++;
+                            if (activeWindow == ItemType.eq_head)
+                            {
+                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_head));
+                            }
+                            else if (activeWindow == ItemType.eq_body)
+                            {
+                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_body));
+                            }
+                            else if (activeWindow == ItemType.eq_legs)
+                            {
+                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_legs));
+                            }
+                            else if (activeWindow == ItemType.item_consumable)
+                            {
+                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.item_consumable));
+                            }
+                            NextPage();
+                        }
+                        else if (deltaPosition.x > minDragDistance &&
+                                 cur_page > 1 && !inTransition)
+                        {
+                            cur_page--;
+                            if (activeWindow == ItemType.eq_head)
+                            {
+                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_head));
+                            }
+                            else if (activeWindow == ItemType.eq_body)
+                            {
+                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_body));
+                            }
+                            else if (activeWindow == ItemType.eq_legs)
+                            {
+                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_legs));
+                            }
+                            else if (activeWindow == ItemType.item_consumable)
+                            {
+                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.item_consumable));
+                            }
+                            PrevPage();
+                        }
+                    }
+                    // Vertical Movement
+                    else if (Mathf.Abs(deltaPosition.y) > Mathf.Abs(deltaPosition.x))
+                    {
+                        if (deltaPosition.y < -minDragDistance && !inTransition)
+                        {
+                            if (activeWindow == ItemType.eq_head)
+                            {
+                                activeWindow = ItemType.item_consumable;
+
+                                cur_page = 1;
+                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.item_consumable));
+
+                                ChangeCategory(false);
+                            }
+                            else if (activeWindow == ItemType.eq_body)
+                            {
+                                activeWindow = ItemType.eq_head;
+
+                                cur_page = 1;
+                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_head));
+
+                                ChangeCategory(false);
+                            }
+                            else if (activeWindow == ItemType.eq_legs)
+                            {
+                                activeWindow = ItemType.eq_body;
+
+                                cur_page = 1;
+                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_body));
+
+                                ChangeCategory(false);
+                            }
+                            else if (activeWindow == ItemType.item_consumable)
+                            {
+                                activeWindow = ItemType.eq_legs;
+
+                                cur_page = 1;
+                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_legs));
+
+                                ChangeCategory(false);
+                            }
+                        }
+                        else if (deltaPosition.y > minDragDistance && !inTransition)
+                        {
+                            if (activeWindow == ItemType.eq_head)
+                            {
+                                activeWindow = ItemType.eq_body;
+
+                                cur_page = 1;
+                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_body));
+
+                                ChangeCategory(true);
+                            }
+                            else if (activeWindow == ItemType.eq_body)
+                            {
+                                activeWindow = ItemType.eq_legs;
+
+                                cur_page = 1;
+                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_legs));
+
+                                ChangeCategory(true);
+                            }
+                            else if (activeWindow == ItemType.eq_legs)
+                            {
+                                activeWindow = ItemType.item_consumable;
+
+                                cur_page = 1;
+                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.item_consumable));
+
+                                ChangeCategory(true);
+                            }
+                            else if (activeWindow == ItemType.item_consumable)
+                            {
+                                activeWindow = ItemType.eq_head;
+
+                                cur_page = 1;
+                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_head));
+
+                                ChangeCategory(true);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        #endregion
+
         // initialise items
         if (!initialized)
         {
@@ -479,7 +645,7 @@ public class ItemShopGUI : MonoBehaviour
             cur_page = 1;
             TransitionItems(InventoryManager.instance.equipmentsHead.Values.ToList());
 
-            ChangeCategory();
+            ChangeCategory(true);
 
             initialized = true;
         }
@@ -577,7 +743,7 @@ public class ItemShopGUI : MonoBehaviour
                 cur_page = 1;
                 TransitionItems(InventoryManager.instance.equipmentsHead.Values.ToList());
                 
-                ChangeCategory();
+                ChangeCategory(true);
             }
 
             if (goodButton(btnBodyRect, "", btnBodyStyle) && !show_popup)
@@ -587,7 +753,7 @@ public class ItemShopGUI : MonoBehaviour
                 cur_page = 1;
                 TransitionItems(InventoryManager.instance.equipmentsBody.Values.ToList());
 
-                ChangeCategory();
+                ChangeCategory(true);
             }
 
             if (goodButton(btnLegsBodyRect, "", btnLegsStyle) && !show_popup)
@@ -597,7 +763,7 @@ public class ItemShopGUI : MonoBehaviour
                 cur_page = 1;
                 TransitionItems(InventoryManager.instance.equipmentsLegs.Values.ToList());
 
-                ChangeCategory();
+                ChangeCategory(true);
             }
 
             if (goodButton(btnItemRect, "", btnItemStyle) && !show_popup)
@@ -607,7 +773,7 @@ public class ItemShopGUI : MonoBehaviour
                 cur_page = 1;
                 TransitionItems(InventoryManager.instance.itemsConsumable.Values.ToList());
 
-                ChangeCategory();
+                ChangeCategory(true);
             }
         }
         GUI.EndGroup();
@@ -999,6 +1165,8 @@ public class ItemShopGUI : MonoBehaviour
 
     void NextPage()
     {
+        inTransition = true;
+
         selected_item = 0;
         iTween.ValueTo(gameObject,
                        iTween.Hash("from", itemPosCenter,
@@ -1018,6 +1186,8 @@ public class ItemShopGUI : MonoBehaviour
 
     void PrevPage()
     {
+        inTransition = true;
+
         selected_item = 0;
         iTween.ValueTo(gameObject,
                        iTween.Hash("from", itemPosCenter,
@@ -1035,23 +1205,46 @@ public class ItemShopGUI : MonoBehaviour
                                    "time", 0.5f));
     }
 
-    void ChangeCategory()
+    void ChangeCategory(bool up)
     {
-        selected_item = 0;
-        iTween.ValueTo(gameObject,
-                       iTween.Hash("from", itemPosCenter,
-                                   "to", itemPosTop,
-                                   "onupdate", "AnimateItemInnerRect",
-                                   "easetype", iTween.EaseType.easeOutBack,
-                                   "time", 0.5f));
+        inTransition = true;
 
-        iTween.ValueTo(gameObject,
-                       iTween.Hash("from", itemPosBottom,
-                                   "to", itemPosCenter,
-                                   "onupdate", "AnimateItemTransitionRect",
-                                   "oncomplete", "OnAnimationComplete",
-                                   "easetype", iTween.EaseType.easeOutBack,
-                                   "time", 0.5f));
+        if (up)
+        {
+            selected_item = 0;
+            iTween.ValueTo(gameObject,
+                           iTween.Hash("from", itemPosCenter,
+                                       "to", itemPosTop,
+                                       "onupdate", "AnimateItemInnerRect",
+                                       "easetype", iTween.EaseType.easeOutBack,
+                                       "time", 0.5f));
+
+            iTween.ValueTo(gameObject,
+                           iTween.Hash("from", itemPosBottom,
+                                       "to", itemPosCenter,
+                                       "onupdate", "AnimateItemTransitionRect",
+                                       "oncomplete", "OnAnimationComplete",
+                                       "easetype", iTween.EaseType.easeOutBack,
+                                       "time", 0.5f));
+        }
+        else
+        {
+            selected_item = 0;
+            iTween.ValueTo(gameObject,
+                           iTween.Hash("from", itemPosCenter,
+                                       "to", itemPosBottom,
+                                       "onupdate", "AnimateItemInnerRect",
+                                       "easetype", iTween.EaseType.easeOutBack,
+                                       "time", 0.5f));
+
+            iTween.ValueTo(gameObject,
+                           iTween.Hash("from", itemPosTop,
+                                       "to", itemPosCenter,
+                                       "onupdate", "AnimateItemTransitionRect",
+                                       "oncomplete", "OnAnimationComplete",
+                                       "easetype", iTween.EaseType.easeOutBack,
+                                       "time", 0.5f));
+        }
 
         HideBubble();
     }
@@ -1065,6 +1258,8 @@ public class ItemShopGUI : MonoBehaviour
         {
             slotItems[i] = transitionItems[i];
         }
+
+        inTransition = false;
     }
 
     void ShowBubble()
