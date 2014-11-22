@@ -40,6 +40,9 @@ public class LoginGUI : MonoBehaviour {
 
     void OnGUI()
     {
+        // Sets the GUI depth
+        GUI.depth = 10;
+
         LoginForm();
 
         //username = GUI.TextField(new Rect(10, 10, 200, 20), username, 25);

@@ -84,9 +84,10 @@ public class GlobalGUI : MonoBehaviour
     }
 
 	// Update is called once per frame
-	void OnGUI () 
+	void OnGUI ()
     {
-        GUI.depth = 0; // at the very top
+        // Sets the GUI depth
+        GUI.depth = 0;
 
         // Set the active skin
         GUI.skin = activeSkin;

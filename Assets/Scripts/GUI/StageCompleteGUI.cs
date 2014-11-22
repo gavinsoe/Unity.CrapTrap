@@ -492,11 +492,8 @@ public class StageCompleteGUI : MonoBehaviour
 	
 	void OnGUI()
     {
-        #region temp
-
-        #endregion
-
-        GUI.depth = 1;
+        // Sets the GUI depth
+        GUI.depth = 10;
         // Set the active skin
         GUI.skin = activeSkin;
         // The container

@@ -178,7 +178,8 @@ public class PauseGUI : MonoBehaviour
             hide = false;
         }
 
-        GUI.depth = 1;
+        // Sets the GUI depth
+        GUI.depth = 10;
         // Set the active skin
         GUI.skin = activeSkin;
 

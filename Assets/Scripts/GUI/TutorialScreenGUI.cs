@@ -92,10 +92,9 @@ public class TutorialScreenGUI : MonoBehaviour {
 	// Update is called once per frame
     void OnGUI()
     {
-        #region temp
+        // Sets the GUI depth
+        GUI.depth = 15;
 
-        #endregion
-        GUI.depth = 0;
         GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, color_alpha);
 
         GUI.DrawTexture(bgRect, bgTexture,ScaleMode.ScaleAndCrop);

@@ -173,7 +173,9 @@ public class TitleScreenGUI : MonoBehaviour {
 
     void OnGUI()
     {
-        GUI.depth = 0;
+        // Sets the GUI depth
+        GUI.depth = 10;
+
         GUI.skin = activeSkin;
         GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, guiAlpha);
         

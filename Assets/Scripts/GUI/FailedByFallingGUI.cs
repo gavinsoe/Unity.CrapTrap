@@ -87,6 +87,9 @@ public class FailedByFallingGUI : MonoBehaviour
 
     void OnGUI()
     {
+        // Sets the GUI depth
+        GUI.depth = 10;
+
         if (show)
         {
             iTween.FadeTo(gameObject, 1, 0.2f);

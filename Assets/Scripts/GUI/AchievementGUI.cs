@@ -217,7 +217,10 @@ public class AchievementGUI : MonoBehaviour
     }
 	
 	// Update is called once per frame
-	void OnGUI () {
+    void OnGUI()
+    {
+        // Sets the GUI depth
+        GUI.depth = 10;
         GUI.skin = activeSkin;
         AchievementScreen();
 	}
