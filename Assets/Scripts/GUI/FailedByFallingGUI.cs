@@ -14,10 +14,6 @@ public class FailedByFallingGUI : MonoBehaviour
     public GUISkin activeSkin;
     private GameObject backgroundObject;
 
-    // Triggers
-    public bool show = false;
-    public bool hide = false;
-
     #region GUI related
     private float color_alpha = 0; // GUI transparency
 
@@ -49,6 +45,9 @@ public class FailedByFallingGUI : MonoBehaviour
     {
         // set the static variable so that other classes can easily use this class
         instance = this;
+
+        // Hide on start
+        iTween.FadeTo(gameObject, 0, 0);
     }
 
     // Use this for initialization
@@ -56,11 +55,8 @@ public class FailedByFallingGUI : MonoBehaviour
     {
         // Set the container position
         containerRect = new Rect(0, 0, Screen.width, Screen.height);
-
-        // Hide on start
-        iTween.FadeTo(gameObject, 0, 0);
-
-        #region temp
+        
+        #region Calculate GUI Components
 
         // Initialise the header stuff
         activeSkin.customStyles[2].fontSize = (int)(Screen.height * headerFontScale);
@@ -81,27 +77,12 @@ public class FailedByFallingGUI : MonoBehaviour
 
         #endregion
         #endregion
-
-        this.enabled = false;
     }
 
     void OnGUI()
     {
         // Sets the GUI depth
         GUI.depth = 10;
-
-        if (show)
-        {
-            iTween.FadeTo(gameObject, 1, 0.2f);
-            iTween.ValueTo(gameObject, iTween.Hash("from", color_alpha, "to", 1, "onupdate", "AnimateFailedMenu", "easetype", iTween.EaseType.easeOutQuart));
-            show = false;
-        }
-        else if (hide)
-        {
-            iTween.FadeTo(gameObject, 0, 0.2f);
-            iTween.ValueTo(gameObject, iTween.Hash("from", color_alpha, "to", 0, "onupdate", "AnimateFailedMenu", "easetype", iTween.EaseType.easeInQuart));
-            hide = false;
-        }
 
         //Set the active skin
         GUI.skin = activeSkin;
@@ -136,6 +117,25 @@ public class FailedByFallingGUI : MonoBehaviour
     public void StageFailed()
     {
         this.enabled = true;
-        show = true;
+        iTween.FadeTo(gameObject, 1, 0.2f);
+        iTween.ValueTo(gameObject, 
+                       iTween.Hash("from", color_alpha, 
+                                   "to", 1, 
+                                   "onupdate", "AnimateFailedMenu", 
+                                   "easetype", iTween.EaseType.easeOutQuart));
+        // Alter culling mask to hide player
+        Camera.main.cullingMask = ~(1 << LayerMask.NameToLayer("Character"));
+
+    }
+
+    public void HideFailedScreen()
+    {
+        iTween.FadeTo(gameObject, 0, 0.2f);
+        iTween.ValueTo(gameObject, 
+                       iTween.Hash("from", color_alpha, 
+                                   "to", 0, 
+                                   "onupdate", "AnimateFailedMenu", 
+                                   "easetype", iTween.EaseType.easeInQuart));
+        this.enabled = false;
     }
 }
