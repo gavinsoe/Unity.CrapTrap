@@ -36,16 +36,19 @@ public class NavigationManager : MonoBehaviour {
     public void NavToAchievements()
     {
         // Navigate to achievements page
+        Application.LoadLevel("GUI_Achievement");
     }
 
     public void NavToCharacterPage()
     {
         // Navigate to character page
+        Application.LoadLevel("GUI_CharacterPage");
     }
 
     public void NavToItemShop()
     {
         // Navigate to Item Shop
+        Application.LoadLevel("GUI_ItemShop");
     }
 
     public void NavToChapterSelect()

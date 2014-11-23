@@ -113,6 +113,9 @@ public class FailedGUI : MonoBehaviour
 
 	void OnGUI()
     {
+        // Sets the GUI depth
+        GUI.depth = 10;
+
         //Set the active skin
         GUI.skin = activeSkin;
 

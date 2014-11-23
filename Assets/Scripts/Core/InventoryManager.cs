@@ -110,6 +110,7 @@ public class InventoryManager : MonoBehaviour
             if (!String.IsNullOrEmpty(Game.instance.bag[i]))
             {
                 equippedConsumables[i] = itemsConsumable[Game.instance.bag[i]];
+                itemsConsumable[Game.instance.bag[i]].balance--;
             }
             else
             {
@@ -285,6 +286,7 @@ public class InventoryManager : MonoBehaviour
                 if (equippedConsumables[i].itemId == "empty")
                 {
                     equippedConsumables[i] = item;
+                    itemsConsumable[item.itemId].balance--;
                     break;
                 }
             }
@@ -393,6 +395,7 @@ public class InventoryManager : MonoBehaviour
 
     public void UnequipItem(int itemSlot)
     {
+        itemsConsumable[equippedConsumables[itemSlot].itemId].balance++;
         equippedConsumables[itemSlot] = new Item();
     }
 
@@ -425,26 +428,26 @@ public class InventoryManager : MonoBehaviour
         if (type == ItemType.eq_head)
         {
             return (from h in equipmentsHead.Values
-                    //where h.balance > 0
+                    where h.balance > 0
                     select h).ToList();
                     
         }
         else if (type == ItemType.eq_body)
         {
             return (from h in equipmentsBody.Values
-                    //where h.balance > 0
+                    where h.balance > 0
                     select h).ToList();
         }
         else if (type == ItemType.eq_legs)
         {
             return (from h in equipmentsLegs.Values
-                    //where h.balance > 0
+                    where h.balance > 0
                     select h).ToList();
         }
         else if (type == ItemType.item_consumable)
         {
             return (from h in itemsConsumable.Values
-                    //where h.balance > 0
+                    where h.balance > 0
                     select h).ToList();
         }
 

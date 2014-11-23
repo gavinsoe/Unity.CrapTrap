@@ -102,8 +102,8 @@ public class CreditsGUI : MonoBehaviour {
 
     void OnGUI()
     {
-        #region temp
-        #endregion
+        // Sets the GUI depth
+        GUI.depth = 10;
 
         GUI.skin = activeSkin;
         Credits();

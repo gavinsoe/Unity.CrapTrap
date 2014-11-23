@@ -50,10 +50,6 @@ public class CrapTrapAssets : IStoreAssets
             CONSUMABLE_DIAPERS_1,
             CONSUMABLE_DIAPERS_2,
             CONSUMABLE_DIAPERS_3,
-            CONSUMABLE_DETERGENT,
-            USE_PORTABLE_POTTY_1,
-            USE_PORTABLE_POTTY_2,
-            USE_PORTABLE_POTTY_3,
             EMERGENCY_REVIVE_1_1,
             EMERGENCY_REVIVE_1_2,
             EMERGENCY_REVIVE_1_3,
@@ -158,15 +154,18 @@ public class CrapTrapAssets : IStoreAssets
                 CONSUMABLE_DIAPERS_1,
                 CONSUMABLE_DIAPERS_2,
                 CONSUMABLE_DIAPERS_3,
-                CONSUMABLE_DETERGENT
+                CONSUMABLE_CHARCOAL_1_5PACK,
+                CONSUMABLE_CHARCOAL_2_5PACK,
+                CONSUMABLE_CHARCOAL_3_5PACK,
+                CONSUMABLE_CHARCOAL_1_10PACK,
+                CONSUMABLE_CHARCOAL_2_10PACK,
+                CONSUMABLE_CHARCOAL_3_10PACK,
+                CONSUMABLE_LUCKY_CHARM
             };
         }
         else if (type == ItemType.item_instant)
         {
             return new VirtualGood[] {
-                USE_PORTABLE_POTTY_1,
-                USE_PORTABLE_POTTY_2,
-                USE_PORTABLE_POTTY_3
             };
         }
         else if (type == ItemType.other)
@@ -323,10 +322,20 @@ public class CrapTrapAssets : IStoreAssets
     public const string CONSUMABLE_CHARCOAL_1_ID = "consumable_charcoal_1";
     public const string CONSUMABLE_CHARCOAL_2_ID = "consumable_charcoal_2";
     public const string CONSUMABLE_CHARCOAL_3_ID = "consumable_charcoal_3";
+    
+    public const string CONSUMABLE_CHARCOAL_1_5PACK_ID = "consumable_charcoal_1_5pack";
+    public const string CONSUMABLE_CHARCOAL_2_5PACK_ID = "consumable_charcoal_2_5pack";
+    public const string CONSUMABLE_CHARCOAL_3_5PACK_ID = "consumable_charcoal_3_5pack";
+
+    public const string CONSUMABLE_CHARCOAL_1_10PACK_ID = "consumable_charcoal_1_10pack";
+    public const string CONSUMABLE_CHARCOAL_2_10PACK_ID = "consumable_charcoal_2_10pack";
+    public const string CONSUMABLE_CHARCOAL_3_10PACK_ID = "consumable_charcoal_3_10pack";
+
     public const string CONSUMABLE_DIAPERS_1_ID = "consumable_diapers_1";
     public const string CONSUMABLE_DIAPERS_2_ID = "consumable_diapers_2";
     public const string CONSUMABLE_DIAPERS_3_ID = "consumable_diapers_3";
-    public const string CONSUMABLE_DETERGENT_ID = "consumable_detergent";
+
+    public const string CONSUMABLE_LUCKY_CHARM_ID = "consumable_lucky_charm";
 
     // category name
     public const string CONSUMABLE_CATEGORY_NAME = "consumable";
@@ -340,16 +349,18 @@ public class CrapTrapAssets : IStoreAssets
             CONSUMABLE_DIAPERS_1_ID,
             CONSUMABLE_DIAPERS_2_ID,
             CONSUMABLE_DIAPERS_3_ID,
-            CONSUMABLE_DETERGENT_ID
+            CONSUMABLE_CHARCOAL_1_5PACK_ID,
+            CONSUMABLE_CHARCOAL_2_5PACK_ID,
+            CONSUMABLE_CHARCOAL_3_5PACK_ID,
+            CONSUMABLE_CHARCOAL_1_10PACK_ID,
+            CONSUMABLE_CHARCOAL_2_10PACK_ID,
+            CONSUMABLE_CHARCOAL_3_10PACK_ID,
+            CONSUMABLE_LUCKY_CHARM_ID,
         });
 
     #endregion
     #region Instant Use Items
-
-    public const string USE_PORTABLE_POTTY_1_ID = "use_portable_potty_1";
-    public const string USE_PORTABLE_POTTY_2_ID = "use_portable_potty_2";
-    public const string USE_PORTABLE_POTTY_3_ID = "use_portable_potty_3";
-
+    
     // currency packs
     public const string PACK_NTP_10_ID = "pack_ntp_10";
     public const string PACK_NTP_50_ID = "pack_ntp_50";
@@ -361,9 +372,6 @@ public class CrapTrapAssets : IStoreAssets
     // list of items that is used instantly
     public static List<string> INSTANT_USE_LIST =
         new List<string>(new string[] {
-            USE_PORTABLE_POTTY_1_ID,
-            USE_PORTABLE_POTTY_2_ID,
-            USE_PORTABLE_POTTY_3_ID,
             PACK_NTP_10_ID,
             PACK_NTP_50_ID,
             PACK_NTP_100_ID,
@@ -403,9 +411,6 @@ public class CrapTrapAssets : IStoreAssets
         "",                             // description
         GOLDEN_TOILET_PAPER_ID          // item id
     );
-
-    #endregion
-    #region Item Packs
 
     #endregion
     #region Virtual Goods
@@ -785,37 +790,74 @@ public class CrapTrapAssets : IStoreAssets
         new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchased
     );
 
-    public static SingleUseVG CONSUMABLE_DETERGENT = new SingleUseVG(
-        "[Detergent]",                                               // name
-        "[Detergent Description]",                                   // description
-        CONSUMABLE_DETERGENT_ID,                                     // item id
-        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchased
+    public static SingleUseVG CONSUMABLE_LUCKY_CHARM = new SingleUseVG(
+        "[Lucky Charm]",
+        "[Lucky Charm Description]",
+        CONSUMABLE_LUCKY_CHARM_ID,
+        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 10)
+    );
+
+    #region Item Packs
+
+    public static SingleUsePackVG CONSUMABLE_CHARCOAL_1_5PACK = new SingleUsePackVG(
+        CONSUMABLE_CHARCOAL_1_ID,   // Single item id
+        5,                          // amount
+        "[5 Rank 1 Charcoal]",      // name
+        "[5 Rank 1 Charcoal Desciprion]", // description
+        CONSUMABLE_CHARCOAL_1_5PACK_ID, // Item pack ID
+        new PurchaseWithVirtualItem(NORMAL_TOILET_PAPER_ID, 115) // price
+    );
+
+    public static SingleUsePackVG CONSUMABLE_CHARCOAL_2_5PACK = new SingleUsePackVG(
+        CONSUMABLE_CHARCOAL_2_ID,   // Single item id
+        5,                          // amount
+        "[5 Rank 2 Charcoal]",      // name
+        "[5 Rank 2 Charcoal Desciprion]", // description
+        CONSUMABLE_CHARCOAL_2_5PACK_ID, // Item pack ID
+        new PurchaseWithVirtualItem(NORMAL_TOILET_PAPER_ID, 340) // price
+    );
+
+    public static SingleUsePackVG CONSUMABLE_CHARCOAL_3_5PACK = new SingleUsePackVG(
+        CONSUMABLE_CHARCOAL_3_ID,   // Single item id
+        5,                          // amount
+        "[5 Rank 1 Charcoal]",      // name
+        "[5 Rank 1 Charcoal Desciprion]", // description
+        CONSUMABLE_CHARCOAL_3_5PACK_ID, // Item pack ID
+        new PurchaseWithVirtualItem(NORMAL_TOILET_PAPER_ID, 560) // price
+    );
+
+    public static SingleUsePackVG CONSUMABLE_CHARCOAL_1_10PACK = new SingleUsePackVG(
+        CONSUMABLE_CHARCOAL_1_ID,   // Single item id
+        10,                          // amount
+        "[10 Rank 1 Charcoal]",      // name
+        "[10 Rank 1 Charcoal Desciprion]", // description
+        CONSUMABLE_CHARCOAL_1_10PACK_ID, // Item pack ID
+        new PurchaseWithVirtualItem(NORMAL_TOILET_PAPER_ID, 220) // price
+    );
+
+    public static SingleUsePackVG CONSUMABLE_CHARCOAL_2_10PACK = new SingleUsePackVG(
+        CONSUMABLE_CHARCOAL_2_ID,   // Single item id
+        10,                          // amount
+        "[10 Rank 2 Charcoal]",      // name
+        "[10 Rank 2 Charcoal Desciprion]", // description
+        CONSUMABLE_CHARCOAL_2_10PACK_ID, // Item pack ID
+        new PurchaseWithVirtualItem(NORMAL_TOILET_PAPER_ID, 650) // price
+    );
+
+    public static SingleUsePackVG CONSUMABLE_CHARCOAL_3_10PACK = new SingleUsePackVG(
+        CONSUMABLE_CHARCOAL_3_ID,   // Single item id
+        10,                          // amount
+        "[10 Rank 3 Charcoal]",      // name
+        "[10 Rank 3 Charcoal Desciprion]", // description
+        CONSUMABLE_CHARCOAL_3_10PACK_ID, // Item pack ID
+        new PurchaseWithVirtualItem(NORMAL_TOILET_PAPER_ID, 1000) // price
     );
 
     #endregion
+
+    #endregion
     #region Instant Use Items
-
-    public static SingleUseVG USE_PORTABLE_POTTY_1 = new SingleUseVG(
-        "[Portable Potty 1]",                                               // name
-        "[Portable Potty 1 Description]",                                   // description
-        USE_PORTABLE_POTTY_1_ID,                                     // item id
-        new PurchaseWithMarket(USE_PORTABLE_POTTY_1_ID, 0.99) // the way the good is purchased
-    );
-
-    public static SingleUseVG USE_PORTABLE_POTTY_2 = new SingleUseVG(
-        "[Portable Potty 2]",                                               // name
-        "[Portable Potty 2 Description]",                                   // description
-        USE_PORTABLE_POTTY_2_ID,                                     // item id
-        new PurchaseWithMarket(USE_PORTABLE_POTTY_2_ID, 1.50) // the way the good is purchased
-    );
-
-    public static SingleUseVG USE_PORTABLE_POTTY_3 = new SingleUseVG(
-        "[Portable Potty 3]",                                               // name
-        "[Portable Potty 3 Description]",                                   // description
-        USE_PORTABLE_POTTY_3_ID,                                     // item id
-        new PurchaseWithMarket(USE_PORTABLE_POTTY_3_ID, 1.99) // the way the good is purchased
-    );
-
+    
     #region Virtual Currency Packs
 
     public static VirtualCurrencyPack PACK_NTP_10 = new VirtualCurrencyPack(

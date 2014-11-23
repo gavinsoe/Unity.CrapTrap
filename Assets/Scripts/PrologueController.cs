@@ -117,7 +117,7 @@ public class PrologueController : MonoBehaviour {
    
     void OnGUI()
     {
-        GUI.depth = 1;
+        GUI.depth = 5;
         foreach (Frame frame in frames)
         {
             if (frame.startTime < timeElapsed && timeElapsed < frame.endTime)
