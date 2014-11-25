@@ -166,6 +166,9 @@ public class ItemShopGUI : MonoBehaviour
     private GUIStyle ntpPurchaseBtnStyle;
     private GUIStyle gtpPurchaseBtnStyle;
     private GUIStyle dollarPurchaseBtnStyle;
+    private GUIStyle ntpDisabledPurchaseBtnStyle;
+    private GUIStyle gtpDisabledPurchaseBtnStyle;
+    private GUIStyle dollarDisabledPurchaseBtnStyle;
     private float itemBtnScale = 0.22f;
     private float itemBtnYOffset = 0.68f;
     private float itemBtnLabelXOffset = 0.13f;
@@ -226,6 +229,7 @@ public class ItemShopGUI : MonoBehaviour
     private GUIStyle popupLabelStyle;
     private float popupLabelScale;
     #endregion
+
     #endregion
     #region Touch Controls
 
@@ -360,6 +364,13 @@ public class ItemShopGUI : MonoBehaviour
         ntpPurchaseBtnStyle = activeSkin.customStyles[12];
         gtpPurchaseBtnStyle = activeSkin.customStyles[13];
         dollarPurchaseBtnStyle = activeSkin.customStyles[14];
+
+        ntpDisabledPurchaseBtnStyle = new GUIStyle(activeSkin.customStyles[12]);
+        ntpDisabledPurchaseBtnStyle.normal.background = ntpDisabledPurchaseBtnStyle.onNormal.background;
+        gtpDisabledPurchaseBtnStyle = new GUIStyle(activeSkin.customStyles[13]);
+        gtpDisabledPurchaseBtnStyle.normal.background = gtpDisabledPurchaseBtnStyle.onNormal.background;
+        dollarDisabledPurchaseBtnStyle = new GUIStyle(activeSkin.customStyles[14]);
+        dollarDisabledPurchaseBtnStyle.normal.background = dollarDisabledPurchaseBtnStyle.onNormal.background;
 
         float itemBtnHeight = itemBoxHeight * itemBtnScale;
         float itemBtnWidth = itemBtnHeight * ((float)ntpPurchaseBtnStyle.normal.background.width /
@@ -1097,18 +1108,32 @@ public class ItemShopGUI : MonoBehaviour
             }
             else if (item.currency == CurrencyType.GTP)
             {
-                if (goodButton(popupConfirmButtonRect, item.price.ToString(), gtpPurchaseBtnStyle))
+                if (InventoryManager.instance.gtp < item.price)
                 {
-                    StoreInventory.BuyItem(item.itemId);
-                    InventoryManager.instance.UpdateCurrency();
+                    if (goodButton(popupConfirmButtonRect, item.price.ToString(), gtpDisabledPurchaseBtnStyle)) ;
+                }
+                else
+                {
+                    if (goodButton(popupConfirmButtonRect, item.price.ToString(), gtpPurchaseBtnStyle))
+                    {
+                        StoreInventory.BuyItem(item.itemId);
+                        InventoryManager.instance.UpdateCurrency();
+                    }
                 }
             }
             else if (item.currency == CurrencyType.NTP)
             {
-                if (goodButton(popupConfirmButtonRect, item.price.ToString(), ntpPurchaseBtnStyle))
+                if (InventoryManager.instance.ntp < item.price)
                 {
-                    StoreInventory.BuyItem(item.itemId);
-                    InventoryManager.instance.UpdateCurrency();
+                    if (goodButton(popupConfirmButtonRect, item.price.ToString(), ntpDisabledPurchaseBtnStyle)) ;
+                }
+                else
+                {
+                    if (goodButton(popupConfirmButtonRect, item.price.ToString(), ntpPurchaseBtnStyle))
+                    {
+                        StoreInventory.BuyItem(item.itemId);
+                        InventoryManager.instance.UpdateCurrency();
+                    }
                 }
             }
         }
