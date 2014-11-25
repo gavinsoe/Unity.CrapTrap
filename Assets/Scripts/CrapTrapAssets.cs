@@ -159,6 +159,7 @@ public class CrapTrapAssets : IStoreAssets
         else if (type == ItemType.other)
         {
             return new VirtualGood[] {
+                CONSUMABLE_PLUNGER,
                 EMERGENCY_REVIVE_1_1,
                 EMERGENCY_REVIVE_1_2,
                 EMERGENCY_REVIVE_1_3,
@@ -824,6 +825,7 @@ public class CrapTrapAssets : IStoreAssets
     #endregion
 
     #endregion
+
     #region Instant Use Items
     
     #region Virtual Currency Packs

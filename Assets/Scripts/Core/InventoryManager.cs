@@ -58,6 +58,7 @@ public class InventoryManager : MonoBehaviour
     public Dictionary<string, Item> equipmentsBody = new Dictionary<string, Item>();
     public Dictionary<string, Item> equipmentsLegs = new Dictionary<string, Item>();
     public Dictionary<string, Item> itemsConsumable = new Dictionary<string, Item>();
+    public Dictionary<string, Item> itemsOther = new Dictionary<string, Item>();
 
     // List that stores equipped items (defaults to empty on startup, until initialization funtion runs)
     public Item equippedHead = new Item();
@@ -89,9 +90,10 @@ public class InventoryManager : MonoBehaviour
         // Initialise currency balance
         InitializeCurrencies();
         // Initialise shop items
-        InitializeShopItems();
+        InitializeItemDictionary();
         // Check for equipped items
         InitializeEquippedGear();
+        
         // Initialize Bag
         InitializeBag();
 	}
@@ -158,7 +160,7 @@ public class InventoryManager : MonoBehaviour
         UpdateCurrency();
     }
 
-    void InitializeShopItems()
+    void InitializeItemDictionary()
     {
         VirtualGood[] goods;
         #region Equipment Head
@@ -208,6 +210,16 @@ public class InventoryManager : MonoBehaviour
         {
             itemsConsumable.Add(item.ItemId, ParseToItem(item, ItemType.item_instant));
             allItems.Add(item.ItemId, ParseToItem(item, ItemType.item_instant));
+        }
+
+        #endregion
+        #region other items
+
+        goods = CrapTrapAssets.GetSpecificGoods(ItemType.other);
+        foreach (VirtualGood item in goods)
+        {
+            itemsOther.Add(item.ItemId, ParseToItem(item, ItemType.other));
+            allItems.Add(item.ItemId, ParseToItem(item, ItemType.other));
         }
 
         #endregion
@@ -330,67 +342,54 @@ public class InventoryManager : MonoBehaviour
         }
 
         #endregion
-        #region Diapers
-
-        // Diapers rank 1
-        if (selectedItem.itemId == CrapTrapAssets.CONSUMABLE_DIAPERS_1_ID)
-        {
-            // Revives player and extends the timer by 10% of stage time (or minimum of 20 seconds)
-            var timeExtension = MainGameController.instance.maxTime * 0.1f;
-
-            if (timeExtension < 20)
-            {
-                // Extend timer by 20 seconds
-                MainGameController.instance.timeElapsed = MainGameController.instance.timeElapsed - 20;
-            }
-            else
-            {
-                // Extend timer by 10% of total stage time
-                MainGameController.instance.timeElapsed = MainGameController.instance.timeElapsed - timeExtension;
-            }
-        }
-
-        // Diapers rank 2
-        if (selectedItem.itemId == CrapTrapAssets.CONSUMABLE_DIAPERS_2_ID)
-        {
-            // Revives player and extends the timer by 30% of stage time (or minimum of 50 seconds)
-            var timeExtension = MainGameController.instance.maxTime * 0.3f;
-
-            if (timeExtension < 50)
-            {
-                // Extend timer by 20 seconds
-                MainGameController.instance.timeElapsed = MainGameController.instance.timeElapsed - 50;
-            }
-            else
-            {
-                // Extend timer by 30% of total stage time
-                MainGameController.instance.timeElapsed = MainGameController.instance.timeElapsed - timeExtension;
-            }
-        }
-
-        // Diapers rank 2
-        if (selectedItem.itemId == CrapTrapAssets.CONSUMABLE_DIAPERS_3_ID)
-        {
-            // Revives player and extends the timer by 50% of stage time (or minimum of 90 seconds)
-            var timeExtension = MainGameController.instance.maxTime * 0.5f;
-
-            if (timeExtension < 90)
-            {
-                // Extend timer by 20 seconds
-                MainGameController.instance.timeElapsed = MainGameController.instance.timeElapsed - 90;
-            }
-            else
-            {
-                // Extend timer by 50% of total stage time
-                MainGameController.instance.timeElapsed = MainGameController.instance.timeElapsed - timeExtension;
-            }
-        }
-
-        #endregion
 
         // update total number of items in inventory
         selectedItem.balance--;
         itemsConsumable[selectedItem.itemId].balance--;
+    }
+
+    public void UseEmergencyDiapers(string item_id)
+    {
+        #region Diapers
+
+        // Diapers rank 1
+        if (item_id == CrapTrapAssets.EMERGENCY_REVIVE_1_1_ID ||
+            item_id == CrapTrapAssets.EMERGENCY_REVIVE_1_2_ID ||
+            item_id == CrapTrapAssets.EMERGENCY_REVIVE_1_3_ID)
+        {
+            // Revives player and extends the timer by 10% of stage time (or minimum of 20 seconds)
+            var timeExtension = MainGameController.instance.maxTime * 0.1f;
+
+            // Extend timer by 10% of total stage time
+            MainGameController.instance.timeElapsed = MainGameController.instance.timeElapsed - timeExtension;
+        }
+
+        // Diapers rank 2
+        else if (item_id == CrapTrapAssets.EMERGENCY_REVIVE_2_1_ID ||
+                 item_id == CrapTrapAssets.EMERGENCY_REVIVE_2_2_ID ||
+                 item_id == CrapTrapAssets.EMERGENCY_REVIVE_2_3_ID)
+        {
+            // Revives player and extends the timer by 30% of stage time (or minimum of 50 seconds)
+            var timeExtension = MainGameController.instance.maxTime * 0.3f;
+
+            // Extend timer by 30% of total stage time
+            MainGameController.instance.timeElapsed = MainGameController.instance.timeElapsed - timeExtension;
+        }
+
+        // Diapers rank 2
+        else if (item_id == CrapTrapAssets.EMERGENCY_REVIVE_3_1_ID ||
+                 item_id == CrapTrapAssets.EMERGENCY_REVIVE_3_2_ID ||
+                 item_id == CrapTrapAssets.EMERGENCY_REVIVE_3_3_ID)
+        {
+            // Revives player and extends the timer by 50% of stage time (or minimum of 90 seconds)
+            var timeExtension = MainGameController.instance.maxTime * 0.5f;
+
+            // Extend timer by 50% of total stage time
+            MainGameController.instance.timeElapsed = MainGameController.instance.timeElapsed - timeExtension;
+        }
+
+        #endregion
+
     }
 
     public void UnequipItem(int itemSlot)
@@ -428,26 +427,26 @@ public class InventoryManager : MonoBehaviour
         if (type == ItemType.eq_head)
         {
             return (from h in equipmentsHead.Values
-                    where h.balance > 0
+                    //where h.balance > 0
                     select h).ToList();
                     
         }
         else if (type == ItemType.eq_body)
         {
             return (from h in equipmentsBody.Values
-                    where h.balance > 0
+                    //where h.balance > 0
                     select h).ToList();
         }
         else if (type == ItemType.eq_legs)
         {
             return (from h in equipmentsLegs.Values
-                    where h.balance > 0
+                    //where h.balance > 0
                     select h).ToList();
         }
         else if (type == ItemType.item_consumable)
         {
             return (from h in itemsConsumable.Values
-                    where h.balance > 0
+                    //where h.balance > 0
                     select h).ToList();
         }
 
