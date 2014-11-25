@@ -64,7 +64,8 @@ public class PrologueController : MonoBehaviour {
 	void Start () 
     {
         // Enable Audio
-        GetComponent<AudioSource>().enabled = true;
+        //GetComponent<AudioSource>().enabled = true;
+        BGMManager.instance.PlayPrologue();
 
         // Hide Title Screen
         GetComponent<TitleScreenGUI>().Hide();
@@ -117,7 +118,7 @@ public class PrologueController : MonoBehaviour {
    
     void OnGUI()
     {
-        GUI.depth = 5;
+        GUI.depth = 15;
         foreach (Frame frame in frames)
         {
             if (frame.startTime < timeElapsed && timeElapsed < frame.endTime)
@@ -129,6 +130,7 @@ public class PrologueController : MonoBehaviour {
 
         if (GUI.Button(new Rect(0, 0, Screen.width, Screen.height), ""))
         {
+            BGMManager.instance.PlayMain();
             GetComponent<TitleScreenGUI>().Show();
         }
     }

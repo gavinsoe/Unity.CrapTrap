@@ -155,14 +155,20 @@ public class MainGameController : MonoBehaviour
             }
         }
 
+        if (!BGMManager.instance.IsStage())
+        {
+            BGMManager.instance.PlayStage();
+        }
+
         // play looping part of audio
         // If the timer has 33.3% left
         float timerPulseRate = (1 - timeElapsed / maxTime) * 1.5f;
 
         if (timerPulseRate < 0.5)
         {
-            if (!audio.isPlaying && isUrgent) // If audio is not playing and it's urgent then play urgent music
+            if (!BGMManager.instance.isPlaying() && isUrgent) // If audio is not playing and it's urgent then play urgent music
             {
+                /*
                 t1 = 0;
                 t2 = 0;
                 vol = audio.volume;
@@ -170,9 +176,12 @@ public class MainGameController : MonoBehaviour
                 audio.clip = urgentClip;
                 audio.loop = true;
                 audio.Play();
+                 * */
+                BGMManager.instance.PlayUrgent();
             }
-            else if (audio.isPlaying && !isUrgent) // If normal music is playing and it is not urgent then change to urgent music
+            else if (BGMManager.instance.isPlaying() && !isUrgent) // If normal music is playing and it is not urgent then change to urgent music
             {
+                /*
                 if (t1 < crossfadeTime) // Fade out normal music
                 {
                     t1 = timeElapsed - timeRightNow;
@@ -197,20 +206,25 @@ public class MainGameController : MonoBehaviour
                 {
                     isUrgent = true;
                 }
+                 * */
+                BGMManager.instance.PlayUrgent();
+                isUrgent = true;
             }
             else
             {
+                /*
                 t1 = 0;
                 t2 = 0;
                 vol = audio.volume;
                 timeRightNow = timeElapsed;
+                 * */
             }
         }
         else
         {
-            
-            if (!audio.isPlaying && !isUrgent)
+            if (!BGMManager.instance.isPlaying() && !isUrgent)
             {
+                /*
                 t1 = 0;
                 t2 = 0;
                 vol = audio.volume;
@@ -218,9 +232,12 @@ public class MainGameController : MonoBehaviour
                 audio.clip = loopingClip;
                 audio.loop = true;
                 audio.Play();
+                 * */
+                BGMManager.instance.PlayStage();
             }
-            else if (audio.isPlaying && isUrgent)
+            else if (BGMManager.instance.isPlaying() && isUrgent)
             {
+                /*
                 if (t1 < crossfadeTime)
                 {
                     t1 = timeElapsed - timeRightNow;
@@ -244,14 +261,20 @@ public class MainGameController : MonoBehaviour
                 {
                     isUrgent = false;
                 }
+                */
+                BGMManager.instance.PlayStage();
+                isUrgent = false;
             }
             else
             {
+                /*
                 t1 = 0;
                 t2 = 0;
                 vol = audio.volume;
                 timeRightNow = timeElapsed;
+                 * */
             }
+            
         }
 
         if (zoomIn)
