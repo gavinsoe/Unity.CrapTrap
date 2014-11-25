@@ -76,6 +76,7 @@ public class MainGameController : MonoBehaviour
     public int pushes;
     public int slides;
     public int pullOuts;
+    public int failedAttempts;
 
     public Objective[] objectives = new Objective[3];
 
@@ -102,6 +103,9 @@ public class MainGameController : MonoBehaviour
         Time.timeScale = 1f;
         timeElapsed = 0;
         isUrgent = false;
+
+        // Initialise variables
+        failedAttempts = 0;
 
         // Get the total number of ntp and gtp
         ntpMax = GameObject.FindGameObjectsWithTag("ntp").Length;
@@ -352,6 +356,8 @@ public class MainGameController : MonoBehaviour
         }
         else
         {
+            failedAttempts++;
+
             MainGameGUI.instance.Hide();
             FailedGUI.instance.Show();
 
