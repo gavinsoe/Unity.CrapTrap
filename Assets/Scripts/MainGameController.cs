@@ -411,6 +411,12 @@ public class MainGameController : MonoBehaviour
         }
     }
 
+    public void Revive(float extension)
+    {
+        timeElapsed = timeElapsed - extension;
+        FailedGUI.instance.Hide();
+    }
+
 	public void PauseGame() 
     {
         // Disable time and movement

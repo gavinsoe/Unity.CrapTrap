@@ -931,19 +931,19 @@ public class CrapTrapAssets : IStoreAssets
         "[Emergency Diapers 3 (1st attempt)]",                                               // name
         "[Emergency Diapers 3 Description]",                                   // description
         EMERGENCY_REVIVE_3_1_ID,                                     // item id
-        new PurchaseWithMarket(EMERGENCY_REVIVE_3_1_ID, 3) // the way the good is purchased
+        new PurchaseWithMarket(EMERGENCY_REVIVE_3_1_ID, 3.00) // the way the good is purchased
     );
     public static SingleUseVG EMERGENCY_REVIVE_3_2 = new SingleUseVG(
         "[Emergency Diapers 3 (2nd attempt)]",                                               // name
         "[Emergency Diapers 3 Description]",                                   // description
         EMERGENCY_REVIVE_3_2_ID,                                     // item id
-        new PurchaseWithMarket(EMERGENCY_REVIVE_3_2_ID, 3) // the way the good is purchased
+        new PurchaseWithMarket(EMERGENCY_REVIVE_3_2_ID, 3.75) // the way the good is purchased
     );
     public static SingleUseVG EMERGENCY_REVIVE_3_3 = new SingleUseVG(
         "[Emergency Diapers 3 (3rd attempt)]",                                               // name
         "[Emergency Diapers 3 Description]",                                   // description
         EMERGENCY_REVIVE_3_3_ID,                                     // item id
-        new PurchaseWithMarket(EMERGENCY_REVIVE_3_3_ID, 3) // the way the good is purchased
+        new PurchaseWithMarket(EMERGENCY_REVIVE_3_3_ID, 4.5) // the way the good is purchased
     );
 
     #endregion

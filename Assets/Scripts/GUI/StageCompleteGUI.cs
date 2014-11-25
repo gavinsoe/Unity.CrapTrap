@@ -498,11 +498,12 @@ public class StageCompleteGUI : MonoBehaviour
         GUI.skin = activeSkin;
         // The container
         GUI.BeginGroup(containerRect);
-        // Draw the background
-        GUI.DrawTexture(backgroundRect, backgroundTexture, ScaleMode.ScaleAndCrop);
-        // Draw the main display
-        MainDisplay();
-
+        {
+            // Draw the background
+            GUI.DrawTexture(backgroundRect, backgroundTexture, ScaleMode.ScaleAndCrop);
+            // Draw the main display
+            MainDisplay();
+        }
         GUI.EndGroup();
     }
 

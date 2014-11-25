@@ -44,25 +44,6 @@ public class ItemShopGUI : MonoBehaviour
 
     private Item[] slotItems = new Item[9];
     private Item[] transitionItems = new Item[9];
-    private Item itemSlot1;
-    private Item itemSlot2;
-    private Item itemSlot3;
-    private Item itemSlot4;
-    private Item itemSlot5;
-    private Item itemSlot6;
-    private Item itemSlot7;
-    private Item itemSlot8;
-    private Item itemSlot9;
-
-    private Item itemSlotTransition1;
-    private Item itemSlotTransition2;
-    private Item itemSlotTransition3;
-    private Item itemSlotTransition4;
-    private Item itemSlotTransition5;
-    private Item itemSlotTransition6;
-    private Item itemSlotTransition7;
-    private Item itemSlotTransition8;
-    private Item itemSlotTransition9;
 
     #region GUI Related
 
