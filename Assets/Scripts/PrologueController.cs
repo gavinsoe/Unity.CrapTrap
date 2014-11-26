@@ -130,7 +130,10 @@ public class PrologueController : MonoBehaviour {
 
         if (GUI.Button(new Rect(0, 0, Screen.width, Screen.height), ""))
         {
-            BGMManager.instance.PlayMain();
+            if (!GetComponent<TitleScreenGUI>().isShowing)
+            {
+                BGMManager.instance.PlayMain();
+            }
             GetComponent<TitleScreenGUI>().Show();
         }
     }

@@ -6,6 +6,7 @@ public class TitleScreenGUI : MonoBehaviour {
 
     // Transparency
     private float guiAlpha = 1;
+    public bool isShowing;
 
     // Prologue
     private PrologueController prologue;
@@ -245,6 +246,7 @@ public class TitleScreenGUI : MonoBehaviour {
 
     public void Show()
     {
+        isShowing = true;
         iTween.ValueTo(gameObject,
             iTween.Hash("from", guiAlpha,
                         "to", 1,
@@ -256,6 +258,7 @@ public class TitleScreenGUI : MonoBehaviour {
 
     public void Hide()
     {
+        isShowing = false;
         iTween.ValueTo(gameObject,
             iTween.Hash("from", guiAlpha,
                         "to", 0,
