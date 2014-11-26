@@ -111,6 +111,7 @@ public class Game : MonoBehaviour
         stats[Stat.skillsUsed] = 0;
         stats[Stat.achievementUnlocked] = 0;
         stats[Stat.consecutiveLogins] = 0;
+        stats[Stat.capsules] = 0;
         bagSlots = 3;
         bag = new string[bagSlots];
 
@@ -196,6 +197,7 @@ public class Game : MonoBehaviour
         info.totalSteps = stats[Stat.totalSteps];
         info.treasures = stats[Stat.treasures];
         info.stagesCompletedPerChapter = stagesCompletedPerChapter;
+        info.capsules = stats[Stat.capsules];
 
         bf.Serialize(file, info);
         file.Close();
@@ -250,6 +252,7 @@ public class Game : MonoBehaviour
             stats[Stat.totalSteps] = info.totalSteps;
             stats[Stat.treasures] = info.treasures;
             stagesCompletedPerChapter = info.stagesCompletedPerChapter;
+            stats[Stat.capsules] = info.capsules;
 
             setLastLogin();
 
@@ -431,6 +434,7 @@ class GameInfo
     public double skillsUsed = 0;
     public double achievementUnlocked = 0;
     public double consecutiveLogins = 0;
+    public double capsules = 0;
 
     public CTAchievement[] achievements;
 

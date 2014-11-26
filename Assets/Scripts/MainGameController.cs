@@ -541,6 +541,7 @@ public class MainGameController : MonoBehaviour
         Game.instance.stats[Stat.stagesCompleted] += 1;
         Game.instance.UpdateStats(NavigationManager.instance.chapter, NavigationManager.instance.stage, reward);
         //gameData.stars[Application.loadedLevelName] = reward;
+        Game.instance.stats[Stat.capsules] += capsules.Count;
 
         // Save progress
         Game.instance.Save();
@@ -825,6 +826,30 @@ public class MainGameController : MonoBehaviour
                 if (pullOuts == 0)
                 {
                     objectives[i].completed = true;
+                }
+            }
+            else if (objectives[i].type == Type.capsules)
+            {
+                if (objectives[i].option == Option.lessThan)
+                {
+                    if (capsules.Count < objectives[i].counter)
+                    {
+                        objectives[i].completed = true;
+                    }
+                }
+                else if (objectives[i].option == Option.greaterThan)
+                {
+                    if (capsules.Count > objectives[i].counter)
+                    {
+                        objectives[i].completed = true;
+                    }
+                }
+                else
+                {
+                    if (capsules.Count == objectives[i].counter)
+                    {
+                        objectives[i].completed = true;
+                    }
                 }
             }
         }

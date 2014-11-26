@@ -24,6 +24,7 @@ public enum Stat
     skillsUsed = 19,
     achievementUnlocked = 20,
     consecutiveLogins = 21,
+    capsules = 22,
 }
 [System.Serializable]
 public class CTAchievement : System.Object
@@ -118,6 +119,10 @@ public class CTAchievement : System.Object
         else if (stat == Stat.achievementUnlocked)
         {
             stringified = "Has done the " + title + " achievement";
+        }
+        else if (stat == Stat.capsules)
+        {
+            stringified = "Has collected a total of " + counter + " times";
         }
         else
         {

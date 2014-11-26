@@ -19,6 +19,7 @@ public enum Type
     noPushing = 14,
     treasures = 15,
     noPullOuts = 16,
+    capsules = 17,
 }
 
 public enum Option
@@ -220,6 +221,21 @@ public class Objective : System.Object
         else if (type == Type.noPullOuts)
         {
             stringified = "Complete stage without pulling out blocks";
+        }
+        else if (type == Type.capsules)
+        {
+            if (option == Option.lessThan)
+            {
+                stringified = "Collect no more than " + counter + " capsules";
+            }
+            else if (option == Option.equal)
+            {
+                stringified = "Collect " + counter + " capsules";
+            }
+            else if (option == Option.greaterThan)
+            {
+                stringified = "Collect more than " + counter + " capsules";
+            }
         }
         else
         {
