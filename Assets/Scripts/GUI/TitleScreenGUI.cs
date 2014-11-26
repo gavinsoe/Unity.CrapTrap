@@ -207,19 +207,12 @@ public class TitleScreenGUI : MonoBehaviour {
         // Version
         GUI.Label(versionRect, version);
 
-        // Version
-        GUI.Label(loadingRect, loading, loadingStyle);
-
         // credits button
         if (GUI.Button(btnCreditsRect, "credits"))
         {
             // Redirect to credits page
         }
-
-        // sound button
-        Game.instance.audio = GUI.Toggle(btnSoundRect, Game.instance.audio, "", activeSkin.customStyles[2]);
-        MainGameController.instance.ToggleSound(Game.instance.audio);
-
+        
         // start button
         if (GUI.Button(btnStartRect, "", activeSkin.customStyles[4]))
         {
