@@ -1,1 +1,5 @@
-lastUpgrade=00900
+lastUpgrade=00910
+proj.AppId=681218300976
+ios.ClientId=681218300976-j67guej11gnleqqma9e1id526q16kk4g.apps.googleusercontent.com
+ios.BundleId=com.ARTIC.CrapTrap
+ios.SetupDone=true
