@@ -15,6 +15,10 @@ public class PlayerTouchControls : MonoBehaviour {
     private float[] touchStartTime;
     public Commands nextCommand;
 
+    // Enables / Disables some type of movements
+    public bool enableHanging = true;
+    public bool enablePushPull = true;
+
     // The component that handles all the character movement.
     private CharacterController character;
     private MainGameController main;
@@ -261,22 +265,22 @@ public class PlayerTouchControls : MonoBehaviour {
                     StartCoroutine(character.move(transform, -1, false));
                     touchState[touch.fingerId] = InputState.MovingLeft;
                 }
-                else if (nextCommand == Commands.ClimbUp)
+                else if (nextCommand == Commands.ClimbUp && enableHanging)
                 {
                     StartCoroutine(character.hang(transform, 1));
                     touchState[touch.fingerId] = InputState.Done;
                 }
-                else if (nextCommand == Commands.HangDown)
+                else if (nextCommand == Commands.HangDown && enableHanging)
                 {
                     StartCoroutine(character.hang(transform, -1));
                     touchState[touch.fingerId] = InputState.Done;
                 }
-                else if (nextCommand == Commands.DragLeft)
+                else if (nextCommand == Commands.DragLeft && enablePushPull)
                 {
                     StartCoroutine(character.move(transform, -1, true));
                     touchState[touch.fingerId] = InputState.DragLeft;
                 }
-                else if (nextCommand == Commands.DragRight)
+                else if (nextCommand == Commands.DragRight && enablePushPull)
                 {
                     StartCoroutine(character.move(transform, 1, true));
                     touchState[touch.fingerId] = InputState.DragRight;
