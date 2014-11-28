@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
-using System;
 using System.Collections;
 
-[Serializable]
+[System.Serializable]
 public class ChapterBlock
 {
     public bool locked;
@@ -251,8 +250,6 @@ public class ChapterSelectGUI : MonoBehaviour
         nxt_page = 1;
 
         #endregion
-
-        
     }
 
     void Update()

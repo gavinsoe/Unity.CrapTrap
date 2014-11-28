@@ -208,7 +208,7 @@ public class ItemShopGUI : MonoBehaviour
     private float popupCancelYOffset = 0.27f;
 
     private GUIStyle popupLabelStyle;
-    private float popupLabelScale;
+    private float popupLabelScale = 0.11f;
     #endregion
 
     #endregion
@@ -1068,7 +1068,6 @@ public class ItemShopGUI : MonoBehaviour
 
         GUI.BeginGroup(popupRect);
         {
-            if (goodButton(popupBgRect, "", activeSkin.button));
             GUI.Box(popupBgRect, "", popupBgStyle);
             if (item.icon != null)
             {
@@ -1091,7 +1090,7 @@ public class ItemShopGUI : MonoBehaviour
             {
                 if (InventoryManager.instance.gtp < item.price)
                 {
-                    if (goodButton(popupConfirmButtonRect, item.price.ToString(), gtpDisabledPurchaseBtnStyle)) ;
+                    goodButton(popupConfirmButtonRect, item.price.ToString(), gtpDisabledPurchaseBtnStyle);
                 }
                 else
                 {
@@ -1106,7 +1105,7 @@ public class ItemShopGUI : MonoBehaviour
             {
                 if (InventoryManager.instance.ntp < item.price)
                 {
-                    if (goodButton(popupConfirmButtonRect, item.price.ToString(), ntpDisabledPurchaseBtnStyle)) ;
+                    goodButton(popupConfirmButtonRect, item.price.ToString(), ntpDisabledPurchaseBtnStyle);
                 }
                 else
                 {

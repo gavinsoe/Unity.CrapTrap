@@ -161,9 +161,6 @@ public class CharacterPageGUI : MonoBehaviour
     private float itemIconScale = 1;
     private Rect itemIconRect;
 
-    private float itemSlotInnerScale = 0.7f;
-    private Rect itemSlotInnerRect;
-
     private float itemBalanceContainerXOffset = 0.63f;
     private float itemBalanceContainerYOffset = 0.62f;
     private float itemBalanceContainerScale = 0.36f;
@@ -210,7 +207,7 @@ public class CharacterPageGUI : MonoBehaviour
     #region Equipment Triangle
 
     private Rect eqTriangleContainerRect;
-    private float triangleYOffset;
+    private float triangleYOffset = 0f;
     private Texture triangleTexture;
     private Rect triangleRect;
 
@@ -265,7 +262,7 @@ public class CharacterPageGUI : MonoBehaviour
 
     private GUIStyle popupLabelStyle;
     private GUIStyle popupBtnStyle;
-    private float popupLabelScale;
+    private float popupLabelScale = 0.11f;
 
     #endregion
 

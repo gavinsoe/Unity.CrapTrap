@@ -32,7 +32,6 @@ public class FailedGUI : MonoBehaviour
     private Rect innerTransitionRect;
 
     private Rect innerContainerPosMid;
-    private Rect innerContainerPosLeft;
     private Rect innerContainerPosRight;
 
     private int transitionTo; // Screen to transition to
@@ -81,7 +80,6 @@ public class FailedGUI : MonoBehaviour
     private Rect shopkeeperRect; // shopkeeper Rect
     private Texture shopkeeperTexture; // shopkeeper texture
     private float shopkeeperScale = 0.72f;
-    private float shopkeeperXOffset = 0.73f;
     private float shopkeeperYOffset = 0.54f;
 
     #endregion
@@ -128,13 +126,11 @@ public class FailedGUI : MonoBehaviour
     private Rect itemInnerContainerRect;
     private float itemIconScale = 0.9f;
     private Rect itemIconRect;
-    private float itemIconYOffset = 0f;
 
     private Texture highlightTexture;
 
     private GUIStyle dollarPurchaseBtnStyle;
     private float itemBtnScale = 0.22f;
-    private float itemBtnYOffset = 0.68f;
     private float itemBtnLabelXOffset = 0.13f;
     private float itemBtnLabelYOffset = -0.02f;
     private float itemBtnLabelScale = 0.4f;
@@ -159,7 +155,6 @@ public class FailedGUI : MonoBehaviour
         // Set the size of the frame
         containerRect = new Rect(0, 0, Screen.width, Screen.height);
         innerContainerPosMid = containerRect;
-        innerContainerPosLeft = new Rect(-containerRect.width, 0, containerRect.width, containerRect.height);
         innerContainerPosRight = new Rect(containerRect.width, 0, containerRect.width, containerRect.height);
 
         innerContainerRect = innerContainerPosMid;
@@ -289,6 +284,8 @@ public class FailedGUI : MonoBehaviour
 
         int btnLabelFontSize = (int)(itemBtnHeight * itemBtnLabelScale);
         Vector2 btnLabelOffset = new Vector2(itemBtnWidth * itemBtnLabelXOffset, itemBtnHeight * itemBtnLabelYOffset);
+        dollarPurchaseBtnStyle.contentOffset = btnLabelOffset;
+        dollarPurchaseBtnStyle.fontSize = btnLabelFontSize;
 
         // Initialise empty item objects
         int count = 0;

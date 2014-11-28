@@ -6,12 +6,6 @@ using Soomla.Store;
 
 public class CrapTrapAssets : IStoreAssets
 {
-    private static List<string> eq_head_list  = new List<string>();
-    private List<string> eq_body_list  = new List<string>();
-    private List<string> eq_hands_list = new List<string>();
-    private List<string> eq_legs_list  = new List<string>();
-    private List<string> eq_feet_list  = new List<string>();
-
     public int GetVersion()
     {
         return 0;

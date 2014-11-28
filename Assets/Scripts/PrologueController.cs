@@ -52,6 +52,8 @@ public class PrologueController : MonoBehaviour {
     public enum Hook { UpperLeft, UpperCenter, UpperRight, MiddleLeft, MiddleCenter, MiddleRight, LowerLeft, LowerCenter, LowerRight };
     public enum ScaleMode { Height, Width, FullScreen }
 
+    public float endTime;
+    public bool closeOnEnd;
     public Frame[] frames;
     public AudioClip bgm;
     #region Timer
@@ -83,7 +85,23 @@ public class PrologueController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
     {
-        timeElapsed += Time.deltaTime;
+        if (timeElapsed > endTime)
+        {
+            if (closeOnEnd)
+            {
+                if (!GetComponent<TitleScreenGUI>().isShowing)
+                {
+                    BGMManager.instance.PlayMain();
+                }
+                GetComponent<TitleScreenGUI>().Show();
+                closeOnEnd = false;
+            }
+        }
+        else
+        {
+            timeElapsed += Time.deltaTime;
+        }
+        
         //for (int i = 0; i < frames.Length; i++)
         foreach (Frame frame in frames)
         {
