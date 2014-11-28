@@ -178,6 +178,7 @@ public class MainGameController : MonoBehaviour
                 audio.Play();
                  * */
                 BGMManager.instance.PlayUrgent();
+                isUrgent = true;
             }
             else if (BGMManager.instance.isPlaying() && !isUrgent) // If normal music is playing and it is not urgent then change to urgent music
             {
@@ -234,6 +235,7 @@ public class MainGameController : MonoBehaviour
                 audio.Play();
                  * */
                 BGMManager.instance.PlayStage();
+                isUrgent = false;
             }
             else if (BGMManager.instance.isPlaying() && isUrgent)
             {
