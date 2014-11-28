@@ -158,7 +158,10 @@ public class PauseGUI : MonoBehaviour
 
         // Scale and position the 'pause' text
         activeSkin.customStyles[7].fontSize = (int)(Screen.height * pauseTxtFontScale);
-        pauseTextRect = new Rect(0, Screen.height * pauseTxtYOffset, Screen.width, activeSkin.customStyles[7].fontSize);   
+        pauseTextRect = new Rect(0, Screen.height * pauseTxtYOffset, Screen.width, activeSkin.customStyles[7].fontSize);
+
+        // Default to disabled
+        this.enabled = false;
 	}
 
     void Update()
@@ -245,8 +248,14 @@ public class PauseGUI : MonoBehaviour
         containerRect = newCoordinates;
     }
 
+    void DisableSelf()
+    {
+        this.enabled = false;
+    }
+
     public void PauseGame()
     {
+        this.enabled = true;
         iTween.ValueTo(gameObject, 
                        iTween.Hash("from", containerRect, 
                                    "to", openPosition, 
@@ -259,8 +268,9 @@ public class PauseGUI : MonoBehaviour
     {
         iTween.ValueTo(gameObject, 
                        iTween.Hash("from", containerRect, 
-                                   "to", closedPosition, 
-                                   "onupdate", "AnimatePauseMenu", 
+                                   "to", closedPosition,
+                                   "onupdate", "AnimatePauseMenu",
+                                   "oncomplete", "DisableSelf",
                                    "easetype", iTween.EaseType.easeInQuart));
     }
 

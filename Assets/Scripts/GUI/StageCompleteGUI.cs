@@ -484,6 +484,7 @@ public class StageCompleteGUI : MonoBehaviour
 
         #endregion
 
+        this.enabled = false;
 	}
 
     void Update()
@@ -692,7 +693,7 @@ public class StageCompleteGUI : MonoBehaviour
             }
             if (GUI.Button(homeBtnRect, "", activeSkin.customStyles[8]))
             {
-                NavigationManager.instance.NavToTitle();
+                NavigationManager.instance.NavToChapterSelect();
             }
             if (GUI.Button(nextBtnRect, "", activeSkin.customStyles[9]))
             {
@@ -828,9 +829,16 @@ public class StageCompleteGUI : MonoBehaviour
         navAlpha = alpha;
     }
 
+    void DisableSelf()
+    {
+        this.enabled = false;
+    }
+
     public void StageComplete(string _time, int _ntpCollected, int _ntpAvailable,
                               int _capAvailable, List<Capsule> capsules, Objective[] objs)
     {
+        this.enabled = true;
+
         // Objectives
         objectives = objs;
         objective1 = objectives[0].ToString();
