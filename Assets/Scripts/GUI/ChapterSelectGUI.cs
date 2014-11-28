@@ -257,6 +257,10 @@ public class ChapterSelectGUI : MonoBehaviour
 
     void Update()
     {
+        if (BGMManager.instance.IsStage())
+        {
+            BGMManager.instance.PlayMain();
+        }
         if (nextPage)
         {
             NextPage();
