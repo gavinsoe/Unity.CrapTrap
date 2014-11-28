@@ -160,6 +160,9 @@ public class MainGameController : MonoBehaviour
             BGMManager.instance.PlayStage();
         }
 
+        GetComponent<AudioSource>().enabled = true;
+        audio.volume = 1f;
+
         // play looping part of audio
         // If the timer has 33.3% left
         float timerPulseRate = (1 - timeElapsed / maxTime) * 1.5f;
