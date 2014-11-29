@@ -5,6 +5,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using GooglePlayGames;
 using UnityEngine.SocialPlatforms;
+using UnityEngine;
 
 public class Game : MonoBehaviour 
 {
@@ -75,8 +76,6 @@ public class Game : MonoBehaviour
             {
                 // handle success or failure
             });
-
-            UnityEditor.PlayerSettings.statusBarHidden = true;
         }
         else if (instance != this)
         {
