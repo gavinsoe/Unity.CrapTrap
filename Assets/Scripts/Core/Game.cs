@@ -130,7 +130,7 @@ public class Game : MonoBehaviour
         stagesCompletedPerChapter = new bool[7][];
         for (int i = 0; i < 7; i++) // Construc sub-arrays
         {
-            stars[i] = new int[10];
+            stars[i] = new int[20];
             stagesCompletedPerChapter[i] = new bool[20];
             levelsUnlocked[i] = new bool[10];
             chapterUnlocked[i] = false;
@@ -334,13 +334,23 @@ public class Game : MonoBehaviour
         }
         else // If challenge stage
         {
-            stagesCompletedPerChapter[chapter][level + 10] = true;
+            stagesCompletedPerChapter[chapter-7][level + 10] = true;
         }
 
         // Update Stars if the current number of stars is more than previous number of stars
-        if (stars[chapter][level] < star)
+        if (chapter < 7)
         {
-            stars[chapter][level] = star;
+            if (stars[chapter][level] < star)
+            {
+                stars[chapter][level] = star;
+            }
+        }
+        else 
+        {
+            if (challengeStars[chapter-7][level] < star)
+            {
+                challengeStars[chapter-7][level] = star;
+            }
         }
 
         // If stage is not the last normal stage in the chapter then open the next stage
@@ -350,7 +360,7 @@ public class Game : MonoBehaviour
             {
                 if (star == 3)
                 {
-                    levelsUnlocked[chapter][level + 1] = true;
+                    challengeLevelsUnlocked[chapter-7][level + 1] = true;
                 }
             }
             else
