@@ -20,7 +20,7 @@ public class EquipmentRenderer : MonoBehaviour {
     public List<EquipmentSprite> eqSprites = new List<EquipmentSprite>();
 
 	// Use this for initialization
-	void Update () {
+	void Start () {
 
         EquipmentSprite eq = null;
 	    
