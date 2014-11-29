@@ -99,6 +99,8 @@ public class MainGameController : MonoBehaviour
             return;
         }
 
+        ToggleSound(Game.instance.audio);
+
         // Initialise timer components
         Time.timeScale = 1f;
         timeElapsed = 0;

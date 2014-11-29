@@ -43,6 +43,10 @@ public class PlayerTouchControls : MonoBehaviour {
         {
             character.idle();
         }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            MainGameController.instance.PauseGame();
+        }
         // Detect Touch input
         foreach (Touch touch in Input.touches)
         {

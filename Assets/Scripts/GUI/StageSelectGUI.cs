@@ -677,6 +677,11 @@ public class StageSelectGUI : MonoBehaviour {
 
         #endregion
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            NavigationManager.instance.NavToChapterSelect();
+        }
+
         foreach (Touch touch in Input.touches)
         {
             if (touch.phase == TouchPhase.Began)

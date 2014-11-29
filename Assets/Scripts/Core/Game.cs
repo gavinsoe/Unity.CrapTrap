@@ -75,6 +75,8 @@ public class Game : MonoBehaviour
             {
                 // handle success or failure
             });
+
+            UnityEditor.PlayerSettings.statusBarHidden = true;
         }
         else if (instance != this)
         {

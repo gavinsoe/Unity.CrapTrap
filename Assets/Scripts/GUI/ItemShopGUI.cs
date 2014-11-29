@@ -680,6 +680,11 @@ public class ItemShopGUI : MonoBehaviour
         {
             bubbleText = "Skelly (get it?) The souls of the dead will now help you transform that pesky block to wood.";
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            NavigationManager.instance.NavToChapterSelect();
+        }
     }
 
     // Drawing the GUI

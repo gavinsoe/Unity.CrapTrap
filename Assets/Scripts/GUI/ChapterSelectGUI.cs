@@ -268,6 +268,11 @@ public class ChapterSelectGUI : MonoBehaviour
             PrevPage();
             prevPage = false;
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            NavigationManager.instance.NavToTitle();
+        }
     }
 
     void OnGUI()

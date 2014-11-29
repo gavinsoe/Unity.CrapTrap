@@ -73,6 +73,15 @@ public class TitleScreenGUI : MonoBehaviour {
 
     void Awake()
     {
+        if (Game.instance.audio)
+        {
+            AudioListener.volume = 1.0f;
+        }
+        else
+        {
+            AudioListener.volume = 0.0f;
+        }
+
         prologue = GetComponent<PrologueController>();
     }
 
@@ -169,6 +178,10 @@ public class TitleScreenGUI : MonoBehaviour {
         if (splashDuration < 0)
         {
             GetComponent<PrologueController>().enabled = true;
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
         }
     }
 
