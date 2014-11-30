@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GlobalGUI : MonoBehaviour 
 {
     public static GlobalGUI instance;
+    private Queue<CTAchievement> achievementQueue;
 
     /* GUI Skin
      * Custom Styles [0] = Achievement Popup Frame
@@ -118,10 +120,16 @@ public class GlobalGUI : MonoBehaviour
 
         achievementLabelOpened = new Rect(contentXOffset, contentYOffset, contentWidth, contentHeight);
         achievementLabelClosed = new Rect(0.5f * (contentXOffset + contentWidth), 0.5f * (contentYOffset + contentHeight), 0, 0);
+        /*
         if (show)
         {
             AchievementUnlocked(new CTAchievement());
             show = false;
+        }
+         * */
+        if (achievementQueue.Count > 0 && show)
+        {
+            AchievementUnlocked(achievementQueue.Dequeue());
         }
     }
 
@@ -168,6 +176,7 @@ public class GlobalGUI : MonoBehaviour
 
     public void AchievementUnlocked(CTAchievement achievement)
     {
+        show = true;
         this.enabled = true;
         achievementPopupVisible = true;
         achievementText = achievement.title;
@@ -220,7 +229,13 @@ public class GlobalGUI : MonoBehaviour
         achievementLabelRect = achievementLabelClosed;
         achievementPopupAlpha = 0;
 
+        show = false;
         this.enabled = false;
+    }
+
+    public void AddAchievement(CTAchievement achievement) 
+    {
+        achievementQueue.Enqueue(achievement);
     }
     #endregion
 }
