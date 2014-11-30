@@ -73,15 +73,6 @@ public class TitleScreenGUI : MonoBehaviour {
 
     void Awake()
     {
-        if (Game.instance.audio)
-        {
-            AudioListener.volume = 1.0f;
-        }
-        else
-        {
-            AudioListener.volume = 0.0f;
-        }
-
         prologue = GetComponent<PrologueController>();
     }
 
@@ -170,6 +161,15 @@ public class TitleScreenGUI : MonoBehaviour {
                                activeSkin.label.fontSize);
 
         #endregion
+
+        if (Game.instance.audio)
+        {
+            AudioListener.volume = 1.0f;
+        }
+        else
+        {
+            AudioListener.volume = 0.0f;
+        }
     }
 
     void Update()

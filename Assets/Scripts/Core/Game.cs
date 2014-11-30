@@ -113,6 +113,8 @@ public class Game : MonoBehaviour
         stats[Stat.achievementUnlocked] = 0;
         stats[Stat.consecutiveLogins] = 0;
         stats[Stat.capsules] = 0;
+        stats[Stat.fails] = 0;
+        stats[Stat.eqsBought] = 0;
         bagSlots = 3;
         bag = new string[bagSlots];
 
@@ -199,6 +201,8 @@ public class Game : MonoBehaviour
         info.treasures = stats[Stat.treasures];
         info.stagesCompletedPerChapter = stagesCompletedPerChapter;
         info.capsules = stats[Stat.capsules];
+        info.fails = stats[Stat.fails];
+        info.eqsBought = stats[Stat.eqsBought];
 
         bf.Serialize(file, info);
         file.Close();
@@ -254,6 +258,8 @@ public class Game : MonoBehaviour
             stats[Stat.treasures] = info.treasures;
             stagesCompletedPerChapter = info.stagesCompletedPerChapter;
             stats[Stat.capsules] = info.capsules;
+            stats[Stat.fails] = info.fails;
+            stats[Stat.eqsBought] = info.eqsBought;
 
             setLastLogin();
 
@@ -398,6 +404,26 @@ public class Game : MonoBehaviour
     {
         for (int i = 0; i < 10; i++)
         {
+            if (achievements[i].stat == Stat.getGear)
+            {
+                if (achievements[i].gear == Gear.diver)
+                {
+                    if (Soomla.Store.StoreInventory.GetItemBalance("eq_head_set_diver") > 0 &&
+                        Soomla.Store.StoreInventory.GetItemBalance("eq_body_set_diver") > 0 &&
+                        Soomla.Store.StoreInventory.GetItemBalance("eq_legs_set_diver") > 0) 
+                    {
+                        if (achievements[i].isDone == false)
+                        {
+                            achievements[i].isDone = true;
+
+                            // Pass on to GlobalGUI
+                            GlobalGUI.instance.AddAchievement(achievements[i]);
+
+                            /* Do update for IOS Game Center/Google Play here */
+                        }
+                    }
+                }
+            }
             if (stats[achievements[i].stat] >= achievements[i].counter)
             {
                 if (achievements[i].isDone == false)
@@ -446,6 +472,8 @@ class GameInfo
     public double achievementUnlocked = 0;
     public double consecutiveLogins = 0;
     public double capsules = 0;
+    public double fails = 0;
+    public double eqsBought = 0;
 
     public CTAchievement[] achievements;
 

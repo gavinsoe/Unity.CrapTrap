@@ -25,6 +25,18 @@ public enum Stat
     achievementUnlocked = 20,
     consecutiveLogins = 21,
     capsules = 22,
+    fails = 23,
+    eqsBought = 24,
+    getGear = 25,
+}
+
+public enum Gear
+{
+    mummy = 1,
+    pirate = 2,
+    tribal = 3,
+    diver = 4,
+    explorer = 5,
 }
 [System.Serializable]
 public class CTAchievement : System.Object
@@ -36,6 +48,8 @@ public class CTAchievement : System.Object
     public string rewardID;
     public bool isDone;
     public string achievementID;
+    public string itemID;
+    public Gear gear;
 
     public string ToString()
     {
@@ -123,6 +137,37 @@ public class CTAchievement : System.Object
         else if (stat == Stat.capsules)
         {
             stringified = "Has collected a total of " + counter + " times";
+        }
+        else if (stat == Stat.fails)
+        {
+            stringified = "Has failed a total of " + counter + " times";
+        }
+        else if (stat == Stat.eqsBought)
+        {
+            stringified = "Has bought a total of " + counter + " equipments";
+        }
+        else if (stat == Stat.getGear)
+        {
+            if (gear == Gear.diver)
+            {
+                stringified = "Has gotten the Diver gear set";
+            }
+            else if (gear == Gear.explorer)
+            {
+                stringified = "Has gotten the Explorer gear set";
+            }
+            else if (gear == Gear.tribal)
+            {
+                stringified = "Has gotten the Tribal gear set";
+            }
+            else if (gear == Gear.pirate)
+            {
+                stringified = "Has gotten the Pirate gear set";
+            }
+            else if (gear == Gear.mummy)
+            {
+                stringified = "Has gotten the Mummy gear set";
+            }
         }
         else
         {

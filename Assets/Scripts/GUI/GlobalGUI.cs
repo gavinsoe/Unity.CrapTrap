@@ -49,6 +49,8 @@ public class GlobalGUI : MonoBehaviour
         // Make sure there is only 1 instance of this class.
         if (instance == null)
         {
+            show = false;
+            achievementQueue = new Queue<CTAchievement>();
             DontDestroyOnLoad(gameObject);
             instance = this;
         }
@@ -112,7 +114,24 @@ public class GlobalGUI : MonoBehaviour
         achievementPopupClosed = new Rect(aPopupWidth * 0.5f, aPopupHeight * 0.5f, 0, 0);
 
         achievementLabelStyle = new GUIStyle(activeSkin.label);
-        achievementLabelStyle.fontSize = (int)(aPopupHeight * achievementLabelScale);
+
+        float textWidth = activeSkin.customStyles[0].CalcSize(new GUIContent(achievementText)).x;
+        float newScale = 0.08f;
+        float popWidth = aPopupWidth * (45f / 100);
+        if (textWidth < popWidth)
+        {
+            newScale = 0.08f;
+        }
+        else if (textWidth > aPopupWidth * (45f / 100))
+        {
+            newScale = (aPopupWidth * (45f / 100)) / textWidth * 0.08f;
+        }
+        if (newScale < 0.06f)
+        {
+            newScale = 0.06f;
+        }
+
+        achievementLabelStyle.fontSize = (int)(aPopupHeight * newScale);
         float contentXOffset = aPopupWidth * achievementLabelXOffset;
         float contentYOffset = aPopupHeight * achievementLabelYOffset;
         float contentWidth = aPopupWidth * achievementLabelWidth;
@@ -127,7 +146,7 @@ public class GlobalGUI : MonoBehaviour
             show = false;
         }
          * */
-        if (achievementQueue.Count > 0 && show)
+        if (achievementQueue.Count > 0 && !show)
         {
             AchievementUnlocked(achievementQueue.Dequeue());
         }
@@ -177,7 +196,7 @@ public class GlobalGUI : MonoBehaviour
     public void AchievementUnlocked(CTAchievement achievement)
     {
         show = true;
-        this.enabled = true;
+        //this.enabled = true;
         achievementPopupVisible = true;
         achievementText = achievement.title;
 
@@ -230,7 +249,7 @@ public class GlobalGUI : MonoBehaviour
         achievementPopupAlpha = 0;
 
         show = false;
-        this.enabled = false;
+        //this.enabled = false;
     }
 
     public void AddAchievement(CTAchievement achievement) 
