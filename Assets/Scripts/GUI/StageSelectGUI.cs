@@ -586,12 +586,6 @@ public class StageSelectGUI : MonoBehaviour {
 
         #endregion
         #endregion
-        CTAchievement test1 = new CTAchievement();
-        CTAchievement test2 = new CTAchievement();
-        test1.title = "HELLO WORLD";
-        test2.title = "NICE TO MEET YOU YOLO YOLO YOLO YOLO YOLO";
-        GlobalGUI.instance.AddAchievement(test1);
-        GlobalGUI.instance.AddAchievement(test2);
     }
 
     StageBtnState getButtonState(int stage_num, bool isChallengeStage)

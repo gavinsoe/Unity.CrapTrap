@@ -205,6 +205,7 @@ public class MainGameGUI : MonoBehaviour
                     !MainGameController.instance.timerPaused)
                 {
                     InventoryManager.instance.ConsumeItem(0);
+                    MainGameController.instance.consumablesUsed += 1;
                 }
             }
             else
@@ -224,6 +225,7 @@ public class MainGameGUI : MonoBehaviour
                     !MainGameController.instance.timerPaused)
                 {
                     InventoryManager.instance.ConsumeItem(1);
+                    MainGameController.instance.consumablesUsed += 1;
                 }
             }
             else
@@ -243,6 +245,7 @@ public class MainGameGUI : MonoBehaviour
                     !MainGameController.instance.timerPaused)
                 {
                     InventoryManager.instance.ConsumeItem(2);
+                    MainGameController.instance.consumablesUsed += 1;
                 }
             }
             else

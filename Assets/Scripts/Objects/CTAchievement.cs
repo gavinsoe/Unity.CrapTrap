@@ -22,12 +22,23 @@ public enum Stat
     boughtGearID = 17,
     chaptersUnlocked = 18,
     skillsUsed = 19,
-    achievementUnlocked = 20,
-    consecutiveLogins = 21,
-    capsules = 22,
-    fails = 23,
-    eqsBought = 24,
-    getGear = 25,
+    consecutiveLogins = 20,
+    capsules = 21,
+    fails = 22,
+    eqsBought = 23,
+    getGear = 24,
+    setCollected = 25,
+    achievementUnlocked = 26,
+    clothingCollected = 27,
+    completeStageWOItems = 28,
+    completeStageWOEq = 29,
+    stareAtItemShop = 30,
+    diapers = 31,
+    attemptWDiver = 32,
+    completeStageW3Stars = 33,
+    completeChallengeStages = 34,
+    gtpBought = 35,
+    itemsBoughtUsingGTP = 36,
 }
 
 public enum Gear
@@ -38,17 +49,23 @@ public enum Gear
     diver = 4,
     explorer = 5,
 }
+
+[System.Serializable]
+public class Reward : System.Object
+{
+    public string rewardID;
+    public int rewardQuantity;
+}
 [System.Serializable]
 public class CTAchievement : System.Object
 {
-
+    public string title;
     public Stat stat;
     public int counter;
-    public string title;
-    public string rewardID;
+    public Reward[] reward;
     public bool isDone;
-    public string achievementID;
-    public string itemID;
+    //public string achievementID;
+    //public string itemIdToBuy;
     public Gear gear;
 
     public string ToString()
@@ -130,10 +147,6 @@ public class CTAchievement : System.Object
         {
             stringified = "Has used " + counter + " skills";
         }
-        else if (stat == Stat.achievementUnlocked)
-        {
-            stringified = "Has done the " + title + " achievement";
-        }
         else if (stat == Stat.capsules)
         {
             stringified = "Has collected a total of " + counter + " times";
@@ -168,6 +181,57 @@ public class CTAchievement : System.Object
             {
                 stringified = "Has gotten the Mummy gear set";
             }
+        }
+        else if (stat == Stat.setCollected)
+        {
+            stringified = "Has collected " + counter + " gear sets";
+        }
+        else if (stat == Stat.achievementUnlocked)
+        {
+            stringified = "Has done " + counter + " achievements";
+        }
+        else if (stat == Stat.clothingCollected)
+        {
+            stringified = "Has collected " + counter + " pieces of clothing";
+        }
+        else if (stat == Stat.completeStageWOItems)
+        {
+            stringified = "Complete " + counter + " different stages without using items";
+        }
+        else if (stat == Stat.completeStageWOEq)
+        {
+            stringified = "Complete " + counter + " different stages without using equips";
+        }
+        else if (stat == Stat.stareAtItemShop)
+        {
+            int mins = (int)(counter / 60);
+            int seconds = (int)(counter % 60);
+            string time = string.Format("{0:00}:{1:00}", mins, seconds);
+            stringified = "Stare at item shop for " + time;
+        }
+        else if (stat == Stat.diapers)
+        {
+            stringified = "Use the diapers " + counter + " times";
+        }
+        else if (stat == Stat.attemptWDiver)
+        {
+            stringified = "Attempt " + counter + " different stages with diver set";
+        }
+        else if (stat == Stat.completeStageW3Stars)
+        {
+            stringified = "Complete " + counter + " different stages with 3 stars";
+        }
+        else if (stat == Stat.completeChallengeStages)
+        {
+            stringified = "Complete " + counter + " different challenge stages";
+        }
+        else if (stat == Stat.gtpBought)
+        {
+            stringified = "Bought a total of " + counter + " Golden Toilet Papers";
+        }
+        else if (stat == Stat.itemsBoughtUsingGTP)
+        {
+            stringified = "Bought a total of " + counter + " items using Golden Toilet Papers";
         }
         else
         {

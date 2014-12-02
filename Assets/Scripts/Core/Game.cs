@@ -29,6 +29,9 @@ public class Game : MonoBehaviour
 
     // number of stages completed in a chapter
     public bool[][] stagesCompletedPerChapter;
+    public bool[][] stagesCompletedWOItems;
+    public bool[][] stagesCompletedWOEq;
+    public bool[][] stagesAttemptedWDiver;
 
     // Login variables
     public System.DateTime lastLogin;
@@ -49,7 +52,7 @@ public class Game : MonoBehaviour
     public System.TimeSpan unlimitedEnergySpan;
     public System.DateTime unlimitedEnergyStart;
 
-    public System.TimeSpan playingTime;
+    //public System.TimeSpan playingTime;
 
     void Awake()
     {
@@ -115,6 +118,15 @@ public class Game : MonoBehaviour
         stats[Stat.capsules] = 0;
         stats[Stat.fails] = 0;
         stats[Stat.eqsBought] = 0;
+        stats[Stat.setCollected] = 0;
+        stats[Stat.achievementUnlocked] = 0;
+        stats[Stat.clothingCollected] = 0;
+        stats[Stat.diapers] = 0;
+        stats[Stat.completeStageWOEq] = 0;
+        stats[Stat.completeStageWOItems] = 0;
+        stats[Stat.stareAtItemShop] = 0;
+        stats[Stat.attemptWDiver] = 0;
+        stats[Stat.itemsBoughtUsingGTP] = 0;
         bagSlots = 3;
         bag = new string[bagSlots];
 
@@ -129,10 +141,16 @@ public class Game : MonoBehaviour
         challengeLevelsUnlocked = new bool[7][];
         challengeChapterUnlocked = new bool[7];
         stagesCompletedPerChapter = new bool[7][];
+        stagesAttemptedWDiver = new bool[7][];
+        stagesCompletedWOEq = new bool[7][];
+        stagesCompletedWOItems = new bool[7][];
         for (int i = 0; i < 7; i++) // Construc sub-arrays
         {
             stars[i] = new int[20];
             stagesCompletedPerChapter[i] = new bool[20];
+            stagesAttemptedWDiver[i] = new bool[20];
+            stagesCompletedWOEq[i] = new bool[20];
+            stagesCompletedWOItems[i] = new bool[20];
             levelsUnlocked[i] = new bool[10];
             chapterUnlocked[i] = false;
             challengeStars[i] = new int[10];
@@ -142,7 +160,13 @@ public class Game : MonoBehaviour
             {
                 stars[i][j] = 0;
                 stagesCompletedPerChapter[i][j] = false;
+                stagesAttemptedWDiver[i][j] = false;
+                stagesCompletedWOEq[i][j] = false;
+                stagesCompletedWOItems[i][j] = false;
                 stagesCompletedPerChapter[i][j + 10] = false;
+                stagesAttemptedWDiver[i][j + 10] = false;
+                stagesCompletedWOEq[i][j + 10] = false;
+                stagesCompletedWOItems[i][j + 10] = false;
                 levelsUnlocked[i][j] = false;
                 challengeStars[i][j] = 0;
                 challengeLevelsUnlocked[i][j] = false;
@@ -200,9 +224,17 @@ public class Game : MonoBehaviour
         info.totalSteps = stats[Stat.totalSteps];
         info.treasures = stats[Stat.treasures];
         info.stagesCompletedPerChapter = stagesCompletedPerChapter;
+        info.stagesCompletedWOEq = stagesCompletedWOEq;
+        info.stagesCompletedWOItems = stagesCompletedWOItems;
+        info.stagesAttemptedWDiver = stagesAttemptedWDiver;
         info.capsules = stats[Stat.capsules];
         info.fails = stats[Stat.fails];
         info.eqsBought = stats[Stat.eqsBought];
+        info.setCollected = stats[Stat.setCollected];
+        info.clothingCollected = stats[Stat.clothingCollected];
+        info.diapers = stats[Stat.diapers];
+        info.stareAtItemShop = stats[Stat.stareAtItemShop];
+        info.itemsBoughtUsingGTP = stats[Stat.itemsBoughtUsingGTP];
 
         bf.Serialize(file, info);
         file.Close();
@@ -257,9 +289,17 @@ public class Game : MonoBehaviour
             stats[Stat.totalSteps] = info.totalSteps;
             stats[Stat.treasures] = info.treasures;
             stagesCompletedPerChapter = info.stagesCompletedPerChapter;
+            stagesAttemptedWDiver = info.stagesAttemptedWDiver;
+            stagesCompletedWOEq = info.stagesCompletedWOEq;
+            stagesCompletedWOItems = info.stagesCompletedWOItems;
             stats[Stat.capsules] = info.capsules;
             stats[Stat.fails] = info.fails;
             stats[Stat.eqsBought] = info.eqsBought;
+            stats[Stat.setCollected] = info.setCollected;
+            stats[Stat.clothingCollected] = info.clothingCollected;
+            stats[Stat.diapers] = info.diapers;
+            stats[Stat.stareAtItemShop] = info.stareAtItemShop;
+            stats[Stat.itemsBoughtUsingGTP] = info.itemsBoughtUsingGTP;
 
             setLastLogin();
 
@@ -404,31 +444,291 @@ public class Game : MonoBehaviour
     {
         for (int i = 0; i < 10; i++)
         {
-            if (achievements[i].stat == Stat.getGear)
+            if (!achievements[i].isDone)
             {
-                if (achievements[i].gear == Gear.diver)
+                if (achievements[i].stat == Stat.getGear)
                 {
-                    if (Soomla.Store.StoreInventory.GetItemBalance("eq_head_set_diver") > 0 &&
-                        Soomla.Store.StoreInventory.GetItemBalance("eq_body_set_diver") > 0 &&
-                        Soomla.Store.StoreInventory.GetItemBalance("eq_legs_set_diver") > 0) 
+                    if (achievements[i].gear == Gear.diver)
                     {
-                        if (achievements[i].isDone == false)
+                        if (Soomla.Store.StoreInventory.GetItemBalance("eq_head_set_diver") > 0 &&
+                            Soomla.Store.StoreInventory.GetItemBalance("eq_body_set_diver") > 0 &&
+                            Soomla.Store.StoreInventory.GetItemBalance("eq_legs_set_diver") > 0)
                         {
                             achievements[i].isDone = true;
+                            stats[Stat.setCollected] += 1;
 
                             // Pass on to GlobalGUI
                             GlobalGUI.instance.AddAchievement(achievements[i]);
+
+                            // Give Reward if any
+                            if (achievements[i].reward.Length > 0)
+                            {
+                                foreach (Reward reward in achievements[i].reward)
+                                {
+                                    Soomla.Store.StoreInventory.GiveItem(reward.rewardID, reward.rewardQuantity);
+                                }
+                            }
+                            stats[Stat.setCollected] += 1;
+
+                            /* Do update for IOS Game Center/Google Play here */
+                        }
+                    }
+                    else if (achievements[i].gear == Gear.explorer)
+                    {
+                        if (Soomla.Store.StoreInventory.GetItemBalance("eq_head_set_explorer") > 0 &&
+                            Soomla.Store.StoreInventory.GetItemBalance("eq_body_set_explorer") > 0 &&
+                            Soomla.Store.StoreInventory.GetItemBalance("eq_legs_set_explorer") > 0)
+                        {
+                            achievements[i].isDone = true;
+                            stats[Stat.setCollected] += 1;
+
+                            // Pass on to GlobalGUI
+                            GlobalGUI.instance.AddAchievement(achievements[i]);
+
+                            // Give Reward if any
+                            if (achievements[i].reward.Length > 0)
+                            {
+                                foreach (Reward reward in achievements[i].reward)
+                                {
+                                    Soomla.Store.StoreInventory.GiveItem(reward.rewardID, reward.rewardQuantity);
+                                }
+                            }
+                            stats[Stat.setCollected] += 1;
+
+                            /* Do update for IOS Game Center/Google Play here */
+                        }
+                    }
+                    else if (achievements[i].gear == Gear.pirate)
+                    {
+                        if (Soomla.Store.StoreInventory.GetItemBalance("eq_head_set_pirate") > 0 &&
+                            Soomla.Store.StoreInventory.GetItemBalance("eq_body_set_pirate") > 0 &&
+                            Soomla.Store.StoreInventory.GetItemBalance("eq_legs_set_pirate") > 0)
+                        {
+                            achievements[i].isDone = true;
+                            stats[Stat.setCollected] += 1;
+
+                            // Pass on to GlobalGUI
+                            GlobalGUI.instance.AddAchievement(achievements[i]);
+
+                            // Give Reward if any
+                            if (achievements[i].reward.Length > 0)
+                            {
+                                foreach (Reward reward in achievements[i].reward)
+                                {
+                                    Soomla.Store.StoreInventory.GiveItem(reward.rewardID, reward.rewardQuantity);
+                                }
+                            }
+                            stats[Stat.setCollected] += 1;
+
+                            /* Do update for IOS Game Center/Google Play here */
+                        }
+                    }
+                    else if (achievements[i].gear == Gear.tribal)
+                    {
+                        if (Soomla.Store.StoreInventory.GetItemBalance("eq_head_set_tribal") > 0 &&
+                            Soomla.Store.StoreInventory.GetItemBalance("eq_body_set_tribal") > 0 &&
+                            Soomla.Store.StoreInventory.GetItemBalance("eq_legs_set_tribal") > 0)
+                        {
+                            achievements[i].isDone = true;
+                            stats[Stat.setCollected] += 1;
+
+                            // Pass on to GlobalGUI
+                            GlobalGUI.instance.AddAchievement(achievements[i]);
+
+                            // Give Reward if any
+                            if (achievements[i].reward.Length > 0)
+                            {
+                                foreach (Reward reward in achievements[i].reward)
+                                {
+                                    Soomla.Store.StoreInventory.GiveItem(reward.rewardID, reward.rewardQuantity);
+                                }
+                            }
+                            stats[Stat.setCollected] += 1;
+
+                            /* Do update for IOS Game Center/Google Play here */
+                        }
+                    }
+                    else if (achievements[i].gear == Gear.mummy)
+                    {
+                        if (Soomla.Store.StoreInventory.GetItemBalance("eq_head_set_mummy") > 0 &&
+                            Soomla.Store.StoreInventory.GetItemBalance("eq_body_set_mummy") > 0 &&
+                            Soomla.Store.StoreInventory.GetItemBalance("eq_legs_set_mummy") > 0)
+                        {
+                            achievements[i].isDone = true;
+                            stats[Stat.setCollected] += 1;
+
+                            // Pass on to GlobalGUI
+                            GlobalGUI.instance.AddAchievement(achievements[i]);
+
+                            // Give Reward if any
+                            if (achievements[i].reward.Length > 0)
+                            {
+                                foreach (Reward reward in achievements[i].reward)
+                                {
+                                    Soomla.Store.StoreInventory.GiveItem(reward.rewardID, reward.rewardQuantity);
+                                }
+                            }
+                            stats[Stat.setCollected] += 1;
 
                             /* Do update for IOS Game Center/Google Play here */
                         }
                     }
                 }
-            }
-            if (stats[achievements[i].stat] >= achievements[i].counter)
-            {
-                if (achievements[i].isDone == false)
+                else if (achievements[i].stat == Stat.completeStageWOEq)
+                {
+                    int count = 0;
+                    for (int k = 0; k < 7; k++)
+                    {
+                        for (int j = 0; j < 20; j++)
+                        {
+                            if (stagesCompletedWOEq[k][j] == true)
+                                count += 1;
+                        }
+                    }
+                    if (count >= achievements[i].counter)
+                    {
+                        achievements[i].isDone = true;
+
+                        // Pass on to GlobalGUI
+                        GlobalGUI.instance.AddAchievement(achievements[i]);
+
+                        // Give Reward if any
+                        if (achievements[i].reward.Length > 0)
+                        {
+                            foreach (Reward reward in achievements[i].reward)
+                            {
+                                Soomla.Store.StoreInventory.GiveItem(reward.rewardID, reward.rewardQuantity);
+                            }
+                        }
+                    }
+                }
+                else if (achievements[i].stat == Stat.completeStageWOItems)
+                {
+                    int count = 0;
+                    for (int k = 0; k < 7; k++)
+                    {
+                        for (int j = 0; j < 20; j++)
+                        {
+                            if (stagesCompletedWOItems[k][j] == true)
+                                count += 1;
+                        }
+                    }
+                    if (count >= achievements[i].counter)
+                    {
+                        achievements[i].isDone = true;
+
+                        // Pass on to GlobalGUI
+                        GlobalGUI.instance.AddAchievement(achievements[i]);
+
+                        // Give Reward if any
+                        if (achievements[i].reward.Length > 0)
+                        {
+                            foreach (Reward reward in achievements[i].reward)
+                            {
+                                Soomla.Store.StoreInventory.GiveItem(reward.rewardID, reward.rewardQuantity);
+                            }
+                        }
+                    }
+                }
+                else if (achievements[i].stat == Stat.attemptWDiver)
+                {
+                    int count = 0;
+                    for (int k = 0; k < 7; k++)
+                    {
+                        for (int j = 0; j < 20; j++)
+                        {
+                            if (stagesAttemptedWDiver[k][j] == true)
+                                count += 1;
+                        }
+                    }
+                    if (count >= achievements[i].counter)
+                    {
+                        achievements[i].isDone = true;
+
+                        // Pass on to GlobalGUI
+                        GlobalGUI.instance.AddAchievement(achievements[i]);
+
+                        // Give Reward if any
+                        if (achievements[i].reward.Length > 0)
+                        {
+                            foreach (Reward reward in achievements[i].reward)
+                            {
+                                Soomla.Store.StoreInventory.GiveItem(reward.rewardID, reward.rewardQuantity);
+                            }
+                        }
+                    }
+                }
+                else if (achievements[i].stat == Stat.completeStageW3Stars)
+                {
+                    int count = 0;
+                    for (int k = 0; k < 7; k++)
+                    {
+                        for (int j = 0; j < 20; j++)
+                        {
+                            if (stars[k][j] == 3)
+                                count += 1;
+                        }
+                    }
+                    if (count >= achievements[i].counter)
+                    {
+                        achievements[i].isDone = true;
+
+                        // Pass on to GlobalGUI
+                        GlobalGUI.instance.AddAchievement(achievements[i]);
+
+                        // Give Reward if any
+                        if (achievements[i].reward.Length > 0)
+                        {
+                            foreach (Reward reward in achievements[i].reward)
+                            {
+                                Soomla.Store.StoreInventory.GiveItem(reward.rewardID, reward.rewardQuantity);
+                            }
+                        }
+                    }
+                }
+                else if (achievements[i].stat == Stat.completeChallengeStages)
+                {
+                    int count = 0;
+                    for (int k = 0; k < 7; k++)
+                    {
+                        for (int j = 10; j < 20; j++)
+                        {
+                            if (stagesCompletedPerChapter[k][j])
+                                count += 1;
+                        }
+                    }
+                    if (count >= achievements[i].counter)
+                    {
+                        achievements[i].isDone = true;
+
+                        // Pass on to GlobalGUI
+                        GlobalGUI.instance.AddAchievement(achievements[i]);
+
+                        // Give Reward if any
+                        if (achievements[i].reward.Length > 0)
+                        {
+                            foreach (Reward reward in achievements[i].reward)
+                            {
+                                Soomla.Store.StoreInventory.GiveItem(reward.rewardID, reward.rewardQuantity);
+                            }
+                        }
+                    }
+                }
+                else if (stats[achievements[i].stat] >= achievements[i].counter)
                 {
                     achievements[i].isDone = true;
+
+                    // Pass on to GlobalGUI
+                    GlobalGUI.instance.AddAchievement(achievements[i]);
+
+                    // Give Reward if any
+                    if (achievements[i].reward.Length > 0)
+                    {
+                        foreach (Reward reward in achievements[i].reward)
+                        {
+                            Soomla.Store.StoreInventory.GiveItem(reward.rewardID, reward.rewardQuantity);
+                        }
+                    }
 
                     /* Do update for IOS Game Center/Google Play here */
                 }
@@ -474,6 +774,11 @@ class GameInfo
     public double capsules = 0;
     public double fails = 0;
     public double eqsBought = 0;
+    public double setCollected = 0;
+    public double clothingCollected = 0;
+    public double diapers = 0;
+    public double stareAtItemShop = 0;
+    public double itemsBoughtUsingGTP = 0;
 
     public CTAchievement[] achievements;
 
@@ -491,6 +796,9 @@ class GameInfo
 
     // number of stages completed in a chapter
     public bool[][] stagesCompletedPerChapter;
+    public bool[][] stagesCompletedWOItems;
+    public bool[][] stagesCompletedWOEq;
+    public bool[][] stagesAttemptedWDiver;
 
     public string lastLogin;
     public string[] bag;

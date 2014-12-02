@@ -77,6 +77,7 @@ public class MainGameController : MonoBehaviour
     public int slides;
     public int pullOuts;
     public int failedAttempts;
+    public int consumablesUsed;
 
     public Objective[] objectives = new Objective[3];
 
@@ -108,6 +109,7 @@ public class MainGameController : MonoBehaviour
 
         // Initialise variables
         failedAttempts = 0;
+        consumablesUsed = 0;
 
         // Get the total number of ntp and gtp
         ntpMax = GameObject.FindGameObjectsWithTag("ntp").Length;
@@ -335,9 +337,69 @@ public class MainGameController : MonoBehaviour
         
         // Update NTP
         InventoryManager.instance.AddNTP(ntp);
-        
+
+        #region Stage Completed Without Items Used
+        // Check if the player uses any items
+        if (consumablesUsed == 0)
+        {
+            Game.instance.stagesCompletedWOItems[NavigationManager.instance.chapter][NavigationManager.instance.stage] = true;
+        }
+        #endregion
+
+        #region Stage Completed Without Equipment
+        // variable to check if anything is equipped
+        bool isEquipped = false;
+
+        // check if anything is equipped in head
+        foreach (string eq in CrapTrapAssets.EQ_HEAD_LIST)
+        {
+            if (Soomla.Store.StoreInventory.IsVirtualGoodEquipped(eq))
+            {
+                isEquipped = true;
+            }
+        }
+
+        if (isEquipped)
+        {
+            // check if anything is equipped in upper body
+            foreach (string eq in CrapTrapAssets.EQ_BODY_LIST)
+            {
+                if (Soomla.Store.StoreInventory.IsVirtualGoodEquipped(eq))
+                {
+                    isEquipped = true;
+                }
+            }
+        }
+
+        if (isEquipped)
+        {
+            // check if anything is equipped in legs
+            foreach (string eq in CrapTrapAssets.EQ_LEGS_LIST)
+            {
+                if (Soomla.Store.StoreInventory.IsVirtualGoodEquipped(eq))
+                {
+                    isEquipped = true;
+                }
+            }
+        }
+
+        if (!isEquipped)
+        {
+            Game.instance.stagesCompletedWOEq[NavigationManager.instance.chapter][NavigationManager.instance.stage] = true;
+        }
+        #endregion
+
+        #region Stage attempted With Diver Suit
+        if(Soomla.Store.StoreInventory.IsVirtualGoodEquipped("eq_head_set_diver") ||
+           Soomla.Store.StoreInventory.IsVirtualGoodEquipped("eq_body_set_diver") ||
+           Soomla.Store.StoreInventory.IsVirtualGoodEquipped("eq_legs_set_diver"))
+        {
+            Game.instance.stagesAttemptedWDiver[NavigationManager.instance.chapter][NavigationManager.instance.stage] = true;
+        }
+        #endregion
+
         // Pop up the stage complete screen.
-        StageCompleteGUI.instance.StageComplete(timeTaken, ntp, ntpMax, capsuleMax, capsules, objectives);
+            StageCompleteGUI.instance.StageComplete(timeTaken, ntp, ntpMax, capsuleMax, capsules, objectives);
 
         /*
         // post score to Leaderboard ID
@@ -351,8 +413,19 @@ public class MainGameController : MonoBehaviour
 
     public void GameOver(bool fell)
     {
+        Game.instance.stats[Stat.fails] += 1;
         // Disable time and movement
         DisableTimeNMove();
+
+        #region Stage attempted With Diver Suit
+        if (Soomla.Store.StoreInventory.IsVirtualGoodEquipped("eq_head_set_diver") ||
+           Soomla.Store.StoreInventory.IsVirtualGoodEquipped("eq_body_set_diver") ||
+           Soomla.Store.StoreInventory.IsVirtualGoodEquipped("eq_legs_set_diver"))
+        {
+            Game.instance.stagesAttemptedWDiver[NavigationManager.instance.chapter][NavigationManager.instance.stage] = true;
+        }
+        #endregion
+
         // pop up the failed menu
         if (fell)
         {
@@ -536,7 +609,7 @@ public class MainGameController : MonoBehaviour
         
         Game.instance.stats[Stat.totalSteps] += moves;
         Game.instance.stats[Stat.totalHangingSteps] += hangingMoves;
-        Game.instance.playingTime = Game.instance.playingTime.Add(new System.TimeSpan(0, 0, (int)time));
+        Game.instance.stats[Stat.playingTime] += time;
 
         Game.instance.stats[Stat.totalClimbs] += climbs;
         Game.instance.stats[Stat.totalPulls] += pulls;
