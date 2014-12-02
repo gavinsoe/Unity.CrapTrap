@@ -36,16 +36,28 @@ namespace Soomla.Store {
 		public enum Consumable{
 			NONCONSUMABLE,
 			CONSUMABLE,
-			SUBSCRIPTION,
+			SUBSCRIPTION
 		}
-		
+
+		/// <summary>
+		/// The product id as defined in itunesconnect or Google Play
+		/// </summary>
 		public string ProductId;
+		/// <summary>
+		/// The type of the item associated with this item on itunesconnect or Google Play.
+		/// </summary>
 		public Consumable consumable;
+		/// <summary>
+		/// A default price for the item in case the fetching of information from the App Store or Google Play fails.
+		/// </summary>
 		public double Price;
 
-		public string MarketPrice;
+		/** These variable will contain information about the item as fetched from the App Store or Google Play. **/
+		public string MarketPriceAndCurrency;
 		public string MarketTitle;
 		public string MarketDescription;
+		public string MarketCurrencyCode;
+		public long MarketPriceMicros;
 		
 		/// <summary>
 		/// Constructor.
@@ -58,32 +70,6 @@ namespace Soomla.Store {
 			this.consumable = consumable;
 			this.Price = price;
 		}
-		
-#if UNITY_ANDROID && !UNITY_EDITOR
-		public MarketItem(AndroidJavaObject jniMarketItem) {
-			ProductId = jniMarketItem.Call<string>("getProductId");
-			Price = jniMarketItem.Call<double>("getPrice");
-			int managedOrdinal = jniMarketItem.Call<AndroidJavaObject>("getManaged").Call<int>("ordinal");
-			switch(managedOrdinal){
-				case 0:
-					this.consumable = Consumable.NONCONSUMABLE;
-					break;
-				case 1:
-					this.consumable = Consumable.CONSUMABLE;
-					break;
-				case 2:
-					this.consumable = Consumable.SUBSCRIPTION;
-					break;
-				default:
-					this.consumable = Consumable.CONSUMABLE;
-					break;
-			}
-
-			MarketPrice = jniMarketItem.Call<string>("getMarketPrice");
-			MarketTitle = jniMarketItem.Call<string>("getMarketTitle");
-			MarketDescription = jniMarketItem.Call<string>("getMarketDescription");
-		}
-#endif
 
 		/// <summary>
 		/// Constructor.
@@ -94,23 +80,49 @@ namespace Soomla.Store {
 		public MarketItem(JSONObject jsonObject) {
 			string keyToLook = "";
 #if UNITY_IOS && !UNITY_EDITOR
-			keyToLook = JSONConsts.MARKETITEM_IOS_ID;
+			keyToLook = StoreJSONConsts.MARKETITEM_IOS_ID;
 #elif UNITY_ANDROID && !UNITY_EDITOR
-			keyToLook = JSONConsts.MARKETITEM_ANDROID_ID;
+			keyToLook = StoreJSONConsts.MARKETITEM_ANDROID_ID;
 #endif
 			if (!string.IsNullOrEmpty(keyToLook) && jsonObject.HasField(keyToLook)) {
 				ProductId = jsonObject[keyToLook].str;
 			} else {
-				ProductId = jsonObject[JSONConsts.MARKETITEM_PRODUCT_ID].str;
+				ProductId = jsonObject[StoreJSONConsts.MARKETITEM_PRODUCT_ID].str;
 			}
-			Price = jsonObject[JSONConsts.MARKETITEM_PRICE].n;
-			int cOrdinal = System.Convert.ToInt32(((JSONObject)jsonObject[JSONConsts.MARKETITEM_CONSUMABLE]).n);
+			Price = jsonObject[StoreJSONConsts.MARKETITEM_PRICE].n;
+			int cOrdinal = System.Convert.ToInt32(((JSONObject)jsonObject[StoreJSONConsts.MARKETITEM_CONSUMABLE]).n);
 			if (cOrdinal == 0) {
 				this.consumable = Consumable.NONCONSUMABLE;
 			} else if (cOrdinal == 1){
 				this.consumable = Consumable.CONSUMABLE;
 			} else {
 				this.consumable = Consumable.SUBSCRIPTION;
+			}
+
+			if (jsonObject[StoreJSONConsts.MARKETITEM_MARKETPRICE]) {
+				this.MarketPriceAndCurrency = jsonObject[StoreJSONConsts.MARKETITEM_MARKETPRICE].str;
+			} else {
+				this.MarketPriceAndCurrency = "";
+			}
+			if (jsonObject[StoreJSONConsts.MARKETITEM_MARKETTITLE]) {
+				this.MarketTitle = jsonObject[StoreJSONConsts.MARKETITEM_MARKETTITLE].str;
+			} else {
+				this.MarketTitle = "";
+			}
+			if (jsonObject[StoreJSONConsts.MARKETITEM_MARKETDESC]) {
+				this.MarketDescription = jsonObject[StoreJSONConsts.MARKETITEM_MARKETDESC].str;
+			} else {
+				this.MarketDescription = "";
+			}
+			if (jsonObject[StoreJSONConsts.MARKETITEM_MARKETCURRENCYCODE]) {
+				this.MarketCurrencyCode = jsonObject[StoreJSONConsts.MARKETITEM_MARKETCURRENCYCODE].str;
+			} else {
+				this.MarketCurrencyCode = "";
+			}
+			if (jsonObject[StoreJSONConsts.MARKETITEM_MARKETPRICEMICROS]) {
+				this.MarketPriceMicros = System.Convert.ToInt64(jsonObject[StoreJSONConsts.MARKETITEM_MARKETPRICEMICROS].n);
+			} else {
+				this.MarketPriceMicros = 0;
 			}
 		}
 
@@ -121,9 +133,17 @@ namespace Soomla.Store {
 		/// <c>MarketItem</c>.</returns>
 		public JSONObject toJSONObject() {
 			JSONObject obj = new JSONObject(JSONObject.Type.OBJECT);
-			obj.AddField(JSONConsts.MARKETITEM_PRODUCT_ID, this.ProductId);
-			obj.AddField(JSONConsts.MARKETITEM_CONSUMABLE, (int)(consumable));
-			obj.AddField(JSONConsts.MARKETITEM_PRICE, (float)this.Price);
+			obj.AddField (Soomla.JSONConsts.SOOM_CLASSNAME, SoomlaUtils.GetClassName (this));
+			obj.AddField(StoreJSONConsts.MARKETITEM_PRODUCT_ID, this.ProductId);
+			obj.AddField(StoreJSONConsts.MARKETITEM_CONSUMABLE, (int)(consumable));
+			obj.AddField(StoreJSONConsts.MARKETITEM_PRICE, (float)this.Price);
+
+			obj.AddField(StoreJSONConsts.MARKETITEM_MARKETPRICE, this.MarketPriceAndCurrency);
+			obj.AddField(StoreJSONConsts.MARKETITEM_MARKETTITLE, this.MarketTitle);
+			obj.AddField(StoreJSONConsts.MARKETITEM_MARKETDESC, this.MarketDescription);
+			obj.AddField(StoreJSONConsts.MARKETITEM_MARKETCURRENCYCODE, this.MarketCurrencyCode);
+			obj.AddField(StoreJSONConsts.MARKETITEM_MARKETPRICEMICROS, (float)this.MarketPriceMicros);
+
 			return obj;
 		}
 

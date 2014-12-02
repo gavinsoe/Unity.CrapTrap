@@ -1,7 +1,6 @@
 ﻿using Soomla;
 using Soomla.Store;
 using UnityEngine;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +8,8 @@ using System.Linq;
 public enum CurrencyType { Dollar, GTP, NTP };
 public enum ItemType { eq_head, eq_body, eq_legs, item_consumable, item_instant, other };
 
-[Serializable]
-public class Item : IComparable<Item>
+[System.Serializable]
+public class Item : System.IComparable<Item>
 {
     public string itemId; // item ID
     public Texture2D icon; // icon of the item
@@ -33,7 +32,7 @@ public class Item : IComparable<Item>
     }
 }
 
-[Serializable]
+[System.Serializable]
 public class ShopItem
 {
     void test()
@@ -45,16 +44,16 @@ public class ShopItem
 public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager instance;
-    
+
     // currencies
     public int ntp;
-    private Texture ntpTexture;
+    public Texture ntpTexture;
     public int gtp;
-    private Texture gtpTexture;
+    public Texture gtpTexture;
 
     // Items cache
     public Dictionary<string, Item> allItems = new Dictionary<string, Item>();
-    public Dictionary<string, Item> equipmentsHead = new Dictionary<string,Item>();
+    public Dictionary<string, Item> equipmentsHead = new Dictionary<string, Item>();
     public Dictionary<string, Item> equipmentsBody = new Dictionary<string, Item>();
     public Dictionary<string, Item> equipmentsLegs = new Dictionary<string, Item>();
     public Dictionary<string, Item> itemsConsumable = new Dictionary<string, Item>();
@@ -82,8 +81,8 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-	// Use this for initialization
-	void Start () 
+    // Use this for initialization
+    void Start()
     {
         // Initialise the shop
         SoomlaStore.Initialize(new CrapTrapAssets());
@@ -93,23 +92,24 @@ public class InventoryManager : MonoBehaviour
         InitializeItemDictionary();
         // Check for equipped items
         InitializeEquippedGear();
-        
+
         // Initialize Bag
         InitializeBag();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	    
-	}
-    
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
     #region Initialization
 
     void InitializeBag()
     {
         for (int i = 0; i < Game.instance.bagSlots; i++)
         {
-            if (!String.IsNullOrEmpty(Game.instance.bag[i]))
+            if (!System.String.IsNullOrEmpty(Game.instance.bag[i]))
             {
                 equippedConsumables[i] = itemsConsumable[Game.instance.bag[i]];
                 itemsConsumable[Game.instance.bag[i]].balance--;
@@ -142,7 +142,7 @@ public class InventoryManager : MonoBehaviour
                 break;
             }
         }
-        
+
         // Check for equipped gear (legs)
         foreach (Item gear in equipmentsLegs.Values)
         {
@@ -168,7 +168,7 @@ public class InventoryManager : MonoBehaviour
         goods = CrapTrapAssets.GetSpecificGoods(ItemType.eq_head);
         foreach (VirtualGood item in goods)
         {
-            equipmentsHead.Add(item.ItemId,ParseToItem(item,ItemType.eq_head));
+            equipmentsHead.Add(item.ItemId, ParseToItem(item, ItemType.eq_head));
             allItems.Add(item.ItemId, ParseToItem(item, ItemType.eq_head));
         }
 
@@ -178,7 +178,7 @@ public class InventoryManager : MonoBehaviour
         goods = CrapTrapAssets.GetSpecificGoods(ItemType.eq_body);
         foreach (VirtualGood item in goods)
         {
-            equipmentsBody.Add(item.ItemId, ParseToItem(item,ItemType.eq_body));
+            equipmentsBody.Add(item.ItemId, ParseToItem(item, ItemType.eq_body));
             allItems.Add(item.ItemId, ParseToItem(item, ItemType.eq_body));
         }
 
@@ -208,7 +208,6 @@ public class InventoryManager : MonoBehaviour
         goods = CrapTrapAssets.GetSpecificGoods(ItemType.item_instant);
         foreach (VirtualGood item in goods)
         {
-            itemsConsumable.Add(item.ItemId, ParseToItem(item, ItemType.item_instant));
             allItems.Add(item.ItemId, ParseToItem(item, ItemType.item_instant));
         }
 
@@ -244,13 +243,13 @@ public class InventoryManager : MonoBehaviour
 
         // retrieve the currency type and price
         if (item.PurchaseType is PurchaseWithVirtualItem &&
-           ((PurchaseWithVirtualItem)item.PurchaseType).ItemId == CrapTrapAssets.NORMAL_TOILET_PAPER_ID)
+           ((PurchaseWithVirtualItem)item.PurchaseType).TargetItemId == CrapTrapAssets.NORMAL_TOILET_PAPER_ID)
         {
             new_item.currency = CurrencyType.NTP;
             new_item.price = ((PurchaseWithVirtualItem)item.PurchaseType).Amount;
         }
         else if (item.PurchaseType is PurchaseWithVirtualItem &&
-                ((PurchaseWithVirtualItem)item.PurchaseType).ItemId == CrapTrapAssets.GOLDEN_TOILET_PAPER_ID)
+                ((PurchaseWithVirtualItem)item.PurchaseType).TargetItemId == CrapTrapAssets.GOLDEN_TOILET_PAPER_ID)
         {
             new_item.currency = CurrencyType.GTP;
             new_item.price = ((PurchaseWithVirtualItem)item.PurchaseType).Amount;
@@ -272,9 +271,6 @@ public class InventoryManager : MonoBehaviour
 
     public void EquipItem(Item item)
     {
-        // Tell soomla that we are equipping the specified item
-        StoreInventory.EquipVirtualGood(item.itemId);
-        
         // Update the cache
         if (item.type == ItemType.eq_head)
         {
@@ -314,38 +310,61 @@ public class InventoryManager : MonoBehaviour
         // Charcoal rank 1
         if (selectedItem.itemId == CrapTrapAssets.CONSUMABLE_CHARCOAL_1_ID)
         {
+            // Consume the item
+            StoreInventory.TakeItem(selectedItem.itemId, 1);
+
             // Extend timer by 20 seconds
             MainGameController.instance.timeElapsed = MainGameController.instance.timeElapsed - 20;
 
             // Make sure it doesn't go negative
             if (MainGameController.instance.timeElapsed < 0) MainGameController.instance.timeElapsed = 0;
+
+            // Remove equipped item
+            equippedConsumables[itemSlot] = new Item();
+
+            // Update balance
+            itemsConsumable[selectedItem.itemId].balance--;
         }
 
         // Charcoal rank 2
         if (selectedItem.itemId == CrapTrapAssets.CONSUMABLE_CHARCOAL_2_ID)
         {
+            // Consume the item
+            StoreInventory.TakeItem(selectedItem.itemId, 1);
+
             // Extend timer by 50 seconds
             MainGameController.instance.timeElapsed = MainGameController.instance.timeElapsed - 50;
 
             // make sure it doesn't go negative
             if (MainGameController.instance.timeElapsed < 0) MainGameController.instance.timeElapsed = 0;
+
+            // Remove equipped item
+            equippedConsumables[itemSlot] = new Item();
+
+            // Update balance
+            itemsConsumable[selectedItem.itemId].balance--;
         }
 
         // Charcoal rank 3
         if (selectedItem.itemId == CrapTrapAssets.CONSUMABLE_CHARCOAL_3_ID)
         {
+            // Consume the item
+            StoreInventory.TakeItem(selectedItem.itemId, 1);
+
             // Extend timer by 90 seconds
             MainGameController.instance.timeElapsed = MainGameController.instance.timeElapsed - 90;
 
             // make sure it doesn't go negative
             if (MainGameController.instance.timeElapsed < 0) MainGameController.instance.timeElapsed = 0;
+
+            // Remove equipped item
+            equippedConsumables[itemSlot] = new Item();
+
+            // Update balance
+            itemsConsumable[selectedItem.itemId].balance--;
         }
 
         #endregion
-
-        // update total number of items in inventory
-        selectedItem.balance--;
-        itemsConsumable[selectedItem.itemId].balance--;
     }
 
     public void PurchaseAndUseEmergencyDiapers(string item_id)
@@ -359,6 +378,8 @@ public class InventoryManager : MonoBehaviour
         {
             // Purchase the diaper
             StoreInventory.BuyItem(item_id);
+            // Consume the item
+            StoreInventory.TakeItem(item_id, 1);
 
             // Revives player and extends the timer by 10% of stage time (or minimum of 20 seconds)
             var timeExtension = MainGameController.instance.maxTime * 0.1f;
@@ -436,26 +457,26 @@ public class InventoryManager : MonoBehaviour
         if (type == ItemType.eq_head)
         {
             return (from h in equipmentsHead.Values
-                    //where h.balance > 0
+                    where h.balance > 0
                     select h).ToList();
-                    
+
         }
         else if (type == ItemType.eq_body)
         {
             return (from h in equipmentsBody.Values
-                    //where h.balance > 0
+                    where h.balance > 0
                     select h).ToList();
         }
         else if (type == ItemType.eq_legs)
         {
             return (from h in equipmentsLegs.Values
-                    //where h.balance > 0
+                    where h.balance > 0
                     select h).ToList();
         }
         else if (type == ItemType.item_consumable)
         {
             return (from h in itemsConsumable.Values
-                    //where h.balance > 0
+                    where h.balance > 0
                     select h).ToList();
         }
 

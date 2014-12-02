@@ -231,9 +231,6 @@ public class ItemShopGUI : MonoBehaviour
 
         #endregion
 
-        // Initialize soomla store
-        SoomlaStore.Initialize(new CrapTrapAssets());
-
         // Set the container rect
         containerRect = new Rect(0, 0, Screen.width, Screen.height);
 
