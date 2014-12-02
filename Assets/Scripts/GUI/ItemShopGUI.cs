@@ -1086,6 +1086,7 @@ public class ItemShopGUI : MonoBehaviour
                 {
                     StoreInventory.BuyItem(item.itemId);
                     InventoryManager.instance.UpdateCurrency();
+                    InventoryManager.instance.UpdateItemDictionary();
                 }
             }
             else if (item.currency == CurrencyType.GTP)
@@ -1100,6 +1101,7 @@ public class ItemShopGUI : MonoBehaviour
                     {
                         StoreInventory.BuyItem(item.itemId);
                         InventoryManager.instance.UpdateCurrency();
+                        InventoryManager.instance.UpdateItemDictionary();
                     }
                 }
             }
@@ -1115,6 +1117,7 @@ public class ItemShopGUI : MonoBehaviour
                     {
                         StoreInventory.BuyItem(item.itemId);
                         InventoryManager.instance.UpdateCurrency();
+                        InventoryManager.instance.UpdateItemDictionary();
                     }
                 }
             }

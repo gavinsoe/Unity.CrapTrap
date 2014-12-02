@@ -313,11 +313,8 @@ public class InventoryManager : MonoBehaviour
             // Consume the item
             StoreInventory.TakeItem(selectedItem.itemId, 1);
 
-            // Extend timer by 20 seconds
-            MainGameController.instance.timeElapsed = MainGameController.instance.timeElapsed - 20;
-
-            // Make sure it doesn't go negative
-            if (MainGameController.instance.timeElapsed < 0) MainGameController.instance.timeElapsed = 0;
+            // Extend max time by 20 seconds
+            MainGameController.instance.timeElapsed = MainGameController.instance.maxTime + 20;
 
             // Remove equipped item
             equippedConsumables[itemSlot] = new Item();
@@ -332,12 +329,9 @@ public class InventoryManager : MonoBehaviour
             // Consume the item
             StoreInventory.TakeItem(selectedItem.itemId, 1);
 
-            // Extend timer by 50 seconds
-            MainGameController.instance.timeElapsed = MainGameController.instance.timeElapsed - 50;
-
-            // make sure it doesn't go negative
-            if (MainGameController.instance.timeElapsed < 0) MainGameController.instance.timeElapsed = 0;
-
+            // Extend max time by 50 seconds
+            MainGameController.instance.timeElapsed = MainGameController.instance.maxTime + 50;
+            
             // Remove equipped item
             equippedConsumables[itemSlot] = new Item();
 
@@ -351,11 +345,8 @@ public class InventoryManager : MonoBehaviour
             // Consume the item
             StoreInventory.TakeItem(selectedItem.itemId, 1);
 
-            // Extend timer by 90 seconds
-            MainGameController.instance.timeElapsed = MainGameController.instance.timeElapsed - 90;
-
-            // make sure it doesn't go negative
-            if (MainGameController.instance.timeElapsed < 0) MainGameController.instance.timeElapsed = 0;
+            // Extend max time by 90 seconds
+            MainGameController.instance.timeElapsed = MainGameController.instance.maxTime + 90;
 
             // Remove equipped item
             equippedConsumables[itemSlot] = new Item();
@@ -450,6 +441,11 @@ public class InventoryManager : MonoBehaviour
     {
         ntp = StoreInventory.GetItemBalance(CrapTrapAssets.NORMAL_TOILET_PAPER_ID);
         gtp = StoreInventory.GetItemBalance(CrapTrapAssets.GOLDEN_TOILET_PAPER_ID);
+    }
+
+    public void UpdateItemDictionary()
+    {
+        InitializeItemDictionary();
     }
 
     public List<Item> GetOwnedEquipment(ItemType type)
