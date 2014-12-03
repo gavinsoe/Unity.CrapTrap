@@ -12,6 +12,7 @@ public class Game : MonoBehaviour
     public static Game instance;
 
     public CTAchievement[] achievements;
+    private bool[] achievementsDone;
     public Dictionary<Stat, double> stats = new Dictionary<Stat,double>();
     public int numOfAchievements;
 
@@ -89,7 +90,8 @@ public class Game : MonoBehaviour
 	// Function to initialize object; called when there is no previous saved file
     public void Initialize()
     {
-        achievements = new CTAchievement[numOfAchievements];
+        //achievements = new CTAchievement[numOfAchievements];
+        achievementsDone = new bool[numOfAchievements];
         energyCap = 10;
         energy = energyCap;
         setLastLogin();
@@ -132,6 +134,11 @@ public class Game : MonoBehaviour
 
         isUnlimitedEnergy = false;
         energyFull = true;
+
+        for (int z = 0; z < numOfAchievements; z++)
+        {
+            achievementsDone[z] = false;
+        }
 
         // Construct arrays
         stars = new int[7][];
@@ -187,7 +194,7 @@ public class Game : MonoBehaviour
         FileStream file = File.Create(Application.persistentDataPath + "/gameInfo.dat");
 
         GameInfo info = new GameInfo();
-        info.achievements = achievements;
+        info.achievementsDone = achievementsDone;
         info.achievementUnlocked = stats[Stat.achievementUnlocked];
         info.audio = audio;
         info.bag = bag;
@@ -252,7 +259,7 @@ public class Game : MonoBehaviour
             info = (GameInfo)bf.Deserialize(file);
             file.Close();
 
-            achievements = info.achievements;
+            achievementsDone = info.achievementsDone;
             stats[Stat.achievementUnlocked] = info.achievementUnlocked;
             audio = info.audio;
             bag = info.bag;
@@ -444,7 +451,7 @@ public class Game : MonoBehaviour
     {
         for (int i = 0; i < 10; i++)
         {
-            if (!achievements[i].isDone)
+            if (!achievementsDone[i])
             {
                 if (achievements[i].stat == Stat.getGear)
                 {
@@ -454,7 +461,8 @@ public class Game : MonoBehaviour
                             Soomla.Store.StoreInventory.GetItemBalance("eq_body_set_diver") > 0 &&
                             Soomla.Store.StoreInventory.GetItemBalance("eq_legs_set_diver") > 0)
                         {
-                            achievements[i].isDone = true;
+                            //achievements[i].isDone = true;
+                            achievementsDone[i] = true;
                             stats[Stat.setCollected] += 1;
 
                             // Pass on to GlobalGUI
@@ -479,7 +487,8 @@ public class Game : MonoBehaviour
                             Soomla.Store.StoreInventory.GetItemBalance("eq_body_set_explorer") > 0 &&
                             Soomla.Store.StoreInventory.GetItemBalance("eq_legs_set_explorer") > 0)
                         {
-                            achievements[i].isDone = true;
+                            //achievements[i].isDone = true;
+                            achievementsDone[i] = true; //
                             stats[Stat.setCollected] += 1;
 
                             // Pass on to GlobalGUI
@@ -504,7 +513,7 @@ public class Game : MonoBehaviour
                             Soomla.Store.StoreInventory.GetItemBalance("eq_body_set_pirate") > 0 &&
                             Soomla.Store.StoreInventory.GetItemBalance("eq_legs_set_pirate") > 0)
                         {
-                            achievements[i].isDone = true;
+                            achievementsDone[i] = true; //achievements[i].isDone = true;
                             stats[Stat.setCollected] += 1;
 
                             // Pass on to GlobalGUI
@@ -529,7 +538,7 @@ public class Game : MonoBehaviour
                             Soomla.Store.StoreInventory.GetItemBalance("eq_body_set_tribal") > 0 &&
                             Soomla.Store.StoreInventory.GetItemBalance("eq_legs_set_tribal") > 0)
                         {
-                            achievements[i].isDone = true;
+                            achievementsDone[i] = true; //achievements[i].isDone = true;
                             stats[Stat.setCollected] += 1;
 
                             // Pass on to GlobalGUI
@@ -554,7 +563,7 @@ public class Game : MonoBehaviour
                             Soomla.Store.StoreInventory.GetItemBalance("eq_body_set_mummy") > 0 &&
                             Soomla.Store.StoreInventory.GetItemBalance("eq_legs_set_mummy") > 0)
                         {
-                            achievements[i].isDone = true;
+                            achievementsDone[i] = true; //achievements[i].isDone = true;
                             stats[Stat.setCollected] += 1;
 
                             // Pass on to GlobalGUI
@@ -587,7 +596,7 @@ public class Game : MonoBehaviour
                     }
                     if (count >= achievements[i].counter)
                     {
-                        achievements[i].isDone = true;
+                        achievementsDone[i] = true; //achievements[i].isDone = true;
 
                         // Pass on to GlobalGUI
                         GlobalGUI.instance.AddAchievement(achievements[i]);
@@ -615,7 +624,7 @@ public class Game : MonoBehaviour
                     }
                     if (count >= achievements[i].counter)
                     {
-                        achievements[i].isDone = true;
+                        achievementsDone[i] = true; //achievements[i].isDone = true;
 
                         // Pass on to GlobalGUI
                         GlobalGUI.instance.AddAchievement(achievements[i]);
@@ -643,7 +652,7 @@ public class Game : MonoBehaviour
                     }
                     if (count >= achievements[i].counter)
                     {
-                        achievements[i].isDone = true;
+                        achievementsDone[i] = true; //achievements[i].isDone = true;
 
                         // Pass on to GlobalGUI
                         GlobalGUI.instance.AddAchievement(achievements[i]);
@@ -671,7 +680,7 @@ public class Game : MonoBehaviour
                     }
                     if (count >= achievements[i].counter)
                     {
-                        achievements[i].isDone = true;
+                        achievementsDone[i] = true; //achievements[i].isDone = true;
 
                         // Pass on to GlobalGUI
                         GlobalGUI.instance.AddAchievement(achievements[i]);
@@ -699,7 +708,7 @@ public class Game : MonoBehaviour
                     }
                     if (count >= achievements[i].counter)
                     {
-                        achievements[i].isDone = true;
+                        achievementsDone[i] = true; //achievements[i].isDone = true;
 
                         // Pass on to GlobalGUI
                         GlobalGUI.instance.AddAchievement(achievements[i]);
@@ -716,7 +725,7 @@ public class Game : MonoBehaviour
                 }
                 else if (stats[achievements[i].stat] >= achievements[i].counter)
                 {
-                    achievements[i].isDone = true;
+                    achievementsDone[i] = true; //achievements[i].isDone = true;
 
                     // Pass on to GlobalGUI
                     GlobalGUI.instance.AddAchievement(achievements[i]);
@@ -781,6 +790,7 @@ class GameInfo
     public double itemsBoughtUsingGTP = 0;
 
     public CTAchievement[] achievements;
+    public bool[] achievementsDone;
 
     // chapter unlock variables -- TRUE means unlocked
     public bool[] chapterUnlocked;

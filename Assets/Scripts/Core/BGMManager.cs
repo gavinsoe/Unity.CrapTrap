@@ -1,6 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum MusicType
+{
+    main = 1,
+    prologue = 2,
+    village = 3,
+    forrest = 4,
+    urgent = 5,
+}
+
 public class BGMManager : MonoBehaviour {
     public static BGMManager instance;
     public AudioClip mainBgm;
@@ -9,6 +18,7 @@ public class BGMManager : MonoBehaviour {
     public AudioClip forestBgm;
     public AudioClip forestUrgentBgm;
     private bool isStage;
+    private MusicType currentBGM;
 
     void Awake()
     {
@@ -26,24 +36,33 @@ public class BGMManager : MonoBehaviour {
 
     public void PlayMain()
     {
-        isStage = false;
-        audio.Stop();
-        audio.clip = mainBgm;
-        audio.loop = true;
-        audio.Play();
+        if (currentBGM != MusicType.main)
+        {
+            currentBGM = MusicType.main;
+            isStage = false;
+            audio.Stop();
+            audio.clip = mainBgm;
+            audio.loop = true;
+            audio.Play();
+        }
     }
 
     public void PlayPrologue()
     {
-        isStage = false;
-        audio.Stop();
-        audio.clip = prologueBgm;
-        audio.loop = false;
-        audio.Play();
+        if (currentBGM != MusicType.prologue)
+        {
+            currentBGM = MusicType.prologue;
+            isStage = false;
+            audio.Stop();
+            audio.clip = prologueBgm;
+            audio.loop = false;
+            audio.Play();
+        }
     }
 
     public void PlayVillage()
     {
+        currentBGM = MusicType.village;
         audio.Stop();
         audio.clip = villageBgm;
         audio.loop = true;
@@ -52,6 +71,7 @@ public class BGMManager : MonoBehaviour {
 
     public void PlayForest()
     {
+        currentBGM = MusicType.forrest;
         audio.Stop();
         audio.clip = forestBgm;
         audio.loop = true;
@@ -61,21 +81,20 @@ public class BGMManager : MonoBehaviour {
     public void PlayStage()
     {
         isStage = true;
-        audio.Stop();
-        if (NavigationManager.instance.chapter == 0 || NavigationManager.instance.chapter == 7)
+        if ((NavigationManager.instance.chapter == 0 || NavigationManager.instance.chapter == 7) && currentBGM != MusicType.village)
         {
-            audio.clip = villageBgm;
+            PlayVillage();
         }
-        else if (NavigationManager.instance.chapter == 1 || NavigationManager.instance.chapter == 8)
+        else if ((NavigationManager.instance.chapter == 1 || NavigationManager.instance.chapter == 8) && currentBGM != MusicType.forrest)
         {
-            audio.clip = forestBgm;
+            PlayForest();
         } 
-        audio.loop = true;
-        audio.Play();
     }
 
     public void PlayUrgent()
     {
+        if (currentBGM != MusicType.urgent) { 
+        currentBGM = MusicType.urgent;
         isStage = true;
         audio.Stop();
         if (NavigationManager.instance.chapter == 0 
@@ -87,6 +106,7 @@ public class BGMManager : MonoBehaviour {
         }
         audio.loop = true;
         audio.Play();
+            }
     }
 
     public bool isPlaying()

@@ -173,116 +173,11 @@ public class MainGameController : MonoBehaviour
 
         if (timerPulseRate < 0.5)
         {
-            if (!BGMManager.instance.isPlaying() && isUrgent) // If audio is not playing and it's urgent then play urgent music
-            {
-                /*
-                t1 = 0;
-                t2 = 0;
-                vol = audio.volume;
-                timeRightNow = timeElapsed;
-                audio.clip = urgentClip;
-                audio.loop = true;
-                audio.Play();
-                 * */
-                BGMManager.instance.PlayUrgent();
-                isUrgent = true;
-            }
-            else if (BGMManager.instance.isPlaying() && !isUrgent) // If normal music is playing and it is not urgent then change to urgent music
-            {
-                /*
-                if (t1 < crossfadeTime) // Fade out normal music
-                {
-                    t1 = timeElapsed - timeRightNow;
-                    audio.volume = (crossfadeTime - t1) * vol;
-                }
-                else if (audio.isPlaying && t1 >= crossfadeTime && t2 == 0f) // Change music to urgent
-                {
-                    t2 = 0.1f;
-                    audio.Stop();
-                    audio.clip = urgentClip;
-                    audio.loop = true;
-                    audio.Play();
-                    timeRightNow = timeElapsed;
-                    
-                }
-                else if (t1 >= crossfadeTime && t2 < crossfadeTime) // Fade in urgent music
-                {
-                    t2 = timeElapsed - timeRightNow;
-                    audio.volume = t2 * vol;
-                }
-                else
-                {
-                    isUrgent = true;
-                }
-                 * */
-                BGMManager.instance.PlayUrgent();
-                isUrgent = true;
-            }
-            else
-            {
-                /*
-                t1 = 0;
-                t2 = 0;
-                vol = audio.volume;
-                timeRightNow = timeElapsed;
-                 * */
-            }
+            BGMManager.instance.PlayUrgent();
         }
         else
         {
-            if (!BGMManager.instance.isPlaying() && !isUrgent)
-            {
-                /*
-                t1 = 0;
-                t2 = 0;
-                vol = audio.volume;
-                timeRightNow = timeElapsed;
-                audio.clip = loopingClip;
-                audio.loop = true;
-                audio.Play();
-                 * */
-                BGMManager.instance.PlayStage();
-                isUrgent = false;
-            }
-            else if (BGMManager.instance.isPlaying() && isUrgent)
-            {
-                /*
-                if (t1 < crossfadeTime)
-                {
-                    t1 = timeElapsed - timeRightNow;
-                    audio.volume = (crossfadeTime - t1) * vol;
-                }
-                else if (audio.isPlaying && t1 >= crossfadeTime && t2 == 0f)
-                {
-                    audio.Stop();
-                    audio.clip = loopingClip;
-                    audio.loop = true;
-                    audio.Play();
-                    timeRightNow = timeElapsed;
-                    t2 = 0.1f;
-                }
-                else if (t1 >= crossfadeTime && t2 < crossfadeTime)
-                {
-                    t2 = timeElapsed - timeRightNow;
-                    audio.volume = t2 * vol;
-                }
-                else
-                {
-                    isUrgent = false;
-                }
-                */
-                BGMManager.instance.PlayStage();
-                isUrgent = false;
-            }
-            else
-            {
-                /*
-                t1 = 0;
-                t2 = 0;
-                vol = audio.volume;
-                timeRightNow = timeElapsed;
-                 * */
-            }
+            BGMManager.instance.PlayStage();
             
         }
 
