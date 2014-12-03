@@ -28,7 +28,7 @@ namespace Soomla.Store
 	[InitializeOnLoad]
 #endif
 	/// <summary>
-	/// This class holds the store's configurations. 
+	/// This class holds the store's configurations.
 	/// </summary>
 	public class StoreSettings : ISoomlaSettings
 	{
@@ -50,8 +50,11 @@ namespace Soomla.Store
 		GUIContent publicKeyLabel = new GUIContent("API Key [?]:", "The API key from Google Play dev console (just in case you're using Google Play as billing provider).");
 		GUIContent testPurchasesLabel = new GUIContent("Test Purchases [?]:", "Check if you want to allow purchases of Google's test product ids.");
 		GUIContent packageNameLabel = new GUIContent("Package Name [?]", "Your package as defined in Unity.");
-		
+
 		GUIContent iosSsvLabel = new GUIContent("Receipt Validation [?]:", "Check if you want your purchases validated with SOOMLA Server Side Protection Service.");
+
+		GUIContent frameworkVersion = new GUIContent("Store Version [?]", "The SOOMLA Framework Store Module version. ");
+		GUIContent buildVersion = new GUIContent("Store Build [?]", "The SOOMLA Framework Store Module build.");
 
 		public void OnEnable() {
 			// Generating AndroidManifest.xml
@@ -65,13 +68,15 @@ namespace Soomla.Store
 		}
 
 		public void OnInfoGUI() {
-
+			SoomlaEditorScript.SelectableLabelField(frameworkVersion, "1.7.4");
+			SoomlaEditorScript.SelectableLabelField(buildVersion, "1");
+			EditorGUILayout.Space();
 		}
 
 		public void OnSoomlaGUI() {
 
 		}
-		
+
 		private void IOSGUI()
 		{
 			showIOSSettings = EditorGUILayout.Foldout(showIOSSettings, "iOS Build Settings");
@@ -90,10 +95,10 @@ namespace Soomla.Store
 				EditorGUILayout.BeginHorizontal();
 				SoomlaEditorScript.SelectableLabelField(packageNameLabel, PlayerSettings.bundleIdentifier);
 				EditorGUILayout.EndHorizontal();
-				
+
 				EditorGUILayout.Space();
 				EditorGUILayout.HelpBox("Billing Service Selection", MessageType.None);
-				
+
 				if (!GPlayBP && !AmazonBP && !NoneBP) {
 					GPlayBP = true;
 				}
@@ -104,7 +109,7 @@ namespace Soomla.Store
 				bpUpdate.TryGetValue("none", out update);
 				if (NoneBP && !update) {
 					setCurrentBPUpdate("none");
-					
+
 					AmazonBP = false;
 					GPlayBP = false;
 					SoomlaManifestTools.GenerateManifest();
@@ -114,16 +119,16 @@ namespace Soomla.Store
 
 
 				GPlayBP = EditorGUILayout.ToggleLeft(playLabel, GPlayBP);
-				
+
 				if (GPlayBP) {
 					EditorGUILayout.BeginHorizontal();
 					EditorGUILayout.Space();
 					EditorGUILayout.LabelField(publicKeyLabel, SoomlaEditorScript.FieldWidth, SoomlaEditorScript.FieldHeight);
 					AndroidPublicKey = EditorGUILayout.TextField(AndroidPublicKey, SoomlaEditorScript.FieldHeight);
 					EditorGUILayout.EndHorizontal();
-					
+
 					EditorGUILayout.Space();
-					
+
 					EditorGUILayout.BeginHorizontal();
 					EditorGUILayout.LabelField(SoomlaEditorScript.EmptyContent, SoomlaEditorScript.SpaceWidth, SoomlaEditorScript.FieldHeight);
 					AndroidTestPurchases = EditorGUILayout.Toggle(testPurchasesLabel, AndroidTestPurchases);
@@ -133,20 +138,20 @@ namespace Soomla.Store
 				bpUpdate.TryGetValue("play", out update);
 				if (GPlayBP && !update) {
 					setCurrentBPUpdate("play");
-					
+
 					AmazonBP = false;
 					NoneBP = false;
 					SoomlaManifestTools.GenerateManifest();
 					handlePlayBPJars(false);
 					handleAmazonBPJars(true);
 				}
-				
+
 
 				AmazonBP = EditorGUILayout.ToggleLeft(amazonLabel, AmazonBP);
 				bpUpdate.TryGetValue("amazon", out update);
 				if (AmazonBP && !update) {
 					setCurrentBPUpdate("amazon");
-					
+
 					GPlayBP = false;
 					NoneBP = false;
 					SoomlaManifestTools.GenerateManifest();
@@ -176,8 +181,8 @@ namespace Soomla.Store
 		}
 
 		private Dictionary<string, bool> bpUpdate = new Dictionary<string, bool>();
-		private static string bpRootPath = Application.dataPath + "/Soomla/compilations/android-billing-services/";
-		
+		private static string bpRootPath = Application.dataPath + "/Soomla/compilations/android/android-billing-services/";
+
 		public static void handlePlayBPJars(bool remove) {
 			try {
 				if (remove) {
@@ -189,7 +194,7 @@ namespace Soomla.Store
 				}
 			}catch {}
 		}
-		
+
 		public static void handleAmazonBPJars(bool remove) {
 			try {
 				if (remove) {
@@ -220,14 +225,14 @@ namespace Soomla.Store
 
 
 		public static string AND_PUB_KEY_DEFAULT = "YOUR GOOGLE PLAY PUBLIC KEY";
-		
+
 		public static string AndroidPublicKey
 		{
 			get {
 				string value;
 				return SoomlaEditorScript.Instance.SoomlaSettings.TryGetValue("AndroidPublicKey", out value) ? value : AND_PUB_KEY_DEFAULT;
 			}
-			set 
+			set
 			{
 				string v;
 				SoomlaEditorScript.Instance.SoomlaSettings.TryGetValue("AndroidPublicKey", out v);
@@ -238,14 +243,14 @@ namespace Soomla.Store
 				}
 			}
 		}
-		
+
 		public static bool AndroidTestPurchases
 		{
-			get { 
+			get {
 				string value;
 				return SoomlaEditorScript.Instance.SoomlaSettings.TryGetValue("AndroidTestPurchases", out value) ? Convert.ToBoolean(value) : false;
 			}
-			set 
+			set
 			{
 				string v;
 				SoomlaEditorScript.Instance.SoomlaSettings.TryGetValue("AndroidTestPurchases", out v);
@@ -256,14 +261,14 @@ namespace Soomla.Store
 				}
 			}
 		}
-		
+
 		public static bool IosSSV
 		{
-			get { 
+			get {
 				string value;
 				return SoomlaEditorScript.Instance.SoomlaSettings.TryGetValue("IosSSV", out value) ? Convert.ToBoolean(value) : false;
 			}
-			set 
+			set
 			{
 				string v;
 				SoomlaEditorScript.Instance.SoomlaSettings.TryGetValue("IosSSV", out v);
@@ -277,11 +282,11 @@ namespace Soomla.Store
 
 		public static bool NoneBP
 		{
-			get { 
+			get {
 				string value;
 				return SoomlaEditorScript.Instance.SoomlaSettings.TryGetValue("NoneBP", out value) ? Convert.ToBoolean(value) : false;
 			}
-			set 
+			set
 			{
 				string v;
 				SoomlaEditorScript.Instance.SoomlaSettings.TryGetValue("NoneBP", out v);
@@ -295,11 +300,11 @@ namespace Soomla.Store
 
 		public static bool GPlayBP
 		{
-			get { 
+			get {
 				string value;
 				return SoomlaEditorScript.Instance.SoomlaSettings.TryGetValue("GPlayBP", out value) ? Convert.ToBoolean(value) : false;
 			}
-			set 
+			set
 			{
 				string v;
 				SoomlaEditorScript.Instance.SoomlaSettings.TryGetValue("GPlayBP", out v);
@@ -310,14 +315,14 @@ namespace Soomla.Store
 				}
 			}
 		}
-		
+
 		public static bool AmazonBP
 		{
-			get { 
+			get {
 				string value;
 				return SoomlaEditorScript.Instance.SoomlaSettings.TryGetValue("AmazonBP", out value) ? Convert.ToBoolean(value) : false;
 			}
-			set 
+			set
 			{
 				string v;
 				SoomlaEditorScript.Instance.SoomlaSettings.TryGetValue("AmazonBP", out v);
@@ -328,8 +333,8 @@ namespace Soomla.Store
 				}
 			}
 		}
-		
 
-		
+
+
 	}
 }

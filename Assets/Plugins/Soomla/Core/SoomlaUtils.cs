@@ -13,6 +13,7 @@
 /// limitations under the License.
 
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace Soomla {
 
@@ -40,6 +41,20 @@ namespace Soomla {
 		/// <param name="message">Error message to output to log.</param>
 		public static void LogError(string tag, string message) {
 			Debug.LogError(string.Format("{0} {1}", tag, message));
+		}
+
+		public static void LogWarning(string tag, string message) {
+			Debug.LogWarning(string.Format("{0} {1}", tag, message));
+		}
+
+		/// <summary>
+		/// Returns the class name to be used in serialization/deserialization process
+		/// in Soomla
+		/// </summary>
+		/// <param name="target">The target to get class name for</param>
+		/// <returns>The class name of the provided instance</returns>
+		public static string GetClassName(object target) {
+			return target.GetType().Name;
 		}
 	}
 }

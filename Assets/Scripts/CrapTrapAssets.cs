@@ -25,6 +25,7 @@ public class CrapTrapAssets : IStoreAssets
             EQ_HEAD_SET_EXPLORER,
             EQ_HEAD_SET_PIRATE,
             EQ_HEAD_SET_TRIBAL,
+            EQ_HEAD_SET_DIVER,
             EQ_HEAD_APPLE_ARROW,
             EQ_HEAD_BEANIE,
             EQ_HEAD_CAP,
@@ -36,11 +37,45 @@ public class CrapTrapAssets : IStoreAssets
             EQ_HEAD_SPECS_BLUE,
             EQ_BODY_SET_EXPLORER,
             EQ_BODY_SET_PIRATE,
+            EQ_BODY_SET_TRIBAL,
+            EQ_BODY_SET_DIVER,
+            EQ_BODY_BARREL,
+            EQ_BODY_BOWTIE,
+            EQ_BODY_BOXING_GLOVES,
+            EQ_BODY_CHESTHAIR,     
+            EQ_BODY_HOODIE,
+            EQ_BODY_KARATEGI,
+            EQ_BODY_LABCOAT_KRIEGER,
+            EQ_BODY_LABCOAT_NORMAL,
+            EQ_BODY_NAKED,
+            EQ_BODY_SHIRT_PINK,
+            EQ_BODY_SHIRT_RED,
+            EQ_BODY_SHIRT_YELLOW,
+            EQ_BODY_SUIT,
+            EQ_BODY_TATTOO,
             EQ_LEGS_SET_EXPLORER,
             EQ_LEGS_SET_PIRATE,
+            EQ_LEGS_SET_TRIBAL,
+            EQ_LEGS_SET_DIVER,
+            EQ_LEGS_ARMY,
+            EQ_LEGS_BALLET,
+            EQ_LEGS_COWBOY,
+            EQ_LEGS_HERMES,
+            EQ_LEGS_LEATHER,
+            EQ_LEGS_LOAFERS,
+            EQ_LEGS_SNEAKERS,
+            EQ_LEGS_SUIT,
             CONSUMABLE_CHARCOAL_1,
             CONSUMABLE_CHARCOAL_2,
             CONSUMABLE_CHARCOAL_3,
+            CONSUMABLE_CHARCOAL_1_5PACK,
+            CONSUMABLE_CHARCOAL_2_5PACK,
+            CONSUMABLE_CHARCOAL_3_5PACK,
+            CONSUMABLE_CHARCOAL_1_10PACK,
+            CONSUMABLE_CHARCOAL_2_10PACK,
+            CONSUMABLE_CHARCOAL_3_10PACK,
+            CONSUMABLE_LUCKY_CHARM,
+            CONSUMABLE_PLUNGER,
             EMERGENCY_REVIVE_1_1,
             EMERGENCY_REVIVE_1_2,
             EMERGENCY_REVIVE_1_3,
@@ -72,11 +107,6 @@ public class CrapTrapAssets : IStoreAssets
             EQUIP_BODY_CATEGORY,
             EQUIP_LEGS_CATEGORY
         };
-    }
-
-    public NonConsumableItem[] GetNonConsumableItems()
-    {
-        return new NonConsumableItem[] { NO_ADDS_NONCONS };
     }
 
     public static VirtualGood[] GetSpecificGoods(ItemType type)
@@ -136,24 +166,12 @@ public class CrapTrapAssets : IStoreAssets
                 CONSUMABLE_CHARCOAL_1,
                 CONSUMABLE_CHARCOAL_2,
                 CONSUMABLE_CHARCOAL_3,
-                CONSUMABLE_CHARCOAL_1_5PACK,
-                CONSUMABLE_CHARCOAL_2_5PACK,
-                CONSUMABLE_CHARCOAL_3_5PACK,
-                CONSUMABLE_CHARCOAL_1_10PACK,
-                CONSUMABLE_CHARCOAL_2_10PACK,
-                CONSUMABLE_CHARCOAL_3_10PACK,
                 CONSUMABLE_LUCKY_CHARM
             };
         }
         else if (type == ItemType.item_instant)
         {
             return new VirtualGood[] {
-            };
-        }
-        else if (type == ItemType.other)
-        {
-            return new VirtualGood[] {
-                CONSUMABLE_PLUNGER,
                 EMERGENCY_REVIVE_1_1,
                 EMERGENCY_REVIVE_1_2,
                 EMERGENCY_REVIVE_1_3,
@@ -163,6 +181,12 @@ public class CrapTrapAssets : IStoreAssets
                 EMERGENCY_REVIVE_3_1,
                 EMERGENCY_REVIVE_3_2,
                 EMERGENCY_REVIVE_3_3
+            };
+        }
+        else if (type == ItemType.other)
+        {
+            return new VirtualGood[] {
+                CONSUMABLE_PLUNGER
             };
         }
         else // Should never end up here (just included to prevent an error message)
@@ -176,8 +200,8 @@ public class CrapTrapAssets : IStoreAssets
 
     #region Currency
 
-    public const string NORMAL_TOILET_PAPER_ID = "ntp";
-    public const string GOLDEN_TOILET_PAPER_ID = "gtp";
+    public const string NORMAL_TOILET_PAPER_ID = "currency_ntp";
+    public const string GOLDEN_TOILET_PAPER_ID = "currency_gtp";
 
     #endregion
     #region Equipment Head
@@ -186,6 +210,7 @@ public class CrapTrapAssets : IStoreAssets
     public const string EQ_HEAD_SET_EXPLORER_ID = "eq_head_set_explorer";
     public const string EQ_HEAD_SET_PIRATE_ID = "eq_head_set_pirate";
     public const string EQ_HEAD_SET_TRIBAL_ID = "eq_head_set_tribal";
+    public const string EQ_HEAD_SET_DIVER_ID = "eq_head_set_diver";
     public const string EQ_HEAD_APPLE_ARROW_ID = "eq_head_apple_arrow";
     public const string EQ_HEAD_BEANIE_ID = "eq_head_beanie";
     public const string EQ_HEAD_CAP_ID = "eq_head_cap";
@@ -195,12 +220,12 @@ public class CrapTrapAssets : IStoreAssets
     public const string EQ_HEAD_PAPERBAG_ID = "eq_head_paperbag";
     public const string EQ_HEAD_SHARK_ID = "eq_head_shark";
     public const string EQ_HEAD_SPECS_BLUE_ID = "eq_head_specs_blue";
-    
+
     // category name
     public const string EQ_HEAD_CATEGORY_NAME = "eq_head";
 
     // list of items (to put into the category)
-    public static List<string> EQ_HEAD_LIST = 
+    public static List<string> EQ_HEAD_LIST =
         new List<string>(new string[] {
             EQ_HEAD_SET_EXPLORER_ID,
             EQ_HEAD_SET_PIRATE_ID,
@@ -223,6 +248,7 @@ public class CrapTrapAssets : IStoreAssets
     public const string EQ_BODY_SET_EXPLORER_ID = "eq_body_set_explorer";
     public const string EQ_BODY_SET_PIRATE_ID = "eq_body_set_pirate";
     public const string EQ_BODY_SET_TRIBAL_ID = "eq_body_set_tribal";
+    public const string EQ_BODY_SET_DIVER_ID = "eq_body_set_diver";
     public const string EQ_BODY_BARREL_ID = "eq_body_barrel";
     public const string EQ_BODY_BOWTIE_ID = "eq_body_bowtie";
     public const string EQ_BODY_BOXING_GLOVES_ID = "eq_body_boxing_gloves";
@@ -270,6 +296,7 @@ public class CrapTrapAssets : IStoreAssets
     public const string EQ_LEGS_SET_EXPLORER_ID = "eq_legs_set_explorer";
     public const string EQ_LEGS_SET_PIRATE_ID = "eq_legs_set_pirate";
     public const string EQ_LEGS_SET_TRIBAL_ID = "eq_legs_set_tribal";
+    public const string EQ_LEGS_SET_DIVER_ID = "eq_legs_set_diver";
     public const string EQ_LEGS_ARMY_ID = "eq_legs_army";
     public const string EQ_LEGS_BALLET_ID = "eq_legs_ballet";
     public const string EQ_LEGS_COWBOY_ID = "eq_legs_cowboy";
@@ -305,7 +332,7 @@ public class CrapTrapAssets : IStoreAssets
     public const string CONSUMABLE_CHARCOAL_1_ID = "consumable_charcoal_1";
     public const string CONSUMABLE_CHARCOAL_2_ID = "consumable_charcoal_2";
     public const string CONSUMABLE_CHARCOAL_3_ID = "consumable_charcoal_3";
-    
+
     public const string CONSUMABLE_CHARCOAL_1_5PACK_ID = "consumable_charcoal_1_5pack";
     public const string CONSUMABLE_CHARCOAL_2_5PACK_ID = "consumable_charcoal_2_5pack";
     public const string CONSUMABLE_CHARCOAL_3_5PACK_ID = "consumable_charcoal_3_5pack";
@@ -337,7 +364,7 @@ public class CrapTrapAssets : IStoreAssets
 
     #endregion
     #region Instant Use Items
-    
+
     // currency packs
     public const string PACK_NTP_10_ID = "pack_ntp_10";
     public const string PACK_NTP_50_ID = "pack_ntp_50";
@@ -372,7 +399,7 @@ public class CrapTrapAssets : IStoreAssets
 
     #endregion
 
-    public const string NO_ADDS_NONCONS_PRODUCT_ID  = "no_ads";
+    public const string NO_ADDS_NONCONS_PRODUCT_ID = "no_ads";
 
     #endregion
     #region Virtual Currencies
@@ -419,6 +446,14 @@ public class CrapTrapAssets : IStoreAssets
        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
     );
 
+    public static EquippableVG EQ_HEAD_SET_DIVER = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "Diving Helmet",                                             // name
+       "Highly pressurised compressed gas",                                      // description
+       EQ_HEAD_SET_DIVER_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );
+
     public static EquippableVG EQ_HEAD_APPLE_ARROW = new EquippableVG(
        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
        "Apple of Archer",                                             // name
@@ -426,7 +461,7 @@ public class CrapTrapAssets : IStoreAssets
        EQ_HEAD_APPLE_ARROW_ID,                                       // item id
        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 25) // the way the good is purchase
     );
-    
+
     public static EquippableVG EQ_HEAD_BEANIE = new EquippableVG(
        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
        "Beanie",                                             // name
@@ -450,7 +485,7 @@ public class CrapTrapAssets : IStoreAssets
        EQ_HEAD_HELMET_BLUE_ID,                                       // item id
        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 25) // the way the good is purchase
     );
-    
+
     public static EquippableVG EQ_HEAD_HELMET_WHITE = new EquippableVG(
        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
        "White Biker Helmet",                                             // name
@@ -509,7 +544,7 @@ public class CrapTrapAssets : IStoreAssets
        EQ_BODY_SET_PIRATE_ID,                                       // item id
        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
     );
-    
+
     public static EquippableVG EQ_BODY_SET_TRIBAL = new EquippableVG(
        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
        "Tribal Regalia",                                             // name
@@ -517,7 +552,15 @@ public class CrapTrapAssets : IStoreAssets
        EQ_BODY_SET_TRIBAL_ID,                                       // item id
        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
     );
-    
+
+    public static EquippableVG EQ_BODY_SET_DIVER = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "Diving Suit",                                             // name
+       "Highly Flammable and combustible",                                      // description
+       EQ_BODY_SET_DIVER_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );
+
     public static EquippableVG EQ_BODY_BARREL = new EquippableVG(
        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
        "Barreled",                                             // name
@@ -525,7 +568,7 @@ public class CrapTrapAssets : IStoreAssets
        EQ_BODY_BARREL_ID,                                       // item id
        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 35) // the way the good is purchase
     );
-    
+
     public static EquippableVG EQ_BODY_BOWTIE = new EquippableVG(
        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
        "Bowtie",                                             // name
@@ -541,7 +584,7 @@ public class CrapTrapAssets : IStoreAssets
        EQ_BODY_BOXING_GLOVES_ID,                                       // item id
        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 25) // the way the good is purchase
     );
-    
+
     public static EquippableVG EQ_BODY_CHESTHAIR = new EquippableVG(
        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
        "Chest Rug",                                             // name
@@ -549,62 +592,62 @@ public class CrapTrapAssets : IStoreAssets
        EQ_BODY_CHESTHAIR_ID,                                       // item id
        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
     );
-           
+
     public static EquippableVG EQ_BODY_HOODIE = new EquippableVG(
        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
        "Blue Hoodie",                                             // name
        "Blue Hoodie",                                      // description
        EQ_BODY_HOODIE_ID,                                       // item id
        new PurchaseWithVirtualItem(NORMAL_TOILET_PAPER_ID, 400) // the way the good is purchase
-    );     
-        
+    );
+
     public static EquippableVG EQ_BODY_KARATEGI = new EquippableVG(
        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
        "Black Gi (top)",                                             // name
        "Allows the wearer to focus their internal energy. Increses time by a medium amount.",                                      // description
        EQ_BODY_KARATEGI_ID,                                       // item id
        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 35) // the way the good is purchase
-    );              
-        
+    );
+
     public static EquippableVG EQ_BODY_LABCOAT_KRIEGER = new EquippableVG(
        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
        "[Labcoat Krieger Body]",                                             // name
        "[Labcoat Krieger Description]",                                      // description
        EQ_BODY_LABCOAT_KRIEGER_ID,                                       // item id
        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
-    ); 
-      
+    );
+
     public static EquippableVG EQ_BODY_LABCOAT_NORMAL = new EquippableVG(
        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
        "Lab Coat",                                             // name
        "Lab Coat",                                      // description
        EQ_BODY_LABCOAT_NORMAL_ID,                                       // item id
        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
-    ); 
-    
+    );
+
     public static EquippableVG EQ_BODY_NAKED = new EquippableVG(
        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
        "Bare naked",                                             // name
        "Streaker",                                      // description
        EQ_BODY_NAKED_ID,                                       // item id
        new PurchaseWithVirtualItem(NORMAL_TOILET_PAPER_ID, 400) // the way the good is purchase
-    ); 
-    
+    );
+
     public static EquippableVG EQ_BODY_SHIRT_PINK = new EquippableVG(
        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
        "Pink shirt",                                             // name
        "Pink shirt",                                      // description
        EQ_BODY_SHIRT_PINK_ID,                                       // item id
        new PurchaseWithVirtualItem(NORMAL_TOILET_PAPER_ID, 300) // the way the good is purchase
-    ); 
-    
+    );
+
     public static EquippableVG EQ_BODY_SHIRT_RED = new EquippableVG(
        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
        "Red shirt",                                             // name
        "Red shirt",                                      // description
        EQ_BODY_SHIRT_RED_ID,                                       // item id
        new PurchaseWithVirtualItem(NORMAL_TOILET_PAPER_ID, 250) // the way the good is purchase
-    ); 
+    );
 
     public static EquippableVG EQ_BODY_SHIRT_YELLOW = new EquippableVG(
        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
@@ -612,8 +655,8 @@ public class CrapTrapAssets : IStoreAssets
        "Yellow shirt",                                      // description
        EQ_BODY_SHIRT_YELLOW_ID,                                       // item id
        new PurchaseWithVirtualItem(NORMAL_TOILET_PAPER_ID, 250) // the way the good is purchase
-    ); 
-    
+    );
+
     public static EquippableVG EQ_BODY_SUIT = new EquippableVG(
        EquippableVG.EquippingModel.CATEGORY,                        // equipping model
        "Black Suit",                                             // name
@@ -628,8 +671,8 @@ public class CrapTrapAssets : IStoreAssets
        "Special ink that has magical powers. Increases time by a small amount.",                                      // description
        EQ_BODY_TATTOO_ID,                                       // item id
        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 25) // the way the good is purchase
-    );         
-    
+    );
+
     #endregion
     #region Equipment Legs
 
@@ -648,7 +691,7 @@ public class CrapTrapAssets : IStoreAssets
        EQ_LEGS_SET_PIRATE_ID,                                      // item id
        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
     );
-    
+
     public static EquippableVG EQ_LEGS_SET_TRIBAL = new EquippableVG(
         EquippableVG.EquippingModel.CATEGORY,                        // equipping model
         "Tribal Regalia",                                          // name
@@ -656,7 +699,15 @@ public class CrapTrapAssets : IStoreAssets
         EQ_LEGS_SET_TRIBAL_ID,                                    // item id
         new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
     );
-    
+
+    public static EquippableVG EQ_LEGS_SET_DIVER = new EquippableVG(
+       EquippableVG.EquippingModel.CATEGORY,                        // equipping model
+       "Diving Suit",                                             // name
+       "Unstable and reactive",                                      // description
+       EQ_LEGS_SET_DIVER_ID,                                       // item id
+       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50) // the way the good is purchase
+    );
+
     public static EquippableVG EQ_LEGS_ARMY = new EquippableVG(
         EquippableVG.EquippingModel.CATEGORY,                        // equipping model
         "Military fatigues",                                          // name
@@ -664,63 +715,63 @@ public class CrapTrapAssets : IStoreAssets
         EQ_LEGS_ARMY_ID,                                    // item id
         new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 25) // the way the good is purchase
     );
-    
+
     public static EquippableVG EQ_LEGS_BALLET = new EquippableVG(
         EquippableVG.EquippingModel.CATEGORY,                        // equipping model
         "Tutu",                                          // name
         "Enhances grace, beauty and femininity. Increases time by a medium amount",                                    // description
         EQ_LEGS_BALLET_ID,                                    // item id
         new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 35) // the way the good is purchase
-    );  
-    
+    );
+
     public static EquippableVG EQ_LEGS_COWBOY = new EquippableVG(
         EquippableVG.EquippingModel.CATEGORY,                        // equipping model
         "Cowboy chaps",                                          // name
         "Mounted riders needs protection. Increases time by a small amount.",                                    // description
         EQ_LEGS_COWBOY_ID,                                    // item id
         new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 25) // the way the good is purchase
-    );  
-    
+    );
+
     public static EquippableVG EQ_LEGS_HERMES = new EquippableVG(
         EquippableVG.EquippingModel.CATEGORY,                        // equipping model
         "Hermes' Talaria",                                          // name
         "Winged sandals symbolizes the god Hermes. Increases time by a medium amount",                                    // description
         EQ_LEGS_HERMES_ID,                                    // item id
         new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 35) // the way the good is purchase
-    );  
-    
+    );
+
     public static EquippableVG EQ_LEGS_LEATHER = new EquippableVG(
         EquippableVG.EquippingModel.CATEGORY,                        // equipping model
         "Leather Boots",                                          // name
         "Footwear made of leather covering the feet and ankles",                                    // description
         EQ_LEGS_LEATHER_ID,                                    // item id
         new PurchaseWithVirtualItem(NORMAL_TOILET_PAPER_ID, 250) // the way the good is purchase
-    );  
-    
+    );
+
     public static EquippableVG EQ_LEGS_LOAFERS = new EquippableVG(
         EquippableVG.EquippingModel.CATEGORY,                        // equipping model
         "Loafers",                                          // name
         "Loafers",                                    // description
         EQ_LEGS_LOAFERS_ID,                                    // item id
         new PurchaseWithVirtualItem(NORMAL_TOILET_PAPER_ID, 250) // the way the good is purchase
-    );  
-           
+    );
+
     public static EquippableVG EQ_LEGS_SNEAKERS = new EquippableVG(
         EquippableVG.EquippingModel.CATEGORY,                        // equipping model
         "Sneakers",                                          // name
         "Increases atheletic performance. Increases time by a medium amount.",                                    // description
         EQ_LEGS_SNEAKERS_ID,                                    // item id
         new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 35) // the way the good is purchase
-    );       
-    
+    );
+
     public static EquippableVG EQ_LEGS_SUIT = new EquippableVG(
         EquippableVG.EquippingModel.CATEGORY,                        // equipping model
         "Suit pants",                                          // name
         "Too expensive to be soiled. Increases time by a small amount.",                                    // description
         EQ_LEGS_SUIT_ID,                                    // item id
         new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 25) // the way the good is purchase
-    );      
-                
+    );
+
     #endregion
     #region Consumables
 
@@ -821,7 +872,7 @@ public class CrapTrapAssets : IStoreAssets
     #endregion
 
     #region Instant Use Items
-    
+
     #region Virtual Currency Packs
 
     public static VirtualCurrencyPack PACK_NTP_10 = new VirtualCurrencyPack(
@@ -961,16 +1012,6 @@ public class CrapTrapAssets : IStoreAssets
     public static VirtualCategory EQUIP_LEGS_CATEGORY = new VirtualCategory(
         EQ_LEGS_CATEGORY_NAME,     // name
         EQ_LEGS_LIST               // items in category
-    );
-
-    #endregion
-    #region Market MANAGED Items
-
-    public static NonConsumableItem NO_ADDS_NONCONS = new NonConsumableItem(
-        "No Ads",
-        "Test purchase of MANAGED item.",
-        "no_ads",
-        new PurchaseWithMarket(new MarketItem(NO_ADDS_NONCONS_PRODUCT_ID, MarketItem.Consumable.NONCONSUMABLE, 0.99))
     );
 
     #endregion

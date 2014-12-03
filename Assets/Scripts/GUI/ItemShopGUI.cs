@@ -231,9 +231,6 @@ public class ItemShopGUI : MonoBehaviour
 
         #endregion
 
-        // Initialize soomla store
-        SoomlaStore.Initialize(new CrapTrapAssets());
-
         // Set the container rect
         containerRect = new Rect(0, 0, Screen.width, Screen.height);
 
@@ -1089,6 +1086,7 @@ public class ItemShopGUI : MonoBehaviour
                 {
                     StoreInventory.BuyItem(item.itemId);
                     InventoryManager.instance.UpdateCurrency();
+                    InventoryManager.instance.UpdateItemDictionary();
                 }
             }
             else if (item.currency == CurrencyType.GTP)
@@ -1103,6 +1101,7 @@ public class ItemShopGUI : MonoBehaviour
                     {
                         StoreInventory.BuyItem(item.itemId);
                         InventoryManager.instance.UpdateCurrency();
+                        InventoryManager.instance.UpdateItemDictionary();
                     }
                 }
             }
@@ -1118,6 +1117,7 @@ public class ItemShopGUI : MonoBehaviour
                     {
                         StoreInventory.BuyItem(item.itemId);
                         InventoryManager.instance.UpdateCurrency();
+                        InventoryManager.instance.UpdateItemDictionary();
                     }
                 }
             }
