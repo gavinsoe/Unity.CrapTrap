@@ -769,7 +769,7 @@ public class StageSelectGUI : MonoBehaviour {
         }
 
         // Energy Box
-        GUI.Label(energyRect, "99", energyStyle);
+        //GUI.Label(energyRect, "99", energyStyle);
         
     }
     void NormalStageFrame()
