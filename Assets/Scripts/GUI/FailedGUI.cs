@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FailedGUI : MonoBehaviour 
+public class FailedGUI : MonoBehaviour
 {
     public static FailedGUI instance;
 
@@ -38,7 +38,7 @@ public class FailedGUI : MonoBehaviour
 
     #region Background
 
-    private Rect bgContainerRect; 
+    private Rect bgContainerRect;
     private Rect bgRect; // The Rect object that holds the background of the page
     private Rect bgRectOpen; // The position of the background when open
     private Rect bgRectClose; // The position of the background when closed
@@ -147,11 +147,7 @@ public class FailedGUI : MonoBehaviour
     {
         // set the static variable so that other classes can easily use this class
         instance = this;
-    }
 
-    // Initialise GUI Elements
-    void Start()
-    {
         // Set the size of the frame
         containerRect = new Rect(0, 0, Screen.width, Screen.height);
         innerContainerPosMid = containerRect;
@@ -180,7 +176,7 @@ public class FailedGUI : MonoBehaviour
         // header stuff
         activeSkin.customStyles[2].fontSize = (int)(Screen.height * headerFontScale);
         headerRect = new Rect(0, containerRect.height * headerYOffset, containerRect.width, activeSkin.customStyles[2].fontSize);
-        
+
         // navigation buttons
         retryBtnStyle = activeSkin.customStyles[3];
         homeBtnStyle = activeSkin.customStyles[4];
@@ -192,21 +188,21 @@ public class FailedGUI : MonoBehaviour
         float navButtonSpacing = navButtonWidth * navButtonSpacingScale;
 
         // Next button on first screen
-        nextBtnRect = new Rect((Screen.width - navButtonWidth) * 0.5f, 
-                               containerRect.height * nextBtnYOffset, 
-                               navButtonWidth, 
+        nextBtnRect = new Rect((Screen.width - navButtonWidth) * 0.5f,
+                               containerRect.height * nextBtnYOffset,
+                               navButtonWidth,
                                navButtonHeight);
 
         // Navigation on second screen
         float navWidth = navButtonWidth * 2 + navButtonSpacing * 1;
-        navContainerRect = new Rect((containerRect.width - navWidth) / 2, 
-                                    containerRect.height * navContainerYOffset, 
-                                    navWidth, 
+        navContainerRect = new Rect((containerRect.width - navWidth) / 2,
+                                    containerRect.height * navContainerYOffset,
+                                    navWidth,
                                     navButtonHeight);
 
         retryBtnRect = new Rect(0, 0, navButtonWidth, navButtonHeight);
         homeBtnRect = new Rect(navButtonWidth + navButtonSpacing, 0, navButtonWidth, navButtonHeight);
-        
+
         #endregion
         #region Fox Lady
 
@@ -302,7 +298,12 @@ public class FailedGUI : MonoBehaviour
 
         // Default to disabled
         this.enabled = false;
-	}
+    }
+
+    // Initialise GUI Elements
+    void Start()
+    {
+    }
 
     void Update()
     {
@@ -313,7 +314,7 @@ public class FailedGUI : MonoBehaviour
         }
     }
 
-	void OnGUI()
+    void OnGUI()
     {
         // Sets the GUI depth
         GUI.depth = 10;
@@ -394,7 +395,7 @@ public class FailedGUI : MonoBehaviour
             }
             if (GUI.Button(homeBtnRect, "", homeBtnStyle))
             {
-                NavigationManager.instance.NavToTitle();
+                NavigationManager.instance.NavToChapterSelect();
             }
         }
         GUI.EndGroup();
@@ -526,7 +527,7 @@ public class FailedGUI : MonoBehaviour
     {
         masterAlpha = alpha;
     }
-    
+
     void AnimateFailedMenu(Rect size)
     {
         bgContainerRect = size;
@@ -549,7 +550,7 @@ public class FailedGUI : MonoBehaviour
     #endregion
 
     #region Public Methods
-    
+
     // Show the GUI
     public void Show()
     {
@@ -562,7 +563,7 @@ public class FailedGUI : MonoBehaviour
             slotItems[0] = InventoryManager.instance.itemsOther[CrapTrapAssets.EMERGENCY_REVIVE_1_1_ID];
             slotItems[1] = InventoryManager.instance.itemsOther[CrapTrapAssets.EMERGENCY_REVIVE_2_1_ID];
             slotItems[2] = InventoryManager.instance.itemsOther[CrapTrapAssets.EMERGENCY_REVIVE_3_1_ID];
-            bubbleText = "[Failed Once]";
+            bubbleText = "I can offer my assistance for the right price.";
             ShowBubble();
         }
         else if (MainGameController.instance.failedAttempts == 2)
@@ -570,7 +571,7 @@ public class FailedGUI : MonoBehaviour
             slotItems[0] = InventoryManager.instance.itemsOther[CrapTrapAssets.EMERGENCY_REVIVE_1_2_ID];
             slotItems[1] = InventoryManager.instance.itemsOther[CrapTrapAssets.EMERGENCY_REVIVE_2_2_ID];
             slotItems[2] = InventoryManager.instance.itemsOther[CrapTrapAssets.EMERGENCY_REVIVE_3_2_ID];
-            bubbleText = "[Failed Twice]";
+            bubbleText = "The price for my assistance have just gone up.";
             ShowBubble();
         }
         else if (MainGameController.instance.failedAttempts == 3)
@@ -578,7 +579,7 @@ public class FailedGUI : MonoBehaviour
             slotItems[0] = InventoryManager.instance.itemsOther[CrapTrapAssets.EMERGENCY_REVIVE_1_3_ID];
             slotItems[1] = InventoryManager.instance.itemsOther[CrapTrapAssets.EMERGENCY_REVIVE_2_3_ID];
             slotItems[2] = InventoryManager.instance.itemsOther[CrapTrapAssets.EMERGENCY_REVIVE_3_3_ID];
-            bubbleText = "[Failed Thrice]";
+            bubbleText = "This is all I have left and its not going to be cheap.";
             ShowBubble();
         }
         else
@@ -586,7 +587,7 @@ public class FailedGUI : MonoBehaviour
             slotItems[0] = new Item();
             slotItems[1] = new Item();
             slotItems[2] = new Item();
-            bubbleText = "Unfortunately we ran out of diapers. Better luck next time!";
+            bubbleText = "We are SOLD OUT, go spread your stink elsewhere.";
             ShowBubble();
         }
 
@@ -634,7 +635,7 @@ public class FailedGUI : MonoBehaviour
         {
             transitionTo = 2;
         }
-        
+
         // Animate the transition
         iTween.ValueTo(gameObject,
                             iTween.Hash("from", innerTransitionRect,

@@ -48,14 +48,10 @@ public class FailedByFallingGUI : MonoBehaviour
 
         // Hide on start
         iTween.FadeTo(gameObject, 0, 0);
-    }
 
-    // Use this for initialization
-    void Start()
-    {
         // Set the container position
         containerRect = new Rect(0, 0, Screen.width, Screen.height);
-        
+
         #region Calculate GUI Components
 
         // Initialise the header stuff
@@ -77,6 +73,13 @@ public class FailedByFallingGUI : MonoBehaviour
 
         #endregion
         #endregion
+
+        this.enabled = false;
+    }
+
+    // Use this for initialization
+    void Start()
+    {
     }
 
     void OnGUI()
@@ -91,7 +94,7 @@ public class FailedByFallingGUI : MonoBehaviour
         // The container
         GUI.BeginGroup(containerRect);
         // Draw the header
-        GUI.Label(headerRect, "YOU DIED", activeSkin.customStyles[2]);
+        GUI.Label(headerRect, "YOU FELL", activeSkin.customStyles[2]);
         #region navigation
         GUI.BeginGroup(navContainerRect);
 
@@ -101,7 +104,7 @@ public class FailedByFallingGUI : MonoBehaviour
         }
         if (GUI.Button(homeBtnRect, "", activeSkin.customStyles[4]))
         {
-            NavigationManager.instance.NavToTitle();
+            NavigationManager.instance.NavToChapterSelect();
         }
 
         GUI.EndGroup();
@@ -118,23 +121,23 @@ public class FailedByFallingGUI : MonoBehaviour
     {
         this.enabled = true;
         iTween.FadeTo(gameObject, 1, 0.2f);
-        iTween.ValueTo(gameObject, 
-                       iTween.Hash("from", color_alpha, 
-                                   "to", 1, 
-                                   "onupdate", "AnimateFailedMenu", 
+        iTween.ValueTo(gameObject,
+                       iTween.Hash("from", color_alpha,
+                                   "to", 1,
+                                   "onupdate", "AnimateFailedMenu",
                                    "easetype", iTween.EaseType.easeOutQuart));
         // Alter culling mask to hide player
-        Camera.main.cullingMask = ~(1 << LayerMask.NameToLayer("Character"));
+        Camera.main.cullingMask = ~(1 << LayerMask.NameToLayer("Character") | 1 << LayerMask.NameToLayer("Minimap"));
 
     }
 
     public void HideFailedScreen()
     {
         iTween.FadeTo(gameObject, 0, 0.2f);
-        iTween.ValueTo(gameObject, 
-                       iTween.Hash("from", color_alpha, 
-                                   "to", 0, 
-                                   "onupdate", "AnimateFailedMenu", 
+        iTween.ValueTo(gameObject,
+                       iTween.Hash("from", color_alpha,
+                                   "to", 0,
+                                   "onupdate", "AnimateFailedMenu",
                                    "easetype", iTween.EaseType.easeInQuart));
         this.enabled = false;
     }
