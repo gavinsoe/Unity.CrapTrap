@@ -1433,6 +1433,5 @@ public class CharacterPageGUI : MonoBehaviour
         return false;
     }
 
-
     #endregion
 }

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 public enum CurrencyType { Dollar, GTP, NTP };
-public enum ItemType { eq_head, eq_body, eq_legs, item_consumable, item_instant, other };
+public enum ItemType { eq_head, eq_body, eq_legs, item_consumable, item_instant, currency_pack, other };
 
 [System.Serializable]
 public class Item : System.IComparable<Item>
@@ -208,7 +208,13 @@ public class InventoryManager : MonoBehaviour
         goods = CrapTrapAssets.GetSpecificGoods(ItemType.item_instant);
         foreach (VirtualGood item in goods)
         {
+            itemsConsumable.Add(item.ItemId, ParseToItem(item, ItemType.item_instant));
             allItems.Add(item.ItemId, ParseToItem(item, ItemType.item_instant));
+        }
+
+        foreach (VirtualCurrencyPack cp in CrapTrapAssets.GetCurrencyPacksCustom())
+        {
+            itemsConsumable.Add(cp.ItemId, ParseToItem(cp, ItemType.currency_pack));
         }
 
         #endregion
@@ -258,6 +264,44 @@ public class InventoryManager : MonoBehaviour
         {
             new_item.currency = CurrencyType.Dollar;
             new_item.dollarPrice = ((PurchaseWithMarket)item.PurchaseType).MarketItem.Price;
+        }
+
+        // set the type
+        new_item.type = type;
+
+        return new_item;
+    }
+
+    Item ParseToItem(VirtualCurrencyPack cp, ItemType type)
+    {
+        // Create a new item object
+        Item new_item = new Item();
+
+        // retrieve the id, name and description
+        new_item.itemId = cp.ItemId;
+        new_item.name = cp.Name;
+        new_item.description = cp.Description;
+
+        // place the sprite of the item
+        new_item.icon = (Texture2D)Resources.Load(cp.ItemId);
+
+        // retrieve the currency type and price
+        if (cp.PurchaseType is PurchaseWithVirtualItem &&
+            ((PurchaseWithVirtualItem)cp.PurchaseType).TargetItemId == CrapTrapAssets.NORMAL_TOILET_PAPER_ID)
+        {
+            new_item.currency = CurrencyType.NTP;
+            new_item.price = ((PurchaseWithVirtualItem)cp.PurchaseType).Amount;
+        }
+        else if (cp.PurchaseType is PurchaseWithVirtualItem &&
+            ((PurchaseWithVirtualItem)cp.PurchaseType).TargetItemId == CrapTrapAssets.GOLDEN_TOILET_PAPER_ID)
+        {
+            new_item.currency = CurrencyType.GTP;
+            new_item.price = ((PurchaseWithVirtualItem)cp.PurchaseType).Amount;
+        }
+        else if (cp.PurchaseType is PurchaseWithMarket)
+        {
+            new_item.currency = CurrencyType.Dollar;
+            new_item.dollarPrice = ((PurchaseWithMarket)cp.PurchaseType).MarketItem.Price;
         }
 
         // set the type
@@ -445,7 +489,60 @@ public class InventoryManager : MonoBehaviour
 
     public void UpdateItemDictionary()
     {
-        InitializeItemDictionary();
+        #region Equipment Head
+
+        foreach (Item item in equipmentsHead.Values)
+        {
+            item.balance = StoreInventory.GetItemBalance(item.itemId);
+        }
+
+        #endregion
+        #region Equipment Body
+
+        foreach (Item item in equipmentsBody.Values)
+        {
+            item.balance = StoreInventory.GetItemBalance(item.itemId);
+        }
+
+        #endregion
+        #region Equipment Legs
+
+        foreach (Item item in equipmentsLegs.Values)
+        {
+            item.balance = StoreInventory.GetItemBalance(item.itemId);
+        }
+
+        #endregion
+        #region Items Consumable
+
+        foreach (Item item in itemsConsumable.Values)
+        {
+            if (item.type != ItemType.currency_pack)
+            {
+                item.balance = StoreInventory.GetItemBalance(item.itemId);
+            }
+        }
+
+        #endregion
+        #region other items
+
+        foreach (Item item in itemsOther.Values)
+        {
+            if (item.type != ItemType.currency_pack)
+            {
+                item.balance = StoreInventory.GetItemBalance(item.itemId);
+            }
+        }
+
+        #endregion
+
+        foreach (Item item in allItems.Values)
+        {
+            if (item.type != ItemType.currency_pack)
+            {
+                item.balance = StoreInventory.GetItemBalance(item.itemId);
+            }
+        }
     }
 
     public List<Item> GetOwnedEquipment(ItemType type)

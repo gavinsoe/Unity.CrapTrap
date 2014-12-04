@@ -500,19 +500,19 @@ public class ItemShopGUI : MonoBehaviour
                             cur_page++;
                             if (activeWindow == ItemType.eq_head)
                             {
-                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_head));
+                                TransitionItems(InventoryManager.instance.equipmentsHead.Values.ToList());
                             }
                             else if (activeWindow == ItemType.eq_body)
                             {
-                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_body));
+                                TransitionItems(InventoryManager.instance.equipmentsBody.Values.ToList());
                             }
                             else if (activeWindow == ItemType.eq_legs)
                             {
-                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_legs));
+                                TransitionItems(InventoryManager.instance.equipmentsLegs.Values.ToList());
                             }
                             else if (activeWindow == ItemType.item_consumable)
                             {
-                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.item_consumable));
+                                TransitionItems(InventoryManager.instance.itemsConsumable.Values.ToList());
                             }
                             NextPage();
                         }
@@ -522,19 +522,19 @@ public class ItemShopGUI : MonoBehaviour
                             cur_page--;
                             if (activeWindow == ItemType.eq_head)
                             {
-                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_head));
+                                TransitionItems(InventoryManager.instance.equipmentsHead.Values.ToList());
                             }
                             else if (activeWindow == ItemType.eq_body)
                             {
-                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_body));
+                                TransitionItems(InventoryManager.instance.equipmentsBody.Values.ToList());
                             }
                             else if (activeWindow == ItemType.eq_legs)
                             {
-                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_legs));
+                                TransitionItems(InventoryManager.instance.equipmentsLegs.Values.ToList());
                             }
                             else if (activeWindow == ItemType.item_consumable)
                             {
-                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.item_consumable));
+                                TransitionItems(InventoryManager.instance.itemsConsumable.Values.ToList());
                             }
                             PrevPage();
                         }
@@ -549,7 +549,7 @@ public class ItemShopGUI : MonoBehaviour
                                 activeWindow = ItemType.item_consumable;
 
                                 cur_page = 1;
-                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.item_consumable));
+                                TransitionItems(InventoryManager.instance.itemsConsumable.Values.ToList());
 
                                 ChangeCategory(false);
                             }
@@ -558,7 +558,7 @@ public class ItemShopGUI : MonoBehaviour
                                 activeWindow = ItemType.eq_head;
 
                                 cur_page = 1;
-                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_head));
+                                TransitionItems(InventoryManager.instance.equipmentsHead.Values.ToList());
 
                                 ChangeCategory(false);
                             }
@@ -567,7 +567,7 @@ public class ItemShopGUI : MonoBehaviour
                                 activeWindow = ItemType.eq_body;
 
                                 cur_page = 1;
-                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_body));
+                                TransitionItems(InventoryManager.instance.equipmentsBody.Values.ToList());
 
                                 ChangeCategory(false);
                             }
@@ -576,7 +576,7 @@ public class ItemShopGUI : MonoBehaviour
                                 activeWindow = ItemType.eq_legs;
 
                                 cur_page = 1;
-                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_legs));
+                                TransitionItems(InventoryManager.instance.equipmentsLegs.Values.ToList());
 
                                 ChangeCategory(false);
                             }
@@ -588,7 +588,7 @@ public class ItemShopGUI : MonoBehaviour
                                 activeWindow = ItemType.eq_body;
 
                                 cur_page = 1;
-                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_body));
+                                TransitionItems(InventoryManager.instance.equipmentsBody.Values.ToList());
 
                                 ChangeCategory(true);
                             }
@@ -597,7 +597,7 @@ public class ItemShopGUI : MonoBehaviour
                                 activeWindow = ItemType.eq_legs;
 
                                 cur_page = 1;
-                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_legs));
+                                TransitionItems(InventoryManager.instance.equipmentsLegs.Values.ToList());
 
                                 ChangeCategory(true);
                             }
@@ -606,7 +606,7 @@ public class ItemShopGUI : MonoBehaviour
                                 activeWindow = ItemType.item_consumable;
 
                                 cur_page = 1;
-                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.item_consumable));
+                                TransitionItems(InventoryManager.instance.itemsConsumable.Values.ToList());
 
                                 ChangeCategory(true);
                             }
@@ -615,7 +615,7 @@ public class ItemShopGUI : MonoBehaviour
                                 activeWindow = ItemType.eq_head;
 
                                 cur_page = 1;
-                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_head));
+                                TransitionItems(InventoryManager.instance.equipmentsHead.Values.ToList());
 
                                 ChangeCategory(true);
                             }
@@ -1087,6 +1087,7 @@ public class ItemShopGUI : MonoBehaviour
                     StoreInventory.BuyItem(item.itemId);
                     InventoryManager.instance.UpdateCurrency();
                     InventoryManager.instance.UpdateItemDictionary();
+                    show_popup = false;
                 }
             }
             else if (item.currency == CurrencyType.GTP)
@@ -1102,6 +1103,7 @@ public class ItemShopGUI : MonoBehaviour
                         StoreInventory.BuyItem(item.itemId);
                         InventoryManager.instance.UpdateCurrency();
                         InventoryManager.instance.UpdateItemDictionary();
+                        show_popup = false;
                     }
                 }
             }
@@ -1118,6 +1120,7 @@ public class ItemShopGUI : MonoBehaviour
                         StoreInventory.BuyItem(item.itemId);
                         InventoryManager.instance.UpdateCurrency();
                         InventoryManager.instance.UpdateItemDictionary();
+                        show_popup = false;
                     }
                 }
             }

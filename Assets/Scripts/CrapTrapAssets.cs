@@ -91,12 +91,17 @@ public class CrapTrapAssets : IStoreAssets
     public VirtualCurrencyPack[] GetCurrencyPacks()
     {
         return new VirtualCurrencyPack[] {  
-            PACK_NTP_10,
-            PACK_NTP_50,
-            PACK_NTP_100,
-            PACK_GTP_10,
-            PACK_GTP_50,
-            PACK_GTP_100
+            PACK_1_NTP,
+            PACK_2_NTP,
+            PACK_3_NTP,
+            PACK_4_NTP,
+            PACK_5_NTP,
+            PACK_1_GTP,
+            PACK_2_GTP,
+            PACK_3_GTP,
+            PACK_4_GTP,
+            PACK_5_GTP,
+            PACK_6_GTP
         };
     }
 
@@ -172,6 +177,11 @@ public class CrapTrapAssets : IStoreAssets
         else if (type == ItemType.item_instant)
         {
             return new VirtualGood[] {
+            };
+        }
+        else if (type == ItemType.other)
+        {
+            return new VirtualGood[] {
                 EMERGENCY_REVIVE_1_1,
                 EMERGENCY_REVIVE_1_2,
                 EMERGENCY_REVIVE_1_3,
@@ -180,12 +190,7 @@ public class CrapTrapAssets : IStoreAssets
                 EMERGENCY_REVIVE_2_3,
                 EMERGENCY_REVIVE_3_1,
                 EMERGENCY_REVIVE_3_2,
-                EMERGENCY_REVIVE_3_3
-            };
-        }
-        else if (type == ItemType.other)
-        {
-            return new VirtualGood[] {
+                EMERGENCY_REVIVE_3_3,
                 CONSUMABLE_PLUNGER
             };
         }
@@ -194,6 +199,23 @@ public class CrapTrapAssets : IStoreAssets
             return new VirtualGood[] {
             };
         }
+    }
+
+    public static VirtualCurrencyPack[] GetCurrencyPacksCustom()
+    {
+        return new VirtualCurrencyPack[] {  
+            PACK_1_NTP,
+            PACK_2_NTP,
+            PACK_3_NTP,
+            PACK_4_NTP,
+            PACK_5_NTP,
+            PACK_1_GTP,
+            PACK_2_GTP,
+            PACK_3_GTP,
+            PACK_4_GTP,
+            PACK_5_GTP,
+            PACK_6_GTP
+        };
     }
 
     #region Constants
@@ -366,22 +388,32 @@ public class CrapTrapAssets : IStoreAssets
     #region Instant Use Items
 
     // currency packs
-    public const string PACK_NTP_10_ID = "pack_ntp_10";
-    public const string PACK_NTP_50_ID = "pack_ntp_50";
-    public const string PACK_NTP_100_ID = "pack_ntp_100";
-    public const string PACK_GTP_10_ID = "pack_gtp_10";
-    public const string PACK_GTP_50_ID = "pack_gtp_50";
-    public const string PACK_GTP_100_ID = "pack_gtp_100";
+    public const string PACK_1_NTP_ID = "pack_1_ntp";
+    public const string PACK_2_NTP_ID = "pack_2_ntp";
+    public const string PACK_3_NTP_ID = "pack_3_ntp";
+    public const string PACK_4_NTP_ID = "pack_4_ntp";
+    public const string PACK_5_NTP_ID = "pack_5_ntp";
+    public const string PACK_1_GTP_ID = "pack_1_gtp";
+    public const string PACK_2_GTP_ID = "pack_2_gtp";
+    public const string PACK_3_GTP_ID = "pack_3_gtp";
+    public const string PACK_4_GTP_ID = "pack_4_gtp";
+    public const string PACK_5_GTP_ID = "pack_5_gtp";
+    public const string PACK_6_GTP_ID = "pack_6_gtp";
 
     // list of items that is used instantly
     public static List<string> INSTANT_USE_LIST =
         new List<string>(new string[] {
-            PACK_NTP_10_ID,
-            PACK_NTP_50_ID,
-            PACK_NTP_100_ID,
-            PACK_GTP_10_ID,
-            PACK_GTP_50_ID,
-            PACK_GTP_100_ID
+            PACK_1_NTP_ID,
+            PACK_2_NTP_ID,
+            PACK_3_NTP_ID,
+            PACK_4_NTP_ID,
+            PACK_5_NTP_ID,
+            PACK_1_GTP_ID,
+            PACK_2_GTP_ID,
+            PACK_3_GTP_ID,
+            PACK_4_GTP_ID,
+            PACK_5_GTP_ID,
+            PACK_6_GTP_ID,
     });
 
     #endregion
@@ -875,118 +907,159 @@ public class CrapTrapAssets : IStoreAssets
 
     #region Virtual Currency Packs
 
-    public static VirtualCurrencyPack PACK_NTP_10 = new VirtualCurrencyPack(
-        "Normal Toilet Paper x10",                          // name
-        "Normal Toilet Paper x10",                          // description
-        PACK_NTP_10_ID,                                     // item id
-        10,                                                 // number of currencies in pack
+    public static VirtualCurrencyPack PACK_1_NTP = new VirtualCurrencyPack(
+        "25 Normal Toilet Papers",                          // name
+        "25 Normal Toilet Papers",                          // description
+        PACK_1_NTP_ID,                                     // item id
+        25,                                                 // number of currencies in pack
         NORMAL_TOILET_PAPER_ID,                        // currency associated
         new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 1)   // the way the good is purchased
     );
-
-    public static VirtualCurrencyPack PACK_NTP_50 = new VirtualCurrencyPack(
-        "Normal Toilet Paper x50",                          // name
-        "Normal Toilet Paper x50",                          // description
-        PACK_NTP_50_ID,                                     // item id
-        50,                                                 // number of currencies in pack
+        
+    public static VirtualCurrencyPack PACK_2_NTP = new VirtualCurrencyPack(
+        "125 Normal Toilet Papers",                          // name
+        "125 Normal Toilet Papers",                          // description
+        PACK_2_NTP_ID,                                     // item id
+        125,                                                 // number of currencies in pack
         NORMAL_TOILET_PAPER_ID,                        // currency associated
         new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 5)   // the way the good is purchased
     );
-
-    public static VirtualCurrencyPack PACK_NTP_100 = new VirtualCurrencyPack(
-       "Normal Toilet Paper x100",                          // name
-       "Normal Toilet Paper x100",                          // description
-       PACK_NTP_100_ID,                                     // item id
-       100,                                                 // number of currencies in pack
-       NORMAL_TOILET_PAPER_ID,                        // currency associated
-       new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 10)   // the way the good is purchased
+    
+    public static VirtualCurrencyPack PACK_3_NTP = new VirtualCurrencyPack(
+        "625 Normal Toilet Papers",                          // name
+        "625 Normal Toilet Papers",                          // description
+        PACK_3_NTP_ID,                                     // item id
+        625,                                                 // number of currencies in pack
+        NORMAL_TOILET_PAPER_ID,                        // currency associated
+        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 25)   // the way the good is purchased
     );
 
-    public static VirtualCurrencyPack PACK_GTP_10 = new VirtualCurrencyPack(
-        "Golden Toilet Paper x10",                          // name
-        "Golden Toilet Paper x10",                          // description
-        PACK_GTP_10_ID,                                     // item id
+    public static VirtualCurrencyPack PACK_4_NTP = new VirtualCurrencyPack(
+        "1250 Normal Toilet Papers",                          // name
+        "1250 Normal Toilet Papers",                          // description
+        PACK_4_NTP_ID,                                     // item id
+        1250,                                                 // number of currencies in pack
+        NORMAL_TOILET_PAPER_ID,                        // currency associated
+        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 50)   // the way the good is purchased
+    );
+    
+    public static VirtualCurrencyPack PACK_5_NTP = new VirtualCurrencyPack(
+        "2500 Normal Toilet Papers",                          // name
+        "2500 Normal Toilet Papers",                          // description
+        PACK_5_NTP_ID,                                     // item id
+        2500,                                                 // number of currencies in pack
+        NORMAL_TOILET_PAPER_ID,                        // currency associated
+        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 100)   // the way the good is purchased
+    );
+
+    public static VirtualCurrencyPack PACK_1_GTP = new VirtualCurrencyPack(
+        "10 Golden Toilet Papers",                          // name
+        "10 Golden Toilet Papers",                          // description
+        PACK_1_GTP_ID,                                     // item id
         10,                                                 // number of currencies in pack
         GOLDEN_TOILET_PAPER_ID,                        // currency associated
-        new PurchaseWithVirtualItem(PACK_GTP_10_ID, 1)   // the way the good is purchased
+        new PurchaseWithMarket(PACK_1_GTP_ID, 1.99)   // the way the good is purchased
     );
 
-    public static VirtualCurrencyPack PACK_GTP_50 = new VirtualCurrencyPack(
-        "Golden Toilet Paper x50",                          // name
-        "Golden Toilet Paper x50",                          // description
-        PACK_GTP_50_ID,                                     // item id
-        50,                                                 // number of currencies in pack
+    public static VirtualCurrencyPack PACK_2_GTP = new VirtualCurrencyPack(
+        "20 Golden Toilet Papers",                          // name
+        "20 Golden Toilet Papers",                          // description
+        PACK_2_GTP_ID,                                     // item id
+        20,                                                 // number of currencies in pack
         GOLDEN_TOILET_PAPER_ID,                        // currency associated
-        new PurchaseWithVirtualItem(PACK_GTP_50_ID, 5)   // the way the good is purchased
+        new PurchaseWithMarket(PACK_2_GTP_ID, 3.98)   // the way the good is purchased
     );
 
-    public static VirtualCurrencyPack PACK_GTP_100 = new VirtualCurrencyPack(
-       "Golden Toilet Paper x100",                          // name
-       "Golden Toilet Paper x100",                          // description
-       PACK_GTP_100_ID,                                     // item id
-       100,                                                 // number of currencies in pack
-       GOLDEN_TOILET_PAPER_ID,                        // currency associated
-       new PurchaseWithMarket(PACK_GTP_100_ID, 10)   // the way the good is purchased
+    public static VirtualCurrencyPack PACK_3_GTP = new VirtualCurrencyPack(
+        "55 Golden Toilet Papers",                          // name
+        "55 Golden Toilet Papers",                          // description
+        PACK_3_GTP_ID,                                     // item id
+        55,                                                 // number of currencies in pack
+        GOLDEN_TOILET_PAPER_ID,                        // currency associated
+        new PurchaseWithMarket(PACK_3_GTP_ID, 9.99)   // the way the good is purchased
     );
-
+    public static VirtualCurrencyPack PACK_4_GTP = new VirtualCurrencyPack(
+        "112 Golden Toilet Papers",                          // name
+        "112 Golden Toilet Papers",                          // description
+        PACK_4_GTP_ID,                                     // item id
+        112,                                                 // number of currencies in pack
+        GOLDEN_TOILET_PAPER_ID,                        // currency associated
+        new PurchaseWithMarket(PACK_4_GTP_ID,19.99)   // the way the good is purchased
+    );
+    public static VirtualCurrencyPack PACK_5_GTP = new VirtualCurrencyPack(
+        "290 Golden Toilet Papers",                          // name
+        "290 Golden Toilet Papers",                          // description
+        PACK_5_GTP_ID,                                     // item id
+        290,                                                 // number of currencies in pack
+        GOLDEN_TOILET_PAPER_ID,                        // currency associated
+        new PurchaseWithMarket(PACK_5_GTP_ID,49.99)   // the way the good is purchased
+    );
+    public static VirtualCurrencyPack PACK_6_GTP = new VirtualCurrencyPack(
+        "600 Golden Toilet Papers",                          // name
+        "600 Golden Toilet Papers",                          // description
+        PACK_6_GTP_ID,                                     // item id
+        600,                                                 // number of currencies in pack
+        GOLDEN_TOILET_PAPER_ID,                        // currency associated
+        new PurchaseWithMarket(PACK_1_GTP_ID,99.99)   // the way the good is purchased
+    );
     #endregion
 
     #endregion
     #region Non Shop Items
 
     public static SingleUseVG EMERGENCY_REVIVE_1_1 = new SingleUseVG(
-        "[Emergency Diapers 1 (1st attempt)]",                                               // name
-        "[Emergency Diapers 1 Description]",                                   // description
+        "Emergency Diapers (Rank 1)",                                               // name
+        "Emergency Diapers (Rank 1)",                                     // description
         EMERGENCY_REVIVE_1_1_ID,                                     // item id
         new PurchaseWithMarket(EMERGENCY_REVIVE_1_1_ID, 0.99) // the way the good is purchased
     );
     public static SingleUseVG EMERGENCY_REVIVE_1_2 = new SingleUseVG(
-        "[Emergency Diapers 1 (2nd attempt)]",                                               // name
-        "[Emergency Diapers 1 Description]",                                   // description
+        "Emergency Diapers (Rank 1)",                                               // name
+        "Emergency Diapers (Rank 1)",                                  // description
         EMERGENCY_REVIVE_1_2_ID,                                     // item id
         new PurchaseWithMarket(EMERGENCY_REVIVE_1_2_ID, 1.25) // the way the good is purchased
     );
     public static SingleUseVG EMERGENCY_REVIVE_1_3 = new SingleUseVG(
-        "[Emergency Diapers 1 (3rd attempt)]",                                               // name
-        "[Emergency Diapers 1 Description]",                                   // description
+        "Emergency Diapers (Rank 1)",                                               // name
+        "Emergency Diapers (Rank 1)",                                    // description
         EMERGENCY_REVIVE_1_3_ID,                                     // item id
         new PurchaseWithMarket(EMERGENCY_REVIVE_1_3_ID, 1.5) // the way the good is purchased
     );
 
     public static SingleUseVG EMERGENCY_REVIVE_2_1 = new SingleUseVG(
-        "[Emergency Diapers 2 (1st attempt)]",                                               // name
-        "[Emergency Diapers 2 Description]",                                   // description
+        "Emergency Diapers (Rank 2)",                                               // name
+        "Emergency Diapers (Rank 2)",                                    // description
         EMERGENCY_REVIVE_2_1_ID,                                     // item id
         new PurchaseWithMarket(EMERGENCY_REVIVE_2_1_ID, 1.75) // the way the good is purchased
     );
     public static SingleUseVG EMERGENCY_REVIVE_2_2 = new SingleUseVG(
-        "[Emergency Diapers 2 (2nd attempt)]",                                               // name
-        "[Emergency Diapers 2 Description]",                                   // description
+        "Emergency Diapers (Rank 2)",                                               // name
+        "Emergency Diapers (Rank 2)",                                     // description
         EMERGENCY_REVIVE_2_2_ID,                                     // item id
         new PurchaseWithMarket(EMERGENCY_REVIVE_2_2_ID, 2.25) // the way the good is purchased
     );
     public static SingleUseVG EMERGENCY_REVIVE_2_3 = new SingleUseVG(
-        "[Emergency Diapers 2 (3rd attempt)]",                                               // name
-        "[Emergency Diapers 2 Description]",                                   // description
+        "Emergency Diapers (Rank 2)",                                               // name
+        "Emergency Diapers (Rank 2)",                                     // description
         EMERGENCY_REVIVE_2_3_ID,                                     // item id
         new PurchaseWithMarket(EMERGENCY_REVIVE_2_3_ID, 2.75) // the way the good is purchased
     );
 
     public static SingleUseVG EMERGENCY_REVIVE_3_1 = new SingleUseVG(
-        "[Emergency Diapers 3 (1st attempt)]",                                               // name
-        "[Emergency Diapers 3 Description]",                                   // description
+        "Emergency Diapers (Rank 3)",                                               // name
+        "Emergency Diapers (Rank 3)",                                   // description
         EMERGENCY_REVIVE_3_1_ID,                                     // item id
         new PurchaseWithMarket(EMERGENCY_REVIVE_3_1_ID, 3.00) // the way the good is purchased
     );
     public static SingleUseVG EMERGENCY_REVIVE_3_2 = new SingleUseVG(
-        "[Emergency Diapers 3 (2nd attempt)]",                                               // name
-        "[Emergency Diapers 3 Description]",                                   // description
+        "Emergency Diapers (Rank 3)",                                               // name
+        "Emergency Diapers (Rank 3)",                                  // description
         EMERGENCY_REVIVE_3_2_ID,                                     // item id
         new PurchaseWithMarket(EMERGENCY_REVIVE_3_2_ID, 3.75) // the way the good is purchased
     );
     public static SingleUseVG EMERGENCY_REVIVE_3_3 = new SingleUseVG(
-        "[Emergency Diapers 3 (3rd attempt)]",                                               // name
-        "[Emergency Diapers 3 Description]",                                   // description
+        "Emergency Diapers (Rank 3)",                                               // name
+        "Emergency Diapers (Rank 3)",                                     // description
         EMERGENCY_REVIVE_3_3_ID,                                     // item id
         new PurchaseWithMarket(EMERGENCY_REVIVE_3_3_ID, 4.5) // the way the good is purchased
     );
