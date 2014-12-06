@@ -413,6 +413,19 @@ public class InventoryManager : MonoBehaviour
         #endregion
     }
 
+    // Called when player fails the stage
+    public void ConsumeCharms()
+    {
+        for (int i = 0; i < equippedConsumables.Length; i++)
+        {
+            if (equippedConsumables[i].itemId == CrapTrapAssets.CONSUMABLE_LUCKY_CHARM_ID)
+            {
+                equippedConsumables[i] = new Item();
+                StoreInventory.TakeItem(CrapTrapAssets.CONSUMABLE_LUCKY_CHARM_ID, 1);
+            }
+        }
+    }
+
     public void UnequipItem(int itemSlot)
     {
         itemsConsumable[equippedConsumables[itemSlot].itemId].balance++;
@@ -689,8 +702,7 @@ public class InventoryManager : MonoBehaviour
 
         return bonusTotal;
     }
-
-
+    
     #endregion
     #region Market event handlers
 

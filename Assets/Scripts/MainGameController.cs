@@ -344,8 +344,9 @@ public class MainGameController : MonoBehaviour
         if (fell)
         {
             MainGameGUI.instance.Hide();
+            InventoryManager.instance.ConsumeCharms();
             FailedByFallingGUI.instance.StageFailed();
-
+            
             /*
             #region App42 Result Tracking
 
@@ -376,6 +377,7 @@ public class MainGameController : MonoBehaviour
             failedAttempts++;
 
             MainGameGUI.instance.Hide();
+            InventoryManager.instance.ConsumeCharms();
             FailedGUI.instance.Show();
 
             /*
