@@ -259,107 +259,112 @@ public class AchievementGUI : MonoBehaviour
         float achievementTitleYOffset;
         float achievementDescYOffset;
         Debug.Log(numOfAchievements);
-        maxPage = numOfAchievements / 10 - 1;
+        int j = 0;
         for (int i = 0; i < numOfAchievements; i++)
         {
-            Debug.Log("TEST " + i);
-            // choose which icon to output
-            iconsTexture[i] = Game.instance.achievements[i].icon;
-            Vector2 achievementTitleSize = activeSkin.customStyles[7].CalcSize(new GUIContent(Game.instance.achievements[i].title));
-            Vector2 achievementDescSize = activeSkin.customStyles[7].CalcSize(new GUIContent(Game.instance.achievements[i].ToString()));
-            achievementTitleStr[i] = Game.instance.achievements[i].title;
-            achievementDescStr[i] = Game.instance.achievements[i].ToString();
-            int test = i % 10;
-            if ((i % 10) == 0)
+            if (!Game.instance.achievements[i].hidden)
             {
-                iconYOffset = subtitleYOffset + subsize.y + screenPadding * 2;
-                iconsRect[i] = new Rect(iconXOffset1, iconYOffset, iconWidth, iconHeight);
-                achievementTitleYOffset = iconYOffset;
-                achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
-                achievementTitleRect[i] = new Rect(achievementTitleXOffset1, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
-                achievementDescRect[i] = new Rect(achievementTitleXOffset1, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
+                Debug.Log("TEST " + i);
+                // choose which icon to output
+                iconsTexture[j] = Game.instance.achievements[i].icon;
+                Vector2 achievementTitleSize = activeSkin.customStyles[7].CalcSize(new GUIContent(Game.instance.achievements[i].title));
+                Vector2 achievementDescSize = activeSkin.customStyles[7].CalcSize(new GUIContent(Game.instance.achievements[i].ToString()));
+                achievementTitleStr[j] = Game.instance.achievements[i].title;
+                achievementDescStr[j] = Game.instance.achievements[i].ToString();
+                int test = i % 10;
+                if ((j % 10) == 0)
+                {
+                    iconYOffset = subtitleYOffset + subsize.y + screenPadding * 2;
+                    iconsRect[j] = new Rect(iconXOffset1, iconYOffset, iconWidth, iconHeight);
+                    achievementTitleYOffset = iconYOffset;
+                    achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
+                    achievementTitleRect[j] = new Rect(achievementTitleXOffset1, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
+                    achievementDescRect[j] = new Rect(achievementTitleXOffset1, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
+                }
+                else if ((j % 10) == 1)
+                {
+                    iconYOffset = subtitleYOffset + subsize.y + screenPadding * 2;
+                    iconsRect[j] = new Rect(iconXOffset2, iconYOffset, iconWidth, iconHeight);
+                    achievementTitleYOffset = iconYOffset;
+                    achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
+                    achievementTitleRect[j] = new Rect(achievementTitleXOffset2, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
+                    achievementDescRect[j] = new Rect(achievementTitleXOffset2, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
+                }
+                else if ((j % 10) == 2)
+                {
+                    iconYOffset = subtitleYOffset + subsize.y + screenPadding * 2 + iconHeight + screenPadding * 2;
+                    iconsRect[j] = new Rect(iconXOffset1, iconYOffset, iconWidth, iconHeight);
+                    achievementTitleYOffset = iconYOffset;
+                    achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
+                    achievementTitleRect[j] = new Rect(achievementTitleXOffset1, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
+                    achievementDescRect[j] = new Rect(achievementTitleXOffset1, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
+                }
+                else if ((j % 10) == 3)
+                {
+                    iconYOffset = subtitleYOffset + subsize.y + screenPadding * 2 + iconHeight + screenPadding * 2;
+                    iconsRect[j] = new Rect(iconXOffset2, iconYOffset, iconWidth, iconHeight);
+                    achievementTitleYOffset = iconYOffset;
+                    achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
+                    achievementTitleRect[j] = new Rect(achievementTitleXOffset2, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
+                    achievementDescRect[j] = new Rect(achievementTitleXOffset2, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
+                }
+                else if ((j % 10) == 4)
+                {
+                    iconYOffset = subtitleYOffset + subsize.y + screenPadding * 2 + iconHeight * 2 + screenPadding * 4;
+                    iconsRect[j] = new Rect(iconXOffset1, iconYOffset, iconWidth, iconHeight);
+                    achievementTitleYOffset = iconYOffset;
+                    achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
+                    achievementTitleRect[j] = new Rect(achievementTitleXOffset1, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
+                    achievementDescRect[j] = new Rect(achievementTitleXOffset1, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
+                }
+                else if ((j % 10) == 5)
+                {
+                    iconYOffset = subtitleYOffset + subsize.y + screenPadding * 2 + iconHeight * 2 + screenPadding * 4;
+                    iconsRect[j] = new Rect(iconXOffset2, iconYOffset, iconWidth, iconHeight);
+                    achievementTitleYOffset = iconYOffset;
+                    achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
+                    achievementTitleRect[j] = new Rect(achievementTitleXOffset2, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
+                    achievementDescRect[j] = new Rect(achievementTitleXOffset2, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
+                }
+                else if ((j % 10) == 6)
+                {
+                    iconYOffset = subtitleYOffset + subsize.y + screenPadding * 2 + iconHeight * 3 + screenPadding * 6;
+                    iconsRect[j] = new Rect(iconXOffset1, iconYOffset, iconWidth, iconHeight);
+                    achievementTitleYOffset = iconYOffset;
+                    achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
+                    achievementTitleRect[j] = new Rect(achievementTitleXOffset1, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
+                    achievementDescRect[j] = new Rect(achievementTitleXOffset1, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
+                }
+                else if ((j % 10) == 7)
+                {
+                    iconYOffset = subtitleYOffset + subsize.y + screenPadding * 2 + iconHeight * 3 + screenPadding * 6;
+                    iconsRect[j] = new Rect(iconXOffset2, iconYOffset, iconWidth, iconHeight);
+                    achievementTitleYOffset = iconYOffset;
+                    achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
+                    achievementTitleRect[j] = new Rect(achievementTitleXOffset2, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
+                    achievementDescRect[j] = new Rect(achievementTitleXOffset2, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
+                }
+                else if ((j % 10) == 8)
+                {
+                    iconYOffset = subtitleYOffset + subsize.y + screenPadding * 2 + iconHeight * 4 + screenPadding * 8;
+                    iconsRect[j] = new Rect(iconXOffset1, iconYOffset, iconWidth, iconHeight);
+                    achievementTitleYOffset = iconYOffset;
+                    achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
+                    achievementTitleRect[j] = new Rect(achievementTitleXOffset1, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
+                    achievementDescRect[j] = new Rect(achievementTitleXOffset1, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
+                }
+                else if ((j % 10) == 9)
+                {
+                    iconYOffset = subtitleYOffset + subsize.y + screenPadding * 2 + iconHeight * 4 + screenPadding * 8;
+                    iconsRect[j] = new Rect(iconXOffset2, iconYOffset, iconWidth, iconHeight);
+                    achievementTitleYOffset = iconYOffset;
+                    achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
+                    achievementTitleRect[j] = new Rect(achievementTitleXOffset2, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
+                    achievementDescRect[j] = new Rect(achievementTitleXOffset2, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
+                }
+                j++;
             }
-            else if ((i % 10) == 1)
-            {
-                iconYOffset = subtitleYOffset + subsize.y + screenPadding * 2;
-                iconsRect[i] = new Rect(iconXOffset2, iconYOffset, iconWidth, iconHeight);
-                achievementTitleYOffset = iconYOffset;
-                achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
-                achievementTitleRect[i] = new Rect(achievementTitleXOffset2, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
-                achievementDescRect[i] = new Rect(achievementTitleXOffset2, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
-            }
-            else if ((i % 10) == 2)
-            {
-                iconYOffset = subtitleYOffset + subsize.y + screenPadding * 2 + iconHeight + screenPadding * 2;
-                iconsRect[i] = new Rect(iconXOffset1, iconYOffset, iconWidth, iconHeight);
-                achievementTitleYOffset = iconYOffset;
-                achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
-                achievementTitleRect[i] = new Rect(achievementTitleXOffset1, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
-                achievementDescRect[i] = new Rect(achievementTitleXOffset1, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
-            }
-            else if ((i % 10) == 3)
-            {
-                iconYOffset = subtitleYOffset + subsize.y + screenPadding * 2 + iconHeight + screenPadding * 2;
-                iconsRect[i] = new Rect(iconXOffset2, iconYOffset, iconWidth, iconHeight);
-                achievementTitleYOffset = iconYOffset;
-                achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
-                achievementTitleRect[i] = new Rect(achievementTitleXOffset2, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
-                achievementDescRect[i] = new Rect(achievementTitleXOffset2, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
-            }
-            else if ((i % 10) == 4)
-            {
-                iconYOffset = subtitleYOffset + subsize.y + screenPadding * 2 + iconHeight * 2 + screenPadding * 4;
-                iconsRect[i] = new Rect(iconXOffset1, iconYOffset, iconWidth, iconHeight);
-                achievementTitleYOffset = iconYOffset;
-                achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
-                achievementTitleRect[i] = new Rect(achievementTitleXOffset1, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
-                achievementDescRect[i] = new Rect(achievementTitleXOffset1, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
-            }
-            else if ((i % 10) == 5)
-            {
-                iconYOffset = subtitleYOffset + subsize.y + screenPadding * 2 + iconHeight * 2 + screenPadding * 4;
-                iconsRect[i] = new Rect(iconXOffset2, iconYOffset, iconWidth, iconHeight);
-                achievementTitleYOffset = iconYOffset;
-                achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
-                achievementTitleRect[i] = new Rect(achievementTitleXOffset2, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
-                achievementDescRect[i] = new Rect(achievementTitleXOffset2, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
-            }
-            else if ((i % 10) == 6)
-            {
-                iconYOffset = subtitleYOffset + subsize.y + screenPadding * 2 + iconHeight * 3 + screenPadding * 6;
-                iconsRect[i] = new Rect(iconXOffset1, iconYOffset, iconWidth, iconHeight);
-                achievementTitleYOffset = iconYOffset;
-                achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
-                achievementTitleRect[i] = new Rect(achievementTitleXOffset1, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
-                achievementDescRect[i] = new Rect(achievementTitleXOffset1, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
-            }
-            else if ((i % 10) == 7)
-            {
-                iconYOffset = subtitleYOffset + subsize.y + screenPadding * 2 + iconHeight * 3 + screenPadding * 6;
-                iconsRect[i] = new Rect(iconXOffset2, iconYOffset, iconWidth, iconHeight);
-                achievementTitleYOffset = iconYOffset;
-                achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
-                achievementTitleRect[i] = new Rect(achievementTitleXOffset2, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
-                achievementDescRect[i] = new Rect(achievementTitleXOffset2, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
-            }
-            else if ((i % 10) == 8)
-            {
-                iconYOffset = subtitleYOffset + subsize.y + screenPadding * 2 + iconHeight * 4 + screenPadding * 8;
-                iconsRect[i] = new Rect(iconXOffset1, iconYOffset, iconWidth, iconHeight);
-                achievementTitleYOffset = iconYOffset;
-                achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
-                achievementTitleRect[i] = new Rect(achievementTitleXOffset1, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
-                achievementDescRect[i] = new Rect(achievementTitleXOffset1, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
-            }
-            else if ((i % 10) == 9)
-            {
-                iconYOffset = subtitleYOffset + subsize.y + screenPadding * 2 + iconHeight * 4 + screenPadding * 8;
-                iconsRect[i] = new Rect(iconXOffset2, iconYOffset, iconWidth, iconHeight);
-                achievementTitleYOffset = iconYOffset;
-                achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
-                achievementTitleRect[i] = new Rect(achievementTitleXOffset2, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
-                achievementDescRect[i] = new Rect(achievementTitleXOffset2, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
-            }
+            maxPage = j / 10 - 1;
         }
         //*/
 
@@ -548,17 +553,17 @@ public class AchievementGUI : MonoBehaviour
             NavigationManager.instance.NavToChapterSelect();
         }
 
-        // Page Control Buttons
-        if (GUI.Button(btnPreviousRect, "", activeSkin.customStyles[6]))
+        if (page > 0)
         {
-            if (page > 0)
+            // Page Control Buttons
+            if (GUI.Button(btnPreviousRect, "", activeSkin.customStyles[6]))
             {
                 page -= 1;
             }
         }
-        if (GUI.Button(btnNextRect, "", activeSkin.customStyles[5]))
+        if (page < maxPage)
         {
-            if (page < maxPage)
+            if (GUI.Button(btnNextRect, "", activeSkin.customStyles[5]))
             {
                 page += 1;
             }

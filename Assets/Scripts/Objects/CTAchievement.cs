@@ -68,6 +68,7 @@ public class CTAchievement : System.Object
     //public string itemIdToBuy;
     public Gear gear;
     public Texture icon;
+    public bool hidden;
 
     public string ToString()
     {

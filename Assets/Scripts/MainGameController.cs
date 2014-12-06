@@ -152,6 +152,11 @@ public class MainGameController : MonoBehaviour
 
         // Adjust max time based on gear
         maxTime = maxTime * (1 + InventoryManager.instance.GetBonusTime());
+
+        if (InventoryManager.instance.setBonus == SetBonus.Explorer)
+        {
+            zoomOutLevel = 13;
+        }
     }
 
 	// Update is called once per frame
@@ -481,7 +486,14 @@ public class MainGameController : MonoBehaviour
                                    "time", 0.5));
 
         // Alter culling mask
-        camera.cullingMask = ~(1 << LayerMask.NameToLayer("Character"));
+        if (InventoryManager.instance.setBonus == SetBonus.Explorer)
+        {
+            camera.cullingMask = ~(1 << LayerMask.NameToLayer("Character"));
+        }
+        else
+        {
+            camera.cullingMask = ~(1 << LayerMask.NameToLayer("Character") | 1 << LayerMask.NameToLayer("Loot"));
+        }
     }
 
 	public void DisableTimeNMove() {
