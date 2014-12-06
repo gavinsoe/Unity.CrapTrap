@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Soomla;
+using Soomla.Store;
 
 public class FailedGUI : MonoBehaviour
 {
@@ -487,7 +489,7 @@ public class FailedGUI : MonoBehaviour
             {
                 if (goodButton(itemBtnRect, item.dollarPrice.ToString(), dollarPurchaseBtnStyle))
                 {
-                    InventoryManager.instance.PurchaseAndUseEmergencyDiapers(item.itemId);
+                    StoreInventory.BuyItem(item.itemId);
                 }
             }
 

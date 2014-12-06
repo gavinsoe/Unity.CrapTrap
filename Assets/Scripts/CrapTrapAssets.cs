@@ -399,6 +399,7 @@ public class CrapTrapAssets : IStoreAssets
     public const string PACK_4_GTP_ID = "pack_4_gtp";
     public const string PACK_5_GTP_ID = "pack_5_gtp";
     public const string PACK_6_GTP_ID = "pack_6_gtp";
+    public const string ANDROID_TEST_ID = "android.test.purchased";
 
     // list of items that is used instantly
     public static List<string> INSTANT_USE_LIST =
@@ -743,7 +744,7 @@ public class CrapTrapAssets : IStoreAssets
     public static EquippableVG EQ_LEGS_ARMY = new EquippableVG(
         EquippableVG.EquippingModel.CATEGORY,                        // equipping model
         "Military fatigues",                                          // name
-        "Camoflaged. Increases time by a small amount.",                                    // description
+        "Camouflaged. Increases time by a small amount.",                                    // description
         EQ_LEGS_ARMY_ID,                                    // item id
         new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 25) // the way the good is purchase
     );
@@ -759,7 +760,7 @@ public class CrapTrapAssets : IStoreAssets
     public static EquippableVG EQ_LEGS_COWBOY = new EquippableVG(
         EquippableVG.EquippingModel.CATEGORY,                        // equipping model
         "Cowboy chaps",                                          // name
-        "Mounted riders needs protection. Increases time by a small amount.",                                    // description
+        "Mounted riders need protection. Increases time by a small amount.",                                    // description
         EQ_LEGS_COWBOY_ID,                                    // item id
         new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 25) // the way the good is purchase
     );
@@ -791,7 +792,7 @@ public class CrapTrapAssets : IStoreAssets
     public static EquippableVG EQ_LEGS_SNEAKERS = new EquippableVG(
         EquippableVG.EquippingModel.CATEGORY,                        // equipping model
         "Sneakers",                                          // name
-        "Increases atheletic performance. Increases time by a medium amount.",                                    // description
+        "Increases athletic performance. Increases time by a medium amount.",                                    // description
         EQ_LEGS_SNEAKERS_ID,                                    // item id
         new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 35) // the way the good is purchase
     );
@@ -984,7 +985,7 @@ public class CrapTrapAssets : IStoreAssets
         PACK_4_GTP_ID,                                     // item id
         112,                                                 // number of currencies in pack
         GOLDEN_TOILET_PAPER_ID,                        // currency associated
-        new PurchaseWithMarket(PACK_4_GTP_ID,19.99)   // the way the good is purchased
+        new PurchaseWithMarket(PACK_4_GTP_ID, 19.99)   // the way the good is purchased
     );
     public static VirtualCurrencyPack PACK_5_GTP = new VirtualCurrencyPack(
         "290 Golden Toilet Papers",                          // name
@@ -992,7 +993,7 @@ public class CrapTrapAssets : IStoreAssets
         PACK_5_GTP_ID,                                     // item id
         290,                                                 // number of currencies in pack
         GOLDEN_TOILET_PAPER_ID,                        // currency associated
-        new PurchaseWithMarket(PACK_5_GTP_ID,49.99)   // the way the good is purchased
+        new PurchaseWithMarket(PACK_5_GTP_ID, 49.99)   // the way the good is purchased
     );
     public static VirtualCurrencyPack PACK_6_GTP = new VirtualCurrencyPack(
         "600 Golden Toilet Papers",                          // name
@@ -1000,7 +1001,7 @@ public class CrapTrapAssets : IStoreAssets
         PACK_6_GTP_ID,                                     // item id
         600,                                                 // number of currencies in pack
         GOLDEN_TOILET_PAPER_ID,                        // currency associated
-        new PurchaseWithMarket(PACK_1_GTP_ID,99.99)   // the way the good is purchased
+        new PurchaseWithMarket(PACK_6_GTP_ID, 99.99)   // the way the good is purchased
     );
     #endregion
 

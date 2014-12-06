@@ -675,7 +675,7 @@ public class ItemShopGUI : MonoBehaviour
         }
         else
         {
-            bubbleText = "Skelly (get it?) The souls of the dead will now help you transform that pesky block to wood.";
+            bubbleText = "";
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -1085,8 +1085,6 @@ public class ItemShopGUI : MonoBehaviour
                 if (goodButton(popupConfirmButtonRect, item.dollarPrice.ToString(), dollarPurchaseBtnStyle))
                 {
                     StoreInventory.BuyItem(item.itemId);
-                    InventoryManager.instance.UpdateCurrency();
-                    InventoryManager.instance.UpdateItemDictionary();
                     show_popup = false;
                 }
             }
@@ -1100,7 +1098,15 @@ public class ItemShopGUI : MonoBehaviour
                 {
                     if (goodButton(popupConfirmButtonRect, item.price.ToString(), gtpPurchaseBtnStyle))
                     {
-                        StoreInventory.BuyItem(item.itemId);
+                        Debug.Log("SOOMLA/UNITY Wants to buy: " + item.name);
+                        try
+                        {
+                            StoreInventory.BuyItem(item.itemId);
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.Log("SOOMLA/UNITY " + e.Message);
+                        }
                         InventoryManager.instance.UpdateCurrency();
                         InventoryManager.instance.UpdateItemDictionary();
                         show_popup = false;
@@ -1118,8 +1124,6 @@ public class ItemShopGUI : MonoBehaviour
                     if (goodButton(popupConfirmButtonRect, item.price.ToString(), ntpPurchaseBtnStyle))
                     {
                         StoreInventory.BuyItem(item.itemId);
-                        InventoryManager.instance.UpdateCurrency();
-                        InventoryManager.instance.UpdateItemDictionary();
                         show_popup = false;
                     }
                 }
@@ -1336,4 +1340,5 @@ public class ItemShopGUI : MonoBehaviour
     }
 
     #endregion
+
 }

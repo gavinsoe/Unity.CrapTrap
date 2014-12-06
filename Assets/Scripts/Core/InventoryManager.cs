@@ -86,6 +86,13 @@ public class InventoryManager : MonoBehaviour
     {
         // Initialise the shop
         SoomlaStore.Initialize(new CrapTrapAssets());
+        SoomlaStore.StartIabServiceInBg();
+        StoreEvents.OnMarketPurchase += onMarketPurchase;
+        StoreEvents.OnItemPurchased += onItemPurchased;
+        StoreEvents.OnGoodEquipped += onGoodEquipped;
+        StoreEvents.OnGoodUnEquipped += onGoodUnequipped;
+        StoreEvents.OnCurrencyBalanceChanged += onCurrencyBalanceChanged;
+
         // Initialise currency balance
         InitializeCurrencies();
         // Initialise shop items
@@ -620,6 +627,102 @@ public class InventoryManager : MonoBehaviour
     {
         ntp = ntp + amount;
         StoreInventory.GiveItem(CrapTrapAssets.NORMAL_TOILET_PAPER_ID, amount);
+    }
+
+    #endregion
+    #region Market event handlers
+
+    /// <summary>
+    /// Handles a currency balance changed event.
+    /// </summary>
+    /// <param name="virtualCurrency">Virtual currency whose balance has changed.</param>
+    /// <param name="balance">Balance of the given virtual currency.</param>
+    /// <param name="amountAdded">Amount added to the balance.</param>
+    public void onCurrencyBalanceChanged(VirtualCurrency virtualCurrency, int balance, int amountAdded)
+    {
+        UpdateCurrency();
+    }
+
+    /// <summary>
+    /// Handles a good equipped event.
+    /// </summary>
+    /// <param name="good">Equippable virtual good.</param>
+    public void onGoodEquipped(EquippableVG good)
+    {
+        UpdateItemDictionary();
+    }
+
+    /// <summary>
+    /// Handles a good unequipped event.
+    /// </summary>
+    /// <param name="good">Equippable virtual good.</param>
+    public void onGoodUnequipped(EquippableVG good)
+    {
+        UpdateItemDictionary();
+    }
+
+    /// <summary>
+    /// Handles an item purchase event.
+    /// </summary>
+    /// <param name="pvi">Purchasable virtual item.</param>
+    public void onItemPurchased(PurchasableVirtualItem pvi, string payload)
+    {
+        InventoryManager.instance.UpdateItemDictionary();
+    }
+
+    public void onMarketPurchase(PurchasableVirtualItem pvi, string payload, Dictionary<string, string> extra)
+    {
+        // pvi is the PurchasableVirtualItem that was just purchased
+        // payload is a text that you can give when you initiate the purchase operation and you want to receive back upon completion
+        // extra will contain platform specific information about the market purchase.
+        //      Android: The "extra" dictionary will contain "orderId" and "purchaseToken".
+        //      iOS: The "extra" dictionary will contain "receipt" and "token".
+
+        #region if using emergency diapers
+
+        // Diapers rank 1
+        if (pvi.ItemId == CrapTrapAssets.EMERGENCY_REVIVE_1_1_ID ||
+            pvi.ItemId == CrapTrapAssets.EMERGENCY_REVIVE_1_2_ID ||
+            pvi.ItemId == CrapTrapAssets.EMERGENCY_REVIVE_1_3_ID)
+        {
+            StoreInventory.TakeItem(pvi.ItemId, 1);
+
+            // Revives player and extends the timer by 10% of stage time (or minimum of 20 seconds)
+            var timeExtension = MainGameController.instance.maxTime * 0.1f;
+
+            // Extend timer by 10% of total stage time
+            MainGameController.instance.Revive(timeExtension);
+        }
+
+        // Diapers rank 2
+        else if (pvi.ItemId == CrapTrapAssets.EMERGENCY_REVIVE_2_1_ID ||
+                    pvi.ItemId == CrapTrapAssets.EMERGENCY_REVIVE_2_2_ID ||
+                    pvi.ItemId == CrapTrapAssets.EMERGENCY_REVIVE_2_3_ID)
+        {
+            // Revives player and extends the timer by 30% of stage time (or minimum of 50 seconds)
+            var timeExtension = MainGameController.instance.maxTime * 0.3f;
+
+            // Extend timer by 30% of total stage time
+            MainGameController.instance.Revive(timeExtension);
+        }
+
+        // Diapers rank 2
+        else if (pvi.ItemId == CrapTrapAssets.EMERGENCY_REVIVE_3_1_ID ||
+                    pvi.ItemId == CrapTrapAssets.EMERGENCY_REVIVE_3_2_ID ||
+                    pvi.ItemId == CrapTrapAssets.EMERGENCY_REVIVE_3_3_ID)
+        {
+            // Revives player and extends the timer by 50% of stage time (or minimum of 90 seconds)
+            var timeExtension = MainGameController.instance.maxTime * 0.5f;
+
+            // Extend timer by 50% of total stage time
+            MainGameController.instance.Revive(timeExtension);
+        }
+
+        #endregion
+        
+        // ... your game specific implementation here ...
+        UpdateCurrency();
+        UpdateItemDictionary();
     }
 
     #endregion
