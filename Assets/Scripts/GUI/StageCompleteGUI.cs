@@ -2,6 +2,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using GooglePlayGames;
+using UnityEngine.SocialPlatforms;
 
 public class StageCompleteGUI : MonoBehaviour 
 {
@@ -29,6 +31,7 @@ public class StageCompleteGUI : MonoBehaviour
      * Custom Styles [18] = Capsule Top
      * Custom Styles [19] = Capsule Bot
      * Custom Styles [20] = Capsule Shine
+     * Custom Styles [21] = Next Button (Disabled)
      */
     public GUISkin activeSkin;
     private int screen = 0;
@@ -260,6 +263,11 @@ public class StageCompleteGUI : MonoBehaviour
     private float navButtonHeight;
     private float navButtonSpacingScale = -0.09f;
 
+    private GUIStyle retryBtnStyle;
+    private GUIStyle homeBtnStyle;
+    private GUIStyle nextBtnStyle;
+    private GUIStyle nextBtnDisabledStyle;
+
     private Rect retryBtnRect;
     private Rect homeBtnRect;
     private Rect nextBtnRect;
@@ -470,9 +478,14 @@ public class StageCompleteGUI : MonoBehaviour
         #endregion
         #region Navigation
 
+        retryBtnStyle = new GUIStyle(activeSkin.customStyles[7]);
+        homeBtnStyle = new GUIStyle(activeSkin.customStyles[8]);
+        nextBtnStyle = new GUIStyle(activeSkin.customStyles[9]);
+        nextBtnDisabledStyle = new GUIStyle(activeSkin.customStyles[21]);
+
         navButtonHeight = menuRect.height * navButtonScale;
-        navButtonWidth = navButtonHeight * ((float)activeSkin.customStyles[7].normal.background.width /
-                                            (float)activeSkin.customStyles[7].normal.background.height);
+        navButtonWidth = navButtonHeight * ((float)retryBtnStyle.normal.background.width /
+                                            (float)retryBtnStyle.normal.background.height);
         float navButtonSpacing = navButtonWidth * navButtonSpacingScale;
 
         float navWidth = navButtonWidth * 3 + navButtonSpacing * 2;
@@ -681,23 +694,32 @@ public class StageCompleteGUI : MonoBehaviour
 
     void Navigation()
     {
-
         var color = GUI.color; // save previous color
         GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, navAlpha);
 
         GUI.BeginGroup(navContainerRect);
         {
-            if (GUI.Button(retryBtnRect, "", activeSkin.customStyles[7]))
+            if (GUI.Button(retryBtnRect, "", retryBtnStyle))
             {
                 NavigationManager.instance.RetryLevel();
             }
-            if (GUI.Button(homeBtnRect, "", activeSkin.customStyles[8]))
+            if (GUI.Button(homeBtnRect, "", homeBtnStyle))
             {
                 NavigationManager.instance.NavToChapterSelect();
             }
-            if (GUI.Button(nextBtnRect, "", activeSkin.customStyles[9]))
+
+            // Only enable if the next stage is a normal stage
+            if (NavigationManager.instance.chapter < 7 &&
+                NavigationManager.instance.stage < 9)
             {
-                NavigationManager.instance.NextStage();
+                if (GUI.Button(nextBtnRect, "", nextBtnStyle))
+                {
+                    NavigationManager.instance.NextStage();
+                }
+            }
+            else
+            {
+                GUI.Button(nextBtnRect, "", nextBtnDisabledStyle);
             }
         }
         GUI.EndGroup();
@@ -822,6 +844,16 @@ public class StageCompleteGUI : MonoBehaviour
         if (screen == 2)
         {
             OpenCapsules();
+        }
+        if (screen == 3)
+        {
+            // If stars = 3, post to leaderboard
+            if (objCompleteCount == 3)
+            {
+                Social.ReportScore((long)MainGameController.instance.timeElapsed,
+                    NavigationManager.instance.getLeaderboardID(), (bool success) => { });
+                Social.ShowLeaderboardUI();
+            }
         }
     }
     void AnimateNavAlpha(float alpha)
