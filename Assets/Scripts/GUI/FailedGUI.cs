@@ -493,12 +493,14 @@ public class FailedGUI : MonoBehaviour
                 }
             }
 
+            /*
             if (item.type != ItemType.item_consumable &&
                 item.type != ItemType.item_instant &&
                 item.balance == 1)
             {
                 GUI.DrawTexture(itemInnerContainerRect, soldOutTexture, ScaleMode.ScaleToFit);
             }
+            */
         }
         else
         {
