@@ -606,44 +606,14 @@ public class CharacterPageGUI : MonoBehaviour
                             cur_page < max_page && !inTransition)
                         {
                             cur_page++;
-                            if (activeWindow == ItemType.eq_head)
-                            {
-                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_head));
-                            }
-                            else if (activeWindow == ItemType.eq_body)
-                            {
-                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_body));
-                            }
-                            else if (activeWindow == ItemType.eq_legs)
-                            {
-                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_legs));
-                            }
-                            else if (activeWindow == ItemType.item_consumable)
-                            {
-                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.item_consumable));
-                            }
+                            InventoryManager.instance.GetOwnedEquipment(activeWindow);
                             NextPage();
                         }
                         else if (deltaPosition.x > minDragDistance &&
                                  cur_page > 1 && !inTransition)
                         {
                             cur_page--;
-                            if (activeWindow == ItemType.eq_head)
-                            {
-                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_head));
-                            }
-                            else if (activeWindow == ItemType.eq_body)
-                            {
-                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_body));
-                            }
-                            else if (activeWindow == ItemType.eq_legs)
-                            {
-                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_legs));
-                            }
-                            else if (activeWindow == ItemType.item_consumable)
-                            {
-                                TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.item_consumable));
-                            }
+                            InventoryManager.instance.GetOwnedEquipment(activeWindow);
                             PrevPage();
                         }
                     }
@@ -1025,22 +995,8 @@ public class CharacterPageGUI : MonoBehaviour
             if (goodButton(arrowPrevRect, "", arrowPrevStyle))
             {
                 cur_page--;
-                if (activeWindow == ItemType.eq_head)
-                {
-                    TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_head));
-                }
-                else if (activeWindow == ItemType.eq_body)
-                {
-                    TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_body));
-                }
-                else if (activeWindow == ItemType.eq_legs)
-                {
-                    TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_legs));
-                }
-                else if (activeWindow == ItemType.item_consumable)
-                {
-                    TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.item_consumable));
-                }
+
+                InventoryManager.instance.GetOwnedEquipment(activeWindow);
 
                 if (!inTransition) PrevPage();
             }
@@ -1050,22 +1006,8 @@ public class CharacterPageGUI : MonoBehaviour
             if (goodButton(arrowNextRect, "", arrowNextStyle))
             {
                 cur_page++;
-                if (activeWindow == ItemType.eq_head)
-                {
-                    TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_head));
-                }
-                else if (activeWindow == ItemType.eq_body)
-                {
-                    TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_body));
-                }
-                else if (activeWindow == ItemType.eq_legs)
-                {
-                    TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.eq_legs));
-                }
-                else if (activeWindow == ItemType.item_consumable)
-                {
-                    TransitionItems(InventoryManager.instance.GetOwnedEquipment(ItemType.item_consumable));
-                }
+
+                InventoryManager.instance.GetOwnedEquipment(activeWindow);
 
                 if (!inTransition) NextPage();
             }
@@ -1251,6 +1193,7 @@ public class CharacterPageGUI : MonoBehaviour
             {
                 InventoryManager.instance.EquipItem(item);
                 show_popup = false;
+                RefreshItems();
                 selected_item = 0;
             }
         }
@@ -1320,6 +1263,26 @@ public class CharacterPageGUI : MonoBehaviour
             else
             {
                 transitionItems[i] = new Item();
+            }
+        }
+    }
+
+    void RefreshItems()
+    {
+        int offset = 9 * (cur_page - 1);
+
+        List<Item> items = InventoryManager.instance.GetOwnedEquipment(activeWindow);
+        int numberOfItems = items.Count;
+
+        for (int i = 0; i < slotItems.Length; i++)
+        {
+            if ((i + offset) < numberOfItems)
+            {
+                slotItems[i] = items.ElementAt(i + offset);
+            }
+            else
+            {
+                slotItems[i] = new Item();
             }
         }
     }

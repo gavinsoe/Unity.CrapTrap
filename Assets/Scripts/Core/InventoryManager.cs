@@ -409,61 +409,6 @@ public class InventoryManager : MonoBehaviour
         #endregion
     }
 
-    public void PurchaseAndUseEmergencyDiapers(string item_id)
-    {
-        #region Diapers
-
-        // Diapers rank 1
-        if (item_id == CrapTrapAssets.EMERGENCY_REVIVE_1_1_ID ||
-            item_id == CrapTrapAssets.EMERGENCY_REVIVE_1_2_ID ||
-            item_id == CrapTrapAssets.EMERGENCY_REVIVE_1_3_ID)
-        {
-            // Purchase the diaper
-            StoreInventory.BuyItem(item_id);
-            // Consume the item
-            StoreInventory.TakeItem(item_id, 1);
-
-            // Revives player and extends the timer by 10% of stage time (or minimum of 20 seconds)
-            var timeExtension = MainGameController.instance.maxTime * 0.1f;
-
-            // Extend timer by 10% of total stage time
-            MainGameController.instance.Revive(timeExtension);
-        }
-
-        // Diapers rank 2
-        else if (item_id == CrapTrapAssets.EMERGENCY_REVIVE_2_1_ID ||
-                 item_id == CrapTrapAssets.EMERGENCY_REVIVE_2_2_ID ||
-                 item_id == CrapTrapAssets.EMERGENCY_REVIVE_2_3_ID)
-        {
-            // Purchase the diaper
-            StoreInventory.BuyItem(item_id);
-
-            // Revives player and extends the timer by 30% of stage time (or minimum of 50 seconds)
-            var timeExtension = MainGameController.instance.maxTime * 0.3f;
-
-            // Extend timer by 30% of total stage time
-            MainGameController.instance.Revive(timeExtension);
-        }
-
-        // Diapers rank 2
-        else if (item_id == CrapTrapAssets.EMERGENCY_REVIVE_3_1_ID ||
-                 item_id == CrapTrapAssets.EMERGENCY_REVIVE_3_2_ID ||
-                 item_id == CrapTrapAssets.EMERGENCY_REVIVE_3_3_ID)
-        {
-            // Purchase the diaper
-            StoreInventory.BuyItem(item_id);
-
-            // Revives player and extends the timer by 50% of stage time (or minimum of 90 seconds)
-            var timeExtension = MainGameController.instance.maxTime * 0.5f;
-
-            // Extend timer by 50% of total stage time
-            MainGameController.instance.Revive(timeExtension);
-        }
-
-        #endregion
-
-    }
-
     public void UnequipItem(int itemSlot)
     {
         itemsConsumable[equippedConsumables[itemSlot].itemId].balance++;

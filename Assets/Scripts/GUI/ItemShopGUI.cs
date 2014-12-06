@@ -994,58 +994,61 @@ public class ItemShopGUI : MonoBehaviour
             {
                 GUI.DrawTexture(itemIconRect, tempIcon);
             }
-            
-            if (goodButton(itemBgRect, "",activeSkin.button) && !show_popup)
-            {
-                if (selected_item == index)
-                {
-                    selected_item = 0;
-                    HideBubble();
-                }
-                else
-                {
-                    selected_item = index;
-                    ShowBubble();
-                }
-            }
-            if (selected_item == index && selected_item != 0 && !show_popup)
-            {
-                GUI.DrawTexture(itemIconRect, highlightTexture);
-            }
 
-            if (item.currency == CurrencyType.Dollar)
-            {
-                if (goodButton(itemBtnRect, item.dollarPrice.ToString(), dollarPurchaseBtnStyle) && !show_popup)
-                {
-                    selected_item = index;
-                    show_popup = true;
-                    ShowBubble();
-                }
-            }
-            else if (item.currency == CurrencyType.GTP)
-            {
-                if (goodButton(itemBtnRect, item.price.ToString(), gtpPurchaseBtnStyle) && !show_popup)
-                {
-                    selected_item = index;
-                    show_popup = true;
-                    ShowBubble();
-                }
-            }
-            else if (item.currency == CurrencyType.NTP)
-            {
-                if (goodButton(itemBtnRect, item.price.ToString(), ntpPurchaseBtnStyle) && !show_popup)
-                {
-                    selected_item = index;
-                    show_popup = true;
-                    ShowBubble();
-                }
-            }
 
             if (item.type != ItemType.item_consumable &&
                 item.type != ItemType.item_instant &&
                 item.balance == 1)
             {
                 GUI.DrawTexture(itemBgRect, soldOutTexture, ScaleMode.ScaleToFit);
+            }
+            else
+            {
+                if (goodButton(itemBgRect, "",activeSkin.button) && !show_popup)
+                {
+                    if (selected_item == index)
+                    {
+                        selected_item = 0;
+                        HideBubble();
+                    }
+                    else
+                    {
+                        selected_item = index;
+                        ShowBubble();
+                    }
+                }
+                if (selected_item == index && selected_item != 0 && !show_popup)
+                {
+                    GUI.DrawTexture(itemIconRect, highlightTexture);
+                }
+
+                if (item.currency == CurrencyType.Dollar)
+                {
+                    if (goodButton(itemBtnRect, item.dollarPrice.ToString(), dollarPurchaseBtnStyle) && !show_popup)
+                    {
+                        selected_item = index;
+                        show_popup = true;
+                        ShowBubble();
+                    }
+                }
+                else if (item.currency == CurrencyType.GTP)
+                {
+                    if (goodButton(itemBtnRect, item.price.ToString(), gtpPurchaseBtnStyle) && !show_popup)
+                    {
+                        selected_item = index;
+                        show_popup = true;
+                        ShowBubble();
+                    }
+                }
+                else if (item.currency == CurrencyType.NTP)
+                {
+                    if (goodButton(itemBtnRect, item.price.ToString(), ntpPurchaseBtnStyle) && !show_popup)
+                    {
+                        selected_item = index;
+                        show_popup = true;
+                        ShowBubble();
+                    }
+                }
             }
         }
     }
