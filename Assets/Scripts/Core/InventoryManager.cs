@@ -7,6 +7,7 @@ using System.Linq;
 
 public enum CurrencyType { Dollar, GTP, NTP };
 public enum ItemType { eq_head, eq_body, eq_legs, item_consumable, item_instant, currency_pack, other };
+public enum SetBonus { None, Explorer, Pirate, Tribal }
 
 [System.Serializable]
 public class Item : System.IComparable<Item>
@@ -63,6 +64,9 @@ public class InventoryManager : MonoBehaviour
     public Item equippedHead = new Item();
     public Item equippedBody = new Item();
     public Item equippedLegs = new Item();
+
+    // Active equipment set bonus
+    public SetBonus setBonus;
 
     // Variables that store items inside the bag (number of bag slots retrieved from database)
     public Item[] equippedConsumables;
@@ -497,6 +501,32 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    public void UpdateSetBonus()
+    {
+        if (equippedHead.itemId == CrapTrapAssets.EQ_HEAD_SET_EXPLORER_ID &&
+            equippedBody.itemId == CrapTrapAssets.EQ_BODY_SET_EXPLORER_ID &&
+            equippedLegs.itemId == CrapTrapAssets.EQ_LEGS_SET_EXPLORER_ID)
+        {
+            setBonus = SetBonus.Explorer;
+        }
+        else if (equippedHead.itemId == CrapTrapAssets.EQ_HEAD_SET_PIRATE_ID &&
+                 equippedBody.itemId == CrapTrapAssets.EQ_BODY_SET_PIRATE_ID &&
+                 equippedLegs.itemId == CrapTrapAssets.EQ_LEGS_SET_PIRATE_ID)
+        {
+            setBonus = SetBonus.Pirate;
+        }
+        else if (equippedHead.itemId == CrapTrapAssets.EQ_HEAD_SET_TRIBAL_ID &&
+                 equippedBody.itemId == CrapTrapAssets.EQ_BODY_SET_TRIBAL_ID &&
+                 equippedLegs.itemId == CrapTrapAssets.EQ_LEGS_SET_TRIBAL_ID)
+        {
+            setBonus = SetBonus.Tribal;
+        }
+        else
+        {
+            setBonus = SetBonus.None;
+        }
+    }
+
     public List<Item> GetOwnedEquipment(ItemType type)
     {
         if (type == ItemType.eq_head)
@@ -586,13 +616,13 @@ public class InventoryManager : MonoBehaviour
             equippedHead.itemId == CrapTrapAssets.EQ_HEAD_PAPERBAG_ID)
         {
             // 2% bonus time
-            bonusTotal += 2;
+            bonusTotal += 0.02f;
         }
         else if (equippedHead.itemId == CrapTrapAssets.EQ_HEAD_NEKOMIMI_ID ||
                  equippedHead.itemId == CrapTrapAssets.EQ_HEAD_SHARK_ID)
         {
             // 3% bonus time
-            bonusTotal += 3;
+            bonusTotal += 0.03f;
         }
         else if (equippedHead.itemId == CrapTrapAssets.EQ_HEAD_SET_EXPLORER_ID ||
                  equippedHead.itemId == CrapTrapAssets.EQ_HEAD_SET_PIRATE_ID ||
@@ -600,7 +630,7 @@ public class InventoryManager : MonoBehaviour
                  equippedHead.itemId == CrapTrapAssets.EQ_HEAD_SET_DIVER_ID)
         {
             // 5% bonus time
-            bonusTotal += 5;
+            bonusTotal += 0.05f;
         }
 
         #endregion
@@ -611,14 +641,14 @@ public class InventoryManager : MonoBehaviour
             equippedHead.itemId == CrapTrapAssets.EQ_BODY_TATTOO_ID)
         {
             // 2% bonus time
-            bonusTotal += 2;
+            bonusTotal += 0.02f;
         }
         else if (equippedHead.itemId == CrapTrapAssets.EQ_BODY_BARREL_ID ||
                  equippedHead.itemId == CrapTrapAssets.EQ_BODY_KARATEGI_ID ||
                  equippedHead.itemId == CrapTrapAssets.EQ_BODY_LABCOAT_KRIEGER_ID)
         {
             // 3% bonus time
-            bonusTotal += 3;
+            bonusTotal += 0.03f;
         }
         else if (equippedHead.itemId == CrapTrapAssets.EQ_BODY_SET_EXPLORER_ID ||
                  equippedHead.itemId == CrapTrapAssets.EQ_BODY_SET_PIRATE_ID ||
@@ -626,7 +656,7 @@ public class InventoryManager : MonoBehaviour
                  equippedHead.itemId == CrapTrapAssets.EQ_BODY_SET_DIVER_ID)
         {
             // 5% bonus time
-            bonusTotal += 5;
+            bonusTotal += 0.05f;
         }
 
         #endregion
@@ -637,14 +667,14 @@ public class InventoryManager : MonoBehaviour
             equippedHead.itemId == CrapTrapAssets.EQ_LEGS_SUIT_ID)
         {
             // 2% bonus time
-            bonusTotal += 2;
+            bonusTotal += 0.02f;
         }
         else if (equippedHead.itemId == CrapTrapAssets.EQ_LEGS_SNEAKERS_ID ||
                  equippedHead.itemId == CrapTrapAssets.EQ_LEGS_HERMES_ID ||
                  equippedHead.itemId == CrapTrapAssets.EQ_LEGS_BALLET_ID)
         {
             // 3% bonus time
-            bonusTotal += 3;
+            bonusTotal += 0.03f;
         }
         else if (equippedHead.itemId == CrapTrapAssets.EQ_LEGS_SET_EXPLORER_ID ||
                  equippedHead.itemId == CrapTrapAssets.EQ_LEGS_SET_PIRATE_ID ||
@@ -652,13 +682,14 @@ public class InventoryManager : MonoBehaviour
                  equippedHead.itemId == CrapTrapAssets.EQ_LEGS_SET_DIVER_ID)
         {
             // 5% bonus time
-            bonusTotal += 5;
+            bonusTotal += 0.05f;
         }
 
         #endregion
 
         return bonusTotal;
     }
+
 
     #endregion
     #region Market event handlers
@@ -681,6 +712,7 @@ public class InventoryManager : MonoBehaviour
     public void onGoodEquipped(EquippableVG good)
     {
         UpdateItemDictionary();
+        UpdateSetBonus();
     }
 
     /// <summary>
@@ -690,6 +722,7 @@ public class InventoryManager : MonoBehaviour
     public void onGoodUnequipped(EquippableVG good)
     {
         UpdateItemDictionary();
+        UpdateSetBonus();
     }
 
     /// <summary>
