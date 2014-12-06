@@ -574,6 +574,92 @@ public class InventoryManager : MonoBehaviour
         StoreInventory.GiveItem(CrapTrapAssets.NORMAL_TOILET_PAPER_ID, amount);
     }
 
+    // Get amount of bonus time based on equipment
+    public float GetBonusTime()
+    {
+        float bonusTotal = 0;
+
+        #region headgear bonus
+
+        if (equippedHead.itemId == CrapTrapAssets.EQ_HEAD_APPLE_ARROW_ID ||
+            equippedHead.itemId == CrapTrapAssets.EQ_HEAD_HELMET_BLUE_ID ||
+            equippedHead.itemId == CrapTrapAssets.EQ_HEAD_PAPERBAG_ID)
+        {
+            // 2% bonus time
+            bonusTotal += 2;
+        }
+        else if (equippedHead.itemId == CrapTrapAssets.EQ_HEAD_NEKOMIMI_ID ||
+                 equippedHead.itemId == CrapTrapAssets.EQ_HEAD_SHARK_ID)
+        {
+            // 3% bonus time
+            bonusTotal += 3;
+        }
+        else if (equippedHead.itemId == CrapTrapAssets.EQ_HEAD_SET_EXPLORER_ID ||
+                 equippedHead.itemId == CrapTrapAssets.EQ_HEAD_SET_PIRATE_ID ||
+                 equippedHead.itemId == CrapTrapAssets.EQ_HEAD_SET_TRIBAL_ID ||
+                 equippedHead.itemId == CrapTrapAssets.EQ_HEAD_SET_DIVER_ID)
+        {
+            // 5% bonus time
+            bonusTotal += 5;
+        }
+
+        #endregion
+        #region body gear bonus
+
+        if (equippedHead.itemId == CrapTrapAssets.EQ_BODY_BOXING_GLOVES_ID ||
+            equippedHead.itemId == CrapTrapAssets.EQ_BODY_SUIT_ID ||
+            equippedHead.itemId == CrapTrapAssets.EQ_BODY_TATTOO_ID)
+        {
+            // 2% bonus time
+            bonusTotal += 2;
+        }
+        else if (equippedHead.itemId == CrapTrapAssets.EQ_BODY_BARREL_ID ||
+                 equippedHead.itemId == CrapTrapAssets.EQ_BODY_KARATEGI_ID ||
+                 equippedHead.itemId == CrapTrapAssets.EQ_BODY_LABCOAT_KRIEGER_ID)
+        {
+            // 3% bonus time
+            bonusTotal += 3;
+        }
+        else if (equippedHead.itemId == CrapTrapAssets.EQ_BODY_SET_EXPLORER_ID ||
+                 equippedHead.itemId == CrapTrapAssets.EQ_BODY_SET_PIRATE_ID ||
+                 equippedHead.itemId == CrapTrapAssets.EQ_BODY_SET_TRIBAL_ID ||
+                 equippedHead.itemId == CrapTrapAssets.EQ_BODY_SET_DIVER_ID)
+        {
+            // 5% bonus time
+            bonusTotal += 5;
+        }
+
+        #endregion
+        #region legs gear bonus
+
+        if (equippedHead.itemId == CrapTrapAssets.EQ_LEGS_ARMY_ID ||
+            equippedHead.itemId == CrapTrapAssets.EQ_LEGS_COWBOY_ID ||
+            equippedHead.itemId == CrapTrapAssets.EQ_LEGS_SUIT_ID)
+        {
+            // 2% bonus time
+            bonusTotal += 2;
+        }
+        else if (equippedHead.itemId == CrapTrapAssets.EQ_LEGS_SNEAKERS_ID ||
+                 equippedHead.itemId == CrapTrapAssets.EQ_LEGS_HERMES_ID ||
+                 equippedHead.itemId == CrapTrapAssets.EQ_LEGS_BALLET_ID)
+        {
+            // 3% bonus time
+            bonusTotal += 3;
+        }
+        else if (equippedHead.itemId == CrapTrapAssets.EQ_LEGS_SET_EXPLORER_ID ||
+                 equippedHead.itemId == CrapTrapAssets.EQ_LEGS_SET_PIRATE_ID ||
+                 equippedHead.itemId == CrapTrapAssets.EQ_LEGS_SET_TRIBAL_ID ||
+                 equippedHead.itemId == CrapTrapAssets.EQ_LEGS_SET_DIVER_ID)
+        {
+            // 5% bonus time
+            bonusTotal += 5;
+        }
+
+        #endregion
+
+        return bonusTotal;
+    }
+
     #endregion
     #region Market event handlers
 

@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Soomla;
+using Soomla.Store;
 
 public class NavigationManager : MonoBehaviour {
     public static NavigationManager instance;
@@ -23,6 +25,15 @@ public class NavigationManager : MonoBehaviour {
 
     public void RetryLevel()
     {
+        // Redirect to stage select if ran out of plungers
+        if (StoreInventory.GetItemBalance(CrapTrapAssets.CONSUMABLE_PLUNGER_ID) <= 0)
+        {
+            if (stage >= 7)
+            {
+                Application.LoadLevel("GUI_ChapterStageSelect_" + (chapter - 6).ToString());
+            }
+        }
+        
         // Restart level
         Application.LoadLevel(Application.loadedLevel);
     }

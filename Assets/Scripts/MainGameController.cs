@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using Soomla;
+using Soomla.Store;
 using System.Collections;
 using System.Net;
 using System.Xml;
@@ -139,6 +141,18 @@ public class MainGameController : MonoBehaviour
 
         #endregion   
 	}
+
+    void Start()
+    {
+        // Consume a plunger if it is a challenge stage
+        if (NavigationManager.instance.chapter >= 7)
+        {
+            StoreInventory.TakeItem(CrapTrapAssets.CONSUMABLE_PLUNGER_ID, 1);
+        }
+
+        // Adjust max time based on gear
+        maxTime = maxTime * (1 + InventoryManager.instance.GetBonusTime());
+    }
 
 	// Update is called once per frame
     void Update()
