@@ -743,6 +743,63 @@ public class InventoryManager : MonoBehaviour
     /// <param name="pvi">Purchasable virtual item.</param>
     public void onItemPurchased(PurchasableVirtualItem pvi, string payload)
     {
+        #region checking of packs
+        if (pvi.ItemId == CrapTrapAssets.CONSUMABLE_CHARCOAL_1_10PACK_ID)
+        {
+            Game.instance.stats[Stat.itemsBought] += 10;
+        }
+        else if (pvi.ItemId == CrapTrapAssets.CONSUMABLE_CHARCOAL_1_5PACK_ID)
+        {
+            Game.instance.stats[Stat.itemsBought] += 5;
+        }
+        else if (pvi.ItemId == CrapTrapAssets.CONSUMABLE_CHARCOAL_2_10PACK_ID)
+        {
+            Game.instance.stats[Stat.itemsBought] += 10;
+        }
+        else if (pvi.ItemId == CrapTrapAssets.CONSUMABLE_CHARCOAL_2_5PACK_ID)
+        {
+            Game.instance.stats[Stat.itemsBought] += 5;
+        }
+        else if (pvi.ItemId == CrapTrapAssets.CONSUMABLE_CHARCOAL_3_10PACK_ID)
+        {
+            Game.instance.stats[Stat.itemsBought] += 10;
+        }
+        else if (pvi.ItemId == CrapTrapAssets.CONSUMABLE_CHARCOAL_3_5PACK_ID)
+        {
+            Game.instance.stats[Stat.itemsBought] += 5;
+        }
+        else if (pvi.ItemId == CrapTrapAssets.PACK_1_NTP_ID)
+        {
+            Game.instance.stats[Stat.itemsBought] += 25;
+        }
+        else if (pvi.ItemId == CrapTrapAssets.PACK_2_NTP_ID)
+        {
+            Game.instance.stats[Stat.itemsBought] += 50;
+        }
+        else if (pvi.ItemId == CrapTrapAssets.PACK_3_NTP_ID)
+        {
+            Game.instance.stats[Stat.itemsBought] += 125;
+        }
+        else if (pvi.ItemId == CrapTrapAssets.PACK_4_NTP_ID)
+        {
+            Game.instance.stats[Stat.itemsBought] += 250;
+        }
+        else if (pvi.ItemId == CrapTrapAssets.PACK_5_NTP_ID)
+        {
+            Game.instance.stats[Stat.itemsBought] += 625;
+        }
+        else
+        {
+            Game.instance.stats[Stat.itemsBought] += 1;
+        }
+        #endregion
+
+        if (pvi.PurchaseType is PurchaseWithVirtualItem &&
+           ((PurchaseWithVirtualItem)pvi.PurchaseType).TargetItemId == CrapTrapAssets.GOLDEN_TOILET_PAPER_ID)
+        {
+            Game.instance.stats[Stat.itemsBoughtUsingGTP] += 1;
+        }
+
         InventoryManager.instance.UpdateItemDictionary();
     }
 
@@ -795,8 +852,43 @@ public class InventoryManager : MonoBehaviour
         }
 
         #endregion
-        
+
         // ... your game specific implementation here ...
+
+        #region if buying gtp
+        // If buying GTP
+        if (pvi.ItemId == CrapTrapAssets.PACK_1_GTP_ID)
+        {
+            Game.instance.stats[Stat.gtpBought] += 10;
+            Game.instance.stats[Stat.itemsBought] += 10;
+        }
+        else if (pvi.ItemId == CrapTrapAssets.PACK_2_GTP_ID)
+        {
+            Game.instance.stats[Stat.gtpBought] += 20;
+            Game.instance.stats[Stat.itemsBought] += 20;
+        }
+        else if (pvi.ItemId == CrapTrapAssets.PACK_3_GTP_ID)
+        {
+            Game.instance.stats[Stat.gtpBought] += 55;
+            Game.instance.stats[Stat.itemsBought] += 55;
+        }
+        else if (pvi.ItemId == CrapTrapAssets.PACK_4_GTP_ID)
+        {
+            Game.instance.stats[Stat.gtpBought] += 112;
+            Game.instance.stats[Stat.itemsBought] += 112;
+        }
+        else if (pvi.ItemId == CrapTrapAssets.PACK_5_GTP_ID)
+        {
+            Game.instance.stats[Stat.gtpBought] += 290;
+            Game.instance.stats[Stat.itemsBought] += 290;
+        }
+        else if (pvi.ItemId == CrapTrapAssets.PACK_6_GTP_ID)
+        {
+            Game.instance.stats[Stat.gtpBought] += 600;
+            Game.instance.stats[Stat.itemsBought] += 600;
+        }
+        #endregion
+
         UpdateCurrency();
         UpdateItemDictionary();
     }

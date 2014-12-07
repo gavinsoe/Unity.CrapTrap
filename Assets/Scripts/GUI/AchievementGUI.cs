@@ -341,7 +341,7 @@ public class AchievementGUI : MonoBehaviour
 
                 j++;
             }
-            maxPage = j / 10 - 1;
+            maxPage = j / 10;
         }
 
         // Buttons
