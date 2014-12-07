@@ -51,6 +51,8 @@ public class InventoryManager : MonoBehaviour
     public Texture ntpTexture;
     public int gtp;
     public Texture gtpTexture;
+    public int plunger;
+    public Texture plungerTexture;
 
     // Items cache
     public Dictionary<string, Item> allItems = new Dictionary<string, Item>();
@@ -454,6 +456,7 @@ public class InventoryManager : MonoBehaviour
     {
         ntp = StoreInventory.GetItemBalance(CrapTrapAssets.NORMAL_TOILET_PAPER_ID);
         gtp = StoreInventory.GetItemBalance(CrapTrapAssets.GOLDEN_TOILET_PAPER_ID);
+        plunger = StoreInventory.GetItemBalance(CrapTrapAssets.CONSUMABLE_PLUNGER_ID);
     }
 
     public void UpdateItemDictionary()
@@ -587,6 +590,12 @@ public class InventoryManager : MonoBehaviour
             gtp = gtp + loot.quantity;
             StoreInventory.GiveItem(CrapTrapAssets.GOLDEN_TOILET_PAPER_ID, loot.quantity);
             return gtpTexture;
+        }
+        else if (loot.itemID == CrapTrapAssets.CONSUMABLE_PLUNGER_ID)
+        {
+            plunger = plunger + loot.quantity;
+            StoreInventory.GiveItem(CrapTrapAssets.CONSUMABLE_PLUNGER_ID, loot.quantity);
+            return plungerTexture;
         }
         else if (loot.itemType == ItemType.eq_head)
         {

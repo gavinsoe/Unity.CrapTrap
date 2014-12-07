@@ -1,6 +1,8 @@
 fileFormatVersion: 2
 guid: e49ceab52176946ae910a8dee63ae1e4
 TextureImporter:
+  fileIDToRecycleName:
+    21300000: skeleton_leg_upper_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -35,6 +37,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 500
   alphaIsTransparency: 1
   textureType: 8
@@ -54,5 +57,6 @@ TextureImporter:
         height: 70
       alignment: 9
       pivot: {x: .490383834, y: .873105705}
+      border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 

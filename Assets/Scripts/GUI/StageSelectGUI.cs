@@ -5,7 +5,7 @@ using System.IO;
 public class StageSelectGUI : MonoBehaviour {
 
     /* GUI Skin
-     * Custom Styles [0] = Energy
+     * Custom Styles [0] = Capsule
      * Custom Styles [1] = Back Button
      * Custom Styles [2] = Sound Button
      * Custom Styles [3] = Background Normal
@@ -88,7 +88,7 @@ public class StageSelectGUI : MonoBehaviour {
 
     // Challenge Toggle Button
     private bool wasChallenge = false;
-    private bool isChallenge = false;
+    public bool isChallenge = false;
     private Rect challengeBtnRect;
     private GUIStyle challengeBtnStyle;
     private ButtonHandler challengeBtnHandler;
@@ -99,12 +99,12 @@ public class StageSelectGUI : MonoBehaviour {
     // Energy
     private Rect energyRect;
     private GUIStyle energyStyle;
-    private float energyScale = 0.1f;
-    private float energyFontScale = 0.3f;
-    private float energyXOffset = 0.01f; // Offset from the right
-    private float energyYOffset = 0.01f; // Offset from the top
-    private float energyLabelXOffset = 0.62f;
-    private float energyLabelYOffset = 0.06f;
+    private float energyScale = 0.2f;
+    private float energyFontScale = 0.31f;
+    private float energyXOffset = 0f; // Offset from the right
+    private float energyYOffset = 0f; // Offset from the top
+    private float energyLabelXOffset = -0.12f;
+    private float energyLabelYOffset = 0.03f;
     
     #endregion
     #region main content
@@ -593,7 +593,10 @@ public class StageSelectGUI : MonoBehaviour {
         bool unlocked = false;
         if (isChallengeStage)
         {
-            unlocked = Game.instance.challengeLevelsUnlocked[chapterNumber-1][stage_num];
+            if (InventoryManager.instance.plunger > 0)
+            {
+                unlocked = Game.instance.challengeLevelsUnlocked[chapterNumber - 1][stage_num];
+            }
         }
         else
         {
@@ -767,9 +770,6 @@ public class StageSelectGUI : MonoBehaviour {
             ToggleChallenge(isChallenge);
             wasChallenge = isChallenge;
         }
-
-        // Energy Box
-        //GUI.Label(energyRect, "99", energyStyle);
         
     }
     void NormalStageFrame()
@@ -843,6 +843,9 @@ public class StageSelectGUI : MonoBehaviour {
                 GUI.EndGroup();
             }
             GUI.EndGroup();
+
+            // Capsules
+            GUI.Label(energyRect, InventoryManager.instance.plunger.ToString(), energyStyle);
         }
         GUI.EndGroup();
     }
