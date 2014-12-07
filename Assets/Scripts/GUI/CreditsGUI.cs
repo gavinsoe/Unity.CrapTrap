@@ -115,7 +115,7 @@ public class CreditsGUI : MonoBehaviour {
         GUI.DrawTexture(bgRect, bgTexture, ScaleMode.ScaleAndCrop);
 
         // Splat
-        GUI.DrawTexture(splatRect, splatTexture, ScaleMode.ScaleAndCrop);
+        //GUI.DrawTexture(splatRect, splatTexture, ScaleMode.ScaleAndCrop);
 
         // Container
         GUILayout.BeginArea(containerRect);
@@ -143,8 +143,8 @@ public class CreditsGUI : MonoBehaviour {
                     GUILayout.BeginHorizontal();
                     {
                         GUILayout.FlexibleSpace();
-                        GUILayout.Label(@"Gavin Soebiantoro ",labelBold);
-                        GUILayout.Label(@"- Programmer",labelNormal);
+                        GUILayout.Label(@"Gavin Soebiantoro ", labelBold);
+                        GUILayout.Label(@"- GG!!!", labelNormal);
                         GUILayout.FlexibleSpace();
                     }
                     GUILayout.EndHorizontal();
@@ -152,7 +152,7 @@ public class CreditsGUI : MonoBehaviour {
                     {
                         GUILayout.FlexibleSpace();
                         GUILayout.Label(@"Bayoe Otto ", labelBold);
-                        GUILayout.Label(@"- Programmer/part time composer", labelNormal);
+                        GUILayout.Label(@"- Shapeshifter", labelNormal);
                         GUILayout.FlexibleSpace();
                     }
                     GUILayout.EndHorizontal();
@@ -160,7 +160,7 @@ public class CreditsGUI : MonoBehaviour {
                     {
                         GUILayout.FlexibleSpace();
                         GUILayout.Label(@"Andrew Chen ", labelBold);
-                        GUILayout.Label(@"- Writer", labelNormal);
+                        GUILayout.Label(@"- RNG God", labelNormal);
                         GUILayout.FlexibleSpace();
                     }
                     GUILayout.EndHorizontal();
@@ -168,7 +168,7 @@ public class CreditsGUI : MonoBehaviour {
                     {
                         GUILayout.FlexibleSpace();
                         GUILayout.Label(@"Amelia Chandra ", labelBold);
-                        GUILayout.Label(@"- Graphic Artist",labelNormal);
+                        GUILayout.Label(@"- Bug Magnet", labelNormal);
                         GUILayout.FlexibleSpace();
                     }
                     GUILayout.EndHorizontal();
@@ -176,7 +176,14 @@ public class CreditsGUI : MonoBehaviour {
                     GUILayout.BeginHorizontal();
                     {
                         GUILayout.FlexibleSpace();
-                        GUILayout.Label(@"special thanks to",labelHeader);
+                        GUILayout.Label(@"special thanks to", labelHeader);
+                        GUILayout.FlexibleSpace();
+                    }
+                    GUILayout.EndHorizontal();
+                    GUILayout.BeginHorizontal();
+                    {
+                        GUILayout.FlexibleSpace();
+                        GUILayout.Label(@"Duria Otto", labelBold);
                         GUILayout.FlexibleSpace();
                     }
                     GUILayout.EndHorizontal();

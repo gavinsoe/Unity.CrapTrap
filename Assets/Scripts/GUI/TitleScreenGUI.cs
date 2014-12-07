@@ -63,7 +63,7 @@ public class TitleScreenGUI : MonoBehaviour {
     // Version
     private Rect versionRect;
     private float versionFontScale = 0.04f;
-    private string version = "v0.0.0.1";
+    private string version = "v1.0.0";
 
     // Loading
     private Rect loadingRect;
@@ -125,12 +125,17 @@ public class TitleScreenGUI : MonoBehaviour {
         btnStartRect = new Rect((Screen.width - btnStartWidth) * 0.5f, Screen.height * btnStartYOffset, btnStartWidth, btnStartHeight);
 
         // Facebook and twitter
+        btnTwitterRect = new Rect(Screen.width - btnHeight - screenPadding,
+                                  Screen.height - btnHeight - screenPadding,
+                                  btnHeight, btnHeight);
+        /*
         btnFacebookRect = new Rect(Screen.width - btnHeight - screenPadding,
                                    Screen.height - btnHeight - screenPadding,
                                    btnHeight, btnHeight);
         btnTwitterRect = new Rect(Screen.width - btnHeight - screenPadding,
                                   Screen.height - btnHeight - screenPadding - btnFacebookRect.height,
                                   btnHeight, btnHeight);
+         * */
 
         // Initialise button scalers
         btnCreditsScale = new ButtonHandler(btnCreditsRect, gameObject, 0.9f, "Credits_ScaleButton");
@@ -224,6 +229,7 @@ public class TitleScreenGUI : MonoBehaviour {
         if (GUI.Button(btnCreditsRect, "credits"))
         {
             // Redirect to credits page
+            NavigationManager.instance.NavToCredits();
         }
         
         // start button

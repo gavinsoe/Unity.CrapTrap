@@ -68,6 +68,12 @@ public class NavigationManager : MonoBehaviour {
         Application.LoadLevel("GUI_ChapterSelect");
     }
 
+    public void NavToCredits()
+    {
+        // Navigate to credits
+        Application.LoadLevel("GUI_Credits");
+    }
+
     public void NextStage()
     {
         // Loads the next stage (or screen)
