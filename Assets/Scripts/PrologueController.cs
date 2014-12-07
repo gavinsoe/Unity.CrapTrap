@@ -140,6 +140,15 @@ public class PrologueController : MonoBehaviour {
    
     void OnGUI()
     {
+
+#if UNITY_ANDROID
+        // Disable user input for GUI when impressions are visible
+        // This is only necessary on Android if we have disabled impression activities
+        //   by having called CBBinding.init(ID, SIG, false), as that allows touch
+        //   events to leak through Chartboost impressions
+        GUI.enabled = !Chartboost.isImpressionVisible();
+#endif
+
         GUI.depth = 15;
         foreach (Frame frame in frames)
         {

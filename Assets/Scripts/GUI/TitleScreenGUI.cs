@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using ChartboostSDK;
 
 public class TitleScreenGUI : MonoBehaviour {
 
@@ -63,7 +64,7 @@ public class TitleScreenGUI : MonoBehaviour {
     // Version
     private Rect versionRect;
     private float versionFontScale = 0.04f;
-    private string version = "v1.0.0";
+    private string version = "v1.0.1";
 
     // Loading
     private Rect loadingRect;
@@ -104,7 +105,9 @@ public class TitleScreenGUI : MonoBehaviour {
         float btnSoundWidth = btnHeight * ((float)activeSkin.customStyles[2].normal.background.width /
                                            (float)activeSkin.customStyles[2].normal.background.height);
 
-        btnCreditsRect = new Rect(Screen.width - btnSettingsWidth - screenPadding, screenPadding, btnSettingsWidth, btnHeight);
+        btnCreditsRect = new Rect(Screen.width - btnSettingsWidth - screenPadding, 
+                                  Screen.height - screenPadding - btnHeight, 
+                                  btnSettingsWidth, btnHeight);
         btnSoundRect = new Rect(Screen.width - btnSoundWidth - screenPadding, btnHeight + screenPadding, btnSoundWidth, btnHeight);
 
         // Button font auto scaling
@@ -125,7 +128,7 @@ public class TitleScreenGUI : MonoBehaviour {
         btnStartRect = new Rect((Screen.width - btnStartWidth) * 0.5f, Screen.height * btnStartYOffset, btnStartWidth, btnStartHeight);
 
         // Facebook and twitter
-        btnTwitterRect = new Rect(Screen.width - btnHeight - screenPadding,
+        btnTwitterRect = new Rect(screenPadding,
                                   Screen.height - btnHeight - screenPadding,
                                   btnHeight, btnHeight);
         /*
@@ -153,8 +156,8 @@ public class TitleScreenGUI : MonoBehaviour {
 
         // Version
         activeSkin.label.fontSize = (int)(Screen.height * versionFontScale);
-        versionRect = new Rect(4 * screenPadding,
-                               Screen.height - activeSkin.label.fontSize - screenPadding * 2,
+        versionRect = new Rect(Screen.width - 4 * screenPadding - Screen.width * 0.4f,
+                               screenPadding * 2,
                                Screen.width * 0.4f,
                                activeSkin.label.fontSize);
 
@@ -192,6 +195,15 @@ public class TitleScreenGUI : MonoBehaviour {
 
     void OnGUI()
     {
+
+#if UNITY_ANDROID
+        // Disable user input for GUI when impressions are visible
+        // This is only necessary on Android if we have disabled impression activities
+        //   by having called CBBinding.init(ID, SIG, false), as that allows touch
+        //   events to leak through Chartboost impressions
+        GUI.enabled = !Chartboost.isImpressionVisible();
+#endif
+
         // Sets the GUI depth
         GUI.depth = 10;
 
