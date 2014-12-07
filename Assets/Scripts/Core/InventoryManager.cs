@@ -743,6 +743,7 @@ public class InventoryManager : MonoBehaviour
     /// <param name="pvi">Purchasable virtual item.</param>
     public void onItemPurchased(PurchasableVirtualItem pvi, string payload)
     {
+        #region checking of packs
         if (pvi.ItemId == CrapTrapAssets.CONSUMABLE_CHARCOAL_1_10PACK_ID)
         {
             Game.instance.stats[Stat.itemsBought] += 10;
@@ -790,6 +791,13 @@ public class InventoryManager : MonoBehaviour
         else
         {
             Game.instance.stats[Stat.itemsBought] += 1;
+        }
+        #endregion
+
+        if (pvi.PurchaseType is PurchaseWithVirtualItem &&
+           ((PurchaseWithVirtualItem)pvi.PurchaseType).TargetItemId == CrapTrapAssets.GOLDEN_TOILET_PAPER_ID)
+        {
+            Game.instance.stats[Stat.itemsBoughtUsingGTP] += 1;
         }
 
         InventoryManager.instance.UpdateItemDictionary();
