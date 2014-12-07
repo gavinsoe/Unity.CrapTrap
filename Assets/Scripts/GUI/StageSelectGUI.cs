@@ -824,7 +824,7 @@ public class StageSelectGUI : MonoBehaviour {
                 GUI.Label(challengeHeaderRect, "Chapter " + chapterNumber, challengeHeaderStyle);
 
                 // Stfuu
-                GUI.Label(challengeLabelRect, "PREPARE YOUR \nANUS!", challengeLabelStyle);
+                GUI.Label(challengeLabelRect, "LET THE FARTING \nBEGIN!", challengeLabelStyle);
 
                 // Stage buttons
                 GUI.BeginGroup(stagesContainerRect);

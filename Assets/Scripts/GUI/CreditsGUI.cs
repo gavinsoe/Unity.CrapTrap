@@ -194,10 +194,10 @@ public class CreditsGUI : MonoBehaviour {
             Application.LoadLevel("GUI_TitleScreen");
 
         }
-        if (GUI.Button(btnWebRect, "", activeSkin.customStyles[6]))
+        /*if (GUI.Button(btnWebRect, "", activeSkin.customStyles[6]))
         {
             Application.OpenURL("http://articonnect.com/");
-        }
+        }*/
         btnBackScale.OnMouseOver(btnBackRect);
         btnWebScale.OnMouseOver(btnWebRect);
     }

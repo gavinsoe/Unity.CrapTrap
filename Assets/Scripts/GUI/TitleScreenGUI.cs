@@ -236,13 +236,15 @@ public class TitleScreenGUI : MonoBehaviour {
         // twitter button
         if (GUI.Button(btnTwitterRect, "", activeSkin.customStyles[6]))
         {
+            Application.OpenURL("https://twitter.com/articint");
         }
 
         // facebook button
+        /*
         if (GUI.Button(btnFacebookRect, "", activeSkin.customStyles[7]))
         {
         }
-
+*/
         btnCreditsScale.OnMouseOver(btnCreditsRect);
         btnSoundScale.OnMouseOver(btnSoundRect);
         btnStartScale.OnMouseOver(btnStartRect);
