@@ -96,7 +96,6 @@ public class AchievementGUI : MonoBehaviour
     private string subtitle = "Are you game enough?";
 
     // Achievements
-    ///*
     private Rect[] achievementTitleRect;
     private Rect[] achievementDescRect;
     private Rect[] iconsRect;
@@ -107,30 +106,8 @@ public class AchievementGUI : MonoBehaviour
     private float achievementDFontScale = 0.025f;
     private string[] achievementTitleStr;
     private string[] achievementDescStr;
-     //*/
-
-    /*
-    private Rect achievementTitleRect;
-    private Rect achievementTitleRect1;
-    private Rect achievementTitleRect2;
-    private Rect achievementTitleRect3;
-    private Rect achievementTitleRect4;
-    private Rect achievementDescRect;
-    private Rect achievementDescRect1;
-    private Rect achievementDescRect2;
-    private Rect achievementDescRect3;
-    private Rect achievementDescRect4;
-    private Rect iconsRect;
-    private Rect iconsRect1;
-    private Rect iconsRect2;
-    private Rect iconsRect3;
-    private Rect iconsRect4;
-    private GUIStyle achievementTitleStyle;
-    private GUIStyle achievementDescStyle;
-    private float achievementFontScale = 0.032f;
-    private string achievementTitleStr = "The Brown Knight";
-    private string achievementDesctStr = "Complete 140 different stages";
-    */
+    private Rect[] capsulesRect;
+    private Texture[] capsulesTexture;
 
     // Decoration
     private Rect rightDecorRect;
@@ -192,50 +169,6 @@ public class AchievementGUI : MonoBehaviour
         subtitleRect = new Rect(subtitleXOffset, subtitleYOffset, subsize.x, subsize.y);
 
         // Achievements
-        /*
-
-        achievementTitleStyle = activeSkin.customStyles[7];
-        achievementDescStyle = activeSkin.customStyles[8];
-        achievementTitleStyle.fontSize = (int)(Screen.height * achievementFontScale);
-        achievementDescStyle.fontSize = (int)(Screen.height * achievementFontScale);
-        Vector2 achTSize = activeSkin.customStyles[7].CalcSize(new GUIContent(achievementTitleStr));
-        Vector2 achDSize = activeSkin.customStyles[8].CalcSize(new GUIContent(achievementDesctStr));
-        float iconHeight = achTSize.y + achDSize.y;
-        float iconWidth = iconHeight * ((float)iconText.width / (float)iconText.height);
-        float iconXOffset = frameXOffset + iconWidth * 2;
-        float iconXOffset1 = Screen.width * 0.5f + screenPadding;
-        float iconYOffset = subtitleYOffset + subsize.y + screenPadding * 2;
-        float iconYOffset1 = subtitleYOffset + subsize.y + screenPadding * 2 + iconHeight + screenPadding * 2;
-        float iconYOffset2 = subtitleYOffset + subsize.y + screenPadding * 2 + iconHeight * 2 + screenPadding * 4;
-        float iconYOffset3 = subtitleYOffset + subsize.y + screenPadding * 2 + iconHeight * 3 + screenPadding * 6;
-        float iconYOffset4 = subtitleYOffset + subsize.y + screenPadding * 2 + iconHeight * 4 + screenPadding * 8;
-        iconsRect = new Rect(iconXOffset, iconYOffset, iconWidth, iconHeight);
-        iconsRect1 = new Rect(iconXOffset, iconYOffset1, iconWidth, iconHeight);
-        iconsRect2 = new Rect(iconXOffset, iconYOffset2, iconWidth, iconHeight);
-        iconsRect3 = new Rect(iconXOffset, iconYOffset3, iconWidth, iconHeight);
-        iconsRect4 = new Rect(iconXOffset1, iconYOffset, iconWidth, iconHeight);
-        float achTXOffset = iconXOffset + iconWidth + screenPadding;
-        float achTXOffset1 = iconXOffset1 + iconWidth + screenPadding;
-        float achTYOffset = iconYOffset;
-        float achDYOffset = achTYOffset + achTSize.y;
-        float achDYOffset1 = iconYOffset1 + achTSize.y;
-        float achDYOffset2 = iconYOffset2 + achTSize.y;
-        float achDYOffset3 = iconYOffset3 + achTSize.y;
-        float achDYOffset4 = iconYOffset4 + achTSize.y;
-        achievementTitleRect = new Rect(achTXOffset, iconYOffset, achTSize.x, achTSize.y);
-        achievementTitleRect1 = new Rect(achTXOffset, iconYOffset1, achTSize.x, achTSize.y);
-        achievementTitleRect2 = new Rect(achTXOffset, iconYOffset2, achTSize.x, achTSize.y);
-        achievementTitleRect3 = new Rect(achTXOffset, iconYOffset3, achTSize.x, achTSize.y);
-        achievementTitleRect4 = new Rect(achTXOffset1, iconYOffset, achTSize.x, achTSize.y);
-        achievementDescRect = new Rect(achTXOffset, achDYOffset, achDSize.x, achDSize.y);
-        achievementDescRect1 = new Rect(achTXOffset, achDYOffset1, achDSize.x, achDSize.y);
-        achievementDescRect2 = new Rect(achTXOffset, achDYOffset2, achDSize.x, achDSize.y);
-        achievementDescRect3 = new Rect(achTXOffset, achDYOffset3, achDSize.x, achDSize.y);
-        achievementDescRect4 = new Rect(achTXOffset1, achDYOffset, achDSize.x, achDSize.y);
-
-        */
-
-        ///*
         achievementTitleStyle = activeSkin.customStyles[7];
         achievementDescStyle = activeSkin.customStyles[8];
         achievementTitleStyle.fontSize = (int)(Screen.height * achievementFontScale);
@@ -247,9 +180,10 @@ public class AchievementGUI : MonoBehaviour
         achievementDescStr = new string[numOfAchievements];
         iconsTexture = new Texture[numOfAchievements];
         iconsRect = new Rect[numOfAchievements];
+        capsulesRect = new Rect[numOfAchievements];
+        capsulesTexture = new Texture[numOfAchievements];
         float achievementTitleHeight = activeSkin.customStyles[7].CalcSize(new GUIContent(Game.instance.achievements[0].title)).y;
         float iconHeight =  achievementTitleHeight * 2;
-        //float iconWidth = iconHeight * ((float)iconsTexture[0].width / (float)iconsTexture[0].height);
         float iconWidth = iconHeight * ((float)iconText.width / (float)iconText.height);
         float iconXOffset1 = frameXOffset + iconWidth * 2;
         float iconXOffset2 = Screen.width * 0.5f + screenPadding;
@@ -258,13 +192,15 @@ public class AchievementGUI : MonoBehaviour
         float achievementTitleXOffset2 = iconXOffset2 + iconWidth + screenPadding;
         float achievementTitleYOffset;
         float achievementDescYOffset;
-        Debug.Log(numOfAchievements);
+        float capsuleHeight = iconHeight;
+        float capsuleWidth = capsuleHeight * ((float)activeSkin.customStyles[9].normal.background.width / (float)activeSkin.customStyles[9].normal.background.height);
+        float capsuleXOffset = 0f;
+        float capsuleYOffset = 0f;
         int j = 0;
         for (int i = 0; i < numOfAchievements; i++)
         {
             if (!Game.instance.achievements[i].hidden)
             {
-                Debug.Log("TEST " + i);
                 // choose which icon to output
                 iconsTexture[j] = Game.instance.achievements[i].icon;
                 Vector2 achievementTitleSize = activeSkin.customStyles[7].CalcSize(new GUIContent(Game.instance.achievements[i].title));
@@ -280,6 +216,8 @@ public class AchievementGUI : MonoBehaviour
                     achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
                     achievementTitleRect[j] = new Rect(achievementTitleXOffset1, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
                     achievementDescRect[j] = new Rect(achievementTitleXOffset1, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
+                    capsuleXOffset = achievementTitleXOffset1 + achievementTitleSize.x;
+                    capsuleYOffset = iconYOffset - achievementTitleSize.y;
                 }
                 else if ((j % 10) == 1)
                 {
@@ -289,6 +227,8 @@ public class AchievementGUI : MonoBehaviour
                     achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
                     achievementTitleRect[j] = new Rect(achievementTitleXOffset2, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
                     achievementDescRect[j] = new Rect(achievementTitleXOffset2, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
+                    capsuleXOffset = achievementTitleXOffset2 + achievementTitleSize.x;
+                    capsuleYOffset = iconYOffset - achievementTitleSize.y;                
                 }
                 else if ((j % 10) == 2)
                 {
@@ -298,6 +238,8 @@ public class AchievementGUI : MonoBehaviour
                     achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
                     achievementTitleRect[j] = new Rect(achievementTitleXOffset1, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
                     achievementDescRect[j] = new Rect(achievementTitleXOffset1, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
+                    capsuleXOffset = achievementTitleXOffset1 + achievementTitleSize.x;
+                    capsuleYOffset = iconYOffset - achievementTitleSize.y;
                 }
                 else if ((j % 10) == 3)
                 {
@@ -307,6 +249,8 @@ public class AchievementGUI : MonoBehaviour
                     achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
                     achievementTitleRect[j] = new Rect(achievementTitleXOffset2, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
                     achievementDescRect[j] = new Rect(achievementTitleXOffset2, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
+                    capsuleXOffset = achievementTitleXOffset2 + achievementTitleSize.x;
+                    capsuleYOffset = iconYOffset - achievementTitleSize.y;
                 }
                 else if ((j % 10) == 4)
                 {
@@ -316,6 +260,8 @@ public class AchievementGUI : MonoBehaviour
                     achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
                     achievementTitleRect[j] = new Rect(achievementTitleXOffset1, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
                     achievementDescRect[j] = new Rect(achievementTitleXOffset1, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
+                    capsuleXOffset = achievementTitleXOffset1 + achievementTitleSize.x;
+                    capsuleYOffset = iconYOffset - achievementTitleSize.y;
                 }
                 else if ((j % 10) == 5)
                 {
@@ -325,6 +271,8 @@ public class AchievementGUI : MonoBehaviour
                     achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
                     achievementTitleRect[j] = new Rect(achievementTitleXOffset2, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
                     achievementDescRect[j] = new Rect(achievementTitleXOffset2, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
+                    capsuleXOffset = achievementTitleXOffset2 + achievementTitleSize.x;
+                    capsuleYOffset = iconYOffset - achievementTitleSize.y;
                 }
                 else if ((j % 10) == 6)
                 {
@@ -334,6 +282,8 @@ public class AchievementGUI : MonoBehaviour
                     achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
                     achievementTitleRect[j] = new Rect(achievementTitleXOffset1, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
                     achievementDescRect[j] = new Rect(achievementTitleXOffset1, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
+                    capsuleXOffset = achievementTitleXOffset1 + achievementTitleSize.x;
+                    capsuleYOffset = iconYOffset - achievementTitleSize.y;
                 }
                 else if ((j % 10) == 7)
                 {
@@ -343,6 +293,8 @@ public class AchievementGUI : MonoBehaviour
                     achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
                     achievementTitleRect[j] = new Rect(achievementTitleXOffset2, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
                     achievementDescRect[j] = new Rect(achievementTitleXOffset2, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
+                    capsuleXOffset = achievementTitleXOffset2 + achievementTitleSize.x;
+                    capsuleYOffset = iconYOffset - achievementTitleSize.y;
                 }
                 else if ((j % 10) == 8)
                 {
@@ -352,6 +304,8 @@ public class AchievementGUI : MonoBehaviour
                     achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
                     achievementTitleRect[j] = new Rect(achievementTitleXOffset1, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
                     achievementDescRect[j] = new Rect(achievementTitleXOffset1, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
+                    capsuleXOffset = achievementTitleXOffset1 + achievementTitleSize.x;
+                    capsuleYOffset = iconYOffset - achievementTitleSize.y;
                 }
                 else if ((j % 10) == 9)
                 {
@@ -361,110 +315,34 @@ public class AchievementGUI : MonoBehaviour
                     achievementDescYOffset = achievementTitleYOffset + achievementTitleHeight;
                     achievementTitleRect[j] = new Rect(achievementTitleXOffset2, achievementTitleYOffset, achievementTitleSize.x, achievementTitleSize.y);
                     achievementDescRect[j] = new Rect(achievementTitleXOffset2, achievementDescYOffset, achievementDescSize.x, achievementDescSize.y);
+                    capsuleXOffset = achievementTitleXOffset2 + achievementTitleSize.x;
+                    capsuleYOffset = iconYOffset - achievementTitleSize.y;
                 }
+
+                if (Game.instance.achievements[i].capsuleColor == Rarity.common)
+                {
+                    capsulesTexture[j] = activeSkin.customStyles[9].normal.background;
+                    capsulesRect[j] = new Rect(capsuleXOffset, capsuleYOffset, capsuleWidth, capsuleHeight);
+                }
+                else if (Game.instance.achievements[i].capsuleColor == Rarity.rare)
+                {
+                    capsulesTexture[j] = activeSkin.customStyles[10].normal.background;
+                    capsulesRect[j] = new Rect(capsuleXOffset, capsuleYOffset, capsuleWidth, capsuleHeight);
+                }
+                else if (Game.instance.achievements[i].capsuleColor == Rarity.challenge)
+                {
+                    capsulesTexture[j] = activeSkin.customStyles[11].normal.background;
+                    capsulesRect[j] = new Rect(capsuleXOffset, capsuleYOffset, capsuleWidth, capsuleHeight);
+                }
+                else
+                {
+                    capsulesTexture[j] = null;
+                }
+
                 j++;
             }
             maxPage = j / 10 - 1;
         }
-        //*/
-
-        /*
-
-        // Banner
-        bannerTexture = activeSkin.customStyles[0].normal.background;
-        float bannerHeight = Screen.height * 0.76f;
-        float bannerWidth = bannerHeight * ((float)bannerTexture.width / (float)bannerTexture.height);
-        float bannerXOffset = (Screen.width - bannerWidth) * 0.5f;
-        float bannerYOffset = -bannerHeight * 0.3f;
-        bannerRect = new Rect(bannerXOffset, bannerYOffset, bannerWidth, bannerHeight);
-
-        // Achievement Paper
-        paperTexture = activeSkin.customStyles[2].normal.background;
-        float paperHeight = Screen.height * 0.79f;
-        float paperWidth = paperHeight * ((float)paperTexture.width / (float)paperTexture.height);
-        float paperXOffset = (Screen.width - paperWidth) * 0.5f;
-        float paperYOffset = paperHeight * 0.25f;
-        paperRect = new Rect(paperXOffset, paperYOffset, paperWidth, paperHeight);
-
-        // Title
-        titleStyle = activeSkin.customStyles[10];
-        titleStyle.fontSize = (int)(Screen.height * titleFontScale);
-        Vector2 size = activeSkin.customStyles[10].CalcSize(new GUIContent(title));
-        float titleXOffset = paperXOffset + paperWidth * 0.51f - size.x * 0.5f;
-        float titleYOffset = paperYOffset + paperHeight * 0.11f;
-        titleRect = new Rect(titleXOffset, titleYOffset, size.x, size.y);
-
-        // Reward
-        rewardStyle = activeSkin.customStyles[11];
-        rewardStyle.fontSize = (int)(Screen.height * rewardFontScale);
-        Vector2 rewardSize = activeSkin.customStyles[11].CalcSize(new GUIContent(achievementController.rewardAmount[0]));
-        rewardTexture = achievementController.rewards[0];
-        float rewardHeight = rewardSize.y;
-        float rewardWidth = rewardHeight * ((float)rewardTexture.width / (float)rewardTexture.height);
-        float rewardXOffset1 = paperXOffset + paperWidth * 0.51f - rewardWidth - screenPadding;
-        float rewardXOffset2 = paperXOffset + paperWidth * 0.51f + screenPadding;
-        float rewardYOffset = titleYOffset + screenPadding + size.y;
-        rewardRect = new Rect(rewardXOffset1, rewardYOffset, rewardWidth, rewardHeight);
-        rewardNumberRect = new Rect(rewardXOffset2, rewardYOffset, rewardSize.x, rewardSize.y);
-        rewardNumber = achievementController.rewardAmount[0];
-
-        // Decoration
-        decorTexture = activeSkin.customStyles[5].normal.background;
-        float decorHeight = size.y * 0.7f;
-        float decorWidth = decorHeight * ((float)decorTexture.width / (float)decorTexture.height);
-        float leftDecorXOffset = titleXOffset - screenPadding;
-        float rightDecorXOffset = titleXOffset + size.x + screenPadding;
-        float decorYOffset = titleYOffset + size.y * 0.15f;
-        leftDecorRect = new Rect(leftDecorXOffset, decorYOffset, -decorWidth, decorHeight);
-        rightDecorRect = new Rect(rightDecorXOffset, decorYOffset, decorWidth, decorHeight);
-
-        // Tick Boxes
-        tickBoxTexture = activeSkin.customStyles[3].normal.background;
-        float tickBoxWidth = paperWidth * 0.07f;
-        float tickBoxHeight = tickBoxWidth * ((float)tickBoxTexture.height / (float)tickBoxTexture.width);
-        float tickBoxXOffset = paperXOffset + paperWidth * 0.25f;
-        float tickBoxYOffset = paperYOffset;
-        tickBoxRect1 = new Rect(tickBoxXOffset, tickBoxYOffset + paperHeight * 0.35f, tickBoxWidth, tickBoxHeight);
-        tickBoxRect2 = new Rect(tickBoxXOffset, tickBoxYOffset + paperHeight * 0.47f, tickBoxWidth, tickBoxHeight);
-        tickBoxRect3 = new Rect(tickBoxXOffset, tickBoxYOffset + paperHeight * 0.59f, tickBoxWidth, tickBoxHeight);
-        tickBoxRect4 = new Rect(tickBoxXOffset, tickBoxYOffset + paperHeight * 0.71f, tickBoxWidth, tickBoxHeight);
-
-        // Ticks
-        tickTexture = activeSkin.customStyles[4].normal.background;
-        tickRect1 = new Rect(tickBoxXOffset, tickBoxYOffset + paperHeight * 0.35f, tickBoxWidth, tickBoxHeight);
-        tickRect2 = new Rect(tickBoxXOffset, tickBoxYOffset + paperHeight * 0.47f, tickBoxWidth, tickBoxHeight);
-        tickRect3 = new Rect(tickBoxXOffset, tickBoxYOffset + paperHeight * 0.59f, tickBoxWidth, tickBoxHeight);
-        tickRect4 = new Rect(tickBoxXOffset, tickBoxYOffset + paperHeight * 0.71f, tickBoxWidth, tickBoxHeight);
-
-        // Achievement Text
-        achievementStyle = activeSkin.customStyles[9];
-        titleStyle.fontSize = (int)(Screen.height * titleFontScale);
-        achievement1 = achievementController.achievements[0].rows[0].ToString();
-        achievement2 = achievementController.achievements[0].rows[1].ToString();
-        achievement3 = achievementController.achievements[0].rows[2].ToString();
-        achievement4 = achievementController.achievements[0].rows[3].ToString();
-        Vector2 achievementSize1 = activeSkin.customStyles[9].CalcSize(new GUIContent(achievement1));
-        Vector2 achievementSize2 = activeSkin.customStyles[9].CalcSize(new GUIContent(achievement2));
-        Vector2 achievementSize3 = activeSkin.customStyles[9].CalcSize(new GUIContent(achievement3));
-        Vector2 achievementSize4 = activeSkin.customStyles[9].CalcSize(new GUIContent(achievement4));
-        float achievementXOffset = tickBoxXOffset + tickBoxWidth;
-        float achievementYOffset1 = tickBoxYOffset + paperHeight * 0.35f + tickBoxHeight * 0.55f;
-        float achievementYOffset2 = tickBoxYOffset + paperHeight * 0.47f + tickBoxHeight * 0.55f;
-        float achievementYOffset3 = tickBoxYOffset + paperHeight * 0.59f + tickBoxHeight * 0.55f;
-        float achievementYOffset4 = tickBoxYOffset + paperHeight * 0.71f + tickBoxHeight * 0.55f;
-        achievementRect1 = new Rect(achievementXOffset, achievementYOffset1, achievementSize1.x, achievementSize1.y);
-        achievementRect2 = new Rect(achievementXOffset, achievementYOffset2, achievementSize2.x, achievementSize2.y);
-        achievementRect3 = new Rect(achievementXOffset, achievementYOffset3, achievementSize3.x, achievementSize3.y);
-        achievementRect4 = new Rect(achievementXOffset, achievementYOffset4, achievementSize4.x, achievementSize4.y);
-
-        // Thumbs
-        thumbsTexture = activeSkin.customStyles[6].normal.background;
-        float thumbsHeight = Screen.height * 0.4f;
-        float thumbsWidht = thumbsHeight * ((float)thumbsTexture.width / (float)thumbsTexture.height);
-        float thumbsXOffset = paperXOffset + paperWidth - thumbsWidht * 1.3f;
-        float thumbsYOffset = paperYOffset + paperHeight - thumbsHeight;
-        thumbsRect = new Rect(thumbsXOffset, thumbsYOffset, thumbsWidht, thumbsHeight);
-         */
 
         // Buttons
         float btnBackHeight = Screen.height * 0.1f;
@@ -511,31 +389,6 @@ public class AchievementGUI : MonoBehaviour
 
         // Achievements
 
-        /*
-
-        GUI.DrawTexture(iconsRect, iconText);
-        GUI.Label(achievementTitleRect, achievementTitleStr, achievementTitleStyle);
-        GUI.Label(achievementDescRect, achievementDesctStr, achievementDescStyle);
-
-        GUI.DrawTexture(iconsRect1, iconText);
-        GUI.Label(achievementTitleRect1, achievementTitleStr, achievementTitleStyle);
-        GUI.Label(achievementDescRect1, achievementDesctStr, achievementDescStyle);
-
-        GUI.DrawTexture(iconsRect2, iconText);
-        GUI.Label(achievementTitleRect2, achievementTitleStr, achievementTitleStyle);
-        GUI.Label(achievementDescRect2, achievementDesctStr, achievementDescStyle);
-
-        GUI.DrawTexture(iconsRect3, iconText);
-        GUI.Label(achievementTitleRect3, achievementTitleStr, achievementTitleStyle);
-        GUI.Label(achievementDescRect3, achievementDesctStr, achievementDescStyle);
-
-        GUI.DrawTexture(iconsRect4, iconText);
-        GUI.Label(achievementTitleRect4, achievementTitleStr, achievementTitleStyle);
-        GUI.Label(achievementDescRect4, achievementDesctStr, achievementDescStyle);
-
-        */
-
-        //*
         for (int i = 0; i < 10; i++)
         {
             if ((i + page * 10) < iconsRect.Length)
@@ -543,9 +396,12 @@ public class AchievementGUI : MonoBehaviour
                 GUI.DrawTexture(iconsRect[i + page * 10], iconText);
                 GUI.Label(achievementTitleRect[i + page * 10], achievementTitleStr[i + page * 10], achievementTitleStyle);
                 GUI.Label(achievementDescRect[i + page * 10], achievementDescStr[i + page * 10], achievementDescStyle);
+                if (capsulesTexture[i] != null)
+                {
+                    GUI.DrawTexture(capsulesRect[i + page * 10], capsulesTexture[i]);
+                }
             }
         }
-         //*/
 
         // back button
         if (GUI.Button(btnBackRect, "", activeSkin.customStyles[0]))

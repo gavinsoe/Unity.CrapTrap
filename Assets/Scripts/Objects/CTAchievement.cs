@@ -50,6 +50,14 @@ public enum Gear
     explorer = 5,
 }
 
+public enum Rarity
+{
+    none = 1,
+    common = 2,
+    rare = 3,
+    challenge = 4,
+}
+
 [System.Serializable]
 public class Reward : System.Object
 {
@@ -69,6 +77,7 @@ public class CTAchievement : System.Object
     public Gear gear;
     public Texture icon;
     public bool hidden;
+    public Rarity capsuleColor;
 
     public string ToString()
     {
@@ -91,35 +100,35 @@ public class CTAchievement : System.Object
         }
         else if (stat == Stat.toiletPapers)
         {
-            stringified = "Has collected a total of " + counter + " toilet papers";
+            stringified = "Has collected " + counter + " toilet papers";
         }
         else if (stat == Stat.goldenPapers)
         {
-            stringified = "Has collected a total of " + counter + " golden toilet papers";
+            stringified = "Has collected " + counter + " golden toilet papers";
         }
         else if (stat == Stat.totalPulls)
         {
-            stringified = "Has pulled a total of " + counter + " times";
+            stringified = "Has pulled " + counter + " times";
         }
         else if (stat == Stat.totalPushes)
         {
-            stringified = "Has pushed a total of " + counter + " times";
+            stringified = "Has pushed " + counter + " times";
         }
         else if (stat == Stat.totalPullOuts)
         {
-            stringified = "Has pulled out a total of " + counter + " times";
+            stringified = "Has pulled out " + counter + " times";
         }
         else if (stat == Stat.totalHangingSteps)
         {
-            stringified = "Has moved a total of " + counter + " times while hanging";
+            stringified = "Has moved " + counter + " times while hanging";
         }
         else if (stat == Stat.totalSlides)
         {
-            stringified = "Has slide a total of " + counter + " times";
+            stringified = "Has slide " + counter + " times";
         }
         else if (stat == Stat.treasures)
         {
-            stringified = "Has collected a total of " + counter + " treasures";
+            stringified = "Has collected " + counter + " treasures";
         }
         else if (stat == Stat.stagesCompleted)
         {
@@ -151,15 +160,15 @@ public class CTAchievement : System.Object
         }
         else if (stat == Stat.capsules)
         {
-            stringified = "Has collected a total of " + counter + " times";
+            stringified = "Has collected " + counter + " capsules";
         }
         else if (stat == Stat.fails)
         {
-            stringified = "Has failed a total of " + counter + " times";
+            stringified = "Has failed " + counter + " times";
         }
         else if (stat == Stat.eqsBought)
         {
-            stringified = "Has bought a total of " + counter + " equipments";
+            stringified = "Has bought " + counter + " equipments";
         }
         else if (stat == Stat.getGear)
         {
@@ -198,11 +207,11 @@ public class CTAchievement : System.Object
         }
         else if (stat == Stat.completeStageWOItems)
         {
-            stringified = "Complete " + counter + " different stages without using items";
+            stringified = "Complete " + counter + " stages without using items";
         }
         else if (stat == Stat.completeStageWOEq)
         {
-            stringified = "Complete " + counter + " different stages without using equips";
+            stringified = "Complete " + counter + " stages without using equips";
         }
         else if (stat == Stat.stareAtItemShop)
         {
@@ -217,11 +226,11 @@ public class CTAchievement : System.Object
         }
         else if (stat == Stat.attemptWDiver)
         {
-            stringified = "Attempt " + counter + " different stages with diver set";
+            stringified = "Attempt " + counter + " stages with diver set";
         }
         else if (stat == Stat.completeStageW3Stars)
         {
-            stringified = "Complete " + counter + " different stages with 3 stars";
+            stringified = "Complete " + counter + " stages with 3 stars";
         }
         else if (stat == Stat.completeChallengeStages)
         {
@@ -229,11 +238,11 @@ public class CTAchievement : System.Object
         }
         else if (stat == Stat.gtpBought)
         {
-            stringified = "Bought a total of " + counter + " Golden Toilet Papers";
+            stringified = "Bought " + counter + " Golden Toilet Papers";
         }
         else if (stat == Stat.itemsBoughtUsingGTP)
         {
-            stringified = "Bought a total of " + counter + " items using Golden Toilet Papers";
+            stringified = "Bought " + counter + " items using Golden Toilet Papers";
         }
         else
         {

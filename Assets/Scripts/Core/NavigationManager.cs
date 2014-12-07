@@ -93,6 +93,6 @@ public class NavigationManager : MonoBehaviour {
 
     public string getLeaderboardID()
     {
-        return leaderboardIDs[chapter * 10 + stage];
+        return leaderboardIDs[chapter * 20 + stage];
     }
 }
