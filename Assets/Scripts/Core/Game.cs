@@ -130,6 +130,7 @@ public class Game : MonoBehaviour
         stats[Stat.stareAtItemShop] = 0;
         stats[Stat.attemptWDiver] = 0;
         stats[Stat.itemsBoughtUsingGTP] = 0;
+        stats[Stat.gtpBought] = 0;
         bagSlots = 3;
         bag = new string[bagSlots];
 
@@ -243,6 +244,7 @@ public class Game : MonoBehaviour
         info.diapers = stats[Stat.diapers];
         info.stareAtItemShop = stats[Stat.stareAtItemShop];
         info.itemsBoughtUsingGTP = stats[Stat.itemsBoughtUsingGTP];
+        info.gtpBought = stats[Stat.gtpBought];
 
         bf.Serialize(file, info);
         file.Close();
@@ -308,6 +310,7 @@ public class Game : MonoBehaviour
             stats[Stat.diapers] = info.diapers;
             stats[Stat.stareAtItemShop] = info.stareAtItemShop;
             stats[Stat.itemsBoughtUsingGTP] = info.itemsBoughtUsingGTP;
+            stats[Stat.gtpBought] = info.gtpBought;
 
             setLastLogin();
 
@@ -795,6 +798,7 @@ class GameInfo
     public double diapers = 0;
     public double stareAtItemShop = 0;
     public double itemsBoughtUsingGTP = 0;
+    public double gtpBought = 0;
 
     public CTAchievement[] achievements;
     public bool[] achievementsDone;
