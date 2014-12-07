@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using ChartboostSDK;
 
 public class PrologueController : MonoBehaviour {
 
@@ -80,6 +81,9 @@ public class PrologueController : MonoBehaviour {
         {
             frame.position = CalculatePosition(frame.sprite, frame.startScale, frame.startXOffset, frame.startYOffset, frame.hook, frame.scaleMode);
         }
+
+        // Cache ads
+        Chartboost.cacheInterstitial(CBLocation.Default);
 	}
 	
 	// Update is called once per frame
@@ -148,6 +152,9 @@ public class PrologueController : MonoBehaviour {
 
         if (GUI.Button(new Rect(0, 0, Screen.width, Screen.height), ""))
         {
+            // Show ad
+            Chartboost.showInterstitial(CBLocation.Default);
+
             if (!GetComponent<TitleScreenGUI>().isShowing)
             {
                 BGMManager.instance.PlayMain();

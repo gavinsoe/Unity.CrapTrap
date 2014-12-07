@@ -15,7 +15,8 @@ public class CrapTrapAssets : IStoreAssets
     {
         return new VirtualCurrency[] { 
             TOILET_PAPER, 
-            GOLDEN_TOILET_PAPER
+            GOLDEN_TOILET_PAPER,
+            CONSUMABLE_PLUNGER
         };
     }
 
@@ -75,7 +76,6 @@ public class CrapTrapAssets : IStoreAssets
             CONSUMABLE_CHARCOAL_2_10PACK,
             CONSUMABLE_CHARCOAL_3_10PACK,
             CONSUMABLE_LUCKY_CHARM,
-            CONSUMABLE_PLUNGER,
             EMERGENCY_REVIVE_1_1,
             EMERGENCY_REVIVE_1_2,
             EMERGENCY_REVIVE_1_3,
@@ -190,8 +190,7 @@ public class CrapTrapAssets : IStoreAssets
                 EMERGENCY_REVIVE_2_3,
                 EMERGENCY_REVIVE_3_1,
                 EMERGENCY_REVIVE_3_2,
-                EMERGENCY_REVIVE_3_3,
-                CONSUMABLE_PLUNGER
+                EMERGENCY_REVIVE_3_3
             };
         }
         else // Should never end up here (just included to prevent an error message)
@@ -224,6 +223,7 @@ public class CrapTrapAssets : IStoreAssets
 
     public const string NORMAL_TOILET_PAPER_ID = "currency_ntp";
     public const string GOLDEN_TOILET_PAPER_ID = "currency_gtp";
+    public const string CONSUMABLE_PLUNGER_ID = "consumable_plunger";
 
     #endregion
     #region Equipment Head
@@ -364,7 +364,6 @@ public class CrapTrapAssets : IStoreAssets
     public const string CONSUMABLE_CHARCOAL_3_10PACK_ID = "consumable_charcoal_3_10pack";
 
     public const string CONSUMABLE_LUCKY_CHARM_ID = "consumable_lucky_charm";
-    public const string CONSUMABLE_PLUNGER_ID = "consumable_plunger";
 
     // category name
     public const string CONSUMABLE_CATEGORY_NAME = "consumable";
@@ -399,7 +398,6 @@ public class CrapTrapAssets : IStoreAssets
     public const string PACK_4_GTP_ID = "pack_4_gtp";
     public const string PACK_5_GTP_ID = "pack_5_gtp";
     public const string PACK_6_GTP_ID = "pack_6_gtp";
-    public const string ANDROID_TEST_ID = "android.test.purchased";
 
     // list of items that is used instantly
     public static List<string> INSTANT_USE_LIST =
@@ -447,6 +445,13 @@ public class CrapTrapAssets : IStoreAssets
         "Golden Toilet Paper",          // name
         "",                             // description
         GOLDEN_TOILET_PAPER_ID          // item id
+    );
+
+    // Non-purchasable
+    public static VirtualCurrency CONSUMABLE_PLUNGER = new VirtualCurrency(
+        "Plunger",                  // name
+        "",                         // description
+        CONSUMABLE_PLUNGER_ID       // item id
     );
 
     #endregion
@@ -833,14 +838,6 @@ public class CrapTrapAssets : IStoreAssets
         "Four Leaf Clover",
         "This charm give you a chance to find more plungers. Destroyed upon soiled pants.",
         CONSUMABLE_LUCKY_CHARM_ID,
-        new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 7)
-    );
-
-    // Non-purchasable
-    public static SingleUseVG CONSUMABLE_PLUNGER = new SingleUseVG(
-        "[Plunger]",
-        "[Plunger Description]",
-        CONSUMABLE_PLUNGER_ID,
         new PurchaseWithVirtualItem(GOLDEN_TOILET_PAPER_ID, 7)
     );
 
