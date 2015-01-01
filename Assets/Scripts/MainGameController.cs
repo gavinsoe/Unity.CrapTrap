@@ -18,7 +18,6 @@ public class MainGameController : MonoBehaviour
     // App42 Stuff
     ServiceAPI serviceAPI;
     StorageService storageService;
-    Constants constants = new Constants();
     LogResponse logCallBack = new LogResponse();
 
     public static MainGameController instance;
@@ -134,7 +133,7 @@ public class MainGameController : MonoBehaviour
         #endif
 
             // Connect to the app service
-            serviceAPI = new ServiceAPI(constants.apiKey, constants.secretKey);
+            serviceAPI = new ServiceAPI(Constants.apiKey, Constants.secretKey);
 
             // Build the storage service
             storageService = serviceAPI.BuildStorageService();
@@ -367,7 +366,7 @@ public class MainGameController : MonoBehaviour
             json.Add("Result", "Fell Down");
 
             // Log result
-            storageService.InsertJSONDocument(constants.dbName, constants.collectionStageStats, json, logCallBack);
+            storageService.InsertJSONDocument(Constants.dbName, Constants.collectionStageStats, json, logCallBack);
 
             #endregion
              * */
@@ -400,7 +399,7 @@ public class MainGameController : MonoBehaviour
             json.Add("Result", "Out of time");
 
             // Log result
-            storageService.InsertJSONDocument(constants.dbName, constants.collectionStageStats, json, logCallBack);
+            storageService.InsertJSONDocument(Constants.dbName, Constants.collectionStageStats, json, logCallBack);
             
             #endregion
              * */

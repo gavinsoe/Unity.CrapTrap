@@ -12,7 +12,6 @@ public class DemoTitleScreenGUI : MonoBehaviour {
     ServiceAPI serviceAPI;
     LogService logService;
     StorageService storageService;
-    Constants constants = new Constants();
     LogResponse logCallBack = new LogResponse();
 
     // GUI Skin
@@ -94,7 +93,7 @@ public class DemoTitleScreenGUI : MonoBehaviour {
         #endif
 
         // Connect to the app service
-        serviceAPI = new ServiceAPI(constants.apiKey, constants.secretKey);
+        serviceAPI = new ServiceAPI(Constants.apiKey, Constants.secretKey);
 
         // Build the log service
         logService = serviceAPI.BuildLogService();

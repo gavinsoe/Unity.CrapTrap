@@ -64,7 +64,7 @@ public class TitleScreenGUI : MonoBehaviour {
     // Version
     private Rect versionRect;
     private float versionFontScale = 0.04f;
-    private string version = "v1.0.1";
+    private string version = "v1.0.2";
 
     // Loading
     private Rect loadingRect;
@@ -182,11 +182,6 @@ public class TitleScreenGUI : MonoBehaviour {
 
     void Update()
     {
-        splashDuration -= Time.deltaTime;
-        if (splashDuration < 0)
-        {
-            GetComponent<PrologueController>().enabled = true;
-        }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Application.Quit();
@@ -277,6 +272,7 @@ public class TitleScreenGUI : MonoBehaviour {
             iTween.Hash("from", guiAlpha,
                         "to", 1,
                         "onupdate", "AnimateTransparency",
+                        "oncomplete", "ShowAd",
                         "easetype", iTween.EaseType.linear,
                         "time", 0.5f));
         this.enabled = true;
@@ -338,6 +334,12 @@ public class TitleScreenGUI : MonoBehaviour {
     {
         splashActive = false;
         this.enabled = false;
+    }
+
+    void ShowAd()
+    {
+        prologue.enabled = false;
+        AdBuddizBinding.ShowAd();
     }
 }
 

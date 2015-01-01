@@ -16,7 +16,6 @@ public class ReviewGUI : MonoBehaviour
     ServiceAPI serviceAPI;
     LogService logService;
     StorageService storageService;
-    Constants constants = new Constants();
     LogResponse logCallBack = new LogResponse();
     ReviewResponse callBack = new ReviewResponse();
 
@@ -125,7 +124,7 @@ public class ReviewGUI : MonoBehaviour
         #endif
 
         // Connect to the app service
-        serviceAPI = new ServiceAPI(constants.apiKey, constants.secretKey);
+        serviceAPI = new ServiceAPI(Constants.apiKey, Constants.secretKey);
 
         // Build the log service
         logService = serviceAPI.BuildLogService();
@@ -381,7 +380,7 @@ public class ReviewGUI : MonoBehaviour
                 json.Add("Rating", (toolbarInt + 1).ToString());
 
                 // Do something...
-                storageService.InsertJSONDocument(constants.dbName, constants.collectionReviews, json, callBack);
+                storageService.InsertJSONDocument(Constants.dbName, Constants.collectionReviews, json, callBack);
 
                 // Log the event
                 logService.SetEvent("[DEMO] Feedback Submitted", logCallBack);

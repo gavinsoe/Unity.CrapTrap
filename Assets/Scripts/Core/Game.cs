@@ -6,6 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using GooglePlayGames;
 using UnityEngine.SocialPlatforms;
 using UnityEngine;
+using ChartboostSDK;
 
 public class Game : MonoBehaviour 
 {
@@ -86,6 +87,17 @@ public class Game : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    void Start()
+    {
+        // Initialise Adbuddiz
+        AdBuddizBinding.SetAndroidPublisherKey(Constants.adBuddizPublisherKeyAndroid);
+
+        // Cache Ads
+        AdBuddizBinding.CacheAds();
+
+        AdBuddizManager.didShowAd += showChartboostInterstitial;
     }
 
 	// Function to initialize object; called when there is no previous saved file
@@ -764,6 +776,11 @@ public class Game : MonoBehaviour
             lockedLevels.Add(key, false);
         }
     } */
+
+    public void showChartboostInterstitial()
+    {
+        Chartboost.showInterstitial(CBLocation.Default);
+    }
 }
 
 // Class to save the data into a Binary Formatter

@@ -25,7 +25,6 @@ public class ContactUsGUI : MonoBehaviour {
     ServiceAPI serviceAPI;
     EmailService emailService;
     LogService logService;
-    Constants constants = new Constants();
     ContactUsResponse callBack = new ContactUsResponse();
     LogResponse logCallBack = new LogResponse();
 
@@ -102,7 +101,7 @@ public class ContactUsGUI : MonoBehaviour {
         #endif
 
         // Connect to the app service
-        serviceAPI = new ServiceAPI(constants.apiKey, constants.secretKey);
+        serviceAPI = new ServiceAPI(Constants.apiKey, Constants.secretKey);
 
         // Build the log service
         logService = serviceAPI.BuildLogService();
@@ -307,7 +306,7 @@ public class ContactUsGUI : MonoBehaviour {
                 newAlert = true;
             }
             // Check if email is valid
-            Regex regex = new Regex(constants.regexEmail, RegexOptions.IgnoreCase);
+            Regex regex = new Regex(Constants.regexEmail, RegexOptions.IgnoreCase);
             if (!String.IsNullOrEmpty(senderEmail) && !regex.IsMatch(senderEmail))
             {
                 if (!String.IsNullOrEmpty(error)) error += "\n";
@@ -328,7 +327,7 @@ public class ContactUsGUI : MonoBehaviour {
                                     "<div>" + emailBody + "</div>";
 
                 // Send email
-                emailService.SendMail(constants.contactEmail, formattedSubject, formattedBody, constants.senderEmail, EmailMIME.HTML_TEXT_MIME_TYPE, callBack);
+                emailService.SendMail(Constants.contactEmail, formattedSubject, formattedBody, Constants.senderEmail, EmailMIME.HTML_TEXT_MIME_TYPE, callBack);
 
                 // Log event
                 logService.SetEvent("[DEMO] Contact Submitted", logCallBack);
