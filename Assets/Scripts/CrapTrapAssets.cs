@@ -1015,51 +1015,51 @@ public class CrapTrapAssets : IStoreAssets
         "Emergency Diapers (Rank 1)",                                               // name
         "Emergency Diapers (Rank 1)",                                  // description
         EMERGENCY_REVIVE_1_2_ID,                                     // item id
-        new PurchaseWithMarket(EMERGENCY_REVIVE_1_2_ID, 1.25) // the way the good is purchased
+        new PurchaseWithMarket(EMERGENCY_REVIVE_1_2_ID, 1.99) // the way the good is purchased
     );
     public static SingleUseVG EMERGENCY_REVIVE_1_3 = new SingleUseVG(
         "Emergency Diapers (Rank 1)",                                               // name
         "Emergency Diapers (Rank 1)",                                    // description
         EMERGENCY_REVIVE_1_3_ID,                                     // item id
-        new PurchaseWithMarket(EMERGENCY_REVIVE_1_3_ID, 1.5) // the way the good is purchased
+        new PurchaseWithMarket(EMERGENCY_REVIVE_1_3_ID, 2.99) // the way the good is purchased
     );
 
     public static SingleUseVG EMERGENCY_REVIVE_2_1 = new SingleUseVG(
         "Emergency Diapers (Rank 2)",                                               // name
         "Emergency Diapers (Rank 2)",                                    // description
         EMERGENCY_REVIVE_2_1_ID,                                     // item id
-        new PurchaseWithMarket(EMERGENCY_REVIVE_2_1_ID, 1.75) // the way the good is purchased
+        new PurchaseWithMarket(EMERGENCY_REVIVE_2_1_ID, 3.99) // the way the good is purchased
     );
     public static SingleUseVG EMERGENCY_REVIVE_2_2 = new SingleUseVG(
         "Emergency Diapers (Rank 2)",                                               // name
         "Emergency Diapers (Rank 2)",                                     // description
         EMERGENCY_REVIVE_2_2_ID,                                     // item id
-        new PurchaseWithMarket(EMERGENCY_REVIVE_2_2_ID, 2.25) // the way the good is purchased
+        new PurchaseWithMarket(EMERGENCY_REVIVE_2_2_ID, 4.99) // the way the good is purchased
     );
     public static SingleUseVG EMERGENCY_REVIVE_2_3 = new SingleUseVG(
         "Emergency Diapers (Rank 2)",                                               // name
         "Emergency Diapers (Rank 2)",                                     // description
         EMERGENCY_REVIVE_2_3_ID,                                     // item id
-        new PurchaseWithMarket(EMERGENCY_REVIVE_2_3_ID, 2.75) // the way the good is purchased
+        new PurchaseWithMarket(EMERGENCY_REVIVE_2_3_ID, 5.99) // the way the good is purchased
     );
 
     public static SingleUseVG EMERGENCY_REVIVE_3_1 = new SingleUseVG(
         "Emergency Diapers (Rank 3)",                                               // name
         "Emergency Diapers (Rank 3)",                                   // description
         EMERGENCY_REVIVE_3_1_ID,                                     // item id
-        new PurchaseWithMarket(EMERGENCY_REVIVE_3_1_ID, 3.00) // the way the good is purchased
+        new PurchaseWithMarket(EMERGENCY_REVIVE_3_1_ID, 6.99) // the way the good is purchased
     );
     public static SingleUseVG EMERGENCY_REVIVE_3_2 = new SingleUseVG(
         "Emergency Diapers (Rank 3)",                                               // name
         "Emergency Diapers (Rank 3)",                                  // description
         EMERGENCY_REVIVE_3_2_ID,                                     // item id
-        new PurchaseWithMarket(EMERGENCY_REVIVE_3_2_ID, 3.75) // the way the good is purchased
+        new PurchaseWithMarket(EMERGENCY_REVIVE_3_2_ID, 7.99) // the way the good is purchased
     );
     public static SingleUseVG EMERGENCY_REVIVE_3_3 = new SingleUseVG(
         "Emergency Diapers (Rank 3)",                                               // name
         "Emergency Diapers (Rank 3)",                                     // description
         EMERGENCY_REVIVE_3_3_ID,                                     // item id
-        new PurchaseWithMarket(EMERGENCY_REVIVE_3_3_ID, 4.5) // the way the good is purchased
+        new PurchaseWithMarket(EMERGENCY_REVIVE_3_3_ID, 8.99) // the way the good is purchased
     );
 
     #endregion
